@@ -1,0 +1,29 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+    
+        {
+            "name": "app_seguimiento_movil",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "app_seguimiento_movil (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "app_seguimiento_movil (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "Flutter",
+            "program": "lib/main.dart",
+            "request": "launch",
+            "type": "dart"
+        },
+    ]
+}
