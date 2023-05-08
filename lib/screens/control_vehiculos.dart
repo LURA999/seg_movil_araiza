@@ -13,13 +13,15 @@ class ControlVehiculos extends StatefulWidget {
 class _ControlVehiculosState extends State<ControlVehiculos> {
   @override
   Widget build(BuildContext context) {
+
+    //Fecha se inserta automaticamente
     final Map<String, List<String>> formValuesInicioTur = {
       'nombre_guardia': ['','1'],
       'turno': ['','1'],
-      'fecha': ['','1'],
       'firma': ['','1'],
     };
 
+    //fecha se inserta manualmente
     final Map<String, List<String>> formValuesRegistroMan = {
       'placas':['','1'],
       'tipo_vehiculo': ['','1'],
@@ -66,13 +68,14 @@ class _ControlVehiculosState extends State<ControlVehiculos> {
                           'Iniciar Turno',
                           'Turno',
                           'Firma',
-                          'Fecha',
                           'Nombre del guardia'
                         ],
                         formValues: formValuesInicioTur,
                         enabled: true),
                     const ButtonScreen(
-                        textButton: 'Escaner QR', btnPosition: 1),
+                        textButton: 'Escaner QR', 
+                        btnPosition: 1
+                      ),
                     ButtonForm(
                         textButton: 'Registro Manual',
                         btnPosition: 2,
@@ -183,16 +186,6 @@ class ButtonScreen extends StatelessWidget {
         onPressed: Provider.of<VarProvider>(context).myGlobalVariable
             ? () {
                 if (btnPosition == 1) {
-                
-                final historyNavigator = Navigator.of(context).widget.observers
-                .whereType<HistoryNavigator>()
-                .first;
-                ModalRoute<Object?>? currentRoute = ModalRoute.of(context);
-                Route<dynamic>? previousRoute = historyNavigator.history.isNotEmpty ? historyNavigator.history.last : null;
-                // historyNavigator.didPush(currentRoute!, previousRoute);
-                /* print('----1');
-                print(historyNavigator.history.length);
-                print('----1'); */
                 Navigator.of(context).pushNamed('scanner_qr');
                 }
               }

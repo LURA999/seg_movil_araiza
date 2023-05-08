@@ -1,4 +1,6 @@
+import 'package:app_seguimiento_movil/routers/router.dart';
 import 'package:flutter/material.dart';
+
 
 class HistoryNavigator extends NavigatorObserver {
   final List<Route<dynamic>> _history = [];
@@ -8,7 +10,13 @@ class HistoryNavigator extends NavigatorObserver {
 
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    _history.add(route);
+    List<Set<String>> namesRoute = Routers.namesRouter;
+    int indice = namesRoute.indexWhere((conjunto) => conjunto.contains(route.settings.name.toString()));
+
+    if (indice >= 0 || route.settings.name.toString() == '/') {
+      _history.add(route);      
+    }
+
   }
 
   @override

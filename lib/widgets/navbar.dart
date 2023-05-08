@@ -1,11 +1,14 @@
-import 'package:app_seguimiento_movil/services/history_navigator.dart';
+import 'package:app_seguimiento_movil/routers/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+import 'package:app_seguimiento_movil/services/services.dart';
 
 class Navbar extends StatelessWidget {
 
   final String contexto2;
-  
+  final int auxPrevDirectory = 1;
+
   const Navbar({
     super.key, 
     required this.contexto2
@@ -37,76 +40,115 @@ class Navbar extends StatelessWidget {
   }
 }
 
-class ButtonNavSvg extends StatelessWidget {
+class ButtonNavSvg extends StatefulWidget {
   final String img;
   final String? route;
   final double height;
   final String contexto2;
-  
-  const ButtonNavSvg({
+
+   ButtonNavSvg({
     super.key, 
     required this.img, 
     required this.height, 
     this.route, 
-    required this.contexto2,
+    required this.contexto2
   });
 
   @override
+  State<ButtonNavSvg> createState() => _ButtonNavSvgState();
+}
+
+class _ButtonNavSvgState extends State<ButtonNavSvg> {
+  bool _isTapped = false;
+  
+
+  void _handleTapDown(TapDownDetails details) {
+    setState(() {
+      _isTapped = true;
+    });
+  }
+
+  void _handleTapUp(TapUpDetails details) {
+    setState(() {
+      _isTapped = false;
+    });
+  }
+  
+  @override
   Widget build(BuildContext context) {
     return InkWell(
+      onTapDown: _handleTapDown,
+      onTapUp: _handleTapUp,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-         padding: const EdgeInsets.all(5),
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(40)),
-          //  border: Border.all(color: Colors.red)
+      duration: const Duration(milliseconds: 200),
+      padding:  EdgeInsets.fromLTRB(
+          MediaQuery.of(context).size.width * .01,
+          MediaQuery.of(context).size.height * .01,
+          MediaQuery.of(context).size.width * .01,
+          MediaQuery.of(context).size.height * .01,
+        ),
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(40)),
+          color: _isTapped ? Color.fromARGB(255, 245, 245, 245) : Colors.white ,
         ),
         child: SvgPicture.asset(
-          img,
-          height: height,
+          widget.img,
+          height: widget.height,
         ),
       ),
       onTap: () {
-        if (route=='home') {
-          final historyNavigator = Navigator.of(context).widget.observers
-          .whereType<HistoryNavigator>()
-          .first;
-          ModalRoute<Object?>? currentRoute = ModalRoute.of(context);
-          Route<dynamic>? previousRoute = historyNavigator.history.isNotEmpty ? historyNavigator.history.last : null;
-          // historyNavigator.didPush(currentRoute!, previousRoute);
-         /*  print('----3');
-          print(historyNavigator.history.length);
-          print('----3'); */
+        int auxPrevDirectory = Provider.of<VarProvider>(context,listen: false).auxPrevDirectory;
+        int auxNextDirectory = Provider.of<VarProvider>(context,listen: false).auxNextDirectory;
+
+        if (widget.route=='home') {
+          auxPrevDirectory = 1;
+          auxNextDirectory = 0;
+          Provider.of<VarProvider>(context,listen: false).updatePrev(auxPrevDirectory);
           Navigator.of(context).pushNamed('home');
         }
 
-        if (route=='prev') {
+        if (widget.route=='prev') {
           final routes = Navigator.of(context).widget.observers
           .whereType<HistoryNavigator>()
           .first.history;
-         if (routes.length > 1) {
-          /* print("entro a IF");
-            // String? currentRoute = ModalRoute.of(context)!.settings.name;
-
-            print('Contexto actual REAL: ${contexto2})}'); */
-
-            final previousRouteSettings = routes[routes.indexOf(ModalRoute.of(context)!) - 1].settings;
-            final previousRouteName = previousRouteSettings.name;
-            // print(routes);
-            Navigator.of(context).pushReplacementNamed(previousRouteName!);
+          try {
+            print(routes.length);
+            if (routes.length > 1) {
+              final previousRouteSettings = routes[routes.indexOf(routes.firstWhere((e) => e.settings.name == widget.contexto2)) - 1].settings;
+              final previousRouteName = previousRouteSettings.name;
+              Navigator.of(context).pushNamed(previousRouteName!);
+            } 
+          } catch (e) {
+            return;
           }
         }
 
-       if (route == 'next') {
+       if (widget.route == 'next') {
           final routes = Navigator.of(context).widget.observers
-              .whereType<HistoryNavigator>()
-              .first.history;
-          if (routes.isNotEmpty) {
-            final currentRouteIndex = routes.indexOf(ModalRoute.of(context)!);
-            if (currentRouteIndex < routes.length - 1) {
-              final nextRoute = routes[currentRouteIndex + 1];
-              Navigator.of(context).push(nextRoute);
-            }
+          .whereType<HistoryNavigator>()
+          .first.history;
+          List<Set<String>> namesRoute = Routers.namesRouter;
+          
+          try {
+            int indice = namesRoute.indexWhere((conjunto) => conjunto.contains(widget.contexto2));
+            print(indice);
+
+            print('ruta[0] ${namesRoute[0].elementAt(0)}');
+            print('ruta[1] ${namesRoute[1].elementAt(0)}');
+            print('ruta[2] ${namesRoute[2].elementAt(0)}');
+            // print("Donde se encuentra la pantalla actual : ${Routers.namesRouter.indexOf(widget.contexto2)} -- el numero de pantalla que son en total : ${Routers.namesRouter.length-1}");
+            if (indice <  Routers.namesRouter.length-1) { 
+              final previousRouteSettings = routes[routes.indexOf(routes.firstWhere((e) => e.settings.name == widget.contexto2)) + 1].settings;
+              final previousRouteName = previousRouteSettings.name;
+              Navigator.of(context).pushNamed(previousRouteName!);
+              print('Presionando boton');
+              for (var el in routes) {
+                print('------');
+                print(el);
+              }
+            } 
+          } catch (e) {
+            return;
           }
         }
       },

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../services/services.dart';
-
 
 class HomeScreen extends StatelessWidget {
   
@@ -101,9 +99,14 @@ class _ContainerOptionState extends State<ContainerOption> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: InkWell(
-        onHover: (value) {
+        onTapDown: (value) {
           setState(() {
-            isHovering = value;
+            isHovering = true;
+          });
+        },
+        onTapUp: (value) {
+          setState(() {
+            isHovering = false;
           });
         },
         onTap: () {
@@ -119,81 +122,58 @@ class _ContainerOptionState extends State<ContainerOption> {
                     FocusScope.of(context).requestFocus( FocusNode());
 
                     if(!myFormKey.currentState!.validate()){
-                        return ;
-                      } 
-
-
+                      return ;
+                    } 
                     if (widget.id == 1) {
-                       final historyNavigator = Navigator.of(context).widget.observers
-                        .whereType<HistoryNavigator>()
-                        .first;
-                        ModalRoute<Object?>? currentRoute = ModalRoute.of(context);
-                        Route<dynamic>? previousRoute = historyNavigator.history.isNotEmpty ? historyNavigator.history.last : null;
-                        // historyNavigator.didPush(currentRoute!, previousRoute);
-                        /* print('----2');
-                        print(historyNavigator.history.length);
-                        print('----2'); */
                         Navigator.of(context).pushNamed('control_vehiculos');
                     }
                   }
-                return  Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    AlertDialog(
-                      title: const Text('Ingrese la contraseña '),
-                      content: Form(
-                        key: myFormKey,
-                        child: SingleChildScrollView(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              TextFormField(
-                                controller: textController,
-                                enabled: widget.id == 1 ? true : false,
-                                textAlign: TextAlign.center,
-                                obscureText: true,
-                                validator: (value) {
-                                if (value == null || value.isEmpty || value == '') {
-                                  return 'Ingrese la contraseña';
-                                } else if (value != '1234') {
-                                  return 'Contraseña invalida';
-                                }
-                                return null;
-                              },
-                            ),
-                            const SizedBox(height: 10,),
-                            ElevatedButton(
-                              onPressed: widget.id == 1 ? handleButtonPressed : null,
-                              child: const Text('Ingresar',style: TextStyle()),
-                            )
-                            ]
+              return  Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  AlertDialog(
+                    title: const Text('Ingrese la contraseña '),
+                    content: Form(
+                      key: myFormKey,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TextFormField(
+                              controller: textController,
+                              enabled: widget.id == 1 ? true : false,
+                              textAlign: TextAlign.center,
+                              obscureText: true,
+                              validator: (value) {
+                              if (value == null || value.isEmpty || value == '') {
+                                return 'Ingrese la contraseña';
+                              } else if (value != '1234') {
+                                return 'Contraseña invalida';
+                              }
+                              return null;
+                            },
                           ),
+                          const SizedBox(height: 10,),
+                          ElevatedButton(
+                            onPressed: widget.id == 1 ? handleButtonPressed : null,
+                            child: const Text('Ingresar',style: TextStyle()),
+                          )
+                          ]
                         ),
                       ),
                     ),
-                  ],
-                );
-              }
-            );
-            /* 
-            final historyNavigator = Navigator.of(context).widget.observers
-            .whereType<HistoryNavigator>()
-            .first;
-            ModalRoute<Object?>? currentRoute = ModalRoute.of(context);
-            Route<dynamic>? previousRoute = historyNavigator.history.isNotEmpty ? historyNavigator.history.last : null;
-            // historyNavigator.didPush(currentRoute!, previousRoute);
-            /* print('----2');
-            print(historyNavigator.history.length);
-            print('----2'); */
-            Navigator.of(context).pushNamed('control_vehiculos'); */
-          
+                  ),
+                ],
+              );
+            }
+          );
         },
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 150),
+          duration: const Duration(milliseconds: 200),
           height: MediaQuery.of(context).size.height * (MediaQuery.of(context).orientation == Orientation.portrait ? 0.005 : 0.005),
           padding: EdgeInsets.all((MediaQuery.of(context).orientation == Orientation.portrait ? 8 : 20)),
           decoration: BoxDecoration(
-            color: isHovering ? const Color.fromARGB(255, 198, 196, 196) : Colors.white,
+            color: isHovering ?const Color.fromARGB(255, 245, 245, 245) : Colors.white,
             boxShadow: const[
               BoxShadow(
                 color:  Color.fromRGBO(0, 0, 0, 0.282),
@@ -205,7 +185,12 @@ class _ContainerOptionState extends State<ContainerOption> {
             borderRadius: const BorderRadius.all(Radius.circular(10)),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.fromLTRB(
+                  MediaQuery.of(context).size.width * .05,
+                  MediaQuery.of(context).size.height * .05,
+                  MediaQuery.of(context).size.width * .05,
+                  MediaQuery.of(context).size.height * .05,
+                ),
             child: Image.asset(
               'assets/images/main/${widget.svg}.png',
               height: 200,

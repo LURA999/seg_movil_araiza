@@ -3,6 +3,7 @@ import 'package:app_seguimiento_movil/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:app_seguimiento_movil/theme/app_theme.dart';
 import 'package:provider/provider.dart';
+import 'package:app_seguimiento_movil/routers/router.dart';
 
 
 
@@ -37,12 +38,7 @@ class MyApp extends StatelessWidget {
       navigatorKey: navigatorKey,
       navigatorObservers: [navigatorObserver],
       home: SplashScreen(),
-      // title: 'Flutter Demo',
-      routes:{
-        'home' : ( _ ) => const HomeScreen(),
-        'control_vehiculos' : ( _ ) => const ControlVehiculos(),
-        'scanner_qr' : ( _ ) => const ScannerQR(),
-      } ,
+      routes: Routers.routerMain,
       theme: AppTheme.lightTeheme,
     );
   }
