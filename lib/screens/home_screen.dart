@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-
+import 'package:app_seguimiento_movil/services/services.dart';
 
 class HomeScreen extends StatelessWidget {
   
   const HomeScreen({Key? key}) : super(key: key);
 
-  
   @override
   Widget build(BuildContext context) {
     TextStyle myTextStyle = const TextStyle(
@@ -13,8 +12,7 @@ class HomeScreen extends StatelessWidget {
       fontFamily: 'Inter',
       fontWeight: FontWeight.w900,
     );
-
-
+    
     return Scaffold(
         backgroundColor: const Color(0xFF293641),
         body: Column(
@@ -92,10 +90,24 @@ class ContainerOption extends StatefulWidget {
 }
 
 class _ContainerOptionState extends State<ContainerOption> {
-
+  final DepartamentService depService = DepartamentService(); 
   bool isHovering = false;
+  String? errorMessage;
+  String password = '';
+
+  handleButtonPressed() async {
+    if (widget.id == 1) {
+      var pass = await depService.checkPassWord(password, 1);
+
+      if (pass.status == 200) {
+        Navigator.of(context).pushNamed('control_vehiculos');
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: InkWell(
@@ -110,24 +122,11 @@ class _ContainerOptionState extends State<ContainerOption> {
           });
         },
         onTap: () {
-           
-
             showDialog(
               context: context,
               builder: (BuildContext context) {
-                final GlobalKey<FormState> myFormKey = GlobalKey<FormState>();
-                final textController = TextEditingController();
-                
-                 handleButtonPressed() {
-                    FocusScope.of(context).requestFocus( FocusNode());
-
-                    if(!myFormKey.currentState!.validate()){
-                      return ;
-                    } 
-                    if (widget.id == 1) {
-                        Navigator.of(context).pushNamed('control_vehiculos');
-                    }
-                  }
+              final GlobalKey<FormState> myFormKey = GlobalKey<FormState>();
+              final textController = TextEditingController();
               return  Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -140,22 +139,26 @@ class _ContainerOptionState extends State<ContainerOption> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             TextFormField(
-                              controller: textController,
-                              enabled: widget.id == 1 ? true : false,
-                              textAlign: TextAlign.center,
-                              obscureText: true,
-                              validator: (value) {
-                              if (value == null || value.isEmpty || value == '') {
-                                return 'Ingrese la contraseña';
-                              } else if (value != '1234') {
-                                return 'Contraseña invalida';
-                              }
-                              return null;
+                            controller: textController,
+                            enabled: widget.id == 1 ? true : false,
+                            textAlign: TextAlign.center,
+                            obscureText: true,
+                            onChanged: (value) {
+                              setState(() {
+                                password = value;
+                              });
                             },
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                  return 'Ingrese la contraseña';
+                                }
+                                
+                                return null;
+                              }
                           ),
                           const SizedBox(height: 10,),
                           ElevatedButton(
-                            onPressed: widget.id == 1 ? handleButtonPressed : null,
+                            onPressed: widget.id == 1 ? handleButtonPressed  : null,
                             child: const Text('Ingresar',style: TextStyle()),
                           )
                           ]

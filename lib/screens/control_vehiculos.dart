@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 class ControlVehiculos extends StatefulWidget {
   const ControlVehiculos({Key? key}) : super(key: key);
-
+  
   @override
   State<ControlVehiculos> createState() => _ControlVehiculosState();
 }
@@ -13,40 +13,40 @@ class ControlVehiculos extends StatefulWidget {
 class _ControlVehiculosState extends State<ControlVehiculos> {
   @override
   Widget build(BuildContext context) {
-
+    
     //Fecha se inserta automaticamente
-    final Map<String, List<String>> formValuesInicioTur = {
-      'nombre_guardia': ['','1'],
-      'turno': ['','1'],
-      'firma': ['','1'],
+    final Map<String, List<Object?>> formValuesInicioTur = {
+      'name': ['','1',false],
+      'turn': ['','1',true],
+      'sign': ['','1',false],
     };
 
     //fecha se inserta manualmente
-    final Map<String, List<String>> formValuesRegistroMan = {
-      'placas':['','1'],
-      'tipo_vehiculo': ['','1'],
-      'color': ['','1'],
-      'nombre': ['','1'],
-      'departamento': ['','0']
+    final Map<String, List<Object?>> formValuesRegistroMan = {
+      'placas':['','1',false],
+      'tipo_vehiculo': ['','1',false],
+      'color': ['','1',false],
+      'nombre': ['','1',false],
+      'departamento': ['','0',false]
     };
 
-    final Map<String, List<String>> formValuesObservacion = {
-      'descripcion': ['','1'],
+    final Map<String, List<Object?>> formValuesObservacion = {
+      'descripcion': ['','1',false],
     };
 
-    final Map<String, List<String>> formValuesDescRepor = {
-      'guardia': ['','1'],
-      'fecha_inicial_y_hora': ['','1'],
-      'fecha_final_y_hora': ['','1'],
+    final Map<String, List<Object?>> formValuesDescRepor = {
+      'guardia': ['','0',false],
+      'date_inicial_y_hora': ['','1',false],
+      'date_final_y_hora': ['','1',false],
     };
 
-    final Map<String, List<String>> formValuesBuscarVh = {
-      'placas': ['','1'],
-      'tipo_vehiculo': ['','1'],
-      'color': ['','1'],
-      'nombre': ['','1'],
-      'entrada': ['','1'],
-      'salida': ['','1']
+    final Map<String, List<Object?>> formValuesBuscarVh = {
+      'placas': ['','1',false],
+      'tipo_vehiculo': ['','1',false],
+      'color': ['','1',false],
+      'nombre': ['','1',false],
+      'entrada': ['','1',false],
+      'salida': ['','1',false]
     };
 
     return Scaffold(
@@ -71,6 +71,7 @@ class _ControlVehiculosState extends State<ControlVehiculos> {
                           'Nombre del guardia'
                         ],
                         formValues: formValuesInicioTur,
+                        listSelect: const ['Primer Turno', 'Segundo Turno', 'Tercer turno'],
                         enabled: true),
                     const ButtonScreen(
                         textButton: 'Escaner QR', 

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:app_seguimiento_movil/screens/screens.dart';
-import 'package:app_seguimiento_movil/widgets/widgets.dart';
 
 class SplashScreen extends StatefulWidget {
   final Duration splashScreenDuration;
@@ -46,7 +45,6 @@ class _SplashScreenState extends State<SplashScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  
                   Image.asset(
                     'assets/images/araiza_logo.png',
                     height: 200,

@@ -84,7 +84,7 @@ Future<String?> pickDownloadDirectory(BuildContext context) async {
     return result;
   } else {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('No se seleccionó ninguna carpeta')),
+      const SnackBar(content: Text('No se seleccionó ninguna carpeta')),
     );
     return null;
   }

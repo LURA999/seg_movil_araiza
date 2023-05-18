@@ -1,3 +1,4 @@
+import 'package:app_seguimiento_movil/models/models.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:app_seguimiento_movil/services/services.dart';
@@ -7,16 +8,20 @@ import 'package:app_seguimiento_movil/widgets/widgets.dart';
 class ButtonForm extends StatelessWidget {
   final String textButton;
   final List<String> field;
-  final Map<String, List<String>> formValues;
+  final Map<String, List<Object?>> formValues;
   final bool enabled;
+  final List<String>? listSelect;
   final int btnPosition;
+  
   const ButtonForm({
     super.key,
     required this.textButton,
     required this.btnPosition,
+    this.listSelect,
     required this.field,
     required this.formValues,
     required this.enabled,
+    
   });
 
   @override
@@ -42,7 +47,7 @@ class ButtonForm extends StatelessWidget {
   }
 
   Future<String?> newMethod(BuildContext context,
-    Map<String, List<String>> formValues, int btnPosition) {
+    Map<String, List<Object?>> formValues, int btnPosition) {
     TextStyle myTextStyle = const TextStyle(
       color: Colors.black,
       fontFamily: 'Inter',
@@ -54,7 +59,7 @@ class ButtonForm extends StatelessWidget {
 
     formValues.forEach((key, value) {
       inputFields.add(const SizedBox(height: 15));
-      if (key.substring(0, 5) == "fecha") {
+      if (key.substring(0, 4) == "date") {
         inputFields.add(
           CustomInputField(
             maxLines: 1,
@@ -68,6 +73,7 @@ class ButtonForm extends StatelessWidget {
           maxLines: key.contains("descripcion")? 5 : 1 ,
           labelText: field[i], 
           formProperty: key, 
+          listSelect: listSelect,
           formValues: formValues));
       }
       i++;
@@ -88,21 +94,6 @@ class ButtonForm extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            //Este codigo es para mentener el encabezado en la parte superior
-            /* Padding(
-              padding: EdgeInsets.fromLTRB(
-                 MediaQuery.of(context).size.width * .1,
-                 MediaQuery.of(context).size.height * .1,
-                 MediaQuery.of(context).size.width * .1,
-                 MediaQuery.of(context).size.height * .1,
-               ),
-              child: Text(
-                field[0],
-                style: myTextStyle.copyWith(
-                  fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .08 : 0.04),
-                ),
-              ),
-            ), */
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(
@@ -147,13 +138,26 @@ class ButtonForm extends StatelessWidget {
                       if(!myFormKey.currentState!.validate()){
                         return ;
                       }
-
+                      DepartamentService dpser = DepartamentService();
+                      Provider.of<VarProvider>(context2, listen: false).updateVariable(true);
 
                       if (btnPosition == 1) {
-                        Provider.of<VarProvider>(context2, listen: false)
-                            .updateVariable(true);
-                        Navigator.pop(context2);
+                        Turn t= Turn();
+                        t.name = formValues['name']![0].toString();
+                        t.sign = formValues['sign']![0].toString();
+                        t.turn = formValues['turn']![0].toString();
+                        await dpser.postTurn(t);
                       }
+
+                      if (btnPosition == 2) {
+                        Register r= Register();
+                        r.color = formValues['color']![0].toString();
+                        r.employeeName = formValues['employeeName']![0].toString();
+                        r.plates = formValues['plates']![0].toString();
+                        r.typevh = formValues['typevh']![0].toString();
+                        await dpser.postRegister(r);
+                      }
+
 
                       if(btnPosition == 4) {
                         const jsonStr = 
@@ -161,6 +165,9 @@ class ButtonForm extends StatelessWidget {
                         const fileName = 'ejemplo.xlsx';
                         jsonToExcel(jsonStr, fileName, context2);                        
                       }
+
+                    Navigator.pop(context2);
+
                     },
                     child: Text(field[0]),
                   ),

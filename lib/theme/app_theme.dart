@@ -7,7 +7,7 @@ class AppTheme {
   static final ThemeData lightTeheme = ThemeData.light().copyWith(
       
       //CAmbia el color del calendario
-       colorScheme: ColorScheme.light(
+       colorScheme: const ColorScheme.light(
         primary: primary, // color primario
       ),
       //Color primario
@@ -56,8 +56,7 @@ class AppTheme {
           border:OutlineInputBorder(
             borderSide: BorderSide( color: primary),
           ),
-
-        ),
+        )
   );
 
 }

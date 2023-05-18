@@ -12,7 +12,7 @@ void main() => runApp(const AppState());
 
 class AppState extends StatelessWidget {
   const AppState({super.key});
-  
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -40,6 +40,7 @@ class MyApp extends StatelessWidget {
       home: SplashScreen(),
       routes: Routers.routerMain,
       theme: AppTheme.lightTeheme,
+
     );
   }
 }

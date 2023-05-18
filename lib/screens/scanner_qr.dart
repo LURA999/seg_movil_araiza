@@ -1,11 +1,9 @@
-import 'dart:convert';
-
+import 'package:app_seguimiento_movil/models/models.dart';
+import 'package:app_seguimiento_movil/services/services.dart';
 import 'package:app_seguimiento_movil/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-
 import 'dart:developer';
 
 class ScannerQR extends StatefulWidget {
@@ -19,7 +17,9 @@ class _ScannerQR extends State<ScannerQR> {
   Barcode? result;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-
+  DepartamentService ds = DepartamentService();
+  VarProvider vp = VarProvider();
+ 
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
   @override
@@ -33,6 +33,9 @@ class _ScannerQR extends State<ScannerQR> {
 
   @override
   Widget build(BuildContext context) {
+  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+
+  
     return Scaffold(
       body: Column(
         children: <Widget>[
@@ -83,13 +86,13 @@ class _ScannerQR extends State<ScannerQR> {
                           await controller?.resumeCamera();
                         },
                         child: const Text('Continuar',
-                            style: TextStyle(fontSize: 20)),
+                          style: TextStyle(fontSize: 20)),
                       ),
                     ),
                     
                   ],
                 ),
-                SizedBox(child: Navbar(contexto2: 'scanner_qr'))
+                const SizedBox(child: Navbar(contexto2: 'scanner_qr'))
               ],
             ),
           )
@@ -127,19 +130,38 @@ class _ScannerQR extends State<ScannerQR> {
       this.controller = controller;
     });
     controller.scannedDataStream.listen((scanData) {
-setState(() async {
+    setState(() async {
         result = scanData;
-            Map<String, dynamic> objetoJson = Map.fromIterable(
-            result!.code.toString().split(',').map((e) => e.trim()),
-            key: (e) => e.split(':')[0].trim(),
-            value: (e) => e.split(':')[1].trim(),
-          );
+        Qr newQr = Qr();
+        Map<String, dynamic> objetoJson = { 
+          for (var e in result!.code.toString().split(',').map((e) => e.trim())) 
+          e.split(':')[0].trim() : e.split(':')[1].trim() 
+        };
+        
+        Map<String, dynamic> json = await vp.arrSharedPreferences();
 
-        String json = jsonEncode(objetoJson);
-  
-        showDialog(
+        print(json['name']);
+        newQr.color = objetoJson['color'];
+        newQr.department = objetoJson['departament'];
+        newQr.employeeName = objetoJson['employeeName '];
+        // newQr.fkTurn = ;
+        newQr.typevh = objetoJson['typeVh'];
+        newQr.plates = objetoJson['plates'];
+        ds.postQr(newQr);
+
+
+      /*showDialog(
       context: context,
       builder: (BuildContext context) {
+        Qr newQr = Qr();
+        DepartamentService ds = DepartamentService();
+        newQr.color = objetoJson['color'];
+        newQr.department = objetoJson['departament'];
+        newQr.employeeName = objetoJson['employeeName '];
+        newQr.fkTurn = 1;
+        newQr.typevh = objetoJson['typeVh'];
+        newQr.plates = objetoJson['plates'];
+        ds.postQr(newQr);
         return  Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -153,7 +175,7 @@ setState(() async {
               );
             
           }
-        );
+        );*/
         ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           duration: Duration(seconds: 3),
