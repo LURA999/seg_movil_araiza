@@ -4,17 +4,20 @@ class Turn {
   String? name;
   String? turn;
   String? sign;
+  String? description;
 
   Turn({
     this.name,
     this.turn,
     this.sign,
+    this.description
   });
 
   Turn.fromJson(Map<String, dynamic> json){
     name = json['name'];
     turn = json['turn'];
     sign = json['sign'];
+    description = json['description'];
   }
 
   Map<String, dynamic> toJson() {
@@ -22,6 +25,7 @@ class Turn {
     data['name'] = name;
     data['turn'] = turn;
     data['sign'] = sign;
+    data['description'] = description;
     return data;
   }
 
@@ -31,7 +35,6 @@ class Turn {
  Map<String, dynamic> objetoJson = { 
   for (var e in jsonString.split(',').map((e) => e.trim())) 
   e.split(':')[0].trim() : e.split(':')[1].trim()};
-  
     return objetoJson;
   }
 }

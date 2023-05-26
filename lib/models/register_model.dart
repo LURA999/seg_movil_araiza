@@ -3,12 +3,14 @@ class Register {
   String? typevh;
   String? color;
   String? employeeName;
+  String? departament;
 
   Register({
     this.plates,
     this.typevh,
     this.color,
-    this.employeeName
+    this.employeeName,
+    this.departament
   });
 
   Register.fromJson(Map<String, dynamic> json){
@@ -16,6 +18,7 @@ class Register {
     typevh = json['typevh'];
     color = json['color'];
     employeeName = json['employeeName'];
+    departament = json['departament'];
   }
 
   Map<String, dynamic> toJson() {
@@ -24,6 +27,7 @@ class Register {
     data['typevh'] = typevh;
     data['color'] = color;
     data['employeeName'] = employeeName;
+    data['departament'] = departament;
     return data;
   }
 

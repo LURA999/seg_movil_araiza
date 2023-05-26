@@ -1,8 +1,10 @@
+import 'package:app_seguimiento_movil/models/date_excel.dart';
 import 'package:app_seguimiento_movil/models/models.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:app_seguimiento_movil/services/services.dart';
 import 'package:app_seguimiento_movil/widgets/widgets.dart';
+import 'package:intl/intl.dart';
 
 
 class ButtonForm extends StatelessWidget {
@@ -10,7 +12,7 @@ class ButtonForm extends StatelessWidget {
   final List<String> field;
   final Map<String, List<Object?>> formValues;
   final bool enabled;
-  final List<String>? listSelect;
+  final List<List<String>>? listSelect;
   final int btnPosition;
   
   const ButtonForm({
@@ -63,16 +65,19 @@ class ButtonForm extends StatelessWidget {
         inputFields.add(
           CustomInputField(
             maxLines: 1,
+            autofocus: i == 1 ? true : false,
             labelText: field[i],
             formProperty: key,
             formValues: formValues,
             keyboardType: TextInputType.datetime),
         );
       } else {
-        inputFields.add(CustomInputField(
-          maxLines: key.contains("descripcion")? 5 : 1 ,
+        inputFields.add(
+        CustomInputField(
+          maxLines: key.contains("description")? 5 : 1 ,
           labelText: field[i], 
-          formProperty: key, 
+          autofocus: i == 1 ? true : false,
+          formProperty: key,
           listSelect: listSelect,
           formValues: formValues));
       }
@@ -84,12 +89,12 @@ class ButtonForm extends StatelessWidget {
 
     return showDialog<String>(
       context: context,
-      builder: (BuildContext context2) => Dialog(
+      builder: (BuildContext ) => Dialog(
         insetPadding: EdgeInsets.fromLTRB(
-          MediaQuery.of(context2).size.width * .07,
-          MediaQuery.of(context2).size.height * .07,
-          MediaQuery.of(context2).size.width * .07,
-          MediaQuery.of(context2).size.height * .07,
+          MediaQuery.of(context).size.width * .07,
+          MediaQuery.of(context).size.height * .07,
+          MediaQuery.of(context).size.width * .07,
+          MediaQuery.of(context).size.height * .07,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -129,7 +134,7 @@ class ButtonForm extends StatelessWidget {
                 children: [
                   TextButton(
                     onPressed: () {
-                      Navigator.pop(context2);
+                      Navigator.pop(context);
                     },
                     child: const Text('Cerrar'),
                   ),
@@ -139,8 +144,10 @@ class ButtonForm extends StatelessWidget {
                         return ;
                       }
                       DepartamentService dpser = DepartamentService();
-                      Provider.of<VarProvider>(context2, listen: false).updateVariable(true);
 
+                      Provider.of<VarProvider>(context, listen: false).updateVariable(true);
+
+                      //Inicio turno
                       if (btnPosition == 1) {
                         Turn t= Turn();
                         t.name = formValues['name']![0].toString();
@@ -149,24 +156,44 @@ class ButtonForm extends StatelessWidget {
                         await dpser.postTurn(t);
                       }
 
+                      //registro
                       if (btnPosition == 2) {
                         Register r= Register();
                         r.color = formValues['color']![0].toString();
                         r.employeeName = formValues['employeeName']![0].toString();
                         r.plates = formValues['plates']![0].toString();
                         r.typevh = formValues['typevh']![0].toString();
+                        r.departament = formValues['departament']![0].toString();
+                        print(r.toJson());
                         await dpser.postRegister(r);
+                        
                       }
 
+                      //Agregar observaciones
+                      if (btnPosition == 3) {
+                        Turn t= Turn();
+                        t.description = formValues['description']![0].toString();
+                        await dpser.post_obv(t);
+                      }
 
+                      //Descargar reporte
                       if(btnPosition == 4) {
-                        const jsonStr = 
-                        '[{"Nombre": "Juan", "Edad": 25, "Color de cabello": "Rojo","Estado civil": "casado"},{"Nombre": "Lizett", "Edad": 24, "Color de cabello": "Cafe","Estado civil": "casada"}, {"Nombre": "María", "Edad": 30, "Color de cabello": "verde","Estado civil": "soltera"}, {"Nombre": "Alonso", "Edad": 24, "Color de cabello":"negro","Estado civil": "casado"}]';
-                        const fileName = 'ejemplo.xlsx';
-                        jsonToExcel(jsonStr, fileName, context2);                        
+                        DateExcel de = DateExcel();
+                        // print(formValues['date_start_hour']![0].toString());
+                        DateFormat df = DateFormat("yyyy-MM-dd HH:mm:ss");
+                        DateFormat df2 = DateFormat("dd/MM/yyyy");
+                        de.dateStart = df.format(df2.parse(formValues['date_start_hour']![0].toString()));
+                        de.dateFinal = df.format(df2.parse(formValues['date_final_hour']![0].toString()));
+                        de.guard = formValues['guard']![0].toString();
+                         var jsonStr = await dpser.selectDate(de);
+                        // '[{"Nombre": "Juan", "Edad": 25, "Color de cabello": "Rojo","Estado civil": "casado"},{"Nombre": "Lizett", "Edad": 24, "Color de cabello": "Cafe","Estado civil": "casada"}, {"Nombre": "María", "Edad": 30, "Color de cabello": "verde","Estado civil": "soltera"}, {"Nombre": "Alonso", "Edad": 24, "Color de cabello":"negro","Estado civil": "casado"}]';
+                        DateTime now = DateTime.now();
+                        String formattedDate = DateFormat('yyyyMMddss').format(now);
+                        String fileName = '$formattedDate.xlsx';
+                        jsonToExcel(jsonStr, fileName, context);                        
                       }
 
-                    Navigator.pop(context2);
+                    Navigator.pop(context);
 
                     },
                     child: Text(field[0]),
@@ -180,7 +207,4 @@ class ButtonForm extends StatelessWidget {
     );
   }
 
-  void converExcel(){
-
-  }
 }

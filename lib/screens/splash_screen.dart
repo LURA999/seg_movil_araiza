@@ -34,7 +34,6 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
     return Scaffold(
-      
       backgroundColor: const Color(0xFF293641),
       body: Center(
         child: FutureBuilder(
@@ -47,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 children: <Widget>[
                   Image.asset(
                     'assets/images/araiza_logo.png',
-                    height: 200,
+                    height: MediaQuery.of(context).size.height * .2,
                   ),
                   const SizedBox(height: 20),
                   // CustomLoading(),

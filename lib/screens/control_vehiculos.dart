@@ -14,39 +14,41 @@ class _ControlVehiculosState extends State<ControlVehiculos> {
   @override
   Widget build(BuildContext context) {
     
+    //Nombre del campo :  contenido, ¿obligatorio?, ¿select?, ¿enabled?
+     
     //Fecha se inserta automaticamente
     final Map<String, List<Object?>> formValuesInicioTur = {
-      'name': ['','1',false],
-      'turn': ['','1',true],
-      'sign': ['','1',false],
+      'name': ['',true,false, true,true],
+      'turn': ['',true,true, true,true],
+      'sign': ['',true,false, true,true],
     };
 
     //fecha se inserta manualmente
     final Map<String, List<Object?>> formValuesRegistroMan = {
-      'placas':['','1',false],
-      'tipo_vehiculo': ['','1',false],
-      'color': ['','1',false],
-      'nombre': ['','1',false],
-      'departamento': ['','0',false]
+      'plates':['',true,false, true,true],
+      'typevh': ['',true,false, true,true],
+      'color': ['',true,false, true,true],
+      'employeeName': ['',true,false, true,true],
+      'departament': ['',false,false, true,true]
     };
 
     final Map<String, List<Object?>> formValuesObservacion = {
-      'descripcion': ['','1',false],
+      'description': ['',true,false, true,true],
     };
 
     final Map<String, List<Object?>> formValuesDescRepor = {
-      'guardia': ['','0',false],
-      'date_inicial_y_hora': ['','1',false],
-      'date_final_y_hora': ['','1',false],
+      'guard': ['',false,false, true],
+      'date_start_hour': ['',true,false, true,true],
+      'date_final_hour': ['',true,false, true,true],
     };
 
     final Map<String, List<Object?>> formValuesBuscarVh = {
-      'placas': ['','1',false],
-      'tipo_vehiculo': ['','1',false],
-      'color': ['','1',false],
-      'nombre': ['','1',false],
-      'entrada': ['','1',false],
-      'salida': ['','1',false]
+      'placas': ['',true,false, true,true],
+      'tipo_vehiculo': ['',false, false,false],
+      'color': ['',false, false,false],
+      'nombre': ['',false, false,false],
+      'entrada': ['',false, false,false],
+      'salida': ['',false, false,false]
     };
 
     return Scaffold(
@@ -66,12 +68,12 @@ class _ControlVehiculosState extends State<ControlVehiculos> {
                         btnPosition: 1,
                         field: const [
                           'Iniciar Turno',
+                          'Nombre del guardia',
                           'Turno',
-                          'Firma',
-                          'Nombre del guardia'
+                          'Firma'
                         ],
                         formValues: formValuesInicioTur,
-                        listSelect: const ['Primer Turno', 'Segundo Turno', 'Tercer turno'],
+                        listSelect: const [['Primer Turno', 'Segundo Turno', 'Tercer turno'],[]],
                         enabled: true),
                     const ButtonScreen(
                         textButton: 'Escaner QR', 
@@ -106,8 +108,10 @@ class _ControlVehiculosState extends State<ControlVehiculos> {
                                     content: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                       children:[
-                                        ElevatedButton(onPressed: (){
+                                        ElevatedButton(onPressed: () async {
                                           Provider.of<VarProvider>(context,listen: false).updateVariable(false);
+                                          DepartamentService dpser = DepartamentService();
+                                          await dpser.postCloseTurn();
                                           Navigator.of(context).pop(context);
                                           Navigator.of(context).pushNamed('home');
                                         }, child: const Text('Aceptar')),
@@ -128,7 +132,7 @@ class _ControlVehiculosState extends State<ControlVehiculos> {
                     ButtonForm(
                         textButton: 'Agregar observaciones',
                         btnPosition: 3,
-                        field: const ['Observaciones', 'Agregue una descripción...'],
+                        field: const ['Enviar', 'Agregue una descripción...'],
                         formValues: formValuesObservacion,
                         enabled: false),
                     ButtonForm(

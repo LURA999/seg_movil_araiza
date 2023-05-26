@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:app_seguimiento_movil/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:syncfusion_flutter_xlsio/xlsio.dart';
@@ -40,27 +41,35 @@ Future<void> jsonToExcel(String jsonStr, String fileName, BuildContext context) 
 
   // Decodifica el JSON
   final List<Map<String, dynamic>> json = List<Map<String, dynamic>>.from(jsonDecode(jsonStr));
+  VarProvider vp = VarProvider();
   
+  final session = await vp.arrSharedPreferences();
+
   // Crea el archivo Excel
   final workbook = Workbook();
   final sheet = workbook.worksheets[0];
-// Agrega las celdas de encabezado
+  // Agrega las celdas de encabezado
 
-
-
-List<String> headers = json[0].keys.toList();
-for (var i = 0; i < headers.length; i++) {
-  sheet.getRangeByIndex(1, i+1).setText(headers[i]);
-}
-
-for (var i = 0; i < json.length; i++) {
-  var keys = json[i].keys.toList();
-  var values = json[i].values.toList();
-  for (var j = 0; j < keys.length; j++) {
-    var cell = sheet.getRangeByIndex(i + 2, j + 1);
-    cell.setText(values[j].toString());
+  List<String> headers = json[0].keys.toList();
+  for (var i = 0; i < headers.length; i++) {
+    sheet.getRangeByIndex(1, i+1).setText(headers[i]);
   }
-}
+
+  for (var i = 0; i < json.length; i++) {
+    var keys = json[i].keys.toList();
+    var values = json[i].values.toList();
+    for (var j = 0; j < keys.length; j++) {
+      var cell = sheet.getRangeByIndex(i + 2, j + 1);
+      cell.setText(values[j].toString());
+    }
+  }
+
+  var cell = sheet.getRangeByIndex(json.length+5,1);
+  cell.setText( session['description']?session['description']:'' );
+  var cell2 = sheet.getRangeByIndex(json.length+6,1);
+  cell2.setText( session['name']+' este es el nombre');
+  var cell3 = sheet.getRangeByIndex(json.length+6,7);
+  cell3.setText( session['sign']+' esta es una firma');
 
 Future<String> getDownloadDirectoryPath() async {
   String path = '';
@@ -96,18 +105,14 @@ String? path =  await pickDownloadDirectory(context);
     if (await directory.exists()) {
      final file = File('$path/$fileName');  
      try {
-      
       await file.writeAsBytes(workbook.saveAsStream());
       ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Archivo guardado en $file')),
       );
-      Navigator.pop(context);
-
      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('$e')),
       );
-      Navigator.pop(context);
      }
      
     } else {

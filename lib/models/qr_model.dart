@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class Qr {
   String? plates;
   String? typevh;
@@ -27,6 +29,26 @@ class Qr {
     timeEntry = json['timeEntry'];
     timeExit = json['timeExit'];
     fkTurn = json['fkTurn'];
+  }
+
+
+List<dynamic>  toJsonArr(Map<String, dynamic> arr) {
+    // arr["data"].forEach((key, value) {print(value);});
+    // print(arr["data"]);
+    print(arr["data"]);
+     List<dynamic> jsonArray = jsonDecode(arr["data"]);
+    return  jsonArray;
+   /*  for (var el in jsonArray) {
+      el['plates'] = plates;
+      el['color'] = color;
+      el['employeeName'] = employeeName;
+      el['department'] = department;
+      el['timeEntry'] = timeEntry;
+      el['timeExit'] = timeExit;
+      el['fkTurn'] = fkTurn;
+    }
+    
+    return jsonArray; */
   }
 
   Map<String, dynamic> toJson() {

@@ -94,7 +94,7 @@ class _ContainerOptionState extends State<ContainerOption> {
   bool isHovering = false;
   String? errorMessage;
   String password = '';
-
+  
   handleButtonPressed() async {
     if (widget.id == 1) {
       var pass = await depService.checkPassWord(password, 1);
@@ -107,7 +107,11 @@ class _ContainerOptionState extends State<ContainerOption> {
 
   @override
   Widget build(BuildContext context) {
-
+  /* print('--------------------------');
+  print('Vertical: ${MediaQuery.of(context).orientation == Orientation.portrait}');
+  print('Horizontal: ${MediaQuery.of(context).orientation != Orientation.portrait}');
+  print('Height: ${MediaQuery.of(context).size.height}');
+  print('Width: ${MediaQuery.of(context).size.width}'); */
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: InkWell(
@@ -142,6 +146,7 @@ class _ContainerOptionState extends State<ContainerOption> {
                             controller: textController,
                             enabled: widget.id == 1 ? true : false,
                             textAlign: TextAlign.center,
+                            autofocus: true,
                             obscureText: true,
                             onChanged: (value) {
                               setState(() {
@@ -171,10 +176,36 @@ class _ContainerOptionState extends State<ContainerOption> {
             }
           );
         },
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          height: MediaQuery.of(context).size.height * (MediaQuery.of(context).orientation == Orientation.portrait ? 0.005 : 0.005),
-          padding: EdgeInsets.all((MediaQuery.of(context).orientation == Orientation.portrait ? 8 : 20)),
+        child: Container(
+          height: MediaQuery.of(context).size.height * (MediaQuery.of(context).orientation == Orientation.portrait ? 0.05 : 0.1),
+          //Si es verdadero, se tiene que aplicar para celulares, y si no, para tablets
+          /** Medidas genericas desde cuando un movil se convierte en una tablet */
+          padding: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
+                ( MediaQuery.of(context).orientation == Orientation.portrait ? 
+                EdgeInsets.fromLTRB(
+                  MediaQuery.of(context).size.width * .03,
+                  MediaQuery.of(context).size.height * .03,
+                  MediaQuery.of(context).size.width * .03,
+                  MediaQuery.of(context).size.height * .03) 
+                : EdgeInsets.fromLTRB(
+                  MediaQuery.of(context).size.width * .06,
+                  MediaQuery.of(context).size.height * .06,
+                  MediaQuery.of(context).size.width * .06,
+                  MediaQuery.of(context).size.height * .06 ) )
+                : (
+                 /* MediaQuery.of(context).orientation == Orientation.portrait ? 
+                EdgeInsets.fromLTRB(
+                  MediaQuery.of(context).size.width * .06,
+                  MediaQuery.of(context).size.height * .06,
+                  MediaQuery.of(context).size.width * .06,
+                  MediaQuery.of(context).size.height * .06) 
+                :*/ EdgeInsets.fromLTRB(
+                  MediaQuery.of(context).size.width * .06,
+                  MediaQuery.of(context).size.height * .06,
+                  MediaQuery.of(context).size.width * .06,
+                  MediaQuery.of(context).size.height * .06 )
+                )
+                ,
           decoration: BoxDecoration(
             color: isHovering ?const Color.fromARGB(255, 245, 245, 245) : Colors.white,
             boxShadow: const[
@@ -187,17 +218,9 @@ class _ContainerOptionState extends State<ContainerOption> {
             ],
             borderRadius: const BorderRadius.all(Radius.circular(10)),
           ),
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(
-                  MediaQuery.of(context).size.width * .05,
-                  MediaQuery.of(context).size.height * .05,
-                  MediaQuery.of(context).size.width * .05,
-                  MediaQuery.of(context).size.height * .05,
-                ),
-            child: Image.asset(
-              'assets/images/main/${widget.svg}.png',
-              height: 200,
-            ),
+          child: Image.asset(
+            'assets/images/main/${widget.svg}.png',
+            height: 200,
           ),
         ),
       ),

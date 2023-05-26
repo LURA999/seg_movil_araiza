@@ -138,16 +138,15 @@ class _ScannerQR extends State<ScannerQR> {
           e.split(':')[0].trim() : e.split(':')[1].trim() 
         };
         
-        Map<String, dynamic> json = await vp.arrSharedPreferences();
+        // Map<String, dynamic> json = await vp.arrSharedPreferences();
 
-        print(json['name']);
         newQr.color = objetoJson['color'];
         newQr.department = objetoJson['departament'];
         newQr.employeeName = objetoJson['employeeName '];
         // newQr.fkTurn = ;
         newQr.typevh = objetoJson['typeVh'];
         newQr.plates = objetoJson['plates'];
-        ds.postQr(newQr);
+        await ds.postQr(newQr);
 
 
       /*showDialog(

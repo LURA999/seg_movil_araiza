@@ -22,7 +22,12 @@ class Navbar extends StatelessWidget {
       alignment: Alignment.bottomCenter,
       child: Container(
         color: Colors.white,
-        height: height * (MediaQuery.of(context).orientation == Orientation.portrait ? 0.1: 0.13),
+        height: height * (
+          MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
+          (MediaQuery.of(context).orientation == Orientation.portrait ? 0.1: 0.18)
+          : 
+          (MediaQuery.of(context).orientation == Orientation.portrait ? 0.1: 0.15)
+          ),
         width: width,
         child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -46,7 +51,7 @@ class ButtonNavSvg extends StatefulWidget {
   final double height;
   final String contexto2;
 
-   ButtonNavSvg({
+  const ButtonNavSvg({
     super.key, 
     required this.img, 
     required this.height, 
@@ -81,6 +86,7 @@ class _ButtonNavSvgState extends State<ButtonNavSvg> {
       onTapUp: _handleTapUp,
       child: AnimatedContainer(
       duration: const Duration(milliseconds: 200),
+      
       padding:  EdgeInsets.fromLTRB(
           MediaQuery.of(context).size.width * .01,
           MediaQuery.of(context).size.height * .01,
@@ -89,7 +95,7 @@ class _ButtonNavSvgState extends State<ButtonNavSvg> {
         ),
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(40)),
-          color: _isTapped ? Color.fromARGB(255, 245, 245, 245) : Colors.white ,
+          color: _isTapped ? const Color.fromARGB(255, 245, 245, 245) : Colors.white ,
         ),
         child: SvgPicture.asset(
           widget.img,
@@ -122,6 +128,7 @@ class _ButtonNavSvgState extends State<ButtonNavSvg> {
             return;
           }
         }
+        
        if (widget.route == 'next') {
           final routes = Navigator.of(context).widget.observers
           .whereType<HistoryNavigator>()

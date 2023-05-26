@@ -31,14 +31,3 @@ class SessionManager {
     await _prefs!.remove(_sessionKey);
   }
 }
-
-void main() async {
-  final sessionManager = SessionManager();
-  await sessionManager.initialize(); // Initialize the session manager
-
-  // Example usage
-  final session = 'your_session_data';
-  await sessionManager.saveSession(session);
-  final savedSession = sessionManager.getSession();
-  print(savedSession);
-}

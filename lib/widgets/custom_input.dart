@@ -1,6 +1,7 @@
-import 'package:app_seguimiento_movil/theme/app_theme.dart';
+import 'package:app_seguimiento_movil/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:app_seguimiento_movil/widgets/dropdown_button.dart';
 
 
 class CustomInputField extends StatefulWidget {
@@ -15,9 +16,10 @@ class CustomInputField extends StatefulWidget {
   final IconData? icon;
   final TextInputType? keyboardType;
   final bool obscureText;
-  final List<String>? listSelect;
+  final List<List<String>>? listSelect;
   final String formProperty;
   final Map<String, List<Object?>> formValues;
+  final bool? autofocus;
 
   const CustomInputField({
     Key? key, 
@@ -34,6 +36,7 @@ class CustomInputField extends StatefulWidget {
     required this.formProperty,
     required this.formValues, 
     required this.maxLines, 
+    required this.autofocus, 
     
   }) : super(key: key);
 
@@ -44,55 +47,29 @@ class CustomInputField extends StatefulWidget {
 class _CustomInputFieldState extends State<CustomInputField> {
   @override
   Widget build(BuildContext context) {
+
     final RegExp regex = RegExp(
         r'^\d{2}\/(0[1-9]|1[0-2])\/\d{4}$',
     );
     final TextEditingController controller = TextEditingController();
     final DateFormat dateFormat = DateFormat('dd/MM/yyyy');
-    if (widget.formValues[widget.formProperty]![2] == true) {
-      List<String> list = widget.listSelect!;
-      String dropdownValue = list.first;
-      return OutlinedButton(
-        onPressed:  null,
-        style: OutlinedButton.styleFrom(
-          side: const BorderSide(color: AppTheme.primary),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-        ),
-        child: Container(
-          height: 70,
-          alignment: Alignment.center,
-          child: DropdownButton<String>(
-          value: dropdownValue,
-          icon: const Icon(Icons.arrow_downward),
-          elevation: 16,
-          isExpanded: true,
-          // style: const TextStyle(color: Colors.deepPurple),
-          underline: Container(
-            height: 2,
-          ),
-          onChanged: (String? value) {
-            // This is called when the user selects an item.
-            setState(() {
-              dropdownValue = value!;
-            });
-          },
-          items: list.map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
-            ),
-        ),
-      );
 
+    if (widget.formValues[widget.formProperty]![2] == true) {
+      int indice = 0;
+      widget.formValues.forEach((key, value) {
+        if(widget.formValues[key]![2] == true){
+          indice++; 
+          return;
+        } 
+      });
+      return DropdownButtonWidget(list: widget.listSelect![indice-1],formValues: widget.formValues,formProperty: widget.formProperty);
     }
+
     return TextFormField(
       maxLines: widget.maxLines,
+      enabled: widget.formValues[widget.formProperty]![3] as bool,
       controller: controller,
-      autofocus: false,
+      autofocus: widget.autofocus!,
      // initialValue: '',
       textCapitalization: TextCapitalization.words,
       keyboardType: widget.keyboardType,
@@ -100,7 +77,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
       onChanged: (value) {
         widget.formValues[widget.formProperty]![0] = value;
       },
-      validator: widget.formValues[widget.formProperty]![1] == '1' ? (value) {
+      validator: widget.formValues[widget.formProperty]![1] == true ? (value) {
         if(value == null || value.isEmpty == true || value == ''){
           return 'Este campo es requerido';
         }else{
@@ -120,8 +97,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
         if (pickedDate != null) {
           String formattedDate = dateFormat.format(pickedDate);
           controller.text = formattedDate;
-                  widget.formValues[widget.formProperty]![0] = controller.text;
-
+          widget.formValues[widget.formProperty]![0] = controller.text;
         }
       }:null,
       autovalidateMode: AutovalidateMode.onUserInteraction,

@@ -17,7 +17,7 @@ class VarProvider with ChangeNotifier {
  int auxNextDirectory = 1;
 
 
-   void updateVariable(bool value) {
+  void updateVariable(bool value) {
     myGlobalVariable = value;
     notifyListeners();
   }

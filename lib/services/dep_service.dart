@@ -37,6 +37,50 @@ class DepartamentService extends ChangeNotifier {
   
   } 
 
+  
+    Future<bool> postCloseTurn() async {
+    try {
+      isSaving = true;
+      notifyListeners();
+      final response = await dio.put(
+        'http://10.0.2.2:8000/pst_tnc/'
+        );
+      if (response.statusCode == 200){
+        isSaving = false;
+        notifyListeners();
+        return true;
+      }
+      isSaving = false;
+      notifyListeners();
+      return false; 
+      } on DioError catch(e) {
+        return false;
+      }
+    }
+  
+Future<bool> post_obv(Turn t) async {
+    try {
+      isSaving = true;
+      notifyListeners();
+      final response = await dio.put(
+        'http://10.0.2.2:8000/pst_obv/',options: Options(
+        headers: {
+          HttpHeaders.contentTypeHeader: "application/json"
+        }
+        ), data: t.toJson()
+      );
+      if (response.statusCode == 200){
+        isSaving = false;
+        notifyListeners();
+        return true;
+      }
+      isSaving = false;
+      notifyListeners();
+      return false; 
+      } on DioError catch(e) {
+        return false;
+      }
+    }
 
   Future<Access> postTurn( Turn session ) async {
   final sm = SessionManager();
@@ -91,42 +135,45 @@ class DepartamentService extends ChangeNotifier {
   
   }
 
+  
+    Future<String> selectDate( DateExcel  e ) async {
+    Qr qr = Qr();
+    
+    List<Qr> result = [];
+    try {
+      isSaving = true;
+      notifyListeners();
+      final response = await dio.post(
+        'http://10.0.2.2:8000/slc_rep/',
+        options: Options(
+          headers: {
+            HttpHeaders.contentTypeHeader: 'application/json'
+          }
+        ), data: e);
+      final str = response.data;
 
-  Future<Access> closeTurn( String pass, int departament ) async {
-  Access result = Access();
-  try {
-    isSaving = true;
-    notifyListeners();
-    final response = await dio.post(
-      'http://10.0.2.2:8000/selct_departament?pass=${pass}&departament=${departament}',
-      options: Options(
-        headers: {
-          HttpHeaders.contentTypeHeader: "application/json"
-        }
-      ));
-
-    if (response.statusCode == 200){
-      final result = Access.fromJson(response.data);
+      if (response.statusCode == 200){
+        isSaving = false;
+        notifyListeners();
+        return str['data'].toString();
+      }
       isSaving = false;
       notifyListeners();
-      return result;
+      return str['data'].toString(); 
+      } on DioError catch(e) {
+        return e.toString();
+      }
     }
-    isSaving = false;
-    notifyListeners();
-    return result; 
-  } on DioError catch(e) {
-    return result;
-  }
   
-  }
 
-  Future<Access> postRegister( Register reg ) async {
+
+  Future<bool> postRegister( Register reg ) async {
   Access result = Access();
   try {
     isSaving = true;
     notifyListeners();
     final response = await dio.post(
-      'http://10.0.2.2:8000/post_register/',
+      'http://10.0.2.2:8000/pst_reg/',
       options: Options(
         headers: {
           HttpHeaders.contentTypeHeader: "application/json"
@@ -135,16 +182,15 @@ class DepartamentService extends ChangeNotifier {
       data: reg);
 
     if (response.statusCode == 200){
-      final result = Access.fromJson(response.data);
       isSaving = false;
       notifyListeners();
-      return result;
+      return true;
     }
     isSaving = false;
     notifyListeners();
-    return result; 
+      return false;
   } on DioError catch(e) {
-    return result;
+      return false;
   }
   
   }
