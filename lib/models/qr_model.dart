@@ -35,7 +35,6 @@ class Qr {
 List<dynamic>  toJsonArr(Map<String, dynamic> arr) {
     // arr["data"].forEach((key, value) {print(value);});
     // print(arr["data"]);
-    print(arr["data"]);
      List<dynamic> jsonArray = jsonDecode(arr["data"]);
     return  jsonArray;
    /*  for (var el in jsonArray) {

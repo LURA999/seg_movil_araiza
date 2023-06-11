@@ -19,7 +19,7 @@ class DepartamentService extends ChangeNotifier {
     isSaving = true;
     notifyListeners();
     final response = await dio.get(
-      'http://10.0.2.2:8000/sct_dep?pass=${pass}&departament=${departament}'
+      'http://10.0.2.2:8000/sct_dep?pass=$pass&departament=$departament'
       );
 
     if (response.statusCode == 200){
@@ -38,12 +38,12 @@ class DepartamentService extends ChangeNotifier {
   } 
 
   
-    Future<bool> postCloseTurn() async {
+    Future<bool> postCloseTurnVehicle() async {
     try {
       isSaving = true;
       notifyListeners();
       final response = await dio.put(
-        'http://10.0.2.2:8000/pst_tnc/'
+        'http://10.0.2.2:8000/pst_tncv/'
         );
       if (response.statusCode == 200){
         isSaving = false;
@@ -57,13 +57,54 @@ class DepartamentService extends ChangeNotifier {
         return false;
       }
     }
-  
-Future<bool> post_obv(Turn t) async {
+  Future<bool> postCloseTurnFood() async {
     try {
       isSaving = true;
       notifyListeners();
       final response = await dio.put(
-        'http://10.0.2.2:8000/pst_obv/',options: Options(
+        'http://10.0.2.2:8000/pst_tncf/'
+        );
+      if (response.statusCode == 200){
+        isSaving = false;
+        notifyListeners();
+        return true;
+      }
+      isSaving = false;
+      notifyListeners();
+      return false; 
+      } on DioError catch(e) {
+        return false;
+      }
+    }
+Future<bool> postObvFood(TurnFood t) async {
+    try {
+      isSaving = true;
+      notifyListeners();
+      final response = await dio.put(
+        'http://10.0.2.2:8000/pst_obvf/',options: Options(
+        headers: {
+          HttpHeaders.contentTypeHeader: "application/json"
+        }
+        ), data: t.toJson()
+      );
+      if (response.statusCode == 200){
+        isSaving = false;
+        notifyListeners();
+        return true;
+      }
+      isSaving = false;
+      notifyListeners();
+      return false; 
+      } on DioError catch(e) {
+        return false;
+      }
+    }
+Future<bool> postObvVehicle(TurnVehicle t) async {
+    try {
+      isSaving = true;
+      notifyListeners();
+      final response = await dio.put(
+        'http://10.0.2.2:8000/pst_obvv/',options: Options(
         headers: {
           HttpHeaders.contentTypeHeader: "application/json"
         }
@@ -82,9 +123,10 @@ Future<bool> post_obv(Turn t) async {
       }
     }
 
-  Future<Access> postTurn( Turn session ) async {
+
+  Future<Access> postTurnVehicle( TurnVehicle session ) async {
   final sm = SessionManager();
-  Turn tn = Turn();
+  TurnVehicle tn = TurnVehicle();
   final key = encrypt.Key.fromLength(32);
   final iv = encrypt.IV.fromLength(16);
   final encrypter = encrypt.Encrypter(encrypt.AES(key));
@@ -97,7 +139,7 @@ Future<bool> post_obv(Turn t) async {
     isSaving = true;
     notifyListeners();
     final response = await dio.post(
-      'http://10.0.2.2:8000/pst_tn/',
+      'http://10.0.2.2:8000/pst_tnv/',
       options: Options(
         headers: {
           HttpHeaders.contentTypeHeader: "application/json"
@@ -113,6 +155,36 @@ Future<bool> post_obv(Turn t) async {
   
   } 
 
+  Future<Access> postTurnFood( TurnFood session ) async {
+  final sm = SessionManager();
+  TurnFood tn = TurnFood();
+  final key = encrypt.Key.fromLength(32);
+  final iv = encrypt.IV.fromLength(16);
+  final encrypter = encrypt.Encrypter(encrypt.AES(key));
+  final encrypted = encrypter.encrypt(session.toJson().toString(), iv: iv);
+  await sm.initialize();
+  await sm.saveSession(encrypted.base64.toString());
+
+  Access result = Access();
+  try {
+    isSaving = true;
+    notifyListeners();
+    final response = await dio.post(
+      'http://10.0.2.2:8000/pst_tnf/',
+      options: Options(
+        headers: {
+          HttpHeaders.contentTypeHeader: "application/json"
+        }
+      ), data: session.toJson());
+
+    isSaving = false;
+    notifyListeners();
+    return result; 
+  } on DioError catch(e) {
+    return result;
+  }
+  
+  } 
   Future<Access> postQr( Qr scn ) async {
   Access result = Access();
   try {
@@ -167,13 +239,42 @@ Future<bool> post_obv(Turn t) async {
   
 
 
-  Future<bool> postRegister( Register reg ) async {
+  Future<bool> postRegisterVehicle( RegisterVehicle reg ) async {
   Access result = Access();
   try {
     isSaving = true;
     notifyListeners();
     final response = await dio.post(
-      'http://10.0.2.2:8000/pst_reg/',
+      'http://10.0.2.2:8000/pst_regv/',
+      options: Options(
+        headers: {
+          HttpHeaders.contentTypeHeader: "application/json"
+        }
+      ),
+      data: reg);
+
+    if (response.statusCode == 200){
+      isSaving = false;
+      notifyListeners();
+      return true;
+    }
+    isSaving = false;
+    notifyListeners();
+      return false;
+  } on DioError catch(e) {
+      return false;
+  }
+  
+  }
+
+
+  Future<bool> postRegisterFood( RegisterFood reg ) async {
+  Access result = Access();
+  try {
+    isSaving = true;
+    notifyListeners();
+    final response = await dio.post(
+      'http://10.0.2.2:8000/pst_regf/',
       options: Options(
         headers: {
           HttpHeaders.contentTypeHeader: "application/json"

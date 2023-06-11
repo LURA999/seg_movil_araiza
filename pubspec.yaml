@@ -48,6 +48,8 @@ dependencies:
   encrypt: ^5.0.1
   http: ^0.13.6
   shelf: ^1.4.1
+  flutter_tableview: ^1.0.1
+  flutter_material_pickers: ^3.5.0
   
 dev_dependencies:
   flutter_test:
@@ -82,9 +84,11 @@ flutter:
     - assets/images/main/Trafico.png
     - assets/images/main/Recursos Humanos.png
     - assets/images/main/home.svg
-    - assets/images/main/arrow_next.svg
+    - assets/images/main/asistencia_comedor_logo.svg
+    - assets/images/main/comedor_logo.svg
     - assets/images/main/arrow_prev.svg
-  #   - images/a_dot_ham.jpeg
+    - assets/images/main/arrow_next.svg
+    - assets/images/main/arrow_rh.svg
   
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

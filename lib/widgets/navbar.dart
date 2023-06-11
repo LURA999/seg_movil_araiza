@@ -86,7 +86,6 @@ class _ButtonNavSvgState extends State<ButtonNavSvg> {
       onTapUp: _handleTapUp,
       child: AnimatedContainer(
       duration: const Duration(milliseconds: 200),
-      
       padding:  EdgeInsets.fromLTRB(
           MediaQuery.of(context).size.width * .01,
           MediaQuery.of(context).size.height * .01,

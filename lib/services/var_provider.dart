@@ -10,7 +10,7 @@ import 'package:app_seguimiento_movil/services/services.dart';
 class VarProvider with ChangeNotifier {
  final key = encrypt.Key.fromLength(32);
  final iv = encrypt.IV.fromLength(16);
- Turn tn = Turn();
+ TurnVehicle tn = TurnVehicle();
  final sm = SessionManager();
  bool myGlobalVariable = false;
  int auxPrevDirectory = 1;
@@ -34,4 +34,6 @@ class VarProvider with ChangeNotifier {
     String decrypted = encrypter.decrypt(encrypt.Encrypted(base64.decode(sm.getSession()!)), iv: iv);
     return tn.fromJsonReverse(decrypted);
   }
+
+
 }

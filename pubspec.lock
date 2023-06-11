@@ -133,15 +133,23 @@ packages:
     dependency: "direct main"
     description:
       name: file_picker
-      sha256: e6c7ad8e572379df86ea64ef0a5395889fba3954411d47ca021b888d79f8e798
+      sha256: "9d6e95ec73abbd31ec54d0e0df8a961017e165aba1395e462e5b31ea0c165daf"
       url: "https://pub.dev"
     source: hosted
-    version: "5.2.11"
+    version: "5.3.1"
   flutter:
     dependency: "direct main"
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_colorpicker:
+    dependency: transitive
+    description:
+      name: flutter_colorpicker
+      sha256: "458a6ed8ea480eb16ff892aedb4b7092b2804affd7e046591fb03127e8d8ef8b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.3"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -150,6 +158,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
+  flutter_material_pickers:
+    dependency: "direct main"
+    description:
+      name: flutter_material_pickers
+      sha256: "1907dde52e1a9ed2a8530875fd675e9e941c30612d4fdc8fb8e5fc77bd714137"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.5.0"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -174,6 +190,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.5"
+  flutter_tableview:
+    dependency: "direct main"
+    description:
+      name: flutter_tableview
+      sha256: "7c09dd7f3a281a9431d95dd45964221ce5aa672c9d903f46e977838034787da1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   flutter_test:
     dependency: "direct dev"
     description: flutter

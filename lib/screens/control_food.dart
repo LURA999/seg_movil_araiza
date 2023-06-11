@@ -1,35 +1,36 @@
-import 'package:app_seguimiento_movil/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:app_seguimiento_movil/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
-class ControlVehiculos extends StatefulWidget {
-  const ControlVehiculos({Key? key}) : super(key: key);
-  
+import '../services/services.dart';
+
+
+class DiningRoom extends StatefulWidget {
+  const DiningRoom({Key? key}) : super(key: key);
+
   @override
-  State<ControlVehiculos> createState() => _ControlVehiculosState();
+  State<DiningRoom> createState() => _DiningRoomState();
 }
 
-class _ControlVehiculosState extends State<ControlVehiculos> {
-  @override
+class _DiningRoomState extends State<DiningRoom> {
+ @override
   Widget build(BuildContext context) {
     
     //Nombre del campo :  contenido, ¿obligatorio?, ¿select?, ¿enabled?
      
     //Fecha se inserta automaticamente
     final Map<String, List<Object?>> formValuesInicioTur = {
-      'name': ['',true,false, true,true],
-      'turn': ['',true,true, true,true],
-      'sign': ['',true,false, true,true],
+      'plate':['',true,false, true,true],
+      'garrison':['',true,false, true,true],
+      'dessert':['',false,false, true,true],
+      'received_number':['',true,false, true,true]
     };
 
     //fecha se inserta manualmente
     final Map<String, List<Object?>> formValuesRegistroMan = {
-      'plates':['',true,false, true,true],
-      'typevh': ['',true,false, true,true],
-      'color': ['',true,false, true,true],
-      'employeeName': ['',true,false, true,true],
-      'departament': ['',false,false, true,true]
+      'employee_number':['',true,false, true,true],
+      'name': ['',true,false, true,true],
+      'type_contract': ['',true,true, true,true],
     };
 
     final Map<String, List<Object?>> formValuesObservacion = {
@@ -42,14 +43,6 @@ class _ControlVehiculosState extends State<ControlVehiculos> {
       'date_final_hour': ['',true,false, true,true],
     };
 
-    final Map<String, List<Object?>> formValuesBuscarVh = {
-      'placas': ['',true,false, true,true],
-      'tipo_vehiculo': ['',false, false,false],
-      'color': ['',false, false,false],
-      'nombre': ['',false, false,false],
-      'entrada': ['',false, false,false],
-      'salida': ['',false, false,false]
-    };
 
     return Scaffold(
         body: Column(
@@ -64,32 +57,33 @@ class _ControlVehiculosState extends State<ControlVehiculos> {
                   padding: const EdgeInsets.all(20),
                   child: Column(children: [
                     ButtonForm(
+                        control: 2,
                         textButton: 'Inicio turno',
                         btnPosition: 1,
                         field: const [
                           'Iniciar Turno',
-                          'Nombre del guardia',
-                          'Turno',
-                          'Firma'
+                          'Platillo',
+                          'Guarnición',
+                          'Postre',
+                          'Número de platillos recibidos'
                         ],
                         formValues: formValuesInicioTur,
-                        listSelect: const [['Primer Turno', 'Segundo Turno', 'Tercer turno'],[]],
                         enabled: true),
                     const ButtonScreen(
                         textButton: 'Escaner QR', 
                         btnPosition: 1
                       ),
                     ButtonForm(
+                        control: 2,
                         textButton: 'Registro Manual',
                         btnPosition: 2,
                         field: const [
                           'Registro Manual',
-                          'placas',
-                          'Tipo de vehículo',
-                          'Color',
+                          'Número de empleado',
                           'Nombre',
-                          'Departamento'
+                          'Tipo de contrato'
                         ],
+                        listSelect: const [['Sindicalizado','No sindicalizado','Corporativo']],
                         formValues: formValuesRegistroMan,
                         enabled: false),
                     SizedBox(
@@ -111,9 +105,11 @@ class _ControlVehiculosState extends State<ControlVehiculos> {
                                         ElevatedButton(onPressed: () async {
                                           Provider.of<VarProvider>(context,listen: false).updateVariable(false);
                                           DepartamentService dpser = DepartamentService();
-                                          await dpser.postCloseTurn();
-                                          Navigator.of(context).pop(context);
-                                          Navigator.of(context).pushNamed('home');
+                                          await dpser.postCloseTurnFood();
+                                          setState(() {
+                                            Navigator.of(context).pop(context);
+                                            Navigator.of(context).pushNamed('home');
+                                          });
                                         }, child: const Text('Aceptar')),
                                         ElevatedButton(onPressed:(){
                                           Navigator.of(context).pop(context);
@@ -130,12 +126,14 @@ class _ControlVehiculosState extends State<ControlVehiculos> {
                         child: const Text('Cerrar turno')),
                     ),
                     ButtonForm(
+                        control: 2,
                         textButton: 'Agregar observaciones',
                         btnPosition: 3,
                         field: const ['Enviar', 'Agregue una descripción...'],
                         formValues: formValuesObservacion,
                         enabled: false),
                     ButtonForm(
+                        control: 0,
                         textButton: 'Descargar reporte',
                         btnPosition: 4,
                         field: const [
@@ -146,57 +144,34 @@ class _ControlVehiculosState extends State<ControlVehiculos> {
                         ],
                         formValues: formValuesDescRepor,
                         enabled: true),
-                    ButtonForm(
-                      textButton: 'Buscar vehículo',
-                      btnPosition: 5,
-                      field: const [
-                        'Buscar vehículo',
-                        'Placas',
-                        'Tipo de vehículo',
-                        'Color',
-                        'Nombre',
-                        'Entrada',
-                        'Salida'
-                      ],
-                      formValues: formValuesBuscarVh,
-                      enabled: true,
-                    ),
                   ]),
                 ),
               ),
             ),
           ),
         ),
-        const SizedBox(child: Navbar(contexto2: 'control_vehiculos',))
+        const SizedBox(child: Navbar(contexto2: 'control_food',))
       ],
     ));
   }
-}
-
-class ButtonScreen extends StatelessWidget {
-  final String textButton;
-  final int btnPosition;
-
-  const ButtonScreen({
-    super.key,
-    required this.textButton,
-    required this.btnPosition,
-  });
 
   @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width,
-      child: ElevatedButton(
-        onPressed: Provider.of<VarProvider>(context).myGlobalVariable
-            ? () {
-                if (btnPosition == 1) {
-                Navigator.of(context).pushNamed('scanner_qr');
-                }
-              }
-            : null,
-        child: Text(textButton),
-      ),
-    );
+  initState() { 
+    super.initState();
+   VarProvider vh = VarProvider()
+  ..arrSharedPreferences().then((Map<String, dynamic> sharedPrefsData) {
+    if (sharedPrefsData['plate'] == null) {
+      SessionManager sm = SessionManager()
+        ..clearSession().then((value) {
+          DepartamentService dpser = DepartamentService()
+            ..postCloseTurnVehicle().then((value) {
+              //cerrar turno anterior
+              Provider.of<VarProvider>(context,listen: false).updateVariable(false);
+            });
+        });
+    }
+  }).catchError((error) {
+    //
+  });
   }
 }

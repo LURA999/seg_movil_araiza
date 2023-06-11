@@ -1,11 +1,11 @@
-class Register {
+class RegisterVehicle {
   String? plates;
   String? typevh;
   String? color;
   String? employeeName;
   String? departament;
 
-  Register({
+  RegisterVehicle({
     this.plates,
     this.typevh,
     this.color,
@@ -13,7 +13,7 @@ class Register {
     this.departament
   });
 
-  Register.fromJson(Map<String, dynamic> json){
+  RegisterVehicle.fromJson(Map<String, dynamic> json){
     plates = json['plates'];
     typevh = json['typevh'];
     color = json['color'];

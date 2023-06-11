@@ -100,18 +100,21 @@ class _ContainerOptionState extends State<ContainerOption> {
       var pass = await depService.checkPassWord(password, 1);
 
       if (pass.status == 200) {
-        Navigator.of(context).pushNamed('control_vehiculos');
+        Navigator.of(context).pushNamed('control_vehicles');
       }
     }
+ if (widget.id == 2) {
+      var pass = await depService.checkPassWord(password, 2);
+
+      if (pass.status == 200) {
+        Navigator.of(context).pushNamed('control_rh');
+      }
+    }
+
   }
 
   @override
   Widget build(BuildContext context) {
-  /* print('--------------------------');
-  print('Vertical: ${MediaQuery.of(context).orientation == Orientation.portrait}');
-  print('Horizontal: ${MediaQuery.of(context).orientation != Orientation.portrait}');
-  print('Height: ${MediaQuery.of(context).size.height}');
-  print('Width: ${MediaQuery.of(context).size.width}'); */
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: InkWell(
@@ -144,7 +147,7 @@ class _ContainerOptionState extends State<ContainerOption> {
                           children: [
                             TextFormField(
                             controller: textController,
-                            enabled: widget.id == 1 ? true : false,
+                            enabled: widget.id == 1 || widget.id == 2 ? true : false,
                             textAlign: TextAlign.center,
                             autofocus: true,
                             obscureText: true,
@@ -163,7 +166,7 @@ class _ContainerOptionState extends State<ContainerOption> {
                           ),
                           const SizedBox(height: 10,),
                           ElevatedButton(
-                            onPressed: widget.id == 1 ? handleButtonPressed  : null,
+                            onPressed: widget.id == 1 || widget.id == 2? handleButtonPressed  : null,
                             child: const Text('Ingresar',style: TextStyle()),
                           )
                           ]
@@ -193,13 +196,7 @@ class _ContainerOptionState extends State<ContainerOption> {
                   MediaQuery.of(context).size.width * .06,
                   MediaQuery.of(context).size.height * .06 ) )
                 : (
-                 /* MediaQuery.of(context).orientation == Orientation.portrait ? 
-                EdgeInsets.fromLTRB(
-                  MediaQuery.of(context).size.width * .06,
-                  MediaQuery.of(context).size.height * .06,
-                  MediaQuery.of(context).size.width * .06,
-                  MediaQuery.of(context).size.height * .06) 
-                :*/ EdgeInsets.fromLTRB(
+                 EdgeInsets.fromLTRB(
                   MediaQuery.of(context).size.width * .06,
                   MediaQuery.of(context).size.height * .06,
                   MediaQuery.of(context).size.width * .06,

@@ -1,19 +1,19 @@
 import 'dart:convert';
 
-class Turn {
+class TurnVehicle {
   String? name;
   String? turn;
   String? sign;
   String? description;
 
-  Turn({
+  TurnVehicle({
     this.name,
     this.turn,
     this.sign,
     this.description
   });
 
-  Turn.fromJson(Map<String, dynamic> json){
+  TurnVehicle.fromJson(Map<String, dynamic> json){
     name = json['name'];
     turn = json['turn'];
     sign = json['sign'];
