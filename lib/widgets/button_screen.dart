@@ -25,7 +25,7 @@ class ButtonScreen extends StatelessWidget {
                 }
               }
             : null,
-        child: Text(textButton),
+        child: Text(textButton,style: TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015))),
       ),
     );
   }

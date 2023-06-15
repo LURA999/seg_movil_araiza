@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       navigatorKey: navigatorKey,
       navigatorObservers: [navigatorObserver],
-      home: SplashScreen(),
+      home: MedicalRecords(),
       routes: Routers.routerMain,
       theme: AppTheme.lightTeheme,
 

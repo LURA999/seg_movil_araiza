@@ -10,6 +10,34 @@ import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 
+Future<String> getDownloadDirectoryPath() async {
+  String path = '';
+  if (Platform.isAndroid) {
+    const platform = MethodChannel('flutter_android_directory');
+    try {
+      path = await platform.invokeMethod('getDownloadsDirectory');
+    } catch (e) {
+      path = (await getExternalStorageDirectory())!.path;
+    }
+  } else {
+    final directory = await getApplicationDocumentsDirectory();
+    path = directory.path;
+  }
+  return path;
+}
+
+Future<String?> pickDownloadDirectory(BuildContext context) async {
+  final result = await FilePicker.platform.getDirectoryPath();
+  if (result != null) {
+    return result;
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('No se seleccionó ninguna carpeta')),
+    );
+    return null;
+  }
+}
+
 
 Future<void> requestPermission(Function(bool) onPermissionResult) async {
   var status = await Permission.storage.status;
@@ -71,33 +99,6 @@ Future<void> jsonToExcel(String jsonStr, String fileName, BuildContext context) 
   var cell3 = sheet.getRangeByIndex(json.length+6,7);
   cell3.setText( session['sign']+' esta es una firma');
 
-Future<String> getDownloadDirectoryPath() async {
-  String path = '';
-  if (Platform.isAndroid) {
-    const platform = MethodChannel('flutter_android_directory');
-    try {
-      path = await platform.invokeMethod('getDownloadsDirectory');
-    } catch (e) {
-      path = (await getExternalStorageDirectory())!.path;
-    }
-  } else {
-    final directory = await getApplicationDocumentsDirectory();
-    path = directory.path;
-  }
-  return path;
-}
-
-Future<String?> pickDownloadDirectory(BuildContext context) async {
-  final result = await FilePicker.platform.getDirectoryPath();
-  if (result != null) {
-    return result;
-  } else {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('No se seleccionó ninguna carpeta')),
-    );
-    return null;
-  }
-}
 
 String? path =  await pickDownloadDirectory(context);
 

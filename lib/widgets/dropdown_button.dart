@@ -54,7 +54,7 @@ class _DropdownButtonWidgetState extends State<DropdownButtonWidget> {
           items: list.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,
-              child: Text(value),
+              child: Text(value,style: TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015))),
             );
           }).toList(),
             ),

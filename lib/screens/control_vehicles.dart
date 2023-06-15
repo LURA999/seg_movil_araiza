@@ -107,7 +107,12 @@ class _ControlVehiclesState extends State<ControlVehicles> {
                               children: [
                                 SingleChildScrollView(
                                   child: AlertDialog(
-                                    title: const Text('Cerrar Turno'),
+                                    title: Text('Cerrar Turno',style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
+                                    //para celulares
+                                    TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015)):
+                                    //para tablets
+                                    TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),),
+                                    ),
                                     content: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                       children:[
@@ -117,10 +122,20 @@ class _ControlVehiclesState extends State<ControlVehicles> {
                                           await dpser.postCloseTurnVehicle();
                                           Navigator.of(context).pop(context);
                                           Navigator.of(context).pushNamed('home');
-                                        }, child: const Text('Aceptar')),
+                                        }, child: Text('Aceptar', style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
+                                        //para celulares
+                                        TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015)):
+                                        //para tablets
+                                        TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),),
+                                        )),
                                         ElevatedButton(onPressed:(){
                                           Navigator.of(context).pop(context);
-                                        },child: const Text('Cancelar'))
+                                        },child: Text('Cancelar', style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
+                                        //para celulares
+                                        TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015)):
+                                        //para tablets
+                                        TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),),
+                                        ))
                                       ]
                                     ),
                                   ),
@@ -130,7 +145,11 @@ class _ControlVehiclesState extends State<ControlVehicles> {
                           }
                           );
                         }:null,
-                        child: const Text('Cerrar turno')),
+                        child:  Text('Cerrar turno',style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
+                        //para celulares
+                        TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015)):
+                        //para tablets
+                        TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),),)),
                     ),
                     ButtonForm(
                         control: 1,

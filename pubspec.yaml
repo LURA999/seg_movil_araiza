@@ -50,6 +50,8 @@ dependencies:
   shelf: ^1.4.1
   flutter_tableview: ^1.0.1
   flutter_material_pickers: ^3.5.0
+  pdf: ^3.10.1
+  open_file: ^3.3.2
   
 dev_dependencies:
   flutter_test:
@@ -89,12 +91,31 @@ flutter:
     - assets/images/main/arrow_prev.svg
     - assets/images/main/arrow_next.svg
     - assets/images/main/arrow_rh.svg
-  
+    - assets/images/main/medical_exam.svg
+    - assets/images/main/tour_of_areas.svg
+    - assets/images/icons_seh/download.svg
+    - assets/images/icons_seh/edit.svg
+    - assets/images/icons_seh/preview.svg
+
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/assets-and-images/#from-packages
+
+
+# To add custom fonts to your application, add a fonts section here,
+  # in this "flutter" section. Each entry in this list should have a
+  # "family" key with the font family name, and a "fonts" key with a
+  # list giving the asset and other descriptors for the font. For
+  # example:
+  fonts:
+    - family: Gotham
+      fonts:
+        - asset: assets/fonts/Gotham-Font/GothamBold.ttf
+
+
 
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a

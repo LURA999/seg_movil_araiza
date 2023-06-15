@@ -20,7 +20,7 @@ class AppTheme {
 
         //TextButtonTheme
         textButtonTheme: TextButtonThemeData(
-          style: TextButton.styleFrom(foregroundColor:primary )
+          style: TextButton.styleFrom(foregroundColor:primary ),
         ),
 
         //FloatingActionsButtons

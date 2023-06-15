@@ -45,9 +45,15 @@ class ButtonForm extends StatelessWidget {
                       newMethod(context, formValues, btnPosition);
                     }
                   : null,
-          child: Text(textButton),
-        ));
-  }
+          child: Text(textButton,style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
+                    //para celulares
+                    TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015)):
+                    //para tablets
+                    TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),)
+                    ),
+                  )
+                );
+              }
 
   Future<String?> newMethod(BuildContext context,
     Map<String, List<Object?>> formValues, int btnPosition) {
@@ -139,10 +145,14 @@ class ButtonForm extends StatelessWidget {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: const Text('Cerrar'),
+                    child:  Text('Cerrar',style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
+                    //para celulares
+                    TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015)):
+                    //para tablets
+                    TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),)),
                   ),
                   ElevatedButton(
-                    onPressed: () async {
+                      onPressed: () async {
                       if(!myFormKey.currentState!.validate()){
                         return ;
                       }
@@ -244,7 +254,11 @@ class ButtonForm extends StatelessWidget {
                     Navigator.pop(context);
 
                     },
-                    child: Text(field[0]),
+                    child: Text(field[0],style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
+                    //para celulares
+                    TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015)):
+                    //para tablets
+                    TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),)),
                   ),
                 ],
               ),
