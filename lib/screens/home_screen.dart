@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:app_seguimiento_movil/services/services.dart';
+import 'package:flutter/services.dart';
 
 class HomeScreen extends StatelessWidget {
   
@@ -14,6 +15,7 @@ class HomeScreen extends StatelessWidget {
     );
     
     return Scaffold(
+      
         backgroundColor: const Color(0xFF293641),
         body: Column(
           children: [ 
@@ -91,13 +93,14 @@ class ContainerOption extends StatefulWidget {
 
 class _ContainerOptionState extends State<ContainerOption> {
   final DepartamentService depService = DepartamentService(); 
-  bool isHovering = false;
   String? errorMessage;
   String password = '';
-  
+  bool autofucus = true;
+
   handleButtonPressed() async {
   var pass = await depService.checkPassWord(password, widget.id);
   if (pass.status == 200) {
+    autofucus = false;
     switch (widget.id) {
       case 1:
         Navigator.of(context).pushNamed('control_vehicles');
@@ -111,11 +114,12 @@ class _ContainerOptionState extends State<ContainerOption> {
       default:
     }
   }
+
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return  Padding(
       padding: const EdgeInsets.all(8.0),
       child: Ink(
         height: 100,
@@ -131,78 +135,82 @@ class _ContainerOptionState extends State<ContainerOption> {
               ),
             ]),
         child: InkWell(
-          onTapDown: (value) {
-            setState(() {
-              // isHovering = true;
-            });
-          },
-          onTapUp: (value) {
-            setState(() {
-              // isHovering = false;
-            });
-          },
           onTap: () {
+              TextEditingController textController = TextEditingController();
               showDialog(
                 context: context,
-                builder: (BuildContext context) {
-                final GlobalKey<FormState> myFormKey = GlobalKey<FormState>();
-                final textController = TextEditingController();
-                return  Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    AlertDialog(
-                      title: Text('Ingrese la contraseña ',style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
-                    //para celulares
-                    TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.015)):
-                    //para tablets
-                    TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),)),
-                      content: Form(
-                        key: myFormKey,
-                        child: SingleChildScrollView(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              TextFormField(
-                              controller: textController,
-                              enabled: widget.id == 1 || widget.id == 2  || widget.id == 3? true : false,
-                              textAlign: TextAlign.center,
-                              autofocus: true,
-                              obscureText: true,
-                              style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
-                              //para celulares
-                              TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015)):
-                              //para tablets
-                              TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),),
-                              onChanged: (value) {
-                                setState(() {
-                                  password = value;
-                                });
-                              },
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                    return 'Ingrese la contraseña';
-                                  }
-                                  
-                                  return null;
-                                }
-                            ),
-                            const SizedBox(height: 10,),
-                            ElevatedButton(
-                              onPressed: widget.id == 1 || widget.id == 2|| widget.id == 3? handleButtonPressed  : null,
-                              child: Text('Ingresar',style:  MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
-                              //para celulares
-                              TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015)):
-                              //para tablets
-                              TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),)),
-                            )
-                            ]
-                          ),
-                        ),
+                builder: (BuildContext context) => Dialog(
+                insetPadding: 
+                MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
+                  //para celulares
+                  EdgeInsets.fromLTRB(
+                  MediaQuery.of(context).size.width * .2,
+                  MediaQuery.of(context).size.height * .0,
+                  MediaQuery.of(context).size.width * .2,
+                  MediaQuery.of(context).size.height * .0,
+                ):
+                  //para tablets
+                  EdgeInsets.fromLTRB(
+                  MediaQuery.of(context).size.width * .3,
+                  MediaQuery.of(context).size.height * .0,
+                  MediaQuery.of(context).size.width * .3,
+                  MediaQuery.of(context).size.height * .0,
+                ),
+                child: GestureDetector(
+                  onTap: () {
+                    SystemChannels.textInput.invokeMethod('TextInput.hide');
+                  },
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Column ( 
+                      children:[
+                      Container(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Text('Ingrese la contraseña ',style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
+                        //para celulares
+                        TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.015),fontWeight: FontWeight.bold):
+                        //para tablets
+                        TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),fontWeight: FontWeight.bold,)),
+                      ),
+                      TextFormField(
+                      controller: textController,
+                      enabled: true,
+                      textAlign: TextAlign.center,
+                      autofocus: autofucus,
+                      obscureText: true,
+                      style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
+                      //para celulares
+                      TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015)):
+                      //para tablets
+                      TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),),
+                      onChanged: (value) {
+                        setState(() {
+                          password = value;
+                        });
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                            return 'Ingrese la contraseña';
+                          } 
+                          return null;
+                        }
+                      ),
+                      const SizedBox(height: 10,),
+                      ElevatedButton(
+                      onPressed: handleButtonPressed,
+                      child: Text('Ingresar',style:  MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
+                      //para celulares
+                      TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015)):
+                      //para tablets
+                      TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),)),
+                      )
+                      ]
                       ),
                     ),
-                  ],
-                );
-              }
+                ),
+                )
+              )
             );
           },
           child: Container(
@@ -229,17 +237,8 @@ class _ContainerOptionState extends State<ContainerOption> {
                     MediaQuery.of(context).size.height * .06 )
                   )
                   ,
-            decoration: BoxDecoration(
-             /*  color: isHovering ?const Color.fromARGB(255, 245, 245, 245) : Colors.white,
-              boxShadow: const[
-                BoxShadow(
-                  color:  Color.fromRGBO(0, 0, 0, 0.282),
-                  spreadRadius: 0.5,
-                  blurRadius: 1,
-                  offset:  Offset(0, 1),
-                ),
-              ] ,*/
-              borderRadius: const BorderRadius.all(Radius.circular(10)),
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
             child: Image.asset(
               'assets/images/main/${widget.svg}.png',
@@ -250,6 +249,14 @@ class _ContainerOptionState extends State<ContainerOption> {
       ),
     ); 
   }
+
+  @override
+  void initState() {
+    super.initState();
+    SystemChannels.textInput.invokeMethod('TextInput.hide');
+
+  }
+  
 }
 
 

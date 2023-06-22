@@ -1,3 +1,4 @@
+import 'package:app_seguimiento_movil/models/models.dart';
 import 'package:flutter/material.dart';
 import 'package:app_seguimiento_movil/theme/app_theme.dart';
 
@@ -5,13 +6,13 @@ import 'package:app_seguimiento_movil/theme/app_theme.dart';
 class DropdownButtonWidget extends StatefulWidget {
   List<String>? list;
   final String formProperty;
-  final Map<String, List<Object?>> formValues;
+  final Map<String, MultiInputs> MultiInputss;
 
   DropdownButtonWidget({
   Key? key, 
   this.list, 
   required this.formProperty, 
-  required this.formValues
+  required this.MultiInputss
   }) : super(key: key);
 
   @override
@@ -25,7 +26,7 @@ class _DropdownButtonWidgetState extends State<DropdownButtonWidget> {
 
   @override
   Widget build(BuildContext context) {
-    widget.formValues[widget.formProperty]![0] = dropdownValue;
+    widget.MultiInputss[widget.formProperty]!.contenido = dropdownValue!;
 
     return OutlinedButton(
         onPressed:  null,
@@ -48,13 +49,17 @@ class _DropdownButtonWidgetState extends State<DropdownButtonWidget> {
             // This is called when the user selects an item.
             setState(() {
               dropdownValue = value;
-              widget.formValues[widget.formProperty]![0] = value;
+              widget.MultiInputss[widget.formProperty]!.contenido = value!;
             });
           },
           items: list.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,
-              child: Text(value,style: TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015))),
+              child: Text(value,style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
+              //para celulares
+              TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015)):
+              //para tablets
+              TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),),),
             );
           }).toList(),
             ),

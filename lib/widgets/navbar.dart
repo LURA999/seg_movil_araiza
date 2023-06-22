@@ -37,7 +37,6 @@ class Navbar extends StatelessWidget {
             ButtonNavSvg(img:'assets/images/main/home.svg', height:(height * (MediaQuery.of(context).orientation == Orientation.portrait ? .05 : .07)), route:'home', contexto2: contexto2),
             SizedBox(width: width * 0.15),
             ButtonNavSvg(img:'assets/images/main/arrow_next.svg', height:(height * (MediaQuery.of(context).orientation == Orientation.portrait ? .05 : .07)), route:'next', contexto2: contexto2),
-            
           ],
         ),
        ),
@@ -133,18 +132,22 @@ class _ButtonNavSvgState extends State<ButtonNavSvg> {
           .whereType<HistoryNavigator>()
           .first.history;
           List<Set<String>> namesRoute = Routers.namesRouter;
-          
           try {
             int indice = namesRoute.indexWhere((conjunto) => conjunto.contains(widget.contexto2));
+            /* for (var el in routes) {
+              print(el.settings.name);
+            } */
+
             // print("Donde se encuentra la pantalla actual : ${routes.indexOf(routes.firstWhere((e) => e.settings.name == widget.contexto2))}: ${widget.contexto2} = el numero de pantalla que son en total : ${Routers.namesRouter.length}");
             // print('El historial a crecido hasta ${routes.length} widgets');
             // print('Estas en la pantalla ${widget.contexto2} y quieres ir para adelante a la pantalla ${routes.indexOf(routes.reversed.firstWhere((e) => e.settings.name == widget.contexto2)) + 1}');
-          
+
             if (indice <  namesRoute.length-1) { 
               indice+=1;
               //se disminuye uno, porque estamos accediendo a la ultima vista, que se accedio, ignorando la actual.
               final previousRouteSettings = routes[routes.indexOf(routes.reversed.firstWhere((e) => e.settings.name == widget.contexto2)) -(indice - 1)].settings;
-              if(namesRoute[indice].first == previousRouteSettings.name){
+              // var valido = namesRoute[indice].firstWhere((screen) => screen == previousRouteSettings.name);
+              if(namesRoute[indice].contains(previousRouteSettings.name)){
                 final previousRouteName = previousRouteSettings.name;
                 Navigator.of(context).pushNamed(previousRouteName!);
               }

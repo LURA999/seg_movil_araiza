@@ -40,33 +40,40 @@ class RhControl extends StatelessWidget {
     );
 
     return Scaffold(
+      resizeToAvoidBottomInset:false,
       backgroundColor: const Color.fromRGBO(246, 247, 252, 2),
-      body: Container(
-        padding: EdgeInsets.fromLTRB(
+      body: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.fromLTRB(
             MediaQuery.of(context).size.width * .05,
             MediaQuery.of(context).size.height * .05,
             MediaQuery.of(context).size.width * .05,
-            MediaQuery.of(context).size.height * 0),
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.height * .02),
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                  Text('Recursos Humanos',style: myTextStyleTitle.copyWith(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .08: 0.04) )),
-                  Text('Selecciona una opción:',style: myTextStyleSubtitule.copyWith(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04 : 0.02) )),
-                  ]
-                ),
+            MediaQuery.of(context).size.height * .02),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                Text('Recursos Humanos',style: myTextStyleTitle.copyWith(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .08: 0.04) )),
+                Text('Selecciona una opción:',style: myTextStyleSubtitule.copyWith(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04 : 0.02) )),
+                ]
               ),
             ),
-            TableCustom(opciones: opciones),
-             const SizedBox(child: Navbar(contexto2: 'control_rh'))
-          ],
+          ),
+        Expanded(
+          child: Container(
+            padding: EdgeInsets.fromLTRB(
+            MediaQuery.of(context).size.width * .05,
+            MediaQuery.of(context).size.height * .0,
+            MediaQuery.of(context).size.width * .05,
+            MediaQuery.of(context).size.height * .0),
+            child:  TableCustom(opciones: opciones),
+          ),
         ),
+           const SizedBox(child: Navbar(contexto2: 'control_rh'))
+        ],
       ),
     );
   }

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:app_seguimiento_movil/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:app_seguimiento_movil/models/models.dart';
@@ -9,8 +8,14 @@ import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 
 
-class MedicalRecords extends StatelessWidget {
+class MedicalRecords extends StatefulWidget {
   const MedicalRecords({Key? key}) : super(key: key);
+
+  @override
+  State<MedicalRecords> createState() => _MedicalRecordsState();
+}
+
+class _MedicalRecordsState extends State<MedicalRecords> {
   @override
   Widget build(BuildContext context) {
     EdgeInsets paddingCell = EdgeInsets.fromLTRB(
@@ -32,7 +37,8 @@ class MedicalRecords extends StatelessWidget {
     MediaQuery.of(context).size.height * (MediaQuery.of(context).orientation == Orientation.portrait ? .01: .017),
     MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .01: .017),
     MediaQuery.of(context).size.height * (MediaQuery.of(context).orientation == Orientation.portrait ? .01: .017)));
-    
+    final TextEditingController controller = TextEditingController();
+
     TextStyle myTextSyleBody = const TextStyle(
       color: Color(0xFF293641),
       fontFamily: 'Inter',
@@ -51,8 +57,8 @@ class MedicalRecords extends StatelessWidget {
       fontWeight: FontWeight.normal,
     );
 
-    final Map<String, List<Object?>> formValuesBuscar = {
-      'search':['',false,false, true,true]
+    final Map<String, MultiInputs> MultiInputssBuscar = {
+      'search' : MultiInputs(contenido: '', obligatorio: false, select: false, enabled: true, paintSignature: false,uploadFile: false) // 'search':['',false,false, true]
     };
 
     List<MedicalRecord> files = [
@@ -118,14 +124,15 @@ class MedicalRecords extends StatelessWidget {
                                   :
                                   //para tablets 
                                   (MediaQuery.of(context).size.width * .3 ),
-                                  child: CustomInputField(
+                                  child: MultiInputs(
                                     formProperty: 'search', 
                                     labelText: 'Núm. de empleado o nombre',
-                                    formValues: formValuesBuscar,
+                                    MultiInputss: MultiInputssBuscar,
                                     maxLines: 1, 
+                                    controller: controller,
                                     autofocus: false, 
                                     keyboardType:  TextInputType.text),
-                                ),
+                                  ),
                                     Align(
                                   alignment:Alignment.centerRight,
                                   child: IconButton(
@@ -136,14 +143,7 @@ class MedicalRecords extends StatelessWidget {
                                   ),
                                  ),
                              const Spacer(),
-                             ElevatedButton(
-                             onPressed: (){}, 
-                             child: Text('Crear nuevo',style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
-                              //para celulares
-                              TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015)):
-                              //para tablets
-                              TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),),
-                              ))
+                             MedicalTest(context: context,)
                            ],
                          ) 
                         ]

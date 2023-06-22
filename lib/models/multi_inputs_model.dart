@@ -1,15 +1,18 @@
-class FormValue {
-  final String contenido;
+class MultiInputs {
+  late String? contenido;
   final bool obligatorio;
   final bool select;
   final bool enabled;
-  final bool enabled2;
+  final bool paintSignature;
+  final bool uploadFile;
 
-  FormValue({
+  MultiInputs({
+    required this.uploadFile,
     required this.contenido,
     required this.obligatorio,
     required this.select,
     required this.enabled,
-    required this.enabled2
+    required this.paintSignature
   });
+
 }

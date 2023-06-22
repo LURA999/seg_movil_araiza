@@ -1,34 +1,36 @@
 import 'package:app_seguimiento_movil/models/models.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:app_seguimiento_movil/services/services.dart';
-import 'package:app_seguimiento_movil/widgets/widgets.dart';
 import 'package:intl/intl.dart';
 
 
 class ButtonForm extends StatelessWidget {
   final String textButton;
   final List<String> field;
-  final Map<String, List<Object?>> formValues;
+  final Map<String, MultiInputs> MultiInputss;
   final bool enabled;
   final List<List<String>>? listSelect;
   final int btnPosition;
   final int control;
-  
+  final TextEditingController controller;
+
   const ButtonForm({
     super.key,
     required this.textButton,
     required this.btnPosition,
     this.listSelect,
     required this.field,
-    required this.formValues,
+    required this.MultiInputss,
     required this.enabled, 
-    required this.control,
-    
+    required this.control, 
+    required this.controller,     
   });
 
   @override
   Widget build(BuildContext context) {
+    
     return SizedBox(
         width: MediaQuery.of(context).size.width,
         child: ElevatedButton(
@@ -42,21 +44,21 @@ class ButtonForm extends StatelessWidget {
           onPressed:
               (Provider.of<VarProvider>(context).myGlobalVariable || enabled)
                   ? () {
-                      newMethod(context, formValues, btnPosition);
+                      newMethod(context, MultiInputss, btnPosition);
                     }
                   : null,
-          child: Text(textButton,style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
+          child: Text(textButton/*, style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
                     //para celulares
                     TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015)):
                     //para tablets
-                    TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),)
+                    TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015) ,)*/
                     ),
                   )
                 );
               }
 
   Future<String?> newMethod(BuildContext context,
-    Map<String, List<Object?>> formValues, int btnPosition) {
+    Map<String, MultiInputs> MultiInputss, int btnPosition) {
     TextStyle myTextStyle = const TextStyle(
       color: Colors.black,
       fontFamily: 'Inter',
@@ -66,27 +68,29 @@ class ButtonForm extends StatelessWidget {
     List<Widget> inputFields = [];
     int i = 1;
 
-    formValues.forEach((key, value) {
+    MultiInputss.forEach((key, value) {
       inputFields.add(const SizedBox(height: 15));
       if (key.substring(0, 4) == "date") {
         inputFields.add(
-          CustomInputField(
+          MultiInputs(
             maxLines: 1,
+            controller:controller,
             autofocus: i == 1 ? true : false,
             labelText: field[i],
             formProperty: key,
-            formValues: formValues,
+            MultiInputss: MultiInputss,
             keyboardType: TextInputType.datetime),
         );
       } else {
         inputFields.add(
-        CustomInputField(
+        MultiInputs(
           maxLines: key.contains("description")? 5 : 1 ,
           labelText: field[i], 
+          controller: controller,
           autofocus: i == 1 ? true : false,
           formProperty: key,
           listSelect: listSelect,
-          formValues: formValues,
+          MultiInputss: MultiInputss,
           keyboardType: key.contains("number")? TextInputType.number : TextInputType.text));
       }
 
@@ -98,172 +102,211 @@ class ButtonForm extends StatelessWidget {
 
     return showDialog<String>(
       context: context,
-      builder: (BuildContext ) => Dialog(
-        insetPadding: EdgeInsets.fromLTRB(
+      builder: (BuildContext context ) => Dialog(
+        insetPadding: 
+        MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
+          //para celulares
+          EdgeInsets.fromLTRB(
           MediaQuery.of(context).size.width * .07,
           MediaQuery.of(context).size.height * .07,
           MediaQuery.of(context).size.width * .07,
           MediaQuery.of(context).size.height * .07,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Expanded(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(
-                    MediaQuery.of(context).size.width * .07,
-                    MediaQuery.of(context).size.height * .1,
-                    MediaQuery.of(context).size.width * .1,
-                    MediaQuery.of(context).size.height * .07,
-                  ),
-                  child: Form(
-                    key: myFormKey,
-                    child: Column(children: [
-                      Align(
-                        alignment: Alignment.bottomLeft,
-                        child: Text(field[0],
-                            style: myTextStyle.copyWith(
-                              fontSize: MediaQuery.of(context).size.width *
-                                  (MediaQuery.of(context).orientation ==
-                                          Orientation.portrait
-                                      ? .08
-                                      : 0.04),
-                            )),
-                      ),
-                      ...inputFields,
-                    ]),
+        ):
+          //para tablets
+          EdgeInsets.fromLTRB(
+          MediaQuery.of(context).size.width * .07,
+          MediaQuery.of(context).size.height * .0,
+          MediaQuery.of(context).size.width * .07,
+          MediaQuery.of(context).size.height * .0,
+          ),
+        child: GestureDetector(
+          onTap: () {
+            SystemChannels.textInput.invokeMethod('TextInput.hide');
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(
+                      MediaQuery.of(context).size.width * .07,
+                      MediaQuery.of(context).size.height * .1,
+                      MediaQuery.of(context).size.width * .1,
+                      MediaQuery.of(context).size.height * .07,
+                    ),
+                    child: Form(
+                      key: myFormKey,
+                      child: Column(children: [
+                        Align(
+                          alignment: Alignment.bottomLeft,
+                          child: Text(field[0],
+                              style: myTextStyle.copyWith(
+                                fontSize: MediaQuery.of(context).size.width *
+                                    (MediaQuery.of(context).orientation ==
+                                            Orientation.portrait
+                                        ? .08
+                                        : 0.04),
+                              )),
+                        ),
+                        ...inputFields,
+                      ]),
+                    ),
                   ),
                 ),
               ),
-            ),
-            SizedBox(
-              child: ButtonBar(
-                alignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child:  Text('Cerrar',style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
-                    //para celulares
-                    TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015)):
-                    //para tablets
-                    TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),)),
-                  ),
-                  ElevatedButton(
-                      onPressed: () async {
-                      if(!myFormKey.currentState!.validate()){
-                        return ;
-                      }
-                      DepartamentService dpser = DepartamentService();
-
-                      Provider.of<VarProvider>(context, listen: false).updateVariable(true);
-                      DateFormat df = DateFormat("yyyy-MM-dd HH:mm:ss");
-                      DateFormat df2 = DateFormat("dd/MM/yyyy");
-
-                      switch (control) {
-                        case 1:
-                           //Inicio turno
-                          if (btnPosition == 1) {
-                            TurnVehicle t= TurnVehicle();
-                            
-                            t.name = formValues['name']![0].toString();
-                            t.sign = formValues['sign']![0].toString();
-                            t.turn = formValues['turn']![0].toString();
-                            await dpser.postTurnVehicle(t);
-                          }
-
-                          //registro
-                          if (btnPosition == 2) {
-                            RegisterVehicle r= RegisterVehicle();
-                            r.color = formValues['color']![0].toString();
-                            r.employeeName = formValues['employeeName']![0].toString();
-                            r.plates = formValues['plates']![0].toString();
-                            r.typevh = formValues['typevh']![0].toString();
-                            r.departament = formValues['departament']![0].toString();
-                            await dpser.postRegisterVehicle(r);
-                            
-                          }
-
-                          //Agregar observaciones
-                          if (btnPosition == 3) {
-                            TurnVehicle t= TurnVehicle();
-                            t.description = formValues['description']![0].toString();
-                            await dpser.postObvVehicle(t);
-                          }
-
-                          break;
-                        case 2:                        
-                          //Inicio turno
-                          if (btnPosition == 1) {
-                            TurnFood t= TurnFood();
-                            t.plate = formValues['plate']![0].toString();
-                            t.garrison = formValues['garrison']![0].toString();
-                            t.dessert = formValues['dessert']![0].toString();
-                            t.received = formValues['received_number']![0].toString();
-                            await dpser.postTurnFood(t);
-                          }
-
-                          //registro
-                          if (btnPosition == 2) {
-                            RegisterFood r= RegisterFood();
-                            r.numEmployee = formValues['employee_number']![0].toString();
-                            r.name = formValues['name']![0].toString();
-                            switch (formValues['type_contract']![0].toString()) {
-                              case 'Sindicalizado':
-                                r.contract = '1';
-                                break;
-                              case 'No sindicalizado':
-                                r.contract = '2';
-                                break;
-                              case 'Corporativo':
-                                r.contract = '3';
-                                break;  
-                              default:
+              SizedBox(
+                child: ButtonBar(
+                  alignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child:  Text('Cerrar',style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
+                      //para celulares
+                      TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015)):
+                      //para tablets
+                      TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),)),
+                    ),
+                    ElevatedButton(
+                        onPressed: () async {
+                        if(!myFormKey.currentState!.validate()){
+                          return ;
+                        }
+                        DepartamentService dpser = DepartamentService();
+        
+                        DateFormat df = DateFormat("yyyy-MM-dd HH:mm:ss");
+                        DateFormat df2 = DateFormat("dd/MM/yyyy");
+        
+                        switch (control) {
+                          case 1:
+                             //Inicio turno
+                            if (btnPosition == 1) {
+                              TurnVehicle t= TurnVehicle();
+                              if (MultiInputss['sign']!.contenido != '' && MultiInputss['sign']!.contenido != null) {
+                                t.name = MultiInputss['name']!.contenido;
+                                t.sign = MultiInputss['sign']!.contenido;
+                                t.turn = MultiInputss['turn']!.contenido;
+                                await dpser.postTurnVehicle(t);
+                              }else {
+                                return ; 
+                              }
+                             
                             }
-                            await dpser.postRegisterFood(r);
-                            
-                          }
-
-                          //Agregar observaciones
-                          if (btnPosition == 3) {
-                            TurnFood t= TurnFood();
-                            t.description = formValues['description']![0].toString();
-                            await dpser.postObvFood(t);
-                          }
-                          break;
-                        default:
-                        //Descargar reporte
-                          if(btnPosition == 4) {
-                            DateExcel de = DateExcel();
-                            // print(formValues['date_start_hour']![0].toString());
-                            de.dateStart = df.format(df2.parse(formValues['date_start_hour']![0].toString()));
-                            de.dateFinal = df.format(df2.parse(formValues['date_final_hour']![0].toString()));
-                            de.guard = formValues['guard']![0].toString();
-                            var jsonStr = await dpser.selectDate(de);
-                            // '[{"Nombre": "Juan", "Edad": 25, "Color de cabello": "Rojo","Estado civil": "casado"},{"Nombre": "Lizett", "Edad": 24, "Color de cabello": "Cafe","Estado civil": "casada"}, {"Nombre": "María", "Edad": 30, "Color de cabello": "verde","Estado civil": "soltera"}, {"Nombre": "Alonso", "Edad": 24, "Color de cabello":"negro","Estado civil": "casado"}]';
-                            DateTime now = DateTime.now();
-                            String formattedDate = DateFormat('yyyyMMddss').format(now);
-                            String fileName = '$formattedDate.xlsx';
-                            jsonToExcel(jsonStr, fileName, context);                        
-                          }
-                          break;
-                      }
-                     
-                    Navigator.pop(context);
-
-                    },
-                    child: Text(field[0],style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
-                    //para celulares
-                    TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015)):
-                    //para tablets
-                    TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),)),
-                  ),
-                ],
+        
+                            //registro 
+                            if (btnPosition == 2) {
+                              RegisterVehicle r= RegisterVehicle();
+                              r.color = MultiInputss['color']!.contenido;
+                              r.employeeName = MultiInputss['employeeName']!.contenido;
+                              r.plates = MultiInputss['plates']!.contenido;
+                              r.typevh = MultiInputss['typevh']!.contenido;
+                              r.departament = MultiInputss['departament']!.contenido;
+                              await dpser.postRegisterVehicle(r);
+                              
+                            }
+        
+                            //Agregar observaciones
+                            if (btnPosition == 3) {
+                              TurnVehicle t= TurnVehicle();
+                              t.description = MultiInputss['description']!.contenido;
+                              await dpser.postObvVehicle(t);
+                            }
+        
+                            break;
+                          case 2:                        
+                            //Inicio turno
+                            if (btnPosition == 1) {
+                              TurnFood t= TurnFood();
+                              if(MultiInputss['picture']!.contenido != '' && MultiInputss['picture']!.contenido != null){
+                                t.plate = MultiInputss['plate']!.contenido;
+                                t.garrison = MultiInputss['garrison']!.contenido;
+                                t.dessert = MultiInputss['dessert']!.contenido;
+                                t.received = MultiInputss['received_number']!.contenido;
+                                await dpser.postTurnFood(t);
+                              }else{
+                                return showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Text('Llene todos los campos'),
+                                      content: const Text('Por favor suba una foto del platillo.'),
+                                      actions: [
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text('Aceptar'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              }
+                              
+                            }
+        
+                            //registro
+                            if (btnPosition == 2) {
+                              RegisterFood r= RegisterFood();
+                              r.numEmployee = MultiInputss['employee_number']!.contenido;
+                              r.name = MultiInputss['name']!.contenido;
+                              switch (MultiInputss['type_contract']!.contenido) {
+                                case 'Sindicalizado':
+                                  r.contract = '1';
+                                  break;
+                                case 'No sindicalizado':
+                                  r.contract = '2';
+                                  break;
+                                case 'Corporativo':
+                                  r.contract = '3';
+                                  break;  
+                                default:
+                              }
+                              await dpser.postRegisterFood(r);
+                              
+                            }
+        
+                            //Agregar observaciones
+                            if (btnPosition == 3) {
+                              TurnFood t= TurnFood();
+                              t.description = MultiInputss['description']!.contenido;
+                              await dpser.postObvFood(t);
+                            }
+                            break;
+                          default:
+                          //Descargar reporte
+                            if(btnPosition == 4) {
+                              DateExcel de = DateExcel();
+                              // print(MultiInputss['date_start_hour']!.contenido);
+                              de.dateStart = df.format(df2.parse(MultiInputss['date_start_hour']!.contenido!));
+                              de.dateFinal = df.format(df2.parse(MultiInputss['date_final_hour']!.contenido!));
+                              de.guard = MultiInputss['guard']!.contenido;
+                              var jsonStr = await dpser.selectDate(de);
+                              // '[{"Nombre": "Juan", "Edad": 25, "Color de cabello": "Rojo","Estado civil": "casado"},{"Nombre": "Lizett", "Edad": 24, "Color de cabello": "Cafe","Estado civil": "casada"}, {"Nombre": "María", "Edad": 30, "Color de cabello": "verde","Estado civil": "soltera"}, {"Nombre": "Alonso", "Edad": 24, "Color de cabello":"negro","Estado civil": "casado"}]';
+                              DateTime now = DateTime.now();
+                              String formattedDate = DateFormat('yyyyMMddss').format(now);
+                              String fileName = '$formattedDate.xlsx';
+                              jsonToExcel(jsonStr, fileName, context);                        
+                            }
+                            break;
+                        }
+                      Provider.of<VarProvider>(context, listen: false).updateVariable(true);
+                      Navigator.pop(context);
+        
+                      },
+                      child: Text(field[0],style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
+                      //para celulares
+                      TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015)):
+                      //para tablets
+                      TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),)),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

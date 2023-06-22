@@ -8,3 +8,5 @@ export 'package:app_seguimiento_movil/models/register_vehicle_model.dart';
 export 'package:app_seguimiento_movil/models/register_food_model.dart';
 export 'package:app_seguimiento_movil/models/medical_records_model.dart';
 export 'package:app_seguimiento_movil/models/option_table_model.dart';
+export 'package:app_seguimiento_movil/models/multi_inputs_model.dart';
+export 'package:app_seguimiento_movil/models/employee_model.dart';

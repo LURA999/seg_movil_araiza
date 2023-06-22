@@ -4,53 +4,62 @@ import 'package:flutter/material.dart';
 import 'package:app_seguimiento_movil/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
+
+
 class ControlVehicles extends StatefulWidget {
   const ControlVehicles({Key? key}) : super(key: key);
+  
   
   @override
   State<ControlVehicles> createState() => _ControlVehiclesState();
 }
 
 class _ControlVehiclesState extends State<ControlVehicles> {
+  
+  double keyboardHeightRatio = 0.0;
+
+  
   @override
   Widget build(BuildContext context) {
     
     //Nombre del campo :  contenido, ¿obligatorio?, ¿!select?, ¿!enabled?
      
     //Fecha se inserta automaticamente
-    final Map<String, List<Object?>> formValuesInicioTur = {
-      'name': ['',true,false, true,true],
-      'turn': ['',true,true, true,true],
-      'sign': ['',true,false, true,true],
+    final Map<String, MultiInputs> MultiInputssInicioTur = {
+      'name': MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false)/* ['',true,false, true] */,
+      'turn': MultiInputs(contenido: '', obligatorio: true, select: true, enabled: true, paintSignature: false,uploadFile: false)/* ['',true,false, true] */,
+      'sign': MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: true,uploadFile: false)/* ['',true,false, true] */,
     };
+
 
     //fecha se inserta manualmente
-    final Map<String, List<Object?>> formValuesRegistroMan = {
-      'plates':['',true,false, true,true],
-      'typevh': ['',true,false, true,true],
-      'color': ['',true,false, true,true],
-      'employeeName': ['',true,false, true,true],
-      'departament': ['',false,false, true,true]
+    final Map<String, MultiInputs> MultiInputssRegistroMan = {
+      'plates' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'plates':['',true,false, true],
+      'typevh' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'typevh': ['',true,false, true],
+      'color' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'color': ['',true,false, true],
+      'employeeName' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'employeeName': ['',true,false, true],
+      'departament' : MultiInputs(contenido: '', obligatorio: false, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'departament': ['',false,false, true]
     };
 
-    final Map<String, List<Object?>> formValuesObservacion = {
-      'description': ['',true,false, true,true],
+    final Map<String, MultiInputs> MultiInputssObservacion = {
+      'descripcion' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false)// 'description': ['',true,false, true],
     };
 
-    final Map<String, List<Object?>> formValuesDescRepor = {
-      'guard': ['',false,false, true,true],
-      'date_start_hour': ['',true,false, true,true],
-      'date_final_hour': ['',true,false, true,true],
+    final Map<String, MultiInputs> MultiInputssDescRepor = {
+      'guard' : MultiInputs(contenido: '', obligatorio: false, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'guard': ['',false,false, true],
+      'date_start_hour' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'date_start_hour': ['',true,false, true],
+      'date_final_hour' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'date_final_hour': ['',true,false, true],
     };
 
-    final Map<String, List<Object?>> formValuesBuscarVh = {
-      'placas': ['',true,false, true,true],
-      'tipo_vehiculo': ['',false, false,false],
-      'color': ['',false, false,false],
-      'nombre': ['',false, false,false],
-      'entrada': ['',false, false,false],
-      'salida': ['',false, false,false]
+    final Map<String, MultiInputs> MultiInputssBuscarVh = {
+      'placas' :MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'placas': ['',true,false, true],
+      'tipo_vehiculo' :MultiInputs(contenido: '', obligatorio: false, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'tipo_vehiculo': ['',false, false,false],
+      'color' :MultiInputs(contenido: '', obligatorio: false, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'color': ['',false, false,false],
+      'nombre' :MultiInputs(contenido: '', obligatorio: false, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'nombre': ['',false, false,false],
+      'entrada' :MultiInputs(contenido: '', obligatorio: false, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'entrada': ['',false, false,false],
+      'salida' :MultiInputs(contenido: '', obligatorio: false, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'salida': ['',false, false,false]
     };
+    final TextEditingController controller = TextEditingController();
 
     return Scaffold(
         body: Column(
@@ -68,13 +77,14 @@ class _ControlVehiclesState extends State<ControlVehicles> {
                         control: 1,
                         textButton: 'Inicio turno',
                         btnPosition: 1,
+                        controller: controller,
                         field: const [
                           'Iniciar Turno',
                           'Nombre del guardia',
                           'Turno',
                           'Firma'
                         ],
-                        formValues: formValuesInicioTur,
+                        MultiInputss: MultiInputssInicioTur,
                         listSelect: const [['Primer Turno', 'Segundo Turno', 'Tercer turno'],[]],
                         enabled: true),
                     const ButtonScreen(
@@ -85,6 +95,7 @@ class _ControlVehiclesState extends State<ControlVehicles> {
                         control: 1,
                         textButton: 'Registro Manual',
                         btnPosition: 2,
+                        controller: controller,
                         field: const [
                           'Registro Manual',
                           'placas',
@@ -93,7 +104,7 @@ class _ControlVehiclesState extends State<ControlVehicles> {
                           'Nombre',
                           'Departamento'
                         ],
-                        formValues: formValuesRegistroMan,
+                        MultiInputss: MultiInputssRegistroMan,
                         enabled: false),
                     SizedBox(
                       width: MediaQuery.of(context).size.width,
@@ -155,11 +166,13 @@ class _ControlVehiclesState extends State<ControlVehicles> {
                         control: 1,
                         textButton: 'Agregar observaciones',
                         btnPosition: 3,
+                        controller: controller,
                         field: const ['Enviar', 'Agregue una descripción...'],
-                        formValues: formValuesObservacion,
+                        MultiInputss: MultiInputssObservacion,
                         enabled: false),
                     ButtonForm(
                         control: 0,
+                        controller: controller,
                         textButton: 'Descargar reporte',
                         btnPosition: 4,
                         field: const [
@@ -168,10 +181,11 @@ class _ControlVehiclesState extends State<ControlVehicles> {
                           'Fecha inicial y hora',
                           'Fecha final y hora'
                         ],
-                        formValues: formValuesDescRepor,
+                        MultiInputss: MultiInputssDescRepor,
                         enabled: true),
                     ButtonForm(
                       control: 1,
+                      controller: controller,
                       textButton: 'Buscar vehículo',
                       btnPosition: 5,
                       field: const [
@@ -183,7 +197,7 @@ class _ControlVehiclesState extends State<ControlVehicles> {
                         'Entrada',
                         'Salida'
                       ],
-                      formValues: formValuesBuscarVh,
+                      MultiInputss: MultiInputssBuscarVh,
                       enabled: true,
                     ),
                   ]),
@@ -200,6 +214,7 @@ class _ControlVehiclesState extends State<ControlVehicles> {
   @override
   initState() { 
     super.initState();
+
    VarProvider vh = VarProvider()
   ..arrSharedPreferences().then((Map<String, dynamic> sharedPrefsData) {
     if (sharedPrefsData['turn'] == null) {

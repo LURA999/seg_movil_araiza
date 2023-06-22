@@ -17,7 +17,7 @@ class AppState extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: ( _ ) =>  VarProvider(), lazy: false,)
+        ChangeNotifierProvider(create: ( _ ) =>  VarProvider(), lazy: false,),
       ],
       child:  const MyApp(),
     );
@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       navigatorKey: navigatorKey,
       navigatorObservers: [navigatorObserver],
-      home: MedicalRecords(),
+      home: const MedicalRecords(),
       routes: Routers.routerMain,
       theme: AppTheme.lightTeheme,
 

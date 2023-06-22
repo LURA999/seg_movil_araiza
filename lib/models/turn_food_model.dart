@@ -7,6 +7,7 @@ class TurnFood {
   String? received;
   String? date_hour;
   String? description;
+  String? picture;
 
   TurnFood({
     this.plate,
@@ -14,6 +15,7 @@ class TurnFood {
     this.dessert,
     this.received,
     this.date_hour,
+    this.picture,
     this.description
   });
 
@@ -23,6 +25,7 @@ class TurnFood {
     dessert = json['dessert'];
     received = json['received'];
     description = json['description'];
+    picture = json['picture'];
   }
 
   Map<String, dynamic> toJson() {
@@ -32,6 +35,7 @@ class TurnFood {
     data['dessert'] = dessert;
     data['received'] = received;
     data['description'] = description;
+    data['picture'] = picture;
     return data;
   }
 

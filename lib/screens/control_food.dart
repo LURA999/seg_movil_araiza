@@ -19,33 +19,34 @@ class _DiningRoomState extends State<DiningRoom> {
     //Nombre del campo :  contenido, ¿obligatorio?, ¿select?, ¿enabled?
      
     //Fecha se inserta automaticamente
-    final Map<String, List<Object?>> formValuesInicioTur = {
-      'plate':['',true,false, true,true],
-      'garrison':['',true,false, true,true],
-      'dessert':['',false,false, true,true],
-      'received_number':['',true,false, true,true]
+    final Map<String, MultiInputs> MultiInputssInicioTur = {
+      'plate' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'plate':['',true,false, true],
+      'garrison' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'garrison':['',true,false, true],
+      'dessert' : MultiInputs(contenido: '', obligatorio: false, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'dessert':['',false,false, true],
+      'received_number' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'received_number':['',true,false, true]
+      'picture' :  MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: true),
     };
 
     //fecha se inserta manualmente
-    final Map<String, List<Object?>> formValuesRegistroMan = {
-      'employee_number':['',true,false, true,true],
-      'name': ['',true,false, true,true],
-      'type_contract': ['',true,true, true,true],
+    final Map<String, MultiInputs> MultiInputssRegistroMan = {
+      'employee_number' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),   // 'employee_number':['',true,false, true],
+      'name' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),   // 'name': ['',true,false, true],
+      'type_contract' : MultiInputs(contenido: '', obligatorio: true, select: true, enabled: true, paintSignature: false,uploadFile: false),   // 'type_contract': ['',true,true, true],
     };
 
-    final Map<String, List<Object?>> formValuesObservacion = {
-      'description': ['',true,false, true,true],
+    final Map<String, MultiInputs> MultiInputssObservacion = {
+      'description': MultiInputs(contenido: '',obligatorio: true,select: false,enabled: true, paintSignature: false,uploadFile: false)// ['',true,false, true],
     };
 
-    final Map<String, List<Object?>> formValuesDescRepor = {
-      'guard': ['',false,false, true],
-      'date_start_hour': ['',true,false, true,true],
-      'date_final_hour': ['',true,false, true,true],
+    final Map<String, MultiInputs> MultiInputssDescRepor = {
+      'guard': MultiInputs(contenido: '', obligatorio: false, select: false, enabled: true, paintSignature: false,uploadFile: false),  // ['',false,false, true],
+      'date_start_hour': MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false), // ['',true,false, true],
+      'date_final_hour': MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false), // ['',true,false, true],
     };
-
+    final TextEditingController controller = TextEditingController();
 
     return Scaffold(
-        body: Column(
+      body: Column(
       children: [
         Expanded(
           child: Container(
@@ -57,6 +58,7 @@ class _DiningRoomState extends State<DiningRoom> {
                   padding: const EdgeInsets.all(20),
                   child: Column(children: [
                     ButtonForm(
+                        controller: controller,
                         control: 2,
                         textButton: 'Inicio turno',
                         btnPosition: 1,
@@ -65,15 +67,17 @@ class _DiningRoomState extends State<DiningRoom> {
                           'Platillo',
                           'Guarnición',
                           'Postre',
-                          'Número de platillos recibidos'
+                          'Número de platillos recibidos',
+                          'Subir imagen'
                         ],
-                        formValues: formValuesInicioTur,
+                        MultiInputss: MultiInputssInicioTur,
                         enabled: true),
                     const ButtonScreen(
                         textButton: 'Escaner QR', 
                         btnPosition: 1
                       ),
                     ButtonForm(
+                        controller: controller,
                         control: 2,
                         textButton: 'Registro Manual',
                         btnPosition: 2,
@@ -84,7 +88,7 @@ class _DiningRoomState extends State<DiningRoom> {
                           'Tipo de contrato'
                         ],
                         listSelect: const [['Sindicalizado','No sindicalizado','Corporativo']],
-                        formValues: formValuesRegistroMan,
+                        MultiInputss: MultiInputssRegistroMan,
                         enabled: false),
                     SizedBox(
                       width: MediaQuery.of(context).size.width,
@@ -93,46 +97,48 @@ class _DiningRoomState extends State<DiningRoom> {
                           showDialog(
                           context: context,
                           builder: (BuildContext context) {
-                            return  Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SingleChildScrollView(
-                                  child: AlertDialog(
-                                    title: Text('Cerrar Turno',style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
-                                    //para celulares
-                                    TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015)):
-                                    //para tablets
-                                    TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),),),
-                                    content: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                      children:[
-                                        ElevatedButton(onPressed: () async {
-                                          Provider.of<VarProvider>(context,listen: false).updateVariable(false);
-                                          DepartamentService dpser = DepartamentService();
-                                          await dpser.postCloseTurnFood();
-                                          setState(() {
+                            return  GestureDetector(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SingleChildScrollView(
+                                    child: AlertDialog(
+                                      title: Text('Cerrar Turno',style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
+                                      //para celulares
+                                      TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015)):
+                                      //para tablets
+                                      TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),),),
+                                      content: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        children:[
+                                          ElevatedButton(onPressed: () async {
+                                            Provider.of<VarProvider>(context,listen: false).updateVariable(false);
+                                            DepartamentService dpser = DepartamentService();
+                                            await dpser.postCloseTurnFood();
+                                            setState(() {
+                                              Navigator.of(context).pop(context);
+                                              Navigator.of(context).pushNamed('home');
+                                            });
+                                          }, child: Text('Aceptar',style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
+                                            //para celulares
+                                            TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015)):
+                                            //para tablets
+                                            TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),)
+                                            ,)),
+                                          ElevatedButton(onPressed:(){
                                             Navigator.of(context).pop(context);
-                                            Navigator.of(context).pushNamed('home');
-                                          });
-                                        }, child: Text('Aceptar',style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
+                                          },child: Text('Cancelar', style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
                                           //para celulares
                                           TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015)):
                                           //para tablets
-                                          TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),)
-                                          ,)),
-                                        ElevatedButton(onPressed:(){
-                                          Navigator.of(context).pop(context);
-                                        },child: Text('Cancelar', style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
-                                        //para celulares
-                                        TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015)):
-                                        //para tablets
-                                        TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),),
-                                        ))
-                                      ]
+                                          TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),),
+                                          ))
+                                        ]
+                                      ),
                                     ),
-                                  ),
-                                )
-                              ],
+                                  )
+                                ],
+                              ),
                             );
                           }
                           );
@@ -144,13 +150,15 @@ class _DiningRoomState extends State<DiningRoom> {
                         TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),),)),
                     ),
                     ButtonForm(
+                        controller: controller,
                         control: 2,
                         textButton: 'Agregar observaciones',
                         btnPosition: 3,
                         field: const ['Enviar', 'Agregue una descripción...'],
-                        formValues: formValuesObservacion,
+                        MultiInputss: MultiInputssObservacion,
                         enabled: false),
                     ButtonForm(
+                        controller: controller,
                         control: 0,
                         textButton: 'Descargar reporte',
                         btnPosition: 4,
@@ -160,7 +168,7 @@ class _DiningRoomState extends State<DiningRoom> {
                           'Fecha inicial y hora',
                           'Fecha final y hora'
                         ],
-                        formValues: formValuesDescRepor,
+                        MultiInputss: MultiInputssDescRepor,
                         enabled: true),
                   ]),
                 ),
