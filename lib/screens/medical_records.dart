@@ -57,8 +57,8 @@ class _MedicalRecordsState extends State<MedicalRecords> {
       fontWeight: FontWeight.normal,
     );
 
-    final Map<String, MultiInputs> MultiInputssBuscar = {
-      'search' : MultiInputs(contenido: '', obligatorio: false, select: false, enabled: true, paintSignature: false,uploadFile: false) // 'search':['',false,false, true]
+    final Map<String, MultiInputsForm> formValuesBuscar = {
+      'search' : MultiInputsForm(contenido: '', obligatorio: false, select: false, enabled: true, paintSignature: false,uploadFile: false) // 'search':['',false,false, true]
     };
 
     List<MedicalRecord> files = [
@@ -127,7 +127,7 @@ class _MedicalRecordsState extends State<MedicalRecords> {
                                   child: MultiInputs(
                                     formProperty: 'search', 
                                     labelText: 'Núm. de empleado o nombre',
-                                    MultiInputss: MultiInputssBuscar,
+                                    formValue: formValuesBuscar,
                                     maxLines: 1, 
                                     controller: controller,
                                     autofocus: false, 

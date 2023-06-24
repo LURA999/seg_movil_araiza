@@ -1,4 +1,5 @@
 import 'package:app_seguimiento_movil/models/models.dart';
+import 'package:app_seguimiento_movil/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -9,7 +10,7 @@ import 'package:intl/intl.dart';
 class ButtonForm extends StatelessWidget {
   final String textButton;
   final List<String> field;
-  final Map<String, MultiInputs> MultiInputss;
+  final Map<String, MultiInputsForm> formValue;
   final bool enabled;
   final List<List<String>>? listSelect;
   final int btnPosition;
@@ -22,7 +23,7 @@ class ButtonForm extends StatelessWidget {
     required this.btnPosition,
     this.listSelect,
     required this.field,
-    required this.MultiInputss,
+    required this.formValue,
     required this.enabled, 
     required this.control, 
     required this.controller,     
@@ -44,7 +45,7 @@ class ButtonForm extends StatelessWidget {
           onPressed:
               (Provider.of<VarProvider>(context).myGlobalVariable || enabled)
                   ? () {
-                      newMethod(context, MultiInputss, btnPosition);
+                      newMethod(context, formValue, btnPosition);
                     }
                   : null,
           child: Text(textButton/*, style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
@@ -58,7 +59,7 @@ class ButtonForm extends StatelessWidget {
               }
 
   Future<String?> newMethod(BuildContext context,
-    Map<String, MultiInputs> MultiInputss, int btnPosition) {
+    Map<String, MultiInputsForm> formValue, int btnPosition) {
     TextStyle myTextStyle = const TextStyle(
       color: Colors.black,
       fontFamily: 'Inter',
@@ -68,7 +69,7 @@ class ButtonForm extends StatelessWidget {
     List<Widget> inputFields = [];
     int i = 1;
 
-    MultiInputss.forEach((key, value) {
+    formValue.forEach((key, value) {
       inputFields.add(const SizedBox(height: 15));
       if (key.substring(0, 4) == "date") {
         inputFields.add(
@@ -78,7 +79,7 @@ class ButtonForm extends StatelessWidget {
             autofocus: i == 1 ? true : false,
             labelText: field[i],
             formProperty: key,
-            MultiInputss: MultiInputss,
+            formValue: formValue,
             keyboardType: TextInputType.datetime),
         );
       } else {
@@ -90,7 +91,7 @@ class ButtonForm extends StatelessWidget {
           autofocus: i == 1 ? true : false,
           formProperty: key,
           listSelect: listSelect,
-          MultiInputss: MultiInputss,
+          formValue: formValue,
           keyboardType: key.contains("number")? TextInputType.number : TextInputType.text));
       }
 
@@ -184,10 +185,10 @@ class ButtonForm extends StatelessWidget {
                              //Inicio turno
                             if (btnPosition == 1) {
                               TurnVehicle t= TurnVehicle();
-                              if (MultiInputss['sign']!.contenido != '' && MultiInputss['sign']!.contenido != null) {
-                                t.name = MultiInputss['name']!.contenido;
-                                t.sign = MultiInputss['sign']!.contenido;
-                                t.turn = MultiInputss['turn']!.contenido;
+                              if (formValue['sign']!.contenido != '' && formValue['sign']!.contenido != null) {
+                                t.name = formValue['name']!.contenido;
+                                t.sign = formValue['sign']!.contenido;
+                                t.turn = formValue['turn']!.contenido;
                                 await dpser.postTurnVehicle(t);
                               }else {
                                 return ; 
@@ -198,11 +199,11 @@ class ButtonForm extends StatelessWidget {
                             //registro 
                             if (btnPosition == 2) {
                               RegisterVehicle r= RegisterVehicle();
-                              r.color = MultiInputss['color']!.contenido;
-                              r.employeeName = MultiInputss['employeeName']!.contenido;
-                              r.plates = MultiInputss['plates']!.contenido;
-                              r.typevh = MultiInputss['typevh']!.contenido;
-                              r.departament = MultiInputss['departament']!.contenido;
+                              r.color = formValue['color']!.contenido;
+                              r.employeeName = formValue['employeeName']!.contenido;
+                              r.plates = formValue['plates']!.contenido;
+                              r.typevh = formValue['typevh']!.contenido;
+                              r.departament = formValue['departament']!.contenido;
                               await dpser.postRegisterVehicle(r);
                               
                             }
@@ -210,7 +211,7 @@ class ButtonForm extends StatelessWidget {
                             //Agregar observaciones
                             if (btnPosition == 3) {
                               TurnVehicle t= TurnVehicle();
-                              t.description = MultiInputss['description']!.contenido;
+                              t.description = formValue['description']!.contenido;
                               await dpser.postObvVehicle(t);
                             }
         
@@ -219,11 +220,11 @@ class ButtonForm extends StatelessWidget {
                             //Inicio turno
                             if (btnPosition == 1) {
                               TurnFood t= TurnFood();
-                              if(MultiInputss['picture']!.contenido != '' && MultiInputss['picture']!.contenido != null){
-                                t.plate = MultiInputss['plate']!.contenido;
-                                t.garrison = MultiInputss['garrison']!.contenido;
-                                t.dessert = MultiInputss['dessert']!.contenido;
-                                t.received = MultiInputss['received_number']!.contenido;
+                              if(formValue['picture']!.contenido != '' && formValue['picture']!.contenido != null){
+                                t.plate = formValue['plate']!.contenido;
+                                t.garrison = formValue['garrison']!.contenido;
+                                t.dessert = formValue['dessert']!.contenido;
+                                t.received = formValue['received_number']!.contenido;
                                 await dpser.postTurnFood(t);
                               }else{
                                 return showDialog(
@@ -250,9 +251,9 @@ class ButtonForm extends StatelessWidget {
                             //registro
                             if (btnPosition == 2) {
                               RegisterFood r= RegisterFood();
-                              r.numEmployee = MultiInputss['employee_number']!.contenido;
-                              r.name = MultiInputss['name']!.contenido;
-                              switch (MultiInputss['type_contract']!.contenido) {
+                              r.numEmployee = formValue['employee_number']!.contenido;
+                              r.name = formValue['name']!.contenido;
+                              switch (formValue['type_contract']!.contenido) {
                                 case 'Sindicalizado':
                                   r.contract = '1';
                                   break;
@@ -271,7 +272,7 @@ class ButtonForm extends StatelessWidget {
                             //Agregar observaciones
                             if (btnPosition == 3) {
                               TurnFood t= TurnFood();
-                              t.description = MultiInputss['description']!.contenido;
+                              t.description = formValue['description']!.contenido;
                               await dpser.postObvFood(t);
                             }
                             break;
@@ -279,10 +280,10 @@ class ButtonForm extends StatelessWidget {
                           //Descargar reporte
                             if(btnPosition == 4) {
                               DateExcel de = DateExcel();
-                              // print(MultiInputss['date_start_hour']!.contenido);
-                              de.dateStart = df.format(df2.parse(MultiInputss['date_start_hour']!.contenido!));
-                              de.dateFinal = df.format(df2.parse(MultiInputss['date_final_hour']!.contenido!));
-                              de.guard = MultiInputss['guard']!.contenido;
+                              // print(formValue['date_start_hour']!.contenido);
+                              de.dateStart = df.format(df2.parse(formValue['date_start_hour']!.contenido!));
+                              de.dateFinal = df.format(df2.parse(formValue['date_final_hour']!.contenido!));
+                              de.guard = formValue['guard']!.contenido;
                               var jsonStr = await dpser.selectDate(de);
                               // '[{"Nombre": "Juan", "Edad": 25, "Color de cabello": "Rojo","Estado civil": "casado"},{"Nombre": "Lizett", "Edad": 24, "Color de cabello": "Cafe","Estado civil": "casada"}, {"Nombre": "María", "Edad": 30, "Color de cabello": "verde","Estado civil": "soltera"}, {"Nombre": "Alonso", "Edad": 24, "Color de cabello":"negro","Estado civil": "casado"}]';
                               DateTime now = DateTime.now();

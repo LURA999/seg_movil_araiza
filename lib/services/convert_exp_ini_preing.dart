@@ -18,7 +18,11 @@ void generatePDF( BuildContext context, bool save) async {
   }); 
    
   if (!storagePermissionGranted) {
-    throw Exception('No se han concedido los permisos de almacenamiento.');
+    try {
+      throw Exception('No se han concedido los permisos de almacenamiento.');      
+    } catch (e) {
+      print(e);
+    }
   }
 
   final pdf = pw.Document();

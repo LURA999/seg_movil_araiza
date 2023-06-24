@@ -6,13 +6,13 @@ import 'package:app_seguimiento_movil/theme/app_theme.dart';
 class DropdownButtonWidget extends StatefulWidget {
   List<String>? list;
   final String formProperty;
-  final Map<String, MultiInputs> MultiInputss;
+  final Map<String, dynamic> formValue;
 
   DropdownButtonWidget({
   Key? key, 
   this.list, 
   required this.formProperty, 
-  required this.MultiInputss
+  required this.formValue
   }) : super(key: key);
 
   @override
@@ -26,7 +26,7 @@ class _DropdownButtonWidgetState extends State<DropdownButtonWidget> {
 
   @override
   Widget build(BuildContext context) {
-    widget.MultiInputss[widget.formProperty]!.contenido = dropdownValue!;
+    widget.formValue[widget.formProperty]!.contenido = dropdownValue!;
 
     return OutlinedButton(
         onPressed:  null,
@@ -49,7 +49,7 @@ class _DropdownButtonWidgetState extends State<DropdownButtonWidget> {
             // This is called when the user selects an item.
             setState(() {
               dropdownValue = value;
-              widget.MultiInputss[widget.formProperty]!.contenido = value!;
+              widget.formValue[widget.formProperty]!.contenido = value!;
             });
           },
           items: list.map<DropdownMenuItem<String>>((String value) {

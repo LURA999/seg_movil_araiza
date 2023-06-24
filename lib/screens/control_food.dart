@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:app_seguimiento_movil/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
+import '../models/multi_inputs_model.dart';
 import '../services/services.dart';
 
 
@@ -19,29 +20,29 @@ class _DiningRoomState extends State<DiningRoom> {
     //Nombre del campo :  contenido, ¿obligatorio?, ¿select?, ¿enabled?
      
     //Fecha se inserta automaticamente
-    final Map<String, MultiInputs> MultiInputssInicioTur = {
-      'plate' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'plate':['',true,false, true],
-      'garrison' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'garrison':['',true,false, true],
-      'dessert' : MultiInputs(contenido: '', obligatorio: false, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'dessert':['',false,false, true],
-      'received_number' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'received_number':['',true,false, true]
-      'picture' :  MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: true),
+    final Map<String, MultiInputsForm> formValuesInicioTur = {
+      'plate' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'plate':['',true,false, true],
+      'garrison' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'garrison':['',true,false, true],
+      'dessert' : MultiInputsForm(contenido: '', obligatorio: false, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'dessert':['',false,false, true],
+      'received_number' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'received_number':['',true,false, true]
+      'picture' :  MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: true),
     };
 
     //fecha se inserta manualmente
-    final Map<String, MultiInputs> MultiInputssRegistroMan = {
-      'employee_number' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),   // 'employee_number':['',true,false, true],
-      'name' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),   // 'name': ['',true,false, true],
-      'type_contract' : MultiInputs(contenido: '', obligatorio: true, select: true, enabled: true, paintSignature: false,uploadFile: false),   // 'type_contract': ['',true,true, true],
+    final Map<String, MultiInputsForm> formValuesRegistroMan = {
+      'employee_number' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),   // 'employee_number':['',true,false, true],
+      'name' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),   // 'name': ['',true,false, true],
+      'type_contract' : MultiInputsForm(contenido: '', obligatorio: true, select: true, enabled: true, paintSignature: false,uploadFile: false),   // 'type_contract': ['',true,true, true],
     };
 
-    final Map<String, MultiInputs> MultiInputssObservacion = {
-      'description': MultiInputs(contenido: '',obligatorio: true,select: false,enabled: true, paintSignature: false,uploadFile: false)// ['',true,false, true],
+    final Map<String, MultiInputsForm> formValuesObservacion = {
+      'description': MultiInputsForm(contenido: '',obligatorio: true,select: false,enabled: true, paintSignature: false,uploadFile: false)// ['',true,false, true],
     };
 
-    final Map<String, MultiInputs> MultiInputssDescRepor = {
-      'guard': MultiInputs(contenido: '', obligatorio: false, select: false, enabled: true, paintSignature: false,uploadFile: false),  // ['',false,false, true],
-      'date_start_hour': MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false), // ['',true,false, true],
-      'date_final_hour': MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false), // ['',true,false, true],
+    final Map<String, MultiInputsForm> formValuesDescRepor = {
+      'guard': MultiInputsForm(contenido: '', obligatorio: false, select: false, enabled: true, paintSignature: false,uploadFile: false),  // ['',false,false, true],
+      'date_start_hour': MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false), // ['',true,false, true],
+      'date_final_hour': MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false), // ['',true,false, true],
     };
     final TextEditingController controller = TextEditingController();
 
@@ -70,7 +71,7 @@ class _DiningRoomState extends State<DiningRoom> {
                           'Número de platillos recibidos',
                           'Subir imagen'
                         ],
-                        MultiInputss: MultiInputssInicioTur,
+                        formValue: formValuesInicioTur,
                         enabled: true),
                     const ButtonScreen(
                         textButton: 'Escaner QR', 
@@ -88,7 +89,7 @@ class _DiningRoomState extends State<DiningRoom> {
                           'Tipo de contrato'
                         ],
                         listSelect: const [['Sindicalizado','No sindicalizado','Corporativo']],
-                        MultiInputss: MultiInputssRegistroMan,
+                        formValue: formValuesRegistroMan,
                         enabled: false),
                     SizedBox(
                       width: MediaQuery.of(context).size.width,
@@ -155,7 +156,7 @@ class _DiningRoomState extends State<DiningRoom> {
                         textButton: 'Agregar observaciones',
                         btnPosition: 3,
                         field: const ['Enviar', 'Agregue una descripción...'],
-                        MultiInputss: MultiInputssObservacion,
+                        formValue: formValuesObservacion,
                         enabled: false),
                     ButtonForm(
                         controller: controller,
@@ -168,7 +169,7 @@ class _DiningRoomState extends State<DiningRoom> {
                           'Fecha inicial y hora',
                           'Fecha final y hora'
                         ],
-                        MultiInputss: MultiInputssDescRepor,
+                        formValue: formValuesDescRepor,
                         enabled: true),
                   ]),
                 ),

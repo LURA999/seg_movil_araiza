@@ -25,7 +25,7 @@ class MultiInputs extends StatefulWidget {
   final bool obscureText;
   final List<List<String>>? listSelect;
   final String formProperty;
-  final Map<String, MultiInputs> MultiInputss;
+  final Map<String, dynamic> formValue;
   final bool? autofocus;
   final TextEditingController? controller;
 
@@ -43,35 +43,34 @@ class MultiInputs extends StatefulWidget {
     this.keyboardType,
     this.obscureText = false,
     required this.formProperty,
-    required this.MultiInputss, 
+    required this.formValue, 
     required this.maxLines, 
     required this.autofocus, 
-    this.controller, required String contenido
+    this.controller
     
   }) : super(key: key);
 
   @override
-  State<MultiInputs> createState() => _MultiInputsState();
+  State<MultiInputs> createState() => _formValuetate();
 }
 
-class _MultiInputsState extends State<MultiInputs> {
+class _formValuetate extends State<MultiInputs> {
 final ImagePicker _picker = ImagePicker();
 
   @override
   Widget build(BuildContext context) {
-
     final RegExp regex = RegExp(
         r'^\d{2}\/(0[1-9]|1[0-2])\/\d{4}$',
     );
     final DateFormat dateFormat = DateFormat('dd/MM/yyyy');
 
     /** Ingrese una imagen*/
-    if(widget.MultiInputss[widget.formProperty]!.uploadFile == true){
+    if(widget.formValue[widget.formProperty]!.uploadFile == true){
       return ElevatedButton.icon(onPressed: openCamera, icon: const Icon(Icons.camera_alt_rounded), label: const Text('Abrir camara'));
     }
     
     /**SI entra aqui, es porque este espacio es un paint_asignature */
-    if(widget.MultiInputss[widget.formProperty]!.paintSignature == true){
+    if(widget.formValue[widget.formProperty]!.paintSignature == true){
       final _sign = GlobalKey<SignatureState>();
       ByteData _img = ByteData(0);
 
@@ -92,7 +91,7 @@ final ImagePicker _picker = ImagePicker();
                      final image = await sign!.getData();
                       var data = await image.toByteData(format: ui.ImageByteFormat.png);
                       final encoded = base64.encode(data!.buffer.asUint8List());
-                      widget.MultiInputss[widget.formProperty]!.contenido = encoded;
+                      widget.formValue[widget.formProperty]!.contenido = encoded;
                 },
                 color: Colors.black,
                 strokeWidth: 3,
@@ -107,7 +106,7 @@ final ImagePicker _picker = ImagePicker();
               sign!.clear();
               setState(() {
                 _img = ByteData(0);
-                widget.MultiInputss[widget.formProperty]!.contenido = null;
+                widget.formValue[widget.formProperty]!.contenido = null;
               });
               // debugPrint("cleared");
             },
@@ -119,15 +118,15 @@ final ImagePicker _picker = ImagePicker();
     }
 
     /** Si entra aqui, entra para crear un select */
-    if (widget.MultiInputss[widget.formProperty]!.select == true) {
+    if (widget.formValue[widget.formProperty]!.select == true) {
       int indice = 0;
-      widget.MultiInputss.forEach((key, value) {
-        if(widget.MultiInputss[key]!.select == true){
+      widget.formValue.forEach((key, value) {
+        if(widget.formValue[key]!.select == true){
           indice++; 
           return;
         } 
       });
-      return DropdownButtonWidget(list: widget.listSelect![indice-1],MultiInputss: widget.MultiInputss,formProperty: widget.formProperty);
+      return DropdownButtonWidget(list: widget.listSelect![indice-1],formValue: widget.formValue,formProperty: widget.formProperty);
     }
 
 
@@ -135,10 +134,10 @@ final ImagePicker _picker = ImagePicker();
      * como lo es el del calendario, y un input normal con diferentes personalizaciones (como subfijos,prefijos,hint etc)  */
     return TextFormField(
           maxLines: widget.maxLines,
-          enabled: widget.MultiInputss[widget.formProperty]!.enabled,
+          enabled: widget.formValue[widget.formProperty]!.enabled,
           controller: widget.controller,
           autofocus: widget.autofocus!,
-          initialValue: widget.controller == null ? widget.MultiInputss[widget.formProperty]!.contenido : null,
+          initialValue: widget.controller == null ? widget.formValue[widget.formProperty]!.contenido : null,
           textCapitalization: TextCapitalization.words,
           keyboardType: widget.keyboardType,
           obscureText: widget.obscureText,
@@ -150,9 +149,9 @@ final ImagePicker _picker = ImagePicker();
           TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015)),
           
           onChanged: (value) {
-            widget.MultiInputss[widget.formProperty]!.contenido = value;
+            widget.formValue[widget.formProperty]!.contenido = value;
           },
-          validator: widget.MultiInputss[widget.formProperty]!.obligatorio == true ? (value) {
+          validator: widget.formValue[widget.formProperty]!.obligatorio == true ? (value) {
             if(value == null || value.isEmpty == true || value == ''){
               return 'Este campo es requerido';
             }else{
@@ -172,7 +171,7 @@ final ImagePicker _picker = ImagePicker();
             if (pickedDate != null) {
               String formattedDate = dateFormat.format(pickedDate);
               widget.controller!.text = formattedDate;
-              widget.MultiInputss[widget.formProperty]!.contenido = widget.controller!.text;
+              widget.formValue[widget.formProperty]!.contenido = widget.controller!.text;
             }
           }:null,
           autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -198,7 +197,7 @@ final ImagePicker _picker = ImagePicker();
   Future<void> openCamera() async {
   final XFile? image = await _picker.pickImage(source: ImageSource.camera);
   if (image != null) {
-    widget.MultiInputss[widget.formProperty]!.contenido = image.path;
+    widget.formValue[widget.formProperty]!.contenido = image.path;
   }
 }
 

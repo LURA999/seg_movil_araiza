@@ -4,9 +4,6 @@ import 'package:flutter/services.dart';
 import '../models/models.dart';
 
 
-  int _currentPageIndex = 0;
-
-
 class MedicalTest extends StatefulWidget {
   final BuildContext context;
   const MedicalTest({Key? key, required this.context}) : super(key: key);
@@ -18,13 +15,6 @@ class MedicalTest extends StatefulWidget {
  
 
 class _MedicalTestState extends State<MedicalTest> {
-
-  final EmployeeRole? _character = EmployeeRole.employee;
-  bool morePage = false;  
-
-  late bool _inputsAdd = false;
-  final List<List<Widget>> _pages = [[]] ;
-  final List<String> _titles = ['EXAMEN MÉDICO LABORAL', '1.- FICHA PERSONAL', '2.- HISTORIAL LABORAL','3.- ACCIDENTES Y ENFERMEDADES DE TRABAJO Anote SOLO Accidentes de trabajo','4.- ANTECEDENTES HEREDITARIOS Y FAMILIARES DE SALUD (Con una X anote los datos positivos según sea el caso)','5.-ANTECEDENTES PERSONALES (Con una X anote los datos positivos según sea el caso)','ANTECEDENTES GINECOLÓGICOS (SOLO SE APLICA A MUJERES)','5.2.-ANTECEDENTES PERSONALES PATOLÓGICOS','6.- INTERROGATORIO POR APARATOS Y SISTEMAS.','7.-EXPLORACIÓN FÍSICA','8.-ANÁLISIS DE LABORATORIO','9.-ESTUDIOS DE GABINETE', 'DICTAMEN MÉDICO'];
 
   @override
   Widget build(BuildContext context) {
@@ -50,67 +40,206 @@ class _MedicalTestState extends State<MedicalTest> {
         );
       }
   Future<String?> newMethod(BuildContext context) {
+    int _currentPageIndex = 0;
+  final EmployeeRole? _character = EmployeeRole.employee;
+  bool morePage = false;  
+
+  //El primero es para controlar los inputs cuando abre y cierra el form
+  late bool _inputsAdd = false;
+  //El segundo es para controlar los radiobutton que se generan al abrir y cerrar el form
+  late bool _inputsAdd2 = false;
+
+
+  final List<List<Widget>> _pages = [[]] ;
+  final List<String> _titles = ['EXAMEN MÉDICO LABORAL', '1.- FICHA PERSONAL', '2.- HISTORIAL LABORAL','3.- ACCIDENTES Y ENFERMEDADES DE TRABAJO Anote SOLO Accidentes de trabajo','4.- ANTECEDENTES HEREDITARIOS Y FAMILIARES DE SALUD (Con una X anote los datos positivos según sea el caso)','5.-ANTECEDENTES PERSONALES (Con una X anote los datos positivos según sea el caso)','ANTECEDENTES GINECOLÓGICOS (SOLO SE APLICA A MUJERES)','5.2.-ANTECEDENTES PERSONALES PATOLÓGICOS','6.- INTERROGATORIO POR APARATOS Y SISTEMAS.','7.-EXPLORACIÓN FÍSICA','8.-ANÁLISIS DE LABORATORIO','9.-ESTUDIOS DE GABINETE', 'DICTAMEN MÉDICO'];
+  
+  //Estos son variables para guardar los resultados de los resultados radiobutton
+  List<Cause> causeEnum = [Cause.none,Cause.none,Cause.none];
+  List<YesNot> yesNotEnum = [YesNot.none,YesNot.none,YesNot.none];
+  List<manoDominante> manoDomEnum = [manoDominante.none];
+  int countCauseEnum =0;
+  int countYesNotEnum = 0;
+  int countManoDomEnum = 0;
+
+  //Estas son variables para guardar los resultados de los checkbox
+  List<List<bool>> listChecked =[
+    [false,false,false,false,false,false,false,false,false,false],
+    [false,false,false,false,false,false,false,false,false,false],
+    [false,false,false,false,false,false,false,false,false,false],
+    [false,false,false,false,false,false,false,false,false,false],
+    [false,false,false,false,false,false,false,false,false,false]
+  ];
+
     _currentPageIndex =0;
     PageController _pageController = PageController(initialPage: 0);
 
-    final List<GlobalKey<FormState>> myFormKey = [GlobalKey<FormState>(),GlobalKey<FormState>(),GlobalKey<FormState>(),GlobalKey<FormState>()];
+    final List<GlobalKey<FormState>> myFormKey = [
+    GlobalKey<FormState>(),
+    GlobalKey<FormState>(),
+    GlobalKey<FormState>(),
+    GlobalKey<FormState>(),
+    GlobalKey<FormState>(),
+    GlobalKey<FormState>(),
+    GlobalKey<FormState>(),
+    ];
     // final List<TextEditingController> controller = [TextEditingController(),TextEditingController(),TextEditingController()];
 
-    List<Map<String, MultiInputs>> formpart1 = [
+    List<Map<String, dynamic>> formpart1 = [
     {//Primeras preguntas
-    'Departamento' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'guard': ['',false,false, true],
-    'Puesto' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'date_start_hour': ['',true,false, true],
+    'Departamento' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
+    'Puesto' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
     },
     {//ficha personal
-     'Nombre' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'guard': ['',false,false, true],
-     'Sexo' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'date_start_hour': ['',true,false, true],
-     'Edad' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'guard': ['',false,false, true],
-     'Edo. Civil' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'date_start_hour': ['',true,false, true],
-     'Domicilio' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'guard': ['',false,false, true],
-     'Tel. fijo y/o cel' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'date_start_hour': ['',true,false, true],
-     'Lugar y fecha de nacimiento' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'date_start_hour': ['',true,false, true],
-     'Actividad extra a su trabajo' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'date_start_hour': ['',true,false, true],
-     'Escolaridad' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'date_start_hour': ['',true,false, true],
-     'Carrera universitaria' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'date_start_hour': ['',true,false, true],
-     'Núm. de hijos' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'date_start_hour': ['',true,false, true],
+     'Nombre' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
+     'Sexo' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
+     'Edad' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
+     'Edo. Civil' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
+     'Domicilio' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
+     'Tel. fijo y/o cel' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
+     'Lugar y fecha de nacimiento' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
+     'Actividad extra a su trabajo' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
+     'Escolaridad' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
+     'Carrera universitaria' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
+     'Núm. de hijos' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
     },
     {//historial laboral
-     '1.- Empresa' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'guard': ['',false,false, true],
-     '1.- Puestos' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'date_start_hour': ['',true,false, true],
-     '1.- Tiempo' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'guard': ['',false,false, true],
-     '2.- Empresa' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'guard': ['',false,false, true],
-     '2.- Puestos' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'date_start_hour': ['',true,false, true],
-     '2.- Tiempo' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'guard': ['',false,false, true],
-     '3.- Empresa' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'guard': ['',false,false, true],
-     '3.- Puestos' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'date_start_hour': ['',true,false, true],
-     '3.- Tiempo' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'guard': ['',false,false, true],
-     '4.- Empresa' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'guard': ['',false,false, true],
-     '4.- Puestos' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'date_start_hour': ['',true,false, true],
-     '4.- Tiempo' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'guard': ['',false,false, true],
+     '1.- Sized' : const SizedBox(height: 20,),
+     '1.- Titulo' : const Align(alignment: Alignment.centerLeft, child: Text('Primera empresa',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))),
+     '1.- Empresa' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
+     '1.- Puestos' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
+     '1.- Tiempo' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
+     '2.- Sized' : const SizedBox(height: 20,),
+     '2.- Titulo' : const Align(alignment: Alignment.centerLeft, child: Text('Segunda empresa',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))),
+     '2.- Empresa' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
+     '2.- Puestos' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
+     '2.- Tiempo' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
+     '3.- Sized' : const SizedBox(height: 20,),
+     '3.- Titulo' : const Align(alignment: Alignment.centerLeft, child: Text('Tercera empresa',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))),
+     '3.- Empresa' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
+     '3.- Puestos' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
+     '3.- Tiempo' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
+     '4.- Sized' : const SizedBox(height: 20,),
+     '4.- Titulo' : const Align(alignment: Alignment.centerLeft, child: Text('Cuarta empresa',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))),
+     '4.- Empresa' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
+     '4.- Puestos' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
+     '4.- Tiempo' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
     } ,
     {//historial laboral
-     '1.- Nombre de empresa' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'guard': ['',false,false, true],
-     '1.- Fecha' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'date_start_hour': ['',true,false, true],
-     '1.- Puesto' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'guard': ['',false,false, true],
-     '1.- Causa' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'guard': ['',false,false, true],
-     '1.- Nombre de la lesión o enfermedad' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'guard': ['',false,false, true],
-     '1.- Incapacidad' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'guard': ['',false,false, true],
-     '1.- Número de dias de incapacidad' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'guard': ['',false,false, true],
-     '2.- Nombre de empresa' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'guard': ['',false,false, true],
-     '2.- Fecha' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'date_start_hour': ['',true,false, true],
-     '2.- Puesto' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'guard': ['',false,false, true],
-     '2.- Causa' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'guard': ['',false,false, true],
-     '2.- Nombre de la lesión o enfermedad' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'guard': ['',false,false, true],
-     '2.- Incapacidad' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'guard': ['',false,false, true],
-     '2.- Número de dias de incapacidad' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'guard': ['',false,false, true],
-     '3.- Nombre de empresa' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'guard': ['',false,false, true],
-     '3.- Fecha' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'date_start_hour': ['',true,false, true],
-     '3.- Puesto' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'guard': ['',false,false, true],
-     '3.- Causa' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'guard': ['',false,false, true],
-     '3.- Nombre de la lesión o enfermedad' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'guard': ['',false,false, true],
-     '3.- Incapacidad' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'guard': ['',false,false, true],
-     '3.- Número de dias de incapacidad' : MultiInputs(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'guard': ['',false,false, true],
-    }
+     '1.- Sized' : const SizedBox(height: 20,),
+     '1.- Titulo' : const Align(alignment: Alignment.centerLeft, child: Text('Primera empresa',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))),
+     '1.- Nombre de empresa' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
+     '1.- Fecha' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
+     '1.- Puesto' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
+     '1.- Causa' : const Align(alignment: Alignment.centerLeft, child: Text('Causa',style: TextStyle(fontSize: 20))),
+     '1.- Causas' : RadioInput(tipoEnum: 2, causeEnum: causeEnum ,index: countCauseEnum++,),
+     '1.- Nombre de la lesión o enfermedad' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
+     '1.- Incapacidad' : const Align(alignment: Alignment.centerLeft, child: Text('Incapacidad',style: TextStyle(fontSize: 20))),
+     '1.- YesNot' : RadioInput(tipoEnum: 1, yesNotEnum: yesNotEnum, index: countYesNotEnum++,),
+     '1.- Número de dias de incapacidad' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
+     '2.- Sized' : const SizedBox(height: 20,),
+     '2.- Titulo' : const Align(alignment: Alignment.centerLeft, child: Text('Segunda empresa',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))),
+     '2.- Nombre de empresa' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
+     '2.- Fecha' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
+     '2.- Puesto' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
+     '2.- Causa' : const Align(alignment: Alignment.centerLeft, child: Text('Causa',style: TextStyle(fontSize: 20))),
+     '2.- Causas' : RadioInput(tipoEnum: 2, causeEnum: causeEnum ,index: countCauseEnum++,),
+     '2.- Nombre de la lesión o enfermedad' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
+     '2.- Incapacidad' : const Align(alignment: Alignment.centerLeft, child: Text('Incapacidad',style: TextStyle(fontSize: 20))),
+     '2.- YesNot' : RadioInput(tipoEnum: 1, yesNotEnum: yesNotEnum, index: countYesNotEnum++,),
+     '2.- Número de dias de incapacidad' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
+     '3.- Sized' : const SizedBox(height: 20,),
+     '3.- Titulo' : const Align(alignment: Alignment.centerLeft, child: Text('Tercera empresa',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))),
+     '3.- Nombre de empresa' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
+     '3.- Fecha' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
+     '3.- Puesto' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
+     '3.- Causa' : const Align(alignment: Alignment.centerLeft, child: Text('Causa',style: TextStyle(fontSize: 20))),
+     '3.- Causas' : RadioInput(tipoEnum: 2, causeEnum: causeEnum ,index: countCauseEnum++,),
+     '3.- Nombre de la lesión o enfermedad' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
+     '3.- Incapacidad' : const Align(alignment: Alignment.centerLeft, child: Text('Incapacidad',style: TextStyle(fontSize: 20))),
+     '3.- YesNot' : RadioInput(tipoEnum: 1, yesNotEnum: yesNotEnum, index: countYesNotEnum++,),
+     '3.- Número de dias de incapacidad' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
+    },
+    { //4.- ANTECEDENTES HEREDITARIOS Y FAMILIARES DE SALUD 
+      // (Con una X anote los datos positivos según sea el caso)
+     '1.- Sized' : const SizedBox(height: 20,),
+     'Padre' : const Align(alignment: Alignment.centerLeft, child: Text('Padre',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))),
+     '1.- opc' : [
+                CheckInput(contenido: 'Buena salud',listChecked: listChecked,indexPrincipal:0,indexSecundario: 0,),
+                CheckInput(contenido: 'Mala salud',listChecked: listChecked,indexPrincipal:0,indexSecundario: 1,),
+                CheckInput(contenido: 'Finado',listChecked: listChecked,indexPrincipal:0,indexSecundario: 2),
+                CheckInput(contenido: 'Alergia',listChecked: listChecked,indexPrincipal:0,indexSecundario: 3),
+                CheckInput(contenido: 'Diabetes',listChecked: listChecked,indexPrincipal:0,indexSecundario: 4),
+                CheckInput(contenido: 'Presion Alta',listChecked: listChecked,indexPrincipal:0,indexSecundario: 5),
+                CheckInput(contenido: 'Colesterol',listChecked: listChecked,indexPrincipal:0,indexSecundario: 6),
+                CheckInput(contenido: 'Enf. Corazón',listChecked: listChecked,indexPrincipal:0,indexSecundario: 7),
+                CheckInput(contenido: 'Cancer',listChecked: listChecked,indexPrincipal:0,indexSecundario: 8),
+                CheckInput(contenido: 'Anemia',listChecked: listChecked,indexPrincipal:0,indexSecundario: 9)
+                  ],
+     '2.- Sized' : const SizedBox(height: 20,),
+     'Madre' : const Align(alignment: Alignment.centerLeft, child: Text('Madre',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))),
+     '2.- opc' : [
+                CheckInput(contenido: 'Buena salud',listChecked: listChecked,indexPrincipal:1,indexSecundario: 0,),
+                CheckInput(contenido: 'Mala salud',listChecked: listChecked,indexPrincipal:1,indexSecundario: 1,),
+                CheckInput(contenido: 'Finado',listChecked: listChecked,indexPrincipal:1,indexSecundario: 2,),
+                CheckInput(contenido: 'Alergia',listChecked: listChecked,indexPrincipal:1,indexSecundario: 3,),
+                CheckInput(contenido: 'Diabetes',listChecked: listChecked,indexPrincipal:1,indexSecundario: 4,),
+                CheckInput(contenido: 'Presion Alta',listChecked: listChecked,indexPrincipal:1,indexSecundario: 5,),
+                CheckInput(contenido: 'Colesterol',listChecked: listChecked,indexPrincipal:1,indexSecundario: 6,),
+                CheckInput(contenido: 'Enf. Corazón',listChecked: listChecked,indexPrincipal:1,indexSecundario: 7,),
+                CheckInput(contenido: 'Cancer',listChecked: listChecked,indexPrincipal:1,indexSecundario: 8,),
+                CheckInput(contenido: 'Anemia',listChecked: listChecked,indexPrincipal:1,indexSecundario: 9,),
+                  ],
+     '3.- Sized' : const SizedBox(height: 20,),
+     'Hermanos' : const Align(alignment: Alignment.centerLeft, child: Text('Hermanos',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))),
+     '3.- opc' : [
+                CheckInput(contenido: 'Buena salud',listChecked: listChecked,indexPrincipal:2,indexSecundario: 0,),
+                CheckInput(contenido: 'Mala salud',listChecked: listChecked,indexPrincipal:2,indexSecundario: 1,),
+                CheckInput(contenido: 'Finado',listChecked: listChecked,indexPrincipal:2,indexSecundario: 2,),
+                CheckInput(contenido: 'Alergia',listChecked: listChecked,indexPrincipal:2,indexSecundario: 3,),
+                CheckInput(contenido: 'Diabetes',listChecked: listChecked,indexPrincipal:2,indexSecundario: 4,),
+                CheckInput(contenido: 'Presion Alta',listChecked: listChecked,indexPrincipal:2,indexSecundario: 5,),
+                CheckInput(contenido: 'Colesterol',listChecked: listChecked,indexPrincipal:2,indexSecundario: 6,),
+                CheckInput(contenido: 'Enf. Corazón',listChecked: listChecked,indexPrincipal:2,indexSecundario: 7,),
+                CheckInput(contenido: 'Cancer',listChecked: listChecked,indexPrincipal:2,indexSecundario: 8,),
+                CheckInput(contenido: 'Anemia',listChecked: listChecked,indexPrincipal:2,indexSecundario: 9,),
+                  ],
+     '4.- Sized' : const SizedBox(height: 20,),
+     'Pareja' : const Align(alignment: Alignment.centerLeft, child: Text('Pareja',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))),
+     '4.- opc' : [
+                CheckInput(contenido: 'Buena salud',listChecked: listChecked,indexPrincipal:3,indexSecundario: 0,),
+                CheckInput(contenido: 'Mala salud',listChecked: listChecked,indexPrincipal:3,indexSecundario: 1,),
+                CheckInput(contenido: 'Finado',listChecked: listChecked,indexPrincipal:3,indexSecundario: 2,),
+                CheckInput(contenido: 'Alergia',listChecked: listChecked,indexPrincipal:3,indexSecundario: 3,),
+                CheckInput(contenido: 'Diabetes',listChecked: listChecked,indexPrincipal:3,indexSecundario: 4,),
+                CheckInput(contenido: 'Presion Alta',listChecked: listChecked,indexPrincipal:3,indexSecundario: 5,),
+                CheckInput(contenido: 'Colesterol',listChecked: listChecked,indexPrincipal:3,indexSecundario: 6,),
+                CheckInput(contenido: 'Enf. Corazón',listChecked: listChecked,indexPrincipal:3,indexSecundario: 7,),
+                CheckInput(contenido: 'Cancer',listChecked: listChecked,indexPrincipal:3,indexSecundario: 8,),
+                CheckInput(contenido: 'Anemia',listChecked: listChecked,indexPrincipal:3,indexSecundario: 9,),
+                  ],
+     '5.- Sized' : const SizedBox(height: 20,),
+     'Hijos' : const Align(alignment: Alignment.centerLeft, child: Text('hijos',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))),
+     '5.- opc' : [
+                CheckInput(contenido: 'Buena salud',listChecked: listChecked,indexPrincipal:4,indexSecundario: 0,),
+                CheckInput(contenido: 'Mala salud',listChecked: listChecked,indexPrincipal:4,indexSecundario: 1,),
+                CheckInput(contenido: 'Finado',listChecked: listChecked,indexPrincipal:4,indexSecundario: 2,),
+                CheckInput(contenido: 'Alergia',listChecked: listChecked,indexPrincipal:4,indexSecundario: 3,),
+                CheckInput(contenido: 'Diabetes',listChecked: listChecked,indexPrincipal:4,indexSecundario: 4,),
+                CheckInput(contenido: 'Presion Alta',listChecked: listChecked,indexPrincipal:4,indexSecundario: 5,),
+                CheckInput(contenido: 'Colesterol',listChecked: listChecked,indexPrincipal:4,indexSecundario: 6,),
+                CheckInput(contenido: 'Enf. Corazón',listChecked: listChecked,indexPrincipal:4,indexSecundario: 7,),
+                CheckInput(contenido: 'Cancer',listChecked: listChecked,indexPrincipal:4,indexSecundario: 8,),
+                CheckInput(contenido: 'Anemia',listChecked: listChecked,indexPrincipal:4,indexSecundario: 9,),
+                  ],
+    },
+    {//5.-ANTECEDENTES PERSONALES (Con una X anote los datos positivos según sea el caso)
+      '¿Eres?' : const Align(alignment: Alignment.centerLeft, child: Text('hijos',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))),
+      '5.- mano' : RadioInput(index: countManoDomEnum,tipoEnum: 3,manoDomEnum: manoDomEnum ),
+
+              
+    } 
+
+
   ];
 
   int i = 0;
@@ -122,23 +251,47 @@ class _MedicalTestState extends State<MedicalTest> {
     _pages[i].add(Title(
       color: Colors.black, 
       child: Text(_titles[i], style: TextStyle(fontSize:MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .05: 0.025),fontWeight: FontWeight.bold))));
-      formpart1[i].forEach((key, value) {
-          _pages[i].add(const SizedBox(height: 10,));
-          _pages[i].add (
-          MultiInputs(
-          maxLines: 1,
-          labelText: key,
-          controller: null,
-          autofocus: false,
-          formProperty: key,
-          MultiInputss: formpart1[i],
-          keyboardType: TextInputType.text));
-          formi++;
-          _pages[i].add(const SizedBox(height: 10,));
+        formpart1[i].forEach((key, value) {
+        switch (value.runtimeType) {
+          case MultiInputsForm:
+            _pages[i].add(const SizedBox(height: 10,));
+            _pages[i].add (
+            MultiInputs(
+            maxLines: 1,
+            labelText: key,
+            controller: null,
+            autofocus: false,
+            formProperty: key,
+            formValue: formpart1[i],
+            keyboardType: TextInputType.text));
+            formi++;
+            _pages[i].add(const SizedBox(height: 10,));
+            break;
+          case RadioInput:
+          // print(value.tipoEnum);
+           if(value.tipoEnum == 3){
+            _pages[i].add(value);
+          }else{ 
+          _pages[i].add(value);
+          }
+          break;
+          case List<CheckInput>:
+            _pages[i].add(SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: value,
+            ),
+          ));
+          break;
+          default:
+          _pages[i].add(value);
+        }  
+        
       });
       ++i; 
+      }
     }
-  }    
+  
 
     return  showDialog<String>(
     context: context,
@@ -171,7 +324,7 @@ class _MedicalTestState extends State<MedicalTest> {
                     child: PageView.builder(
                       // physics: const NeverScrollableScrollPhysics(),
                       controller: _pageController,
-                      itemCount: 4,
+                      itemCount: 7,
                       itemBuilder: (context, index) {
                         return SingleChildScrollView(
                           child: Form(
@@ -215,12 +368,14 @@ class _MedicalTestState extends State<MedicalTest> {
                             // });
                             setState(() { 
                               _currentPageIndex++;
-                            });                                
+                            });    
                           } else {
                             // formpart1[_currentPageIndex].forEach((key, value) { 
                             //   print(value.contenido);
                             // });
+
                           }
+                          
                         },
                         child: Text(_currentPageIndex == _pages.length - 2
                             ? 'Terminar'
