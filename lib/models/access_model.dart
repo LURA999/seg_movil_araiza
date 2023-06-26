@@ -9,7 +9,7 @@ class Access {
 
   Access.fromJson(Map<String, dynamic> json){
     info = json['message'];
-    status = json['status'];
+    status = int.parse(json['status']);
   }
   
   Map<String, dynamic> toJson() {

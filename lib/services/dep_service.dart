@@ -3,7 +3,10 @@ import 'package:app_seguimiento_movil/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'dart:io';
+import 'dart:convert';
+
 import 'package:encrypt/encrypt.dart' as encrypt;
+import 'package:http/http.dart' as http;
 
 class DepartamentService extends ChangeNotifier {
   // final String _baseUrl = "127.0.0.1:8000";
@@ -18,12 +21,14 @@ class DepartamentService extends ChangeNotifier {
   try {
     isSaving = true;
     notifyListeners();
-    final response = await dio.get(
-      'http://10.0.2.2:8000/sct_dep?pass=$pass&departament=$departament'
-      );
 
-    if (response.statusCode == 200){
-      final result = Access.fromJson(response.data);
+    final url = Uri.parse('https://www.comunicadosaraiza.com/movil_scan_api/API/departament.php?departament=$departament&pass=$pass');
+    var response = (await http.get(url)).body;
+
+    // var response = await http.post(url, body: {'pass': pass, 'departament': departament});
+    
+    if (response.contains('200')){
+      final result = Access.fromJson(jsonDecode(response));
       isSaving = false;
       notifyListeners();
       return result;
