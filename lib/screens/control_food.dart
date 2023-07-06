@@ -3,6 +3,7 @@ import 'package:app_seguimiento_movil/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
 import '../models/multi_inputs_model.dart';
+import '../services/letter_mediaquery.dart';
 import '../services/services.dart';
 
 
@@ -13,12 +14,14 @@ class DiningRoom extends StatefulWidget {
   State<DiningRoom> createState() => _DiningRoomState();
 }
 
+
 class _DiningRoomState extends State<DiningRoom> {
  @override
   Widget build(BuildContext context) {
     
+    bool salir = false;
     //Nombre del campo :  contenido, ¿obligatorio?, ¿select?, ¿enabled?
-     
+    
     //Fecha se inserta automaticamente
     final Map<String, MultiInputsForm> formValuesInicioTur = {
       'plate' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'plate':['',true,false, true],
@@ -94,7 +97,7 @@ class _DiningRoomState extends State<DiningRoom> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width,
                       child: ElevatedButton(
-                        onPressed: (Provider.of<VarProvider>(context).myGlobalVariable || false) ? () {
+                        onPressed: (Provider.of<VarProvider>(context).varControl || false) ? () {
                           showDialog(
                           context: context,
                           builder: (BuildContext context) {
@@ -104,36 +107,30 @@ class _DiningRoomState extends State<DiningRoom> {
                                 children: [
                                   SingleChildScrollView(
                                     child: AlertDialog(
-                                      title: Text('Cerrar Turno',style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
+                                      title: Text('Cerrar Turno',style:  MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
                                       //para celulares
-                                      TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015)):
+                                      TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.015),fontWeight: FontWeight.bold):
                                       //para tablets
-                                      TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),),),
+                                      TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),fontWeight: FontWeight.bold,)),
                                       content: Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                         children:[
-                                          ElevatedButton(onPressed: () async {
+                                          ElevatedButton(onPressed: (Provider.of<VarProvider>(context).varSalir) == false ? () async {
+                                            Provider.of<VarProvider>(context,listen: false).updateVarSalir(true);
                                             Provider.of<VarProvider>(context,listen: false).updateVariable(false);
                                             DepartamentService dpser = DepartamentService();
-                                            await dpser.postCloseTurnFood();
-                                            setState(() {
-                                              Navigator.of(context).pop(context);
-                                              Navigator.of(context).pushNamed('home');
-                                            });
-                                          }, child: Text('Aceptar',style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
-                                            //para celulares
-                                            TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015)):
-                                            //para tablets
-                                            TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),)
-                                            ,)),
-                                          ElevatedButton(onPressed:(){
+                                              await dpser.postCloseTurnFood();
+                                              setState(() {
+                                                Navigator.of(context).pop(context);
+                                                Navigator.of(context).pushNamed('home');
+                                              });
+                                            }: null, child: Text('Aceptar',style: getTextStyleButtonField(context))
+                                          ),
+                                          ElevatedButton(onPressed: (Provider.of<VarProvider>(context).varSalir) == false ? (){
                                             Navigator.of(context).pop(context);
-                                          },child: Text('Cancelar', style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
-                                          //para celulares
-                                          TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015)):
-                                          //para tablets
-                                          TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),),
-                                          ))
+
+                                          }: null,child: Text('Cancelar', style: getTextStyleButtonField(context)),
+                                          )
                                         ]
                                       ),
                                     ),
@@ -144,11 +141,7 @@ class _DiningRoomState extends State<DiningRoom> {
                           }
                           );
                         }:null,
-                        child: Text('Cerrar turno',style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
-                        //para celulares
-                        TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015)):
-                        //para tablets
-                        TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),),)),
+                        child: Text('Cerrar turno',style: getTextStyleButtonField(context))),
                     ),
                     ButtonForm(
                         controller: controller,

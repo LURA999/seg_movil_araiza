@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:app_seguimiento_movil/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
+import '../services/letter_mediaquery.dart';
+
 
 
 class ControlVehicles extends StatefulWidget {
@@ -42,7 +44,7 @@ class _ControlVehiclesState extends State<ControlVehicles> {
     };
 
     final Map<String, MultiInputsForm> formValuesObservacion = {
-      'descripcion' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false)// 'description': ['',true,false, true],
+      'description' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false)// 'description': ['',true,false, true],
     };
 
     final Map<String, MultiInputsForm> formValuesDescRepor = {
@@ -52,12 +54,12 @@ class _ControlVehiclesState extends State<ControlVehicles> {
     };
 
     final Map<String, MultiInputsForm> formValuesBuscarVh = {
-      'placas' :MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'placas': ['',true,false, true],
-      'tipo_vehiculo' :MultiInputsForm(contenido: '', obligatorio: false, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'tipo_vehiculo': ['',false, false,false],
-      'color' :MultiInputsForm(contenido: '', obligatorio: false, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'color': ['',false, false,false],
-      'nombre' :MultiInputsForm(contenido: '', obligatorio: false, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'nombre': ['',false, false,false],
-      'entrada' :MultiInputsForm(contenido: '', obligatorio: false, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'entrada': ['',false, false,false],
-      'salida' :MultiInputsForm(contenido: '', obligatorio: false, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'salida': ['',false, false,false]
+      'placas' :MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false,suffixIcon: Icons.search_outlined),// 'placas': ['',true,false, true],
+      'tipo_vehiculo' :MultiInputsForm(contenido: '', obligatorio: false, select: false, enabled: false, paintSignature: false,uploadFile: false),// 'tipo_vehiculo': ['',false, false,false],
+      'color' :MultiInputsForm(contenido: '', obligatorio: false, select: false, enabled: false, paintSignature: false,uploadFile: false),// 'color': ['',false, false,false],
+      'nombre' :MultiInputsForm(contenido: '', obligatorio: false, select: false, enabled: false, paintSignature: false,uploadFile: false),// 'nombre': ['',false, false,false],
+      'entrada' :MultiInputsForm(contenido: '', obligatorio: false, select: false, enabled: false, paintSignature: false,uploadFile: false),// 'entrada': ['',false, false,false],
+      'salida' :MultiInputsForm(contenido: '', obligatorio: false, select: false, enabled: false, paintSignature: false,uploadFile: false),// 'salida': ['',false, false,false]
     };
     final TextEditingController controller = TextEditingController();
 
@@ -109,7 +111,7 @@ class _ControlVehiclesState extends State<ControlVehicles> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width,
                       child: ElevatedButton(
-                        onPressed: (Provider.of<VarProvider>(context).myGlobalVariable || false) ? () {
+                        onPressed: (Provider.of<VarProvider>(context).varControl || false) ? () {
                           showDialog(
                           context: context,
                           builder: (BuildContext context) {
@@ -120,32 +122,28 @@ class _ControlVehiclesState extends State<ControlVehicles> {
                                   child: AlertDialog(
                                     title: Text('Cerrar Turno',style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
                                     //para celulares
-                                    TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015)):
+                                    TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.015),fontWeight: FontWeight.bold):
                                     //para tablets
-                                    TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),),
+                                    TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),fontWeight: FontWeight.bold,)
                                     ),
                                     content: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                       children:[
-                                        ElevatedButton(onPressed: () async {
-                                          Provider.of<VarProvider>(context,listen: false).updateVariable(false);
+                                        ElevatedButton(onPressed: (Provider.of<VarProvider>(context).varSalir) == false ?() async {
                                           DepartamentService dpser = DepartamentService();
-                                          await dpser.postCloseTurnVehicle();
-                                          Navigator.of(context).pop(context);
-                                          Navigator.of(context).pushNamed('home');
-                                        }, child: Text('Aceptar', style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
-                                        //para celulares
-                                        TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015)):
-                                        //para tablets
-                                        TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),),
+                                          var salirInt = (await dpser.postCloseTurnVehicle());
+                                          if (salirInt) {
+                                            Provider.of<VarProvider>(context,listen: false).updateVariable(false);
+                                            Provider.of<VarProvider>(context,listen: false).updateVarSalir(true);
+                                            Navigator.of(context).pop(context);
+                                            Navigator.of(context).pushNamed('home');
+                                            Provider.of<VarProvider>(context,listen: false).updateVarSalir(false);
+                                          }
+                                        }: null, child: Text('Aceptar', style: getTextStyleButtonField(context)
                                         )),
-                                        ElevatedButton(onPressed:(){
+                                        ElevatedButton(onPressed:(Provider.of<VarProvider>(context).varSalir) == false ?(){
                                           Navigator.of(context).pop(context);
-                                        },child: Text('Cancelar', style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
-                                        //para celulares
-                                        TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015)):
-                                        //para tablets
-                                        TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),),
+                                        }: null,child: Text('Cancelar', style: getTextStyleButtonField(context)
                                         ))
                                       ]
                                     ),
@@ -156,11 +154,9 @@ class _ControlVehiclesState extends State<ControlVehicles> {
                           }
                           );
                         }:null,
-                        child:  Text('Cerrar turno',style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
-                        //para celulares
-                        TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015)):
-                        //para tablets
-                        TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),),)),
+                        child:  Text('Cerrar turno',style: getTextStyleButtonField(context)
+                        )
+                      ),
                     ),
                     ButtonForm(
                         control: 1,
@@ -185,7 +181,7 @@ class _ControlVehiclesState extends State<ControlVehicles> {
                         enabled: true),
                     ButtonForm(
                       control: 1,
-                      controller: controller,
+                      controller: null,
                       textButton: 'Buscar vehículo',
                       btnPosition: 5,
                       field: const [

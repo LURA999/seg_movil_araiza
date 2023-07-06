@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:app_seguimiento_movil/models/models.dart';
 import 'package:app_seguimiento_movil/services/services.dart';
 import 'package:app_seguimiento_movil/widgets/widgets.dart';
@@ -37,12 +39,10 @@ class _ScannerQR extends State<ScannerQR> {
 
   
     return Scaffold(
-      
       body: Column(
         children: <Widget>[
           Expanded(flex: 4, child: _buildQrView(context)),
           SizedBox(
-            
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
@@ -101,8 +101,11 @@ class _ScannerQR extends State<ScannerQR> {
       ),
     );
   }
+  
+  bool isProccesing = false;
 
   Widget _buildQrView(BuildContext context) {
+
     // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
     var scanArea = (MediaQuery.of(context).size.width < 400 ||
             MediaQuery.of(context).size.height < 400)
@@ -127,73 +130,90 @@ class _ScannerQR extends State<ScannerQR> {
   }
 
   void _onQRViewCreated(QRViewController controller) {
-    setState(() {
-      this.controller = controller;
-    });
-    controller.scannedDataStream.listen((scanData) {
-    setState(() async {
+
+    Color color = Colors.red;
+    String text = '';
+    if (isProccesing == false) {
+      setState(() {
+        isProccesing = true;
+        this.controller = controller;
+      });
+
+     controller.scannedDataStream.listen((scanData) async {
+      setState(() {
+        isProccesing = true;
+        this.controller = controller;
+      });
         result = scanData;
+        controller.stopCamera();
         Qr newQr = Qr();
         Map<String, dynamic> objetoJson = { 
-          for (var e in result!.code.toString().split(',').map((e) => e.trim())) 
-          e.split(':')[0].trim() : e.split(':')[1].trim() 
-        };
-        
+           for (var e in result!.code.toString().split(',').map((e) => e.trim())) 
+           e.split(':')[0].trim() : e.split(':')[1].trim() 
+        }; 
+        // var jsonResult = json.decode(result!.code!);
         // Map<String, dynamic> json = await vp.arrSharedPreferences();
-
         newQr.color = objetoJson['color'];
-        newQr.department = objetoJson['departament'];
-        newQr.employeeName = objetoJson['employeeName '];
-        // newQr.fkTurn = ;
-        newQr.typevh = objetoJson['typeVh'];
+        newQr.departament = objetoJson['departament'];
+        newQr.employeeName = objetoJson['employeeName'];
+        newQr.fkTurn = 1;
+        newQr.typevh = objetoJson['typevh'];
         newQr.plates = objetoJson['plates'];
-        await ds.postQr(newQr);
+        if(isProccesing == true){
+            await ds.postQr(newQr).then((value) {
+            if(value.status == 200){
+              setState(() {
+                color = Colors.green;
+                text = 'Scanner completado.';
+              });
+            }else{
+              setState(() {
+                color = Colors.red;
+                text = 'Ah ocurrido un error.';
+              });
+            }
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+            duration: const Duration(seconds: 5),
+            backgroundColor: color,
+            content: Text(text,style: const TextStyle(color: Colors.white)),
+          ));
+          await Future.delayed(const Duration(seconds: 5));
+        }
 
-
-      /*showDialog(
+        setState(() {
+          isProccesing = false;
+          this.controller = controller;
+          controller.resumeCamera();
+        });
+        /* 
+       showDialog(
       context: context,
       builder: (BuildContext context) {
         Qr newQr = Qr();
-        DepartamentService ds = DepartamentService();
-        newQr.color = objetoJson['color'];
-        newQr.department = objetoJson['departament'];
-        newQr.employeeName = objetoJson['employeeName '];
+       newQr.color = objetoJson['color'];
+        newQr.departament = objetoJson['departament'];
+        newQr.employeeName = objetoJson['employeeName'];
         newQr.fkTurn = 1;
-        newQr.typevh = objetoJson['typeVh'];
+        newQr.typevh = objetoJson['typevh'];
         newQr.plates = objetoJson['plates'];
-        ds.postQr(newQr);
         return  Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             AlertDialog(
               title: const Text('LEYENDO QR'),
-              content: Container(
-                child: Text('JSONCOMPLETO: ${json}, RECUPERANDO DATO EN JSON ${objetoJson['calle']}'),
-              )
+              content: Text('JSONCOMPLETO: color: ${newQr.color}, departament: ${newQr.departament}, employeeName: ${newQr.employeeName}, turn: ${newQr.fkTurn}, typevh: ${newQr.typevh}, plates: ${newQr.plates},')
              )
               ]
               );
             
           }
-        );*/
-        ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          duration: Duration(seconds: 3),
-          backgroundColor: Colors.green,
-          content: Text('Scanner completado'),
-        ),
-      );
-
-      controller.stopCamera();
-      await Future.delayed(const Duration(seconds: 5));
-      controller.resumeCamera();
+        );  */
+        // ignore: use_build_context_synchronously
 
       });
-      
-      
-
-      
-    });
+    }
   }
 
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {

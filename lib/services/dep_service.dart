@@ -1,34 +1,35 @@
 import 'package:app_seguimiento_movil/models/models.dart';
 import 'package:app_seguimiento_movil/services/services.dart';
-import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'dart:io';
 import 'dart:convert';
 
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart';
 
+//,headers: {HttpHeaders.contentTypeHeader: "application/json"}
 class DepartamentService extends ChangeNotifier {
-  // final String _baseUrl = "127.0.0.1:8000";
+
+
   bool isSaving = true;
   final dio = Dio();
-  VarProvider vp = VarProvider();
+  //Esta en modo desarrollo?
+  bool modoApk = kDebugMode?true:false; 
+  late String link = modoApk?'https://www.comunicadosaraiza.com/movil_scan_api/API':'https://www.comunicadosaraiza.com/movil_scan_api/API';
 
   Future<Access> checkPassWord( String pass, int departament ) async {
-
   Access result = Access();
-
   try {
     isSaving = true;
     notifyListeners();
 
-    final url = Uri.parse('https://www.comunicadosaraiza.com/movil_scan_api/API/departament.php?departament=$departament&pass=$pass');
+    final url = Uri.parse('$link/departament.php?departament=$departament&pass=$pass');
     var response = (await http.get(url)).body;
+      final result = Access.fromJson(jsonDecode(response));
 
     // var response = await http.post(url, body: {'pass': pass, 'departament': departament});
-    
-    if (response.contains('200')){
-      final result = Access.fromJson(jsonDecode(response));
+    if (result.status == 200){
       isSaving = false;
       notifyListeners();
       return result;
@@ -36,7 +37,7 @@ class DepartamentService extends ChangeNotifier {
     isSaving = false;
     notifyListeners();
     return result; 
-  } on DioError catch(e) {
+  } catch(e) {
     return result;
   }
   
@@ -47,18 +48,26 @@ class DepartamentService extends ChangeNotifier {
     try {
       isSaving = true;
       notifyListeners();
-      final response = await dio.put(
-        'http://10.0.2.2:8000/pst_tncv/'
-        );
-      if (response.statusCode == 200){
+      final url = Uri.parse('$link/turn_vehicle.php');
+      var response = (await http.post(url, body: json.encode({}))).body;
+      
+      if (response.contains('200')){  
         isSaving = false;
         notifyListeners();
         return true;
       }
+      /* final response = await dio.put(
+        'http://10.0.2.2:8000/pst_tncv/'
+        ); 
+      if (response.statusCode == 200){
+        isSaving = false;
+        notifyListeners();
+        return true;
+      }*/
       isSaving = false;
       notifyListeners();
       return false; 
-      } on DioError catch(e) {
+      } catch(e) {
         return false;
       }
     }
@@ -66,18 +75,26 @@ class DepartamentService extends ChangeNotifier {
     try {
       isSaving = true;
       notifyListeners();
-      final response = await dio.put(
+      final url = Uri.parse('$link/turn_food.php');
+      var response = (await http.post(url, body: json.encode({}))).body;
+      
+      if (response.contains('200')){  
+        isSaving = false;
+        notifyListeners();
+        return true;
+      }
+     /* final response = await dio.put(
         'http://10.0.2.2:8000/pst_tncf/'
         );
       if (response.statusCode == 200){
         isSaving = false;
         notifyListeners();
         return true;
-      }
+      }*/
       isSaving = false;
       notifyListeners();
       return false; 
-      } on DioError catch(e) {
+      } catch(e) {
         return false;
       }
     }
@@ -85,7 +102,15 @@ Future<bool> postObvFood(TurnFood t) async {
     try {
       isSaving = true;
       notifyListeners();
-      final response = await dio.put(
+      final url = Uri.parse('$link/turn_food.php');
+      var response = (await http.post(url, body: json.encode(t.toJson()),headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+      
+      if (response.contains('200')){  
+        isSaving = false;
+        notifyListeners();
+        return true;
+      }
+      /*final response = await dio.put(
         'http://10.0.2.2:8000/pst_obvf/',options: Options(
         headers: {
           HttpHeaders.contentTypeHeader: "application/json"
@@ -96,7 +121,7 @@ Future<bool> postObvFood(TurnFood t) async {
         isSaving = false;
         notifyListeners();
         return true;
-      }
+      }*/
       isSaving = false;
       notifyListeners();
       return false; 
@@ -108,7 +133,15 @@ Future<bool> postObvVehicle(TurnVehicle t) async {
     try {
       isSaving = true;
       notifyListeners();
-      final response = await dio.put(
+      final url = Uri.parse('$link/turn_vehicle.php');
+      var response = (await http.post(url, body: json.encode(t.toJson()))).body;
+      
+      if (response.contains('200')){  
+        isSaving = false;
+        notifyListeners();
+        return true;
+      }
+      /* final response = await dio.put(
         'http://10.0.2.2:8000/pst_obvv/',options: Options(
         headers: {
           HttpHeaders.contentTypeHeader: "application/json"
@@ -119,7 +152,7 @@ Future<bool> postObvVehicle(TurnVehicle t) async {
         isSaving = false;
         notifyListeners();
         return true;
-      }
+      } */
       isSaving = false;
       notifyListeners();
       return false; 
@@ -128,6 +161,28 @@ Future<bool> postObvVehicle(TurnVehicle t) async {
       }
     }
 
+  Future<Access> findVehicle(String plate) async {
+    Access result = Access();
+    try {
+      notifyListeners();
+      final url = Uri.parse('$link/qr_vehicle.php?plate=$plate');
+      var response = (await http.get(url)).body;
+      final result = Access.fromJson(jsonDecode(response));
+      if (result.status == 200){
+        isSaving = false;
+        notifyListeners();
+        return result;
+      }
+      
+      isSaving = false;
+      notifyListeners();
+      return result; 
+    } catch (e) {
+      return result;
+    }
+    
+    
+  }
 
   Future<Access> postTurnVehicle( TurnVehicle session ) async {
   final sm = SessionManager();
@@ -143,13 +198,19 @@ Future<bool> postObvVehicle(TurnVehicle t) async {
   try {
     isSaving = true;
     notifyListeners();
-    final response = await dio.post(
+    final url = Uri.parse('$link/turn_vehicle.php');
+      var response = (await http.post(
+      url, 
+      body: json.encode(session.toJson()))).body;
+      result =Access.fromJson(json.decode(response));
+
+    /* final response = await dio.post(
       'http://10.0.2.2:8000/pst_tnv/',
       options: Options(
         headers: {
           HttpHeaders.contentTypeHeader: "application/json"
         }
-      ), data: session.toJson());
+      ), data: session.toJson()); */
 
     isSaving = false;
     notifyListeners();
@@ -174,14 +235,19 @@ Future<bool> postObvVehicle(TurnVehicle t) async {
   try {
     isSaving = true;
     notifyListeners();
-    final response = await dio.post(
+      final url = Uri.parse('$link/turn_food.php');
+      var response = (await http.post(
+      url, 
+      body: json.encode(session.toJson()))).body;
+      result =Access.fromJson(json.decode(response));
+   /*  final response = await dio.post(
       'http://10.0.2.2:8000/pst_tnf/',
       options: Options(
         headers: {
           HttpHeaders.contentTypeHeader: "application/json"
         }
       ), data: session.toJson());
-
+ */
     isSaving = false;
     notifyListeners();
     return result; 
@@ -190,37 +256,55 @@ Future<bool> postObvVehicle(TurnVehicle t) async {
   }
   
   } 
+  
   Future<Access> postQr( Qr scn ) async {
   Access result = Access();
   try {
     isSaving = true;
     notifyListeners();
-    final response = await dio.post(
+     final url = Uri.parse('$link/qr_vehicle.php');
+      var response = (await http.post(
+      url, 
+      body:json.encode(scn.toJson()))).body;
+      result =Access.fromJson(json.decode(response));
+      
+      
+    /*final response = await dio.post(
       'http://10.0.2.2:8000/pst_qr/',
       options: Options(
         headers: {
           HttpHeaders.contentTypeHeader: "application/json"
         }
       ),
-      data: scn,);
+      data: scn,);*/
     isSaving = false;
     notifyListeners();
     return result; 
-  } on DioError catch(e) {
+  } on Exception catch(e) {
     return result;
   }
   
   }
 
   
-    Future<String> selectDate( DateExcel  e ) async {
+    Future<String?> selectDate( DateExcel  e ) async {
     Qr qr = Qr();
     
-    List<Qr> result = [];
+    List<Qr> listContainer = [];
+    Access result = Access();
+
     try {
       isSaving = true;
       notifyListeners();
-      final response = await dio.post(
+
+      
+      final url = Uri.parse('$link/qr_vehicle.php');
+      var response = (await http.post(
+      url, 
+      body: json.encode(e.toJson()))).body;
+
+      result =Access.fromJson(json.decode(response));
+      /* final response = await dio.post(
         'http://10.0.2.2:8000/slc_rep/',
         options: Options(
           headers: {
@@ -233,10 +317,22 @@ Future<bool> postObvVehicle(TurnVehicle t) async {
         isSaving = false;
         notifyListeners();
         return str['data'].toString();
-      }
+      } 
       isSaving = false;
       notifyListeners();
-      return str['data'].toString(); 
+      return str.container.toString();
+      */
+
+      final str =  Access.fromJson(jsonDecode(response));
+
+      if (result.status == 200){ 
+        isSaving = false;
+        notifyListeners();
+        return str.container.toString(); 
+      } 
+      isSaving = false;
+      notifyListeners();
+      return str.container.toString(); 
       } on DioError catch(e) {
         return e.toString();
       }
@@ -244,12 +340,26 @@ Future<bool> postObvVehicle(TurnVehicle t) async {
   
 
 
-  Future<bool> postRegisterVehicle( RegisterVehicle reg ) async {
+  Future<Access> postRegisterVehicle( RegisterVehicle reg ) async {
   Access result = Access();
   try {
     isSaving = true;
     notifyListeners();
-    final response = await dio.post(
+    final url = Uri.parse('$link/qr_vehicle.php');
+      var response = (await http.post(
+      url, 
+      body: json.encode(reg.toJson()))).body;
+
+      result =Access.fromJson(json.decode(response));
+
+
+      if (result.status == 200){ 
+        isSaving = false;
+        notifyListeners();
+        return result;
+      } 
+
+    /* final response = await dio.post(
       'http://10.0.2.2:8000/pst_regv/',
       options: Options(
         headers: {
@@ -262,12 +372,12 @@ Future<bool> postObvVehicle(TurnVehicle t) async {
       isSaving = false;
       notifyListeners();
       return true;
-    }
+    } */
     isSaving = false;
     notifyListeners();
-      return false;
+      return result;
   } on DioError catch(e) {
-      return false;
+      return result;
   }
   
   }
@@ -278,7 +388,18 @@ Future<bool> postObvVehicle(TurnVehicle t) async {
   try {
     isSaving = true;
     notifyListeners();
-    final response = await dio.post(
+
+    final url = Uri.parse('$link/qr_food.php');
+      var response = (await http.post(
+      url, 
+      body: json.encode(reg.toJson()))).body;
+      
+      if (response.contains('200')){ 
+        isSaving = false;
+        notifyListeners();
+        return true;
+      }
+    /* final response = await dio.post(
       'http://10.0.2.2:8000/pst_regf/',
       options: Options(
         headers: {
@@ -291,7 +412,8 @@ Future<bool> postObvVehicle(TurnVehicle t) async {
       isSaving = false;
       notifyListeners();
       return true;
-    }
+    } */
+
     isSaving = false;
     notifyListeners();
       return false;

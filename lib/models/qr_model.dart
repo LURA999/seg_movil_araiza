@@ -5,7 +5,7 @@ class Qr {
   String? typevh;
   String? color;
   String? employeeName;
-  String? department;
+  String? departament;
   DateTime? timeEntry;
   DateTime? timeExit;
   int? fkTurn;
@@ -15,7 +15,7 @@ class Qr {
     this.typevh,
     this.color,
     this.employeeName,
-    this.department,
+    this.departament,
     this.timeEntry,
     this.timeExit,
     this.fkTurn
@@ -25,10 +25,11 @@ class Qr {
     plates = json['plates'];
     color = json['color'];
     employeeName = json['employeeName'];
-    department = json['department'];
+    departament = json['departament'];
+    fkTurn = json['fkTurn'];
+    typevh = json['typevh'];
     timeEntry = json['timeEntry'];
     timeExit = json['timeExit'];
-    fkTurn = json['fkTurn'];
   }
 
 
@@ -50,15 +51,19 @@ List<dynamic>  toJsonArr(Map<String, dynamic> arr) {
     return jsonArray; */
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    data['plates'] = plates;
-    data['color'] = color;
-    data['employeeName'] = employeeName;
-    data['department'] = department;
-    data['timeEntry'] = timeEntry;
-    data['timeExit'] = timeExit;
-    data['fkTurn'] = fkTurn;
+  Map<String, String> toJson() {
+    final Map<String, String> data = {};
+    data['plates'] = plates!;
+    data['color'] = color!;
+    data['employeeName'] = employeeName!;
+    data['departament'] = departament!;
+    data['typevh'] = typevh!;
+    data['fkTurn'] = fkTurn!.toString();
+
+    if(timeEntry != null && timeExit != null){
+      data['timeEntry'] = timeEntry!.toString();
+      data['timeExit'] = timeExit!.toString();
+    }
     return data;
   }
 }

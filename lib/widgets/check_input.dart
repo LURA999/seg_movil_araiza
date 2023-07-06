@@ -51,4 +51,74 @@ class _CheckInputState extends State<CheckInput> {
     );
   }
   
+
+  /***
+   * 
+   * Column(
+          children: [
+              ListTile(
+              title: const Text('Si'),
+              leading: Radio<YesNot>(
+                activeColor: AppTheme.primary,
+                fillColor: MaterialStateProperty.resolveWith(getColor),
+                value: YesNot.si,
+                groupValue: widget.yesNotEnum![widget.index],
+                onChanged: (YesNot? value) {
+                  setState(() {
+                    widget.yesNotEnum![widget.index] = value!;
+                  });
+                },
+              ),
+            ),
+            ListTile(
+              title: const Text('No'),
+              leading: Radio<YesNot>(
+                activeColor: AppTheme.primary,
+                fillColor: MaterialStateProperty.resolveWith(getColor),
+                value: YesNot.no,
+                groupValue: widget.yesNotEnum![widget.index],
+                onChanged: (YesNot? value) {
+                  setState(() {
+                    widget.yesNotEnum![widget.index] = value!;
+                  });
+                },
+              ),
+            ),
+          ],
+        );
+        
+      case 2:
+      return Column(
+          children: [
+              ListTile(
+              title: const Text('Accidente'),
+              leading: Radio<Cause>(
+                activeColor: AppTheme.primary,
+                fillColor: MaterialStateProperty.resolveWith(getColor),
+                value: Cause.accidente,
+                groupValue: widget.causeEnum![widget.index],
+                onChanged: (Cause? value) {
+                  setState(() {
+                    widget.causeEnum![widget.index] = value!;
+                  });
+                },
+              ),
+            ),
+            ListTile(
+              title: const Text('Enfermedad'),
+              leading: Radio<Cause>(
+                activeColor: AppTheme.primary,
+                fillColor: MaterialStateProperty.resolveWith(getColor),
+                value: Cause.enfermedad,
+                groupValue: widget.causeEnum![widget.index],
+                onChanged: (Cause? value) {
+                  setState(() {
+                    widget.causeEnum![widget.index] = value!;
+                  });
+                },
+              ),
+            ),
+          ],
+        );
+   */
 }

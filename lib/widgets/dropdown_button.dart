@@ -1,7 +1,6 @@
-import 'package:app_seguimiento_movil/models/models.dart';
 import 'package:flutter/material.dart';
 import 'package:app_seguimiento_movil/theme/app_theme.dart';
-
+import '../services/letter_mediaquery.dart';
 
 class DropdownButtonWidget extends StatefulWidget {
   List<String>? list;
@@ -55,11 +54,7 @@ class _DropdownButtonWidgetState extends State<DropdownButtonWidget> {
           items: list.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,
-              child: Text(value,style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
-              //para celulares
-              TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015)):
-              //para tablets
-              TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),),),
+              child: Text(value,style: getTextStyleButtonField(context)),
             );
           }).toList(),
             ),

@@ -12,16 +12,21 @@ class VarProvider with ChangeNotifier {
  final iv = encrypt.IV.fromLength(16);
  TurnVehicle tn = TurnVehicle();
  final sm = SessionManager();
- bool myGlobalVariable = false;
+ bool varControl = false;
+ bool varSalir = false;
  int auxPrevDirectory = 1;
  int auxNextDirectory = 1;
 
 
   void updateVariable(bool value) {
-    myGlobalVariable = value;
+    varControl = value;
     notifyListeners();
   }
 
+  void updateVarSalir(bool value) {
+    varSalir = value;
+    notifyListeners();
+  }
 
   void updatePrev(int value) {
     auxPrevDirectory = value;

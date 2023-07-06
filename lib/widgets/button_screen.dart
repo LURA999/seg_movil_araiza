@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../services/services.dart';
+import '../services/letter_mediaquery.dart';
 
 class ButtonScreen extends StatelessWidget {
   final String textButton;
@@ -18,18 +18,14 @@ class ButtonScreen extends StatelessWidget {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: ElevatedButton(
-        onPressed: Provider.of<VarProvider>(context).myGlobalVariable
+        onPressed: Provider.of<VarProvider>(context).varControl
             ? () {
                 if (btnPosition == 1) {
                 Navigator.of(context).pushNamed('scanner_qr');
                 }
               }
             : null,
-        child: Text(textButton,style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
-                    //para celulares
-                    TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015)):
-                    //para tablets
-                    TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),)
+        child: Text(textButton,style: getTextStyleButtonField(context)
         )
       ),
     );

@@ -1,3 +1,4 @@
+import 'package:app_seguimiento_movil/models/models.dart';
 import 'package:app_seguimiento_movil/services/services.dart';
 import 'package:app_seguimiento_movil/screens/screens.dart';
 import 'package:flutter/material.dart';
@@ -26,8 +27,7 @@ class AppState extends StatelessWidget {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  // This widget is the root of your application.
+  
   @override
   Widget build(BuildContext context) {
   final HistoryNavigator navigatorObserver = HistoryNavigator();
@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       navigatorKey: navigatorKey,
       navigatorObservers: [navigatorObserver],
-      home: const MedicalRecords(),
+      home: const ControlVehicles(),
       routes: Routers.routerMain,
       theme: AppTheme.lightTeheme,
 

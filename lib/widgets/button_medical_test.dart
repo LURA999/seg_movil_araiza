@@ -2,6 +2,7 @@ import 'package:app_seguimiento_movil/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../models/models.dart';
+import '../services/letter_mediaquery.dart';
 
 
 class MedicalTest extends StatefulWidget {
@@ -30,13 +31,9 @@ class _MedicalTestState extends State<MedicalTest> {
           onPressed: () {
               newMethod(context);
           },
-          child: Text('Crear nuevo',style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
-          //para celulares
-          TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015)):
-          //para tablets
-          TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),),
+          child: Text('Crear nuevo',style: getTextStyleButtonField(context),
           ),
-          )
+        )
         );
       }
   Future<String?> newMethod(BuildContext context) {
@@ -234,9 +231,7 @@ class _MedicalTestState extends State<MedicalTest> {
     },
     {//5.-ANTECEDENTES PERSONALES (Con una X anote los datos positivos según sea el caso)
       '¿Eres?' : const Align(alignment: Alignment.centerLeft, child: Text('hijos',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))),
-      '5.- mano' : RadioInput(index: countManoDomEnum,tipoEnum: 3,manoDomEnum: manoDomEnum ),
-
-              
+      '5.- mano' : RadioInput(index: countManoDomEnum,tipoEnum: 3,manoDomEnum: manoDomEnum ),         
     } 
 
 

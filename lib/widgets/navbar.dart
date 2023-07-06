@@ -20,7 +20,7 @@ class Navbar extends StatelessWidget {
     double height = MediaQuery.of(context).size.height;
     return Align(
       alignment: Alignment.bottomCenter,
-      child: Container(
+      child: Ink(
         color: Colors.white,
         height: height * (
           MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
@@ -80,84 +80,83 @@ class _ButtonNavSvgState extends State<ButtonNavSvg> {
   
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTapDown: _handleTapDown,
-      onTapUp: _handleTapUp,
-      child: AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
-      padding:  EdgeInsets.fromLTRB(
-          MediaQuery.of(context).size.width * .01,
-          MediaQuery.of(context).size.height * .01,
-          MediaQuery.of(context).size.width * .01,
-          MediaQuery.of(context).size.height * .01,
-        ),
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(40)),
-          color: _isTapped ? const Color.fromARGB(255, 245, 245, 245) : Colors.white ,
-        ),
-        child: SvgPicture.asset(
-          widget.img,
-          height: widget.height,
-        ),
+    return Ink(
+      decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(40.0),
       ),
-      onTap: () {
-        int auxPrevDirectory = Provider.of<VarProvider>(context,listen: false).auxPrevDirectory;
-        int auxNextDirectory = Provider.of<VarProvider>(context,listen: false).auxNextDirectory;
-
-        if (widget.route=='home') {
-          auxPrevDirectory = 1;
-          auxNextDirectory = 0;
-          Provider.of<VarProvider>(context,listen: false).updatePrev(auxPrevDirectory);
-          Navigator.of(context).pushNamed('home');
-        }
-
-        if (widget.route=='prev') {
-          final routes = Navigator.of(context).widget.observers
-          .whereType<HistoryNavigator>()
-          .first.history;
-          try {
-            // print(routes.length);
-            if (routes.length > 1) {
-              final previousRouteSettings = routes[routes.indexOf(routes.firstWhere((e) => e.settings.name == widget.contexto2)) - 1].settings;
-              final previousRouteName = previousRouteSettings.name;
-              Navigator.of(context).pushNamed(previousRouteName!);
-            } 
-          } catch (e) {
-            return;
+      child: InkWell(
+        borderRadius: BorderRadius.circular(20.0),
+        child: Container(
+        padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.01) /* EdgeInsets.fromLTRB(
+            MediaQuery.of(context).size.width * .01,
+            MediaQuery.of(context).size.height * .01,
+            MediaQuery.of(context).size.width * .01,
+            MediaQuery.of(context).size.height * .01,
+          ) */,
+          child: SvgPicture.asset(
+            widget.img,
+            height: widget.height,
+          ),
+        ),
+        onTap: () {
+          int auxPrevDirectory = Provider.of<VarProvider>(context,listen: false).auxPrevDirectory;
+          int auxNextDirectory = Provider.of<VarProvider>(context,listen: false).auxNextDirectory;
+    
+          if (widget.route=='home') {
+            auxPrevDirectory = 1;
+            auxNextDirectory = 0;
+            Provider.of<VarProvider>(context,listen: false).updatePrev(auxPrevDirectory);
+            Navigator.of(context).pushNamed('home');
           }
-        }
-        
-       if (widget.route == 'next') {
-          final routes = Navigator.of(context).widget.observers
-          .whereType<HistoryNavigator>()
-          .first.history;
-          List<Set<String>> namesRoute = Routers.namesRouter;
-          try {
-            int indice = namesRoute.indexWhere((conjunto) => conjunto.contains(widget.contexto2));
-            /* for (var el in routes) {
-              print(el.settings.name);
-            } */
-
-            // print("Donde se encuentra la pantalla actual : ${routes.indexOf(routes.firstWhere((e) => e.settings.name == widget.contexto2))}: ${widget.contexto2} = el numero de pantalla que son en total : ${Routers.namesRouter.length}");
-            // print('El historial a crecido hasta ${routes.length} widgets');
-            // print('Estas en la pantalla ${widget.contexto2} y quieres ir para adelante a la pantalla ${routes.indexOf(routes.reversed.firstWhere((e) => e.settings.name == widget.contexto2)) + 1}');
-
-            if (indice <  namesRoute.length-1) { 
-              indice+=1;
-              //se disminuye uno, porque estamos accediendo a la ultima vista, que se accedio, ignorando la actual.
-              final previousRouteSettings = routes[routes.indexOf(routes.reversed.firstWhere((e) => e.settings.name == widget.contexto2)) -(indice - 1)].settings;
-              // var valido = namesRoute[indice].firstWhere((screen) => screen == previousRouteSettings.name);
-              if(namesRoute[indice].contains(previousRouteSettings.name)){
+    
+          if (widget.route=='prev') {
+            final routes = Navigator.of(context).widget.observers
+            .whereType<HistoryNavigator>()
+            .first.history;
+            try {
+              // print(routes.length);
+              if (routes.length > 1) {
+                final previousRouteSettings = routes[routes.indexOf(routes.firstWhere((e) => e.settings.name == widget.contexto2)) - 1].settings;
                 final previousRouteName = previousRouteSettings.name;
                 Navigator.of(context).pushNamed(previousRouteName!);
-              }
-              
-            } 
-          } catch (e) {
-            return;
+              } 
+            } catch (e) {
+              return;
+            }
           }
-        }
-      },
+          
+         if (widget.route == 'next') {
+            final routes = Navigator.of(context).widget.observers
+            .whereType<HistoryNavigator>()
+            .first.history;
+            List<Set<String>> namesRoute = Routers.namesRouter;
+            try {
+              int indice = namesRoute.indexWhere((conjunto) => conjunto.contains(widget.contexto2));
+              /* for (var el in routes) {
+                print(el.settings.name);
+              } */
+    
+              // print("Donde se encuentra la pantalla actual : ${routes.indexOf(routes.firstWhere((e) => e.settings.name == widget.contexto2))}: ${widget.contexto2} = el numero de pantalla que son en total : ${Routers.namesRouter.length}");
+              // print('El historial a crecido hasta ${routes.length} widgets');
+              // print('Estas en la pantalla ${widget.contexto2} y quieres ir para adelante a la pantalla ${routes.indexOf(routes.reversed.firstWhere((e) => e.settings.name == widget.contexto2)) + 1}');
+    
+              if (indice <  namesRoute.length-1) { 
+                indice+=1;
+                //se disminuye uno, porque estamos accediendo a la ultima vista, que se accedio, ignorando la actual.
+                final previousRouteSettings = routes[routes.indexOf(routes.reversed.firstWhere((e) => e.settings.name == widget.contexto2)) -(indice - 1)].settings;
+                // var valido = namesRoute[indice].firstWhere((screen) => screen == previousRouteSettings.name);
+                if(namesRoute[indice].contains(previousRouteSettings.name)){
+                  final previousRouteName = previousRouteSettings.name;
+                  Navigator.of(context).pushNamed(previousRouteName!);
+                }
+                
+              } 
+            } catch (e) {
+              return;
+            }
+          }
+        },
+      ),
     );
   }
 }

@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 abstract class BaseInputsForm {
   late String? contenido;
   final bool enabled;
@@ -20,8 +22,10 @@ class MultiInputsForm implements BaseInputsForm {
   final bool uploadFile;
   final bool select;
   final bool obligatorio;
-
+  final IconData? suffixIcon;
+  
   MultiInputsForm({
+    this.suffixIcon,
     required this.uploadFile,
     required this.contenido,
     required this.obligatorio,

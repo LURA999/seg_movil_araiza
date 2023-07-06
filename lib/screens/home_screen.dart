@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:app_seguimiento_movil/services/services.dart';
 import 'package:flutter/services.dart';
 
+import '../services/letter_mediaquery.dart';
+
 class HomeScreen extends StatelessWidget {
   
   const HomeScreen({Key? key}) : super(key: key);
@@ -179,11 +181,7 @@ class _ContainerOptionState extends State<ContainerOption> {
                       textAlign: TextAlign.center,
                       autofocus: autofucus,
                       obscureText: true,
-                      style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
-                      //para celulares
-                      TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015)):
-                      //para tablets
-                      TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),),
+                      style: getTextStyleButtonField(context),
                       onChanged: (value) {
                         setState(() {
                           password = value;
@@ -199,11 +197,7 @@ class _ContainerOptionState extends State<ContainerOption> {
                       const SizedBox(height: 10,),
                       ElevatedButton(
                       onPressed: handleButtonPressed,
-                      child: Text('Ingresar',style:  MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
-                      //para celulares
-                      TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015)):
-                      //para tablets
-                      TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),)),
+                      child: Text('Ingresar',style:  getTextStyleButtonField(context)),
                       )
                       ]
                       ),

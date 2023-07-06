@@ -56,7 +56,15 @@ class AppTheme {
           border:OutlineInputBorder(
             borderSide: BorderSide( color: primary),
           ),
-        )
+        ),
+
+       /*  datePickerTheme:  DatePickerThemeData(
+                          headerBackgroundColor: Colors.orange,
+                          backgroundColor: Colors.blue,
+                         
+        ) */
   );
+
+  
 
 }

@@ -1,13 +1,9 @@
-import 'dart:convert';
-import 'dart:typed_data';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:app_seguimiento_movil/models/models.dart';
-import 'package:app_seguimiento_movil/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:app_seguimiento_movil/widgets/dropdown_button.dart';
-import 'package:flutter_signature_pad/flutter_signature_pad.dart';
-import 'dart:ui' as ui;
+import '../services/letter_mediaquery.dart';
 
 
 
@@ -25,12 +21,12 @@ class MultiInputs extends StatefulWidget {
   final bool obscureText;
   final List<List<String>>? listSelect;
   final String formProperty;
-  final Map<String, dynamic> formValue;
+  late Map<String, dynamic> formValue;
   final bool? autofocus;
   final TextEditingController? controller;
 
   
-  const MultiInputs({
+  MultiInputs({
     Key? key, 
     this.hintText, 
     this.labelText, 
@@ -62,61 +58,13 @@ final ImagePicker _picker = ImagePicker();
     final RegExp regex = RegExp(
         r'^\d{2}\/(0[1-9]|1[0-2])\/\d{4}$',
     );
-    final DateFormat dateFormat = DateFormat('dd/MM/yyyy');
+    final DateFormat dateFormat = DateFormat('dd/MM/yyyy HH:mm:ss');
 
     /** Ingrese una imagen*/
     if(widget.formValue[widget.formProperty]!.uploadFile == true){
-      return ElevatedButton.icon(onPressed: openCamera, icon: const Icon(Icons.camera_alt_rounded), label: const Text('Abrir camara'));
+      return ElevatedButton.icon(onPressed: openCamera, icon: const Icon(Icons.camera_alt_rounded), label: Text('Abrir camara',style: getTextStyleButtonField(context),));
     }
     
-    /**SI entra aqui, es porque este espacio es un paint_asignature */
-    if(widget.formValue[widget.formProperty]!.paintSignature == true){
-      final _sign = GlobalKey<SignatureState>();
-      ByteData _img = ByteData(0);
-
-      return Column(
-        children: [
-          Text( widget.labelText.toString()),
-          SizedBox(
-            height: MediaQuery.of(context).size.height *.3,
-            width: MediaQuery.of(context).size.width,
-            child: Container( 
-              decoration: BoxDecoration(
-              border: Border.all(color: AppTheme.primary)
-            ),
-              child: Signature(
-                key: _sign,
-                onSign: () async {
-                    final sign = _sign.currentState;
-                     final image = await sign!.getData();
-                      var data = await image.toByteData(format: ui.ImageByteFormat.png);
-                      final encoded = base64.encode(data!.buffer.asUint8List());
-                      widget.formValue[widget.formProperty]!.contenido = encoded;
-                },
-                color: Colors.black,
-                strokeWidth: 3,
-              ),
-            ),
-          ),
-          _img.buffer.lengthInBytes == 0 ? Container() : LimitedBox(maxHeight: 200.0, child: Image.memory(_img.buffer.asUint8List())),
-           ElevatedButton.icon(
-            icon: const Icon(Icons.delete),
-            onPressed: () async {
-              final sign = _sign.currentState;
-              sign!.clear();
-              setState(() {
-                _img = ByteData(0);
-                widget.formValue[widget.formProperty]!.contenido = null;
-              });
-              // debugPrint("cleared");
-            },
-            label: const Text('BORRAR'),
-            
-            ),
-        ],
-      );
-    }
-
     /** Si entra aqui, entra para crear un select */
     if (widget.formValue[widget.formProperty]!.select == true) {
       int indice = 0;
@@ -129,6 +77,38 @@ final ImagePicker _picker = ImagePicker();
       return DropdownButtonWidget(list: widget.listSelect![indice-1],formValue: widget.formValue,formProperty: widget.formProperty);
     }
 
+    if (widget.keyboardType.toString().contains('datetime')) {
+        final format = DateFormat("yyyy-MM-dd HH:mm");
+        return DateTimeField(
+        controller: widget.controller,
+        format: format,
+        decoration: const InputDecoration(
+          suffixIcon: Icon(Icons.date_range), 
+          hintText: 'dd/mm/yyyy hh:mm'
+        ),
+        onShowPicker: (context, currentValue) async {
+          return await showDatePicker(
+            context: context,
+            firstDate: DateTime(1900),
+            initialDate: currentValue ?? DateTime.now(),
+            lastDate: DateTime(2100),
+          ).then((DateTime? date) async {
+            if (date != null) {
+              final time = await showTimePicker(
+                context: context,
+                initialTime:
+                    TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
+              );
+              widget.formValue[widget.formProperty]!.contenido = dateFormat.format(DateTimeField.combine(date, time));
+              return DateTimeField.combine(date, time);
+            } else {
+              widget.formValue[widget.formProperty]!.contenido = currentValue;
+              return currentValue;
+            }
+          });
+        },
+      );
+    }
 
     /** Si entra aqui, entra a los 2 diferentes textformfield, 
      * como lo es el del calendario, y un input normal con diferentes personalizaciones (como subfijos,prefijos,hint etc)  */
@@ -141,13 +121,7 @@ final ImagePicker _picker = ImagePicker();
           textCapitalization: TextCapitalization.words,
           keyboardType: widget.keyboardType,
           obscureText: widget.obscureText,
-          style: 
-          MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
-          //para celulares
-          TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015)):
-          //para tablets
-          TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015)),
-          
+          style: getTextStyleButtonField(context),
           onChanged: (value) {
             widget.formValue[widget.formProperty]!.contenido = value;
           },
@@ -162,7 +136,8 @@ final ImagePicker _picker = ImagePicker();
             return null;
           }:null,
           onTap: widget.keyboardType.toString().contains('datetime') ? () async {
-            DateTime? pickedDate = await showDatePicker(
+
+            /* DateTime? pickedDate = await showDatePicker(
             context: context,
             initialDate: DateTime.now(),
             firstDate: DateTime(2020),
@@ -172,16 +147,17 @@ final ImagePicker _picker = ImagePicker();
               String formattedDate = dateFormat.format(pickedDate);
               widget.controller!.text = formattedDate;
               widget.formValue[widget.formProperty]!.contenido = widget.controller!.text;
-            }
+            } */
+            
           }:null,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           decoration:  InputDecoration(
-            hintText: widget.keyboardType.toString().contains('datetime') ? 'DD/MM/YYYY' : widget.hintText,
+            hintText: widget.hintText,
             labelText: widget.labelText,      
             helperText: widget.helperText,
             counterText: widget.counterText,
             //dentro del input del lado derecho
-            suffixIcon: widget.keyboardType.toString().contains('datetime') ? const Icon(Icons.date_range) : (widget.suffixIcon == null ? null : Icon(widget.suffixIcon)),
+            suffixIcon: (widget.suffixIcon == null ? null : Icon(widget.suffixIcon)),
             //dentro del input del lado izquierdo
             prefix: widget.prefix == null ? null : Icon(widget.prefix),
             //afuera del input lado izquierdo
