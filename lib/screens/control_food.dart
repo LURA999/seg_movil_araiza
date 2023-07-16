@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:app_seguimiento_movil/widgets/widgets.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../models/multi_inputs_model.dart';
@@ -24,28 +25,28 @@ class _DiningRoomState extends State<DiningRoom> {
     
     //Fecha se inserta automaticamente
     final Map<String, MultiInputsForm> formValuesInicioTur = {
-      'plate' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'plate':['',true,false, true],
-      'garrison' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'garrison':['',true,false, true],
-      'dessert' : MultiInputsForm(contenido: '', obligatorio: false, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'dessert':['',false,false, true],
-      'received_number' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'received_number':['',true,false, true]
-      'picture' :  MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: true),
+      'plate' : MultiInputsForm(contenido: '', obligatorio: true),
+      'garrison' : MultiInputsForm(contenido: '', obligatorio: true),
+      'dessert' : MultiInputsForm(contenido: '', obligatorio: false),
+      'received_number' : MultiInputsForm(contenido: '', obligatorio: true),
+      'picture' :  MultiInputsForm(contenido: '', obligatorio: true,uploadFile: true),
     };
 
     //fecha se inserta manualmente
     final Map<String, MultiInputsForm> formValuesRegistroMan = {
-      'employee_number' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),   // 'employee_number':['',true,false, true],
-      'name' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),   // 'name': ['',true,false, true],
-      'type_contract' : MultiInputsForm(contenido: '', obligatorio: true, select: true, enabled: true, paintSignature: false,uploadFile: false),   // 'type_contract': ['',true,true, true],
+      'employee_number' : MultiInputsForm(contenido: '', obligatorio: true), 
+      'name' : MultiInputsForm(contenido: '', obligatorio: true),   
+      'type_contract' : MultiInputsForm(contenido: '', obligatorio: true, select: true), 
     };
 
     final Map<String, MultiInputsForm> formValuesObservacion = {
-      'description': MultiInputsForm(contenido: '',obligatorio: true,select: false,enabled: true, paintSignature: false,uploadFile: false)// ['',true,false, true],
+      'description': MultiInputsForm(contenido: '',obligatorio: true,select: false,enabled: true)
     };
 
     final Map<String, MultiInputsForm> formValuesDescRepor = {
-      'guard': MultiInputsForm(contenido: '', obligatorio: false, select: false, enabled: true, paintSignature: false,uploadFile: false),  // ['',false,false, true],
-      'date_start_hour': MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false), // ['',true,false, true],
-      'date_final_hour': MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false), // ['',true,false, true],
+      'guard': MultiInputsForm(contenido: '', obligatorio: false),
+      'date_start_hour': MultiInputsForm(contenido: '', obligatorio: true), 
+      'date_final_hour': MultiInputsForm(contenido: '', obligatorio: true), 
     };
     final TextEditingController controller = TextEditingController();
 
@@ -178,6 +179,8 @@ class _DiningRoomState extends State<DiningRoom> {
   @override
   initState() { 
     super.initState();
+    SystemChannels.textInput.invokeMethod('TextInput.hide');
+
    VarProvider vh = VarProvider()
   ..arrSharedPreferences().then((Map<String, dynamic> sharedPrefsData) {
     if (sharedPrefsData['plate'] == null) {

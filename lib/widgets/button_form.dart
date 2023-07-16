@@ -20,8 +20,9 @@ class ButtonForm extends StatelessWidget {
   final int btnPosition;
   final int control;
   final TextEditingController? controller;
+  final List<TextEditingController> controllerArr = []; 
 
-  const ButtonForm({
+  ButtonForm({
     super.key,
     required this.textButton,
     required this.btnPosition,
@@ -64,24 +65,22 @@ class ButtonForm extends StatelessWidget {
   Future<String?> newMethod(BuildContext context,
     Map<String, MultiInputsForm> formValue, int btnPosition) {
     //vars para el touch paint  
-    final _sign = GlobalKey<SignatureState>();
-    ByteData _img = ByteData(0);
-    var sign;
+    final sign0 = GlobalKey<SignatureState>();
+    ByteData img = ByteData(0);
+    SignatureState? sign;
     
     final GlobalKey<FormState> myFormKey = GlobalKey<FormState>();
     List<Widget> inputFields = [];
     int i = 1;
 
+    inputFields.add(const SizedBox(height: 15));
     formValue.forEach((key, value) {
       TextEditingController? controllerAux = TextEditingController();
-
       //Esto es para ayudar al formulario, para que sea mas dinamico
       //Si es nulo, entonces no seran validados los campos
       if (controller == null) {
         controllerAux = controller;
       } 
-
-      inputFields.add(const SizedBox(height: 15));
       if (key.substring(0, 4) == "date") {
         inputFields.add(
           MultiInputs(
@@ -107,28 +106,27 @@ class ButtonForm extends StatelessWidget {
                   border: Border.all(color: AppTheme.primary)
                 ),
                   child: Signature(
-                    key: _sign,
+                    key: sign0,
                     onSign: () async {
-                      sign = _sign.currentState;
+                      sign = sign0.currentState;
+                      formValue[key]!.contenido = sign.toString();
                     },
                     color: Colors.black,
                     strokeWidth: 3,
                   ),
                 ),
               ),
-              _img.buffer.lengthInBytes == 0 ? Container() : LimitedBox(maxHeight: 200.0, child: Image.memory(_img.buffer.asUint8List())),
+              img.buffer.lengthInBytes == 0 ? Container() : LimitedBox(maxHeight: 200.0, child: Image.memory(img.buffer.asUint8List())),
               ElevatedButton.icon(
                 icon: const Icon(Icons.delete),
                 onPressed: () async {
-                  final sign = _sign.currentState;
+                  sign = sign0.currentState;
                   sign!.clear();
-                    _img = ByteData(0);
-                    formValue[key]!.contenido = null;
-                  // debugPrint("cleared");
+                  img = ByteData(0);
+                  formValue[key]!.contenido = null;
                 },
-                label: Text('BORRAR',style: getTextStyleButtonField(context)),
-                
-                ),
+                label: Text('Borrar',style: getTextStyleButtonField(context)),
+              ),
             ],
           )
           );
@@ -142,10 +140,15 @@ class ButtonForm extends StatelessWidget {
           formProperty: key,
           suffixIcon: value.suffixIcon,
           listSelect: listSelect,
+          autocompleteAsync: value.autocompleteAsync,
           formValue: formValue,
           keyboardType: key.contains("number")? TextInputType.number : TextInputType.text)
           );
         }
+      }
+
+      if (controllerAux != null) {
+        controllerArr.add(controllerAux);
       }
 
       i++;
@@ -223,23 +226,43 @@ class ButtonForm extends StatelessWidget {
                           case 1:
                              //Inicio turno
                             if (btnPosition == 1) {
-                              final image = await sign!.getData();
-                              var data = await image.toByteData(format: ui.ImageByteFormat.png);
-                              final encoded = base64.encode(data!.buffer.asUint8List());
-                              formValue['sign']!.contenido = encoded;
-                              TurnVehicle t= TurnVehicle();
-                              if (formValue['sign']!.contenido != '' && formValue['sign']!.contenido != null) {
-                                t.name = formValue['name']!.contenido;
-                                t.sign = formValue['sign']!.contenido;
-                                t.turn = formValue['turn']!.contenido;
-                                if((await dpser.postTurnVehicle(t)).status == 404){
-                                  return;
+                              if (sign == null || formValue['name']!.contenido == '' || formValue['name']!.contenido == null || formValue['sign']!.contenido == '' || formValue['sign']!.contenido == null) {
+                                showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                 return AlertDialog(
+                                    title: Text('Por favor acomplete todos los campos',style:  MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
+                                    //para celulares
+                                    TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.015),fontWeight: FontWeight.bold):
+                                    //para tablets
+                                    TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),fontWeight: FontWeight.bold,)),
+                                    content: ElevatedButton(onPressed: () {
+                                        Navigator.of(context).pop(context);
+                                    },
+                                    child: Text('Aceptar',style: getTextStyleButtonField(context))
+                                    )
+                                  );
+                                  }
+                                 );
+                              }else{
+                                final image = await sign!.getData();
+                                var data = await image.toByteData(format: ui.ImageByteFormat.png);
+                                final encoded = base64.encode(data!.buffer.asUint8List());
+                                formValue['sign']!.contenido = encoded;
+                                TurnVehicle t= TurnVehicle();
+                                if (formValue['sign']!.contenido != '' && formValue['sign']!.contenido != null) {
+                                  t.name = formValue['name']!.contenido.toString().trim().replaceAll(RegExp('  +'), ' ');
+                                  t.sign = formValue['sign']!.contenido;
+                                  t.turn = formValue['turn']!.contenido;
+                                  if((await dpser.postTurnVehicle(t)).status == 404){
+                                    return;
+                                  }
+                                Provider.of<VarProvider>(context, listen: false).updateVariable(true);
+                                }else {
+                                  return ; 
                                 }
-                              }else {
-                                return ; 
+                                Navigator.pop(context);
                               }
-                              Provider.of<VarProvider>(context, listen: false).updateVariable(true);
-                              Navigator.pop(context);
                             }
         
                             //registro 
@@ -263,10 +286,9 @@ class ButtonForm extends StatelessWidget {
                             }
 
                             if (btnPosition == 5) {
-                              RegisterVehicle reg= RegisterVehicle();
+                              int i = 0;
                               if (formValue['placas']!.contenido != null && formValue['placas']!.contenido != '') {
                                 Access r = await dpser.findVehicle(formValue['placas']!.contenido!);
-                                List<RegisterVehicle> rlist = [];
                                 if (r.container != null) {
                                   for (var rc in r.container) {
                                     formValue['placas']!.contenido = rc['plates'];
@@ -275,13 +297,14 @@ class ButtonForm extends StatelessWidget {
                                     formValue['nombre']!.contenido = rc['employee_name'];
                                     // formValue['salida']!.contenido = rc['timeExit'];
                                     formValue['entrada']!.contenido = rc['time_entry'];
-                                  }
-                                  print(formValue['placas']);
-                                  print(formValue['tipo_vehiculo']);
-                                  print(formValue['color']);
-                                  print(formValue['nombre']);
-                                  print(formValue['entrada']);
+                                    formValue['salida']!.contenido = '';
+                                  } 
                                 }
+                                
+                                formValue.forEach((key, value) {
+                                  controllerArr[i].text = formValue[key]!.contenido!;
+                                  i++;
+                                });
                               }
                             }
 
@@ -352,22 +375,23 @@ class ButtonForm extends StatelessWidget {
                           //Descargar reporte
                             if(btnPosition == 4) {
                               DateExcel de = DateExcel();
-                              // print(formValue['date_start_hour']!.contenido);
                               de.dateStart = formValue['date_start_hour']!.contenido!; 
-                              de.dateFinal = formValue['date_final_hour']!.contenido!;   
-                              // de.dateStart = df.format(df2.parse(formValue['date_start_hour']!.contenido!));
-                              // de.dateFinal = df.format(df2.parse(formValue['date_final_hour']!.contenido!));
+                              de.dateFinal = formValue['date_final_hour']!.contenido!;
+                              de.turn = formValue['turn']!.contenido!;
                               de.guard = formValue['guard']!.contenido;
-                              String? jsonStr = await dpser.selectDate(de);
-                              // '[{"Nombre": "Juan", "Edad": 25, "Color de cabello": "Rojo","Estado civil": "casado"},{"Nombre": "Lizett", "Edad": 24, "Color de cabello": "Cafe","Estado civil": "casada"}, {"Nombre": "María", "Edad": 30, "Color de cabello": "verde","Estado civil": "soltera"}, {"Nombre": "Alonso", "Edad": 24, "Color de cabello":"negro","Estado civil": "casado"}]';
-                                if (jsonStr != null && jsonStr != 'null') {
+                              List<Map<String, dynamic>> jsonStr = await dpser.selectDate(de);
+                                if (jsonStr.isNotEmpty) {
                                   DateTime now = DateTime.now();
                                   String formattedDate = DateFormat('yyyyMMddss').format(now);
                                   String fileName = '$formattedDate.xlsx';
-                                  await jsonToExcel(jsonStr, fileName, context);  
+                                   await jsonToExcel(
+                                   jsonStr,
+                                   ['TIPO VEHICULO','COLOR','PLACAS','NOMBRE EMPLEADO', 'DEPARTAMENTO','ENTRADA','SALIDA'], 
+                                   fileName, 
+                                   context);  
                                 }
-                              Navigator.pop(context);
-                            }
+                               Navigator.pop(context);
+                            } 
                             break;
                         }
                       },

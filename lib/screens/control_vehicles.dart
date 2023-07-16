@@ -2,6 +2,7 @@ import 'package:app_seguimiento_movil/models/models.dart';
 import 'package:app_seguimiento_movil/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:app_seguimiento_movil/widgets/widgets.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../services/letter_mediaquery.dart';
@@ -28,39 +29,40 @@ class _ControlVehiclesState extends State<ControlVehicles> {
      
     //Fecha se inserta automaticamente
     final Map<String, MultiInputsForm> formValuesInicioTur = {
-      'name': MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false)/* ['',true,false, true] */,
-      'turn': MultiInputsForm(contenido: '', obligatorio: true, select: true, enabled: true, paintSignature: false,uploadFile: false)/* ['',true,false, true] */,
-      'sign': MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: true,uploadFile: false)/* ['',true,false, true] */,
+      'name': MultiInputsForm(contenido: '', obligatorio: true,autocomplete: true, autocompleteAsync: true),
+      'turn': MultiInputsForm(contenido: '', obligatorio: true, select: true),
+      'sign': MultiInputsForm(contenido: '', obligatorio: true, paintSignature: true),
     };
-
-
+    
     //fecha se inserta manualmente
     final Map<String, MultiInputsForm> formValuesRegistroMan = {
-      'plates' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'plates':['',true,false, true],
-      'typevh' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'typevh': ['',true,false, true],
-      'color' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'color': ['',true,false, true],
-      'employeeName' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'employeeName': ['',true,false, true],
-      'departament' : MultiInputsForm(contenido: '', obligatorio: false, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'departament': ['',false,false, true]
+      'plates' : MultiInputsForm(contenido: '', obligatorio: true),
+      'typevh' : MultiInputsForm(contenido: '', obligatorio: true),
+      'color' : MultiInputsForm(contenido: '', obligatorio: true),
+      'employeeName' : MultiInputsForm(contenido: '', obligatorio: true),
+      'departament' : MultiInputsForm(contenido: '',obligatorio: true),
     };
 
     final Map<String, MultiInputsForm> formValuesObservacion = {
-      'description' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false)// 'description': ['',true,false, true],
+      'description' : MultiInputsForm(contenido: '', obligatorio: true)
     };
 
     final Map<String, MultiInputsForm> formValuesDescRepor = {
-      'guard' : MultiInputsForm(contenido: '', obligatorio: false, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'guard': ['',false,false, true],
-      'date_start_hour' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'date_start_hour': ['',true,false, true],
-      'date_final_hour' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),// 'date_final_hour': ['',true,false, true],
+      'guard' : MultiInputsForm(contenido: '',obligatorio: true,autocomplete: true,autocompleteAsync: false),
+      'turn': MultiInputsForm(contenido: '', obligatorio: true, select: true),
+      'date_start_hour' : MultiInputsForm(contenido: '', obligatorio: true),
+      'date_final_hour' : MultiInputsForm(contenido: '', obligatorio: true),
     };
 
     final Map<String, MultiInputsForm> formValuesBuscarVh = {
-      'placas' :MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false,suffixIcon: Icons.search_outlined),// 'placas': ['',true,false, true],
-      'tipo_vehiculo' :MultiInputsForm(contenido: '', obligatorio: false, select: false, enabled: false, paintSignature: false,uploadFile: false),// 'tipo_vehiculo': ['',false, false,false],
-      'color' :MultiInputsForm(contenido: '', obligatorio: false, select: false, enabled: false, paintSignature: false,uploadFile: false),// 'color': ['',false, false,false],
-      'nombre' :MultiInputsForm(contenido: '', obligatorio: false, select: false, enabled: false, paintSignature: false,uploadFile: false),// 'nombre': ['',false, false,false],
-      'entrada' :MultiInputsForm(contenido: '', obligatorio: false, select: false, enabled: false, paintSignature: false,uploadFile: false),// 'entrada': ['',false, false,false],
-      'salida' :MultiInputsForm(contenido: '', obligatorio: false, select: false, enabled: false, paintSignature: false,uploadFile: false),// 'salida': ['',false, false,false]
+      'placas' :MultiInputsForm(contenido: '', obligatorio: true,suffixIcon: Icons.search_outlined),
+      'tipo_vehiculo' :MultiInputsForm(contenido: '', enabled: false),
+      'color' :MultiInputsForm(contenido: '', enabled: false),
+      'nombre' :MultiInputsForm(contenido: '', enabled: false),
+      'entrada' :MultiInputsForm(contenido: '', enabled: false),
+      'salida' :MultiInputsForm(contenido: '', enabled: false),
     };
+
     final TextEditingController controller = TextEditingController();
 
     return Scaffold(
@@ -174,14 +176,16 @@ class _ControlVehiclesState extends State<ControlVehicles> {
                         field: const [
                           'Descargar reporte',
                           'Guardia',
+                          'Turno',
                           'Fecha inicial y hora',
                           'Fecha final y hora'
                         ],
+                        listSelect: const [['Primer Turno', 'Segundo Turno', 'Tercer turno'],[]],
                         formValue: formValuesDescRepor,
                         enabled: true),
                     ButtonForm(
                       control: 1,
-                      controller: null,
+                      controller: controller,
                       textButton: 'Buscar vehículo',
                       btnPosition: 5,
                       field: const [
@@ -210,6 +214,7 @@ class _ControlVehiclesState extends State<ControlVehicles> {
   @override
   initState() { 
     super.initState();
+    SystemChannels.textInput.invokeMethod('TextInput.hide');
 
    VarProvider vh = VarProvider()
   ..arrSharedPreferences().then((Map<String, dynamic> sharedPrefsData) {

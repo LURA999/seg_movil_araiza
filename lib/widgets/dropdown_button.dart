@@ -25,7 +25,7 @@ class _DropdownButtonWidgetState extends State<DropdownButtonWidget> {
 
   @override
   Widget build(BuildContext context) {
-    widget.formValue[widget.formProperty]!.contenido = dropdownValue!;
+    widget.formValue[widget.formProperty]!.contenido = (list.indexOf(dropdownValue!)+1).toString();
 
     return OutlinedButton(
         onPressed:  null,
@@ -48,7 +48,7 @@ class _DropdownButtonWidgetState extends State<DropdownButtonWidget> {
             // This is called when the user selects an item.
             setState(() {
               dropdownValue = value;
-              widget.formValue[widget.formProperty]!.contenido = value!;
+              widget.formValue[widget.formProperty]!.contenido = (list.indexOf(value!)+1).toString();
             });
           },
           items: list.map<DropdownMenuItem<String>>((String value) {

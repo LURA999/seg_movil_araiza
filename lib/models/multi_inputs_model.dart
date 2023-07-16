@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 abstract class BaseInputsForm {
   late String? contenido;
-  final bool enabled;
+  final bool? enabled;
 
   BaseInputsForm({
     required this.contenido,
@@ -16,22 +16,25 @@ class MultiInputsForm implements BaseInputsForm {
  @override
   late String? contenido;
   @override
-  final bool enabled;
+  bool? enabled;
+  bool? paintSignature;
+  bool? uploadFile;
+  bool? select;
+  bool? obligatorio;
+  IconData? suffixIcon;
+  bool? autocomplete;
+  bool? autocompleteAsync;
 
-  final bool paintSignature;
-  final bool uploadFile;
-  final bool select;
-  final bool obligatorio;
-  final IconData? suffixIcon;
-  
   MultiInputsForm({
     this.suffixIcon,
-    required this.uploadFile,
-    required this.contenido,
-    required this.obligatorio,
-    required this.select,
-    required this.enabled,
-    required this.paintSignature
+    this.autocomplete,
+    this.autocompleteAsync,
+    this.uploadFile,
+    this.contenido,
+    this.obligatorio,
+    this.select,
+    this.enabled,
+    this.paintSignature
   });
 
 }
@@ -43,9 +46,7 @@ class RadioInputForm implements BaseInputsForm {
   late String? contenido;
   @override
   final bool enabled;
-
   late String? contenidoDef;
-
 
   RadioInputForm({
     required this.contenido,

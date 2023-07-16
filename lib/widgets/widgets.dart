@@ -7,3 +7,4 @@ export 'package:app_seguimiento_movil/widgets/list_items.dart';
 export 'package:app_seguimiento_movil/widgets/button_medical_test.dart';
 export 'package:app_seguimiento_movil/widgets/radio_input.dart';
 export 'package:app_seguimiento_movil/widgets/check_input.dart';
+export 'package:app_seguimiento_movil/widgets/autocomplete_custom.dart';

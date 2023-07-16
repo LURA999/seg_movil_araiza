@@ -1,3 +1,4 @@
+import 'package:app_seguimiento_movil/widgets/widgets.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +6,22 @@ import 'package:intl/intl.dart';
 import 'package:app_seguimiento_movil/widgets/dropdown_button.dart';
 import '../services/letter_mediaquery.dart';
 
+class Guard {
+  String name;
+  int id;
 
+  Guard({
+    required this.name,
+    required this.id
+  });
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = {};
+    data['name'] = name;
+    data['id'] = id;
+    return data;
+  }
+}
 
 class MultiInputs extends StatefulWidget {
 
@@ -20,12 +36,14 @@ class MultiInputs extends StatefulWidget {
   final TextInputType? keyboardType;
   final bool obscureText;
   final List<List<String>>? listSelect;
+  final bool? autocompleteAsync;
   final String formProperty;
   late Map<String, dynamic> formValue;
   final bool? autofocus;
-  final TextEditingController? controller;
+  late  TextEditingController? controller;
 
   
+
   MultiInputs({
     Key? key, 
     this.hintText, 
@@ -37,6 +55,7 @@ class MultiInputs extends StatefulWidget {
     this.prefix,
     this.listSelect,
     this.keyboardType,
+    this.autocompleteAsync,
     this.obscureText = false,
     required this.formProperty,
     required this.formValue, 
@@ -58,15 +77,19 @@ final ImagePicker _picker = ImagePicker();
     final RegExp regex = RegExp(
         r'^\d{2}\/(0[1-9]|1[0-2])\/\d{4}$',
     );
-    final DateFormat dateFormat = DateFormat('dd/MM/yyyy HH:mm:ss');
+
+    //automcompletador
+    if(widget.formValue[widget.formProperty]!.autocomplete ?? false){
+      return AutocompleteCustom(formProperty: widget.formProperty,formValue: widget.formValue,autocompleteAsync: widget.autocompleteAsync!,labelText: widget.labelText,);
+    }
 
     /** Ingrese una imagen*/
-    if(widget.formValue[widget.formProperty]!.uploadFile == true){
+    if(widget.formValue[widget.formProperty]!.uploadFile ?? false){
       return ElevatedButton.icon(onPressed: openCamera, icon: const Icon(Icons.camera_alt_rounded), label: Text('Abrir camara',style: getTextStyleButtonField(context),));
     }
     
     /** Si entra aqui, entra para crear un select */
-    if (widget.formValue[widget.formProperty]!.select == true) {
+    if (widget.formValue[widget.formProperty]!.select ?? false) {
       int indice = 0;
       widget.formValue.forEach((key, value) {
         if(widget.formValue[key]!.select == true){
@@ -78,13 +101,15 @@ final ImagePicker _picker = ImagePicker();
     }
 
     if (widget.keyboardType.toString().contains('datetime')) {
+      MaterialTapTargetSize tapTargetSize = MaterialTapTargetSize.padded;
+
         final format = DateFormat("yyyy-MM-dd HH:mm");
         return DateTimeField(
         controller: widget.controller,
         format: format,
         decoration: const InputDecoration(
           suffixIcon: Icon(Icons.date_range), 
-          hintText: 'dd/mm/yyyy hh:mm'
+          hintText: 'yyyy/mm/dd hh:mm'
         ),
         onShowPicker: (context, currentValue) async {
           return await showDatePicker(
@@ -95,11 +120,26 @@ final ImagePicker _picker = ImagePicker();
           ).then((DateTime? date) async {
             if (date != null) {
               final time = await showTimePicker(
-                context: context,
-                initialTime:
-                    TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
+              context: context,
+              initialTime:
+                  TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
+              builder: (BuildContext context, Widget? child) {
+                return Theme(
+                  data: Theme.of(context).copyWith(
+                    materialTapTargetSize: tapTargetSize,
+                  ), 
+                  child: 
+                    MediaQuery(
+                    data: MediaQuery.of(context).copyWith(
+                      alwaysUse24HourFormat: true,
+                    ), 
+                    child: child!,
+                  )
+                );
+                }
               );
-              widget.formValue[widget.formProperty]!.contenido = dateFormat.format(DateTimeField.combine(date, time));
+              final sendFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
+              widget.formValue[widget.formProperty]!.contenido = sendFormat.format(DateTimeField.combine(date, time)); 
               return DateTimeField.combine(date, time);
             } else {
               widget.formValue[widget.formProperty]!.contenido = currentValue;
@@ -171,10 +211,15 @@ final ImagePicker _picker = ImagePicker();
   }
 
   Future<void> openCamera() async {
+  try{
   final XFile? image = await _picker.pickImage(source: ImageSource.camera);
   if (image != null) {
     widget.formValue[widget.formProperty]!.contenido = image.path;
   }
+  }catch(Exception){
+  }
+
+  
 }
 
 }

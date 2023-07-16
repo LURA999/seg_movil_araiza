@@ -18,16 +18,83 @@ class DepartamentService extends ChangeNotifier {
   bool modoApk = kDebugMode?true:false; 
   late String link = modoApk?'https://www.comunicadosaraiza.com/movil_scan_api/API':'https://www.comunicadosaraiza.com/movil_scan_api/API';
 
+ Future<List<Map<String, dynamic>>> nameGuard( String name ) async {
+  try {
+    isSaving = true;
+    notifyListeners();
+    final url = Uri.parse('$link/turn_vehicle.php?name=$name');
+    var response = (await http.get(url)).body;
+      final result = AccessMap.fromJson(json.decode(response));
+    // var response = await http.post(url, body: {'pass': pass, 'departament': departament});
+
+    if (result.status == 200){
+      isSaving = false;
+      notifyListeners();
+      return result.container! ;
+    }
+    isSaving = false;
+    notifyListeners();
+    return result.container!; 
+  } catch(e) {
+    return [] ;
+  }
+  
+  } 
+
+  Future<List<Map<String, dynamic>>> namesGuard() async {
+  try {
+    isSaving = true;
+    notifyListeners();
+    final url = Uri.parse('$link/turn_vehicle.php?names=true');
+    var response = (await http.get(url)).body;
+      final result = AccessMap.fromJson(json.decode(response));
+    // var response = await http.post(url, body: {'pass': pass, 'departament': departament});
+
+    if (result.status == 200){
+      isSaving = false;
+      notifyListeners();
+      return result.container! ;
+    }
+    isSaving = false;
+    notifyListeners();
+    return result.container!; 
+  } catch(e) {
+    return [] ;
+  }
+  
+  } 
+
+Future<Access> dataGuard( int idGuard ) async {
+  Access result = Access();
+  try {
+    isSaving = true;
+    notifyListeners();
+    final url = Uri.parse('$link/turn_vehicle.php?idGuard=$idGuard');
+    var response = (await http.get(url)).body;
+      final result = Access.fromJson(jsonDecode(response));
+    // var response = await http.post(url, body: {'pass': pass, 'departament': departament});
+    if (result.status == 200){
+      isSaving = false;
+      notifyListeners();
+      return result;
+    }
+    isSaving = false;
+    notifyListeners();
+    return result; 
+  } catch(e) {
+    return result;
+  }
+  
+  } 
+
   Future<Access> checkPassWord( String pass, int departament ) async {
   Access result = Access();
   try {
     isSaving = true;
     notifyListeners();
-
     final url = Uri.parse('$link/departament.php?departament=$departament&pass=$pass');
     var response = (await http.get(url)).body;
       final result = Access.fromJson(jsonDecode(response));
-
     // var response = await http.post(url, body: {'pass': pass, 'departament': departament});
     if (result.status == 200){
       isSaving = false;
@@ -125,7 +192,7 @@ Future<bool> postObvFood(TurnFood t) async {
       isSaving = false;
       notifyListeners();
       return false; 
-      } on DioError catch(e) {
+      }  catch(e) {
         return false;
       }
     }
@@ -156,7 +223,7 @@ Future<bool> postObvVehicle(TurnVehicle t) async {
       isSaving = false;
       notifyListeners();
       return false; 
-      } on DioError catch(e) {
+      }  catch(e) {
         return false;
       }
     }
@@ -215,7 +282,7 @@ Future<bool> postObvVehicle(TurnVehicle t) async {
     isSaving = false;
     notifyListeners();
     return result; 
-  } on DioError catch(e) {
+  }  catch(e) {
     return result;
   }
   
@@ -251,7 +318,7 @@ Future<bool> postObvVehicle(TurnVehicle t) async {
     isSaving = false;
     notifyListeners();
     return result; 
-  } on DioError catch(e) {
+  }  catch(e) {
     return result;
   }
   
@@ -287,23 +354,19 @@ Future<bool> postObvVehicle(TurnVehicle t) async {
   }
 
   
-    Future<String?> selectDate( DateExcel  e ) async {
-    Qr qr = Qr();
+    Future<List<Map<String, dynamic>>> selectDate( DateExcel  e ) async {
     
-    List<Qr> listContainer = [];
-    Access result = Access();
+    List<Map<String, dynamic>> listContainer = [];
+    AccessMap result = AccessMap();
 
     try {
       isSaving = true;
       notifyListeners();
-
-      
       final url = Uri.parse('$link/qr_vehicle.php');
       var response = (await http.post(
       url, 
       body: json.encode(e.toJson()))).body;
-
-      result =Access.fromJson(json.decode(response));
+      result = AccessMap.fromJson(json.decode(response));
       /* final response = await dio.post(
         'http://10.0.2.2:8000/slc_rep/',
         options: Options(
@@ -323,18 +386,17 @@ Future<bool> postObvVehicle(TurnVehicle t) async {
       return str.container.toString();
       */
 
-      final str =  Access.fromJson(jsonDecode(response));
-
       if (result.status == 200){ 
+        listContainer =  result.container!;
         isSaving = false;
         notifyListeners();
-        return str.container.toString(); 
+        return listContainer; 
       } 
       isSaving = false;
       notifyListeners();
-      return str.container.toString(); 
-      } on DioError catch(e) {
-        return e.toString();
+      return listContainer; 
+      } catch(e) {
+        return listContainer;
       }
     }
   
@@ -349,9 +411,7 @@ Future<bool> postObvVehicle(TurnVehicle t) async {
       var response = (await http.post(
       url, 
       body: json.encode(reg.toJson()))).body;
-
       result =Access.fromJson(json.decode(response));
-
 
       if (result.status == 200){ 
         isSaving = false;
@@ -376,7 +436,7 @@ Future<bool> postObvVehicle(TurnVehicle t) async {
     isSaving = false;
     notifyListeners();
       return result;
-  } on DioError catch(e) {
+  }  catch(e) {
       return result;
   }
   
@@ -417,7 +477,7 @@ Future<bool> postObvVehicle(TurnVehicle t) async {
     isSaving = false;
     notifyListeners();
       return false;
-  } on DioError catch(e) {
+  }  catch(e) {
       return false;
   }
   

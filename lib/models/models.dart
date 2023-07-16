@@ -11,3 +11,5 @@ export 'package:app_seguimiento_movil/models/option_table_model.dart';
 export 'package:app_seguimiento_movil/models/multi_inputs_model.dart';
 export 'package:app_seguimiento_movil/models/employee_model.dart';
 export 'package:app_seguimiento_movil/models/enums_test_medical.dart';
+export 'package:app_seguimiento_movil/models/qr_vehicle.dart';
+export 'package:app_seguimiento_movil/models/accessMap_model.dart';

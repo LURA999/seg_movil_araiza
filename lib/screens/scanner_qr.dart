@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:app_seguimiento_movil/models/models.dart';
 import 'package:app_seguimiento_movil/services/services.dart';
 import 'package:app_seguimiento_movil/widgets/widgets.dart';
