@@ -36,7 +36,7 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
               return const Iterable<String>.empty();
             } 
           }
-          return (tempOptions ?? widget.goptions)!.where((String option) {
+          return (tempOptions ?? widget.goptions ?? []).where((String option) {
             return option.contains(textEditingValue.text.toLowerCase());
           });
         },
@@ -44,7 +44,14 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
         },
         optionsViewBuilder: (BuildContext context, AutocompleteOnSelected<String> onSelected,
           Iterable<String> options) {
-            int index = 0;
+            List<ListTile> list = options.isNotEmpty ? options.map((String option) => ListTile(
+            title: Text(option),
+            onTap: () {
+              onSelected(option);
+              widget.formValue![widget.formProperty]!.contenido = option;
+            },
+          )).toList() : [];
+
             return Align(
               alignment: Alignment.topLeft,
               child: SizedBox( 
@@ -53,20 +60,10 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
                 child:  Material(  
                   elevation: 3.0,
                   child: SingleChildScrollView(
+                    
                     child: Column(
                       key: widget.key,
-                      children: options.isNotEmpty ? options.map((String option) => ListTile(
-                        title: Text(option),
-                        onTap: () {
-                          onSelected(option);
-                          if (!widget.autocompleteAsync) {
-                            widget.formValue![widget.formProperty]!.contenido = widget.goptionsId![index];
-                          }else{
-                            widget.formValue![widget.formProperty]!.contenido = option;
-                          }
-                          index++;
-                        },
-                      )).toList() : [],
+                      children: list,
                     ),
                   ),
                 ),
@@ -90,9 +87,12 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
                     DepartamentService dp = DepartamentService();
                     List<Map<String,dynamic>> arr=  await dp.nameGuard(value);
                     for (var i = 0; i < arr.length; i++) {
-                      setState(() { 
-                        tempOptions!.add(arr[i]['name']);
-                      });
+                      if (tempOptions !=null) {
+                        setState(() { 
+                          tempOptions!.add(arr[i]['name']);
+                        });
+                      }
+                      
                     }   
                   
                         
