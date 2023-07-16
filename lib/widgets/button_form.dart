@@ -245,6 +245,10 @@ class ButtonForm extends StatelessWidget {
                             //registro 
                             if (btnPosition == 2) {
                               RegisterVehicle r= RegisterVehicle();
+                              VarProvider vh = VarProvider();
+                              vh.arrSharedPreferences();
+
+                              r.turn = 
                               r.color = formValue['color']!.contenido;
                               r.employeeName = formValue['employeeName']!.contenido;
                               r.plates = formValue['plates']!.contenido;

@@ -85,15 +85,15 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
                     tempOptions = [];
                   });
                     DepartamentService dp = DepartamentService();
-                    List<Map<String,dynamic>> arr=  await dp.nameGuard(value);
-                    for (var i = 0; i < arr.length; i++) {
-                      if (tempOptions !=null) {
-                        setState(() { 
-                          tempOptions!.add(arr[i]['name']);
-                        });
-                      }
+                    // List<Map<String,dynamic>> arr=  await dp.nameGuard(value);
+                    // for (var i = 0; i < arr.length; i++) {
+                    //   if (tempOptions !=null) {
+                    //     setState(() { 
+                    //       tempOptions!.add(arr[i]['name']);
+                    //     });
+                    //   }
                       
-                    }   
+                    // }   
                   
                         
                   widget.formValue![widget.formProperty]!.contenido = value;
@@ -122,11 +122,11 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
 
   Future llenarOpciones() async {
    DepartamentService dp = DepartamentService();
-    List<Map<String,dynamic>> arr=  await dp.namesGuard();
-    for (var i = 0; i < arr.length; i++) {
-      widget.goptions!.add(arr[i]['name']);
-      widget.goptionsId!.add(int.parse(arr[i]['id']));
-    }
+    // List<Map<String,dynamic>> arr=  await dp.namesGuard();
+    // for (var i = 0; i < arr.length; i++) {
+    //   widget.goptions!.add(arr[i]['name']);
+    //   widget.goptionsId!.add(int.parse(arr[i]['id']));
+    // }
   }
 
 }
