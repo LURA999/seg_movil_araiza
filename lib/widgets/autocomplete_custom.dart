@@ -94,6 +94,7 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
                       }
                       
                     }   
+
                   
                         
                   widget.formValue![widget.formProperty]!.contenido = value;
@@ -126,9 +127,8 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
     for (var i = 0; i < arr.length; i++) {
       widget.goptions!.add(arr[i]['name']);
       widget.goptionsId!.add(int.parse(arr[i]['id']));
-    }
+
   }
 
+  }
 }
-
-
