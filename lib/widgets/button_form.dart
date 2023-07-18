@@ -254,7 +254,7 @@ class ButtonForm extends StatelessWidget {
                                   t.name = formValue['name']!.contenido.toString().trim().replaceAll(RegExp('  +'), ' ');
                                   t.sign = formValue['sign']!.contenido;
                                   t.turn = formValue['turn']!.contenido;
-                                  if((await dpser.postTurnVehicle(t)).status == 404){
+                                  if((await dpser.postTurnVehicle(t,context)).status == 404){
                                     return;
                                   }
                                 Provider.of<VarProvider>(context, listen: false).updateVariable(true);
@@ -277,7 +277,7 @@ class ButtonForm extends StatelessWidget {
                               r.plates = formValue['plates']!.contenido;
                               r.typevh = formValue['typevh']!.contenido;
                               r.departament = formValue['departament']!.contenido;
-                              await dpser.postRegisterVehicle(r);
+                              await dpser.postRegisterVehicle(r,context);
                               Navigator.pop(context);
                             }
         
@@ -285,14 +285,37 @@ class ButtonForm extends StatelessWidget {
                             if (btnPosition == 3) {
                               TurnVehicle t= TurnVehicle();
                               t.description = formValue['description']!.contenido;
-                              await dpser.postObvVehicle(t);
+                              await dpser.postObvVehicle(t,context);
                               Navigator.pop(context);
                             }
 
+                              if(btnPosition == 4) {
+                              DateExcelVehicle de = DateExcelVehicle();
+                              de.dateStart = formValue['date_start_hour']!.contenido!; 
+                              de.dateFinal = formValue['date_final_hour']!.contenido!;
+                              de.turn = formValue['turn']!.contenido!;
+                              de.guard = formValue['guard']!.contenido;
+                              List<Map<String, dynamic>> jsonStr = await dpser.selectDateVehicle(de,context);
+                              List<Map<String, dynamic>> jsonStrObs = await dpser.selectObsVehicle(de,context);
+                                if (jsonStr.isNotEmpty) {
+                                  DateTime now = DateTime.now();
+                                  String formattedDate = DateFormat('yyyyMMddss').format(now);
+                                  String fileName = '$formattedDate.xlsx';
+                                   await jsonToExcel(
+                                   jsonStr,
+                                   ['TIPO VEHICULO','COLOR','PLACAS','NOMBRE EMPLEADO', 'DEPARTAMENTO','ENTRADA'], 
+                                  jsonStrObs,
+                                   null,
+                                   1,
+                                   fileName, 
+                                   context);   
+                                }
+                               Navigator.pop(context);
+                            } 
                             if (btnPosition == 5) {
                               int i = 0;
                               if (formValue['placas']!.contenido != null && formValue['placas']!.contenido != '') {
-                                Access r = await dpser.findVehicle(formValue['placas']!.contenido!);
+                                Access r = await dpser.findVehicle(formValue['placas']!.contenido!,context);
                                 if (r.container != null) {
                                   for (var rc in r.container) {
                                     formValue['placas']!.contenido = rc['plates'];
@@ -322,7 +345,7 @@ class ButtonForm extends StatelessWidget {
                                 t.garrison = formValue['garrison']!.contenido;
                                 t.dessert = formValue['dessert']!.contenido;
                                 t.received = formValue['received_number']!.contenido;
-                                await dpser.postTurnFood(t);
+                                await dpser.postTurnFood(t,context);
                               }else{
                                 return showDialog(
                                   context: context,
@@ -351,19 +374,9 @@ class ButtonForm extends StatelessWidget {
                               RegisterFood r= RegisterFood();
                               r.numEmployee = formValue['employee_number']!.contenido;
                               r.name = formValue['name']!.contenido;
-                              switch (formValue['type_contract']!.contenido) {
-                                case 'Sindicalizado':
-                                  r.contract = '1';
-                                  break;
-                                case 'No sindicalizado':
-                                  r.contract = '2';
-                                  break;
-                                case 'Corporativo':
-                                  r.contract = '3';
-                                  break;  
-                                default:
-                              }
-                              await dpser.postRegisterFood(r);
+                              r.name = formValue['type_contract']!.contenido;
+                            
+                              await dpser.postRegisterFood(r,context);
                               Navigator.pop(context);
                             }
         
@@ -371,31 +384,37 @@ class ButtonForm extends StatelessWidget {
                             if (btnPosition == 3) {
                               TurnFood t= TurnFood();
                               t.description = formValue['description']!.contenido;
-                              await dpser.postObvFood(t);
+                              await dpser.postObvFood(t,context);
                               Navigator.pop(context);
                             }
-                            break;
-                          default:
-                          //Descargar reporte
+
+
                             if(btnPosition == 4) {
-                              DateExcel de = DateExcel();
+                              DateExcelFood de = DateExcelFood();
                               de.dateStart = formValue['date_start_hour']!.contenido!; 
                               de.dateFinal = formValue['date_final_hour']!.contenido!;
-                              de.turn = formValue['turn']!.contenido!;
-                              de.guard = formValue['guard']!.contenido;
-                              List<Map<String, dynamic>> jsonStr = await dpser.selectDate(de);
+                              de.plate = formValue['plate']!.contenido!;
+                              List<Map<String, dynamic>> jsonStr = await dpser.selectDateFood(de, context);
+                              List<Map<String, dynamic>> jsonStrObs = await dpser.selectObsFood(de, context);
+
                                 if (jsonStr.isNotEmpty) {
                                   DateTime now = DateTime.now();
                                   String formattedDate = DateFormat('yyyyMMddss').format(now);
                                   String fileName = '$formattedDate.xlsx';
                                    await jsonToExcel(
                                    jsonStr,
-                                   ['TIPO VEHICULO','COLOR','PLACAS','NOMBRE EMPLEADO', 'DEPARTAMENTO','ENTRADA','SALIDA'], 
+                                   ['Numero de empleado','Nombre','Contrato','Fecha comida'], 
+                                   jsonStrObs,
+                                   null,
+                                   2,
                                    fileName, 
                                    context);  
                                 }
                                Navigator.pop(context);
                             } 
+                            break;
+                          default:
+                            
                             break;
                         }
                       },

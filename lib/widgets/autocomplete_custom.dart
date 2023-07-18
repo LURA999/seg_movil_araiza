@@ -37,20 +37,20 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
             } 
           }
           return (tempOptions ?? widget.goptions ?? []).where((String option) {
-            return option.contains(textEditingValue.text.toLowerCase());
+            return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
           });
         },
         onSelected: (String selection) {
         },
         optionsViewBuilder: (BuildContext context, AutocompleteOnSelected<String> onSelected,
           Iterable<String> options) {
-            List<ListTile> list = options.isNotEmpty ? options.map((String option) => ListTile(
+            List<ListTile> list = options.map((String option) => ListTile(
             title: Text(option),
             onTap: () {
               onSelected(option);
               widget.formValue![widget.formProperty]!.contenido = option;
             },
-          )).toList() : [];
+          )).toList() ;
 
             return Align(
               alignment: Alignment.topLeft,
@@ -85,18 +85,14 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
                     tempOptions = [];
                   });
                     DepartamentService dp = DepartamentService();
-                    List<Map<String,dynamic>> arr=  await dp.nameGuard(value);
+                    List<Map<String,dynamic>> arr=  await dp.nameGuard(value.toLowerCase(),context);
                     for (var i = 0; i < arr.length; i++) {
                       if (tempOptions !=null) {
                         setState(() { 
                           tempOptions!.add(arr[i]['name']);
                         });
                       }
-                      
                     }   
-
-                  
-                        
                   widget.formValue![widget.formProperty]!.contenido = value;
                     setState(() {
                       widget.goptions = tempOptions;
@@ -123,7 +119,7 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
 
   Future llenarOpciones() async {
    DepartamentService dp = DepartamentService();
-    List<Map<String,dynamic>> arr=  await dp.namesGuard();
+    List<Map<String,dynamic>> arr=  await dp.namesGuard(context);
     for (var i = 0; i < arr.length; i++) {
       widget.goptions!.add(arr[i]['name']);
       widget.goptionsId!.add(int.parse(arr[i]['id']));

@@ -28,20 +28,6 @@ class DepartamentService extends ChangeNotifier {
       notifyListeners();
       return result;
     }
-    /* final response = await dio.get(
-      'http://10.0.2.2:8000/selct_departament?pass=${pass}&departament=${departament}',
-      options: Options(
-        headers: {
-          HttpHeaders.contentTypeHeader: "application/json"
-        }
-      ));
-
-    if (response.statusCode == 200){
-      final result = Access.fromJson(response.data);
-      isSaving = false;
-      notifyListeners();
-      return result;
-    } */
     isSaving = false;
     notifyListeners();
     return result; 

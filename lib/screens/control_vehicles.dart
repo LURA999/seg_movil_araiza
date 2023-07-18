@@ -133,7 +133,7 @@ class _ControlVehiclesState extends State<ControlVehicles> {
                                       children:[
                                         ElevatedButton(onPressed: (Provider.of<VarProvider>(context).varSalir) == false ?() async {
                                           DepartamentService dpser = DepartamentService();
-                                          var salirInt = (await dpser.postCloseTurnVehicle());
+                                          var salirInt = (await dpser.postCloseTurnVehicle(context));
                                           if (salirInt) {
                                             Provider.of<VarProvider>(context,listen: false).updateVariable(false);
                                             Provider.of<VarProvider>(context,listen: false).updateVarSalir(true);
@@ -169,7 +169,7 @@ class _ControlVehiclesState extends State<ControlVehicles> {
                         formValue: formValuesObservacion,
                         enabled: false),
                     ButtonForm(
-                        control: 0,
+                        control: 1,
                         controller: controller,
                         textButton: 'Descargar reporte',
                         btnPosition: 4,

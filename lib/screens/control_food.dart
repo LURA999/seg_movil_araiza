@@ -44,7 +44,7 @@ class _DiningRoomState extends State<DiningRoom> {
     };
 
     final Map<String, MultiInputsForm> formValuesDescRepor = {
-      'guard': MultiInputsForm(contenido: '', obligatorio: false),
+      'plate': MultiInputsForm(contenido: '', obligatorio: false),
       'date_start_hour': MultiInputsForm(contenido: '', obligatorio: true), 
       'date_final_hour': MultiInputsForm(contenido: '', obligatorio: true), 
     };
@@ -120,11 +120,14 @@ class _DiningRoomState extends State<DiningRoom> {
                                             Provider.of<VarProvider>(context,listen: false).updateVarSalir(true);
                                             Provider.of<VarProvider>(context,listen: false).updateVariable(false);
                                             DepartamentService dpser = DepartamentService();
-                                              await dpser.postCloseTurnFood();
-                                              setState(() {
+                                              var salirInt =  await dpser.postCloseTurnFood();
+                                               if (salirInt) {
+                                                Provider.of<VarProvider>(context,listen: false).updateVariable(false);
+                                                Provider.of<VarProvider>(context,listen: false).updateVarSalir(true);
                                                 Navigator.of(context).pop(context);
                                                 Navigator.of(context).pushNamed('home');
-                                              });
+                                                Provider.of<VarProvider>(context,listen: false).updateVarSalir(false);
+                                              }
                                             }: null, child: Text('Aceptar',style: getTextStyleButtonField(context))
                                           ),
                                           ElevatedButton(onPressed: (Provider.of<VarProvider>(context).varSalir) == false ? (){
@@ -154,12 +157,12 @@ class _DiningRoomState extends State<DiningRoom> {
                         enabled: false),
                     ButtonForm(
                         controller: controller,
-                        control: 0,
+                        control: 2,
                         textButton: 'Descargar reporte',
                         btnPosition: 4,
                         field: const [
                           'Descargar reporte',
-                          'Guardia',
+                          'Busca un postre,platillo o guarnición',
                           'Fecha inicial y hora',
                           'Fecha final y hora'
                         ],
@@ -187,7 +190,7 @@ class _DiningRoomState extends State<DiningRoom> {
       SessionManager sm = SessionManager()
         ..clearSession().then((value) {
           DepartamentService dpser = DepartamentService()
-            ..postCloseTurnVehicle().then((value) {
+            ..postCloseTurnVehicle(context).then((value) {
               //cerrar turno anterior
               Provider.of<VarProvider>(context,listen: false).updateVariable(false);
             });

@@ -100,7 +100,7 @@ class _ContainerOptionState extends State<ContainerOption> {
   bool autofucus = true;
 
   handleButtonPressed() async {
-  var pass = await depService.checkPassWord(password, widget.id);
+  var pass = await depService.checkPassWord(password, widget.id,context);
   if (pass.status == 200) {
     autofucus = false;
     switch (widget.id) {
@@ -192,8 +192,10 @@ class _ContainerOptionState extends State<ContainerOption> {
                             return 'Ingrese la contraseña';
                           } 
                           return null;
-                        }
+                        },
+                      onEditingComplete: () => handleButtonPressed,
                       ),
+                      
                       const SizedBox(height: 10,),
                       ElevatedButton(
                       onPressed: handleButtonPressed,

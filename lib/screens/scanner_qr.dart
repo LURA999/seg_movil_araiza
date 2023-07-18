@@ -127,7 +127,7 @@ class _ScannerQR extends State<ScannerQR> {
     );
   }
 
-  void _onQRViewCreated(QRViewController controller) {
+  Future<void> _onQRViewCreated(QRViewController controller) async {
 
     Color color = Colors.red;
     String text = '';
@@ -137,7 +137,11 @@ class _ScannerQR extends State<ScannerQR> {
         this.controller = controller;
       });
 
-     controller.scannedDataStream.listen((scanData) async {
+    VarProvider vp = VarProvider();
+    final json = await vp.arrSharedPreferences();
+
+    if (json['turn'] != null) {
+      controller.scannedDataStream.listen((scanData) async {
       setState(() {
         isProccesing = true;
         this.controller = controller;
@@ -154,11 +158,10 @@ class _ScannerQR extends State<ScannerQR> {
         newQr.color = objetoJson['color'];
         newQr.departament = objetoJson['departament'];
         newQr.employeeName = objetoJson['employeeName'];
-        newQr.fkTurn = 1;
         newQr.typevh = objetoJson['typevh'];
         newQr.plates = objetoJson['plates'];
         if(isProccesing == true){
-            await ds.postQr(newQr).then((value) {
+            await ds.postQrVehicle(newQr,context).then((value) {
             if(value.status == 200){
               setState(() {
                 color = Colors.green;
@@ -167,7 +170,7 @@ class _ScannerQR extends State<ScannerQR> {
             }else{
               setState(() {
                 color = Colors.red;
-                text = 'Ah ocurrido un error.';
+                text = 'Error: Solo se permiten 2 comidas al dia por empleado';
               });
             }
           });
@@ -185,32 +188,58 @@ class _ScannerQR extends State<ScannerQR> {
           this.controller = controller;
           controller.resumeCamera();
         });
-        /* 
-       showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        Qr newQr = Qr();
-       newQr.color = objetoJson['color'];
-        newQr.departament = objetoJson['departament'];
-        newQr.employeeName = objetoJson['employeeName'];
-        newQr.fkTurn = 1;
-        newQr.typevh = objetoJson['typevh'];
-        newQr.plates = objetoJson['plates'];
-        return  Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            AlertDialog(
-              title: const Text('LEYENDO QR'),
-              content: Text('JSONCOMPLETO: color: ${newQr.color}, departament: ${newQr.departament}, employeeName: ${newQr.employeeName}, turn: ${newQr.fkTurn}, typevh: ${newQr.typevh}, plates: ${newQr.plates},')
-             )
-              ]
-              );
-            
-          }
-        );  */
-        // ignore: use_build_context_synchronously
 
       });
+    }else{
+      controller.scannedDataStream.listen((scanData) async {
+      setState(() {
+        isProccesing = true;
+        this.controller = controller;
+      });
+        result = scanData;
+        controller.stopCamera();
+        QrFood newQr = QrFood();
+        Map<String, dynamic> objetoJson = { 
+           for (var e in result!.code.toString().split(',').map((e) => e.trim())) 
+           e.split(':')[0].trim() : e.split(':')[1].trim() 
+        }; 
+        // var jsonResult = json.decode(result!.code!);
+        // Map<String, dynamic> json = await vp.arrSharedPreferences();
+        newQr.numEmployee = objetoJson['numEmployee'];
+        newQr.contract = objetoJson['contract'];
+        newQr.name = objetoJson['name'];
+        if(isProccesing == true){
+            await ds.postQrFood(newQr,context).then((value) {
+            if(value.status == 200){
+              setState(() {
+                color = Colors.green;
+                text = 'Scanner completado.';
+              });
+            }else{
+              setState(() {
+                color = Colors.red;
+                text = 'Error: Solo se permiten 2 comidas al dia por empleado';
+              });
+            }
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+            duration: const Duration(seconds: 5),
+            backgroundColor: color,
+            content: Text(text,style: const TextStyle(color: Colors.white)),
+          ));
+          await Future.delayed(const Duration(seconds: 5));
+        }
+
+        setState(() {
+          isProccesing = false;
+          this.controller = controller;
+          controller.resumeCamera();
+        });
+
+      });
+    }
+     
     }
   }
 

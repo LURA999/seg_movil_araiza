@@ -56,6 +56,7 @@ dependencies:
   flutter_signature_pad: ^3.0.1
   image_picker: ^0.8.9
   datetime_picker_formfield: ^2.0.1
+  connectivity_plus: ^4.0.1
   #easy_autocomplete: ^1.6.0
   #flutter_async_autocomplete: ^0.1.1
   #flutter_datetime_picker: 1.5.1
@@ -120,10 +121,12 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: Gotham
+    - family: GothamRegular
       fonts:
         - asset: assets/fonts/Gotham-Font/Gotham-Regular.ttf
-
+    - family: GothamBold
+      fonts:
+        - asset: assets/fonts/Gotham-Font/GothamBold.ttf
 
 
   # To add custom fonts to your application, add a fonts section here,

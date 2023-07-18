@@ -55,7 +55,7 @@ Future<void> requestPermission(Function(bool) onPermissionResult) async {
 }
 
 
-Future<void> jsonToExcel(List<Map<String, dynamic>> jsonStr, List<String> headersPerso, String fileName, BuildContext context) async {
+Future<void> jsonToExcel(List<Map<String, dynamic>> jsonStr, List<String> headersPerso,List<Map<String, dynamic>> jsonStrObs, List<Map<String,dynamic>>? dataGuard, int Screen, String fileName, BuildContext context) async {
   bool storagePermissionGranted = false;
   if (Platform.isAndroid || Platform.isIOS) {
   await requestPermission((bool granted) {
@@ -80,9 +80,7 @@ Future<void> jsonToExcel(List<Map<String, dynamic>> jsonStr, List<String> header
 
   int beginRow = 5;
   
-  String base64Image = 'iVBORw0KGgoAAAANSUhEUgAAAC4AAAAqCAYAAADMKGkhAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAX9SURBVHgB7VhrTBRXGP3uzD6ABYq8RLGIokFrtKRgfSFSQ+NjbbWG3TQSo2liag3qj9aW+sNuJKk/GqFqqlWb2tT4AGopxhYFLNugtjW18RGp1apUQUBBVpB9ztzbb1ie+2CfJm3KSQ67uXP3zplzD983MwAjGMEI/pUg8AxQqtHwSa/KSygh5+auO/IpPAMEXXjtobVRYTbbdgpsY88AY+s6LIbDSzdVWiCI4CCIqNu7alSoYN1FCdvQP0jI7ihF1EcQZATN8bP7NIkqXv4xA8gDBrzDYStltLCdRBa9/vYBIwQBQRF+oUgTSlXyExxjiyWL3ZzJyijb085FbAuGeB4CRO1nmgSikO0njC13JZr1EXcBj2aEghVWvDb34rFTl2wQAGQQACSnRcJ/SRjtcZr1SHQPFK/Aj4Jo6AzDzy0QAPyOCjodLgdZCSN0CTAnpxtxROj9PrZX8MBJGWYe6M6s/NKt4Cf8Ei45LSi4b/DrUlfHx6WpaybMWy1Di7nWP/Rzb9Z+7npnGbcja+Nxv8T7XA6l6mGTcycYY0uQ4Ej8Y1RGxtfh1GxMT5YoWmT2YWcC0Hf1uzU7a4tXRIGP8El4bfGbybwAxRSrB2VAkOBEIPrRqfPTBMtTMD9ta46ZMBMUEbHgaq6IEcJlNhOZYrvUbX3R4rXw6qKVE4ETj1GRaRjFFkOxNzqTJkx9pYpXhC1uuloFf/74hUmhiobnX1SDm/kSefzZhthMOFS3Vz3KWz1eCT+t00RzHH+QUjbb3bYze927NTlrbSpjNLTpWjW03/090drd8TBmYgbIlBFO83Hn7KRMEr/KZgktLC/O9io2HoVX71g5URYpfo/OLHSVaWwq/QyLTT7LyZW5jxuugMnwCJhIlfcuneoIiYyH0amZQ+Yy5+zw2F3XR0D0rnIvMs95cprJ4SCjMNvxpP3suwBgd1Lm5EodMa4R3e5zs/l67RjB3P1o7PQc4GUhAy730EE7BZ6KkKcSuMJSzfDN0a3w00WaaKISzktO4zaCJ8oUqtrYlFmZTx7cxIhc7h83GQ0Rdy+WG8JjkyBhWjZ4sZbkfH7kzBUlw/3DuhVOBesyzN4Ul5XDmabJ2Wvu4M8ymq7rwWo24W6AnSKQxivVY0TBakickQOEUwwcG0KnGC1XpVtf8Fn40vcrvqZMyEPHjcNUhB5iTn4dOy07y9z5SNZy4wJGhw6hqftJWOuN808i4sZDTHKaG6fZAEW4LxI2R11Qcc1n4RLUBaeOYhY34boGSZ+d0sKDSJkYnTSjhhB+VlvDVTB3GXrGxUGkIuVunf9WiQKN49PVWLr5oUKH8j7uUp76g5O/DafNY1UxTgr5ilJhNTp7z+6wU6e8lp67dbRgMUY1XKoEEe2iLqpPZ9vfcc3155pikqaR+EkZveODdkZaG9hVQeCzlm2rqPOky6NwrbZMNKeqKlH8e7h00+CqgCc3x0+dX8rLlZqutkbobG0YlFOHSOEVtdy8eB1vA2zJ6WqBlymHOI1rXWaCsPoN3XcN4AW8arNlZfXsuP6v+twFKTUcI2rU/JzdbAbjpi+YZ3zcMspiNICh+TZYjV3uGhQfHpuYRG2WEJulm/DKMGJ4cLvnZh3b8GkBuDUrdZU3wEv4fHd4UrfoJYGSI3i+KcNOHP7WvG8OYwSqQaCbc3dUeS1agl+3taW6nCTOxp3xKN4RDheDon8AY1eutvhnE/gIvx8kSrdkJzC5vBwjMBt8BGEEaw07zIXYNmp1+qfgBwJ6WC7VLYqmRqEcjZzvuJb7pBArzjxefqfmrbIyEMFPBPReRas789giZ6sEYCUilhkk9NFljcZHNqzRhSZmyg9EtISgvJ6QYmMWifSqLRfcVCqMlBEzsmdNkb4AgoCgvMnSfqJvQZfXM1Hch11SdNHSpduGD0PvP9wGQULA71X6UPFLg1me9HJViqorEv1Nx2bI9z4sdGBItoY3tx/QltVbIUgImnAJ9fX1TJ0Wd47xChsGfiFWDgELdV5k65ij2rKfBPgvYP/6efkH3snMgRGMYAT/L/wD4ZG61nFHLWoAAAAASUVORK5CYII=';
-
-List<int> imageData = base64Decode(base64Image);
+ 
 // ByteData bytes = ByteData.view(Uint8List.fromList(imageData).buffer);
 // Uint8List imageData = bytes.buffer.asUint8List(); 
 
@@ -95,11 +93,11 @@ List<int> imageData = base64Decode(base64Image);
   final ByteData bytes = await rootBundle.load('assets/images/logo_report_vehicle.png');
   final Uint8List imageLogo = bytes.buffer.asUint8List(); 
   final Picture pictureLogo = sheet.pictures.addStream(1, 1, imageLogo);
-  pictureLogo.width = 150; // Ancho de la imagen en unidades de 1/256 de un carácter
+  pictureLogo.width = 160; // Ancho de la imagen en unidades de 1/256 de un carácter
   pictureLogo.height = 90; 
   
   // AJUSTANDO TITULO
-  sheet.getRangeByIndex(2,3).setText('CONTROL DE VEHICULOS EMPLEADOS');
+  sheet.getRangeByIndex(2,3).setText('');
   // Fusionar celdas
   final Range rangeTitle = sheet.getRangeByName('B2:F2');
   rangeTitle.cellStyle.bold = true;
@@ -136,17 +134,48 @@ List<int> imageData = base64Decode(base64Image);
   sheet.autoFitColumn(6);
   sheet.autoFitColumn(7);
   
-  var cell = sheet.getRangeByIndex(jsonStr.length + 7 + beginRow,1);
-  cell.setText('JORGE ALONSO LUNA RIVERA');
+  //TRAFICO
+  if (Screen == 1) {
+    // AJUSTANDO TITULO
+    sheet.getRangeByIndex(2,3).setText('CONTROL DE VEHICULOS EMPLEADOS');
+    String base64Image = dataGuard![0]['sign'] ?? 'iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAAAXNSR0IArs4c6QAABSJJREFUeF7t1bERwDAMxLB4/6UzgV2wfaRXIci8nM9HgMBV4LAhQOAuIBCvg8BDQCCeBwGBeAMEmoA/SHMzNSIgkJFDW7MJCKS5mRoREMjIoa3ZBATS3EyNCAhk5NDWbAICaW6mRgQEMnJoazYBgTQ3UyMCAhk5tDWbgECam6kRAYGMHNqaTUAgzc3UiIBARg5tzSYgkOZmakRAICOHtmYTEEhzMzUiIJCRQ1uzCQikuZkaERDIyKGt2QQE0txMjQgIZOTQ1mwCAmlupkYEBDJyaGs2AYE0N1MjAgIZObQ1m4BAmpupEQGBjBzamk1AIM3N1IiAQEYObc0mIJDmZmpEQCAjh7ZmExBIczM1IiCQkUNbswkIpLmZGhEQyMihrdkEBNLcTI0ICGTk0NZsAgJpbqZGBAQycmhrNgGBNDdTIwICGTm0NZuAQJqbqREBgYwc2ppNQCDNzdSIgEBGDm3NJiCQ5mZqREAgI4e2ZhMQSHMzNSIgkJFDW7MJCKS5mRoREMjIoa3ZBATS3EyNCAhk5NDWbAICaW6mRgQEMnJoazYBgTQ3UyMCAhk5tDWbgECam6kRAYGMHNqaTUAgzc3UiIBARg5tzSYgkOZmakRAICOHtmYTEEhzMzUiIJCRQ1uzCQikuZkaERDIyKGt2QQE0txMjQgIZOTQ1mwCAmlupkYEBDJyaGs2AYE0N1MjAgIZObQ1m4BAmpupEQGBjBzamk1AIM3N1IiAQEYObc0mIJDmZmpEQCAjh7ZmExBIczM1IiCQkUNbswkIpLmZGhEQyMihrdkEBNLcTI0ICGTk0NZsAgJpbqZGBAQycmhrNgGBNDdTIwICGTm0NZuAQJqbqREBgYwc2ppNQCDNzdSIgEBGDm3NJiCQ5mZqREAgI4e2ZhMQSHMzNSIgkJFDW7MJCKS5mRoREMjIoa3ZBATS3EyNCAhk5NDWbAICaW6mRgQEMnJoazYBgTQ3UyMCAhk5tDWbgECam6kRAYGMHNqaTUAgzc3UiIBARg5tzSYgkOZmakRAICOHtmYTEEhzMzUiIJCRQ1uzCQikuZkaERDIyKGt2QQE0txMjQgIZOTQ1mwCAmlupkYEBDJyaGs2AYE0N1MjAgIZObQ1m4BAmpupEQGBjBzamk1AIM3N1IiAQEYObc0mIJDmZmpEQCAjh7ZmExBIczM1IiCQkUNbswkIpLmZGhEQyMihrdkEBNLcTI0ICGTk0NZsAgJpbqZGBAQycmhrNgGBNDdTIwICGTm0NZuAQJqbqREBgYwc2ppNQCDNzdSIgEBGDm3NJiCQ5mZqREAgI4e2ZhMQSHMzNSIgkJFDW7MJCKS5mRoREMjIoa3ZBATS3EyNCAhk5NDWbAICaW6mRgQEMnJoazYBgTQ3UyMCAhk5tDWbgECam6kRAYGMHNqaTUAgzc3UiIBARg5tzSYgkOZmakRAICOHtmYTEEhzMzUiIJCRQ1uzCQikuZkaERDIyKGt2QQE0txMjQgIZOTQ1mwCAmlupkYEBDJyaGs2AYE0N1MjAgIZObQ1m4BAmpupEQGBjBzamk1AIM3N1IiAQEYObc0mIJDmZmpEQCAjh7ZmExBIczM1IiCQkUNbswkIpLmZGhEQyMihrdkEBNLcTI0ICGTk0NZsAgJpbqZGBAQycmhrNgGBNDdTIwICGTm0NZuAQJqbqREBgYwc2ppNQCDNzdSIgEBGDm3NJiCQ5mZqREAgI4e2ZhMQSHMzNSIgkJFDW7MJCKS5mRoR+AErVADJkrjltgAAAABJRU5ErkJggg==';
+    List<int> imageData = base64Decode(base64Image);
 
-  var cell2 = sheet.getRangeByIndex(jsonStr.length + 8 + beginRow,1);
-  cell2.setText('ESTA ES UNA DESCRIPCION');
+    var cellNombre = sheet.getRangeByIndex(jsonStr.length + 6 + beginRow,1);
+    cellNombre.setText('NOMBRE');
+    var cell = sheet.getRangeByIndex(jsonStr.length + 7 + beginRow,1);
+    cell.setText(dataGuard[0]['name']);
 
-  var cell3 = sheet.getRangeByIndex(jsonStr.length + 6 + beginRow,7);
-  final Picture picture = sheet.pictures.addStream(jsonStr.length + 6 + beginRow, 7, imageData);
-  cell3.setText( 'FIRMA');
-  picture.width = 120; // Ancho de la imagen en unidades de 1/256 de un carácter
-  picture.height = 60; // Altura de la imagen en unidades de 1/20 de un punto
+    var cellObservacion = sheet.getRangeByIndex(jsonStr.length + 8 + beginRow,1);
+    cellObservacion.setText('OBSERVACION(ES)');
+    for (var i = 0; i < jsonStrObs.length; i++) {
+      var cell2 = sheet.getRangeByIndex(jsonStr.length + 9 + i + beginRow,1);
+      cell2.setText(jsonStrObs[i]['observation']);
+      Range obs =   sheet.getRangeByName('A${jsonStr.length + 9 + i + beginRow}:E${jsonStr.length + 9 + i + beginRow}');
+      obs.merge();
+    }
+
+    var cell3 = sheet.getRangeByIndex(jsonStr.length + 7 + beginRow,7);
+    final Picture picture = sheet.pictures.addStream(jsonStr.length + 6 + beginRow, 7, imageData);
+    cell3.setText( 'FIRMA');
+    picture.width = 150; // Ancho de la imagen en unidades de 1/256 de un carácter
+    picture.height = 90; // Altura de la imagen en unidades de 1/20 de un punto
+  } else {
+    //COMEDOR
+
+    // AJUSTANDO TITULO
+    sheet.getRangeByIndex(2,3).setText('CONTROL DEL COMEDOR DE EMPLEADOS');
+    var cellObservacion = sheet.getRangeByIndex(jsonStr.length + 8 + beginRow,1);
+    cellObservacion.setText('OBSERVACION(ES)');
+    for (var i = 0; i < jsonStrObs.length; i++) {
+      var cell2 = sheet.getRangeByIndex(jsonStr.length + 9 + i + beginRow,1);
+      cell2.setText(jsonStrObs[i]['description']);
+      Range obs =   sheet.getRangeByName('A${jsonStr.length + 9 + i + beginRow}:E${jsonStr.length + 9 + i + beginRow}');
+      obs.merge();
+    }
+
+  }
+  
 
   String? path =  await pickDownloadDirectory(context);
 
