@@ -120,7 +120,7 @@ class _DiningRoomState extends State<DiningRoom> {
                                             Provider.of<VarProvider>(context,listen: false).updateVarSalir(true);
                                             Provider.of<VarProvider>(context,listen: false).updateVariable(false);
                                             DepartamentService dpser = DepartamentService();
-                                              var salirInt =  await dpser.postCloseTurnFood();
+                                              var salirInt =  await dpser.postCloseTurnFood(context);
                                                if (salirInt) {
                                                 Provider.of<VarProvider>(context,listen: false).updateVariable(false);
                                                 Provider.of<VarProvider>(context,listen: false).updateVarSalir(true);

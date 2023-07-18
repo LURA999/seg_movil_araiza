@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class TurnFood {
   String? plate;
   String? garrison;

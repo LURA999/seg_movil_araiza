@@ -7,6 +7,7 @@ class RegisterVehicle {
   String? timeExit;
   String? timeEnter;
   String? turn;
+  
   RegisterVehicle({
     this.plates,
     this.typevh,

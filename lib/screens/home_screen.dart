@@ -17,7 +17,6 @@ class HomeScreen extends StatelessWidget {
     );
     
     return Scaffold(
-      
         backgroundColor: const Color(0xFF293641),
         body: Column(
           children: [ 

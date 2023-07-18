@@ -180,7 +180,7 @@ class _ControlVehiclesState extends State<ControlVehicles> {
                           'Fecha inicial y hora',
                           'Fecha final y hora'
                         ],
-                        listSelect: const [['Primer Turno', 'Segundo Turno', 'Tercer turno'],[]],
+                        listSelect: const [['Primer Turno', 'Segundo Turno', 'Tercer turno', 'Todos los turnos'],[]],
                         formValue: formValuesDescRepor,
                         enabled: true),
                     ButtonForm(
@@ -222,7 +222,7 @@ class _ControlVehiclesState extends State<ControlVehicles> {
       SessionManager sm = SessionManager()
         ..clearSession().then((value) {
           DepartamentService dpser = DepartamentService()
-            ..postCloseTurnFood().then((value) {
+            ..postCloseTurnFood(context).then((value) {
               //cerrar turno anterior
               Provider.of<VarProvider>(context,listen: false).updateVariable(false);
             });

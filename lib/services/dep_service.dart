@@ -21,12 +21,13 @@ class DepartamentService extends ChangeNotifier {
   late String link = modoApk?'https://www.comunicadosaraiza.com/movil_scan_api/API':'https://www.comunicadosaraiza.com/movil_scan_api/API';
 
  Future<List<Map<String, dynamic>>> nameGuard( String name,BuildContext context ) async {
-AccessMap result = AccessMap();
+  AccessMap result = AccessMap();
  
   var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
-    print('No hay conexión a Internet.');
+    messageError(context,'No hay conexión a Internet.');
+    return [];
   } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
 
 try {
@@ -44,22 +45,22 @@ try {
     }
     isSaving = false;
     notifyListeners();
-    return result.container!; 
+    return []; 
   } on SocketException catch (e) {
     // Error de conexión de red (sin conexión a Internet)
-    print('Error de conexión de red: $e');
-    return result.container!; 
+    messageError(context,'Error de conexión de red: $e');
+    return []; 
   } on HttpException catch (e) {
     // Error de la solicitud HTTP
-    print('Error de la solicitud HTTP: $e');
-    return result.container!; 
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return []; 
   } catch (e) {
     // Otro tipo de error
-    print('Error inesperado: $e');
-    return result.container!; 
+    messageError(context,'Error inesperado: $e');
+    return []; 
   }
   }
-    return result.container!; 
+    return []; 
   
   } 
 
@@ -69,7 +70,8 @@ try {
   var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
-    print('No hay conexión a Internet.');
+    messageError(context,'No hay conexión a Internet.');
+    return [];
   } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
 try {
     isSaving = true;
@@ -86,62 +88,63 @@ try {
     }
     isSaving = false;
     notifyListeners();
-    return result.container!; 
+    return []; 
   } on SocketException catch (e) {
     // Error de conexión de red (sin conexión a Internet)
-    print('Error de conexión de red: $e');
-    return result.container!; 
+    messageError(context,'Error de conexión de red: $e');
+    return []; 
   } on HttpException catch (e) {
     // Error de la solicitud HTTP
-    print('Error de la solicitud HTTP: $e');
-    return result.container!; 
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return []; 
   } catch (e) {
     // Otro tipo de error
-    print('Error inesperado: $e');
-    return result.container!; 
+    messageError(context,'Error inesperado: $e');
+    return []; 
   }
   }
-    return result.container!; 
+    return []; 
   } 
 
-Future<Access> dataGuard( int idGuard,BuildContext context ) async {
-  Access result = Access();
+Future<List<Map<String, dynamic>>> dataGuard( String idGuard,BuildContext context ) async {
+  AccessMap result = AccessMap();
   var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
-    print('No hay conexión a Internet.');
+    messageError(context,'No hay conexión a Internet.');
+    return [];
   } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
 
 try {
     isSaving = true;
     notifyListeners();
-    final url = Uri.parse('$link/turn_vehicle.php?idGuard=$idGuard');
+    final url = Uri.parse('$link/turn_vehicle.php?nameSign=$idGuard');
     var response = (await http.get(url)).body;
-      final result = Access.fromJson(jsonDecode(response));
+      final result = AccessMap.fromJson(jsonDecode(response));
     // var response = await http.post(url, body: {'pass': pass, 'departament': departament});
     if (result.status == 200){
       isSaving = false;
       notifyListeners();
-      return result;
+      return result.container!;
     }
     isSaving = false;
     notifyListeners();
-    return result; 
+    return []; 
   } on SocketException catch (e) {
     // Error de conexión de red (sin conexión a Internet)
-    print('Error de conexión de red: $e');
-    return result; 
+    messageError(context,'Error de conexión de red: $e');
+    return []; 
   } on HttpException catch (e) {
     // Error de la solicitud HTTP
-    print('Error de la solicitud HTTP: $e');
-    return result; 
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return []; 
   } catch (e) {
     // Otro tipo de error
-    print('Error inesperado: $e');
-    return result; 
+    messageError(context,'Error inesperado: $e');
+    return []; 
   }
   }
-    return result; 
+    return []; 
   
   } 
 
@@ -150,7 +153,8 @@ try {
   var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
-    print('No hay conexión a Internet.');
+    messageError(context,'No hay conexión a Internet.');
+    return result;
   } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
 
 try {
@@ -170,15 +174,15 @@ try {
     return result; 
   } on SocketException catch (e) {
     // Error de conexión de red (sin conexión a Internet)
-    print('Error de conexión de red: $e');
+    messageError(context,'Error de conexión de red: $e');
     return result; 
   } on HttpException catch (e) {
     // Error de la solicitud HTTP
-    print('Error de la solicitud HTTP: $e');
+    messageError(context,'Error de la solicitud HTTP: $e');
     return result; 
   } catch (e) {
     // Otro tipo de error
-    print('Error inesperado: $e');
+    messageError(context,'Error inesperado: $e');
     return result; 
   }
   }
@@ -190,7 +194,9 @@ try {
     var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
-    print('No hay conexión a Internet.');
+    messageError(context,'No hay conexión a Internet.');
+    
+    return false;
   } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
 
 try {
@@ -209,25 +215,26 @@ try {
       return false; 
      } on SocketException catch (e) {
     // Error de conexión de red (sin conexión a Internet)
-    print('Error de conexión de red: $e');
+    messageError(context,'Error de conexión de red: $e');
       return false; 
   } on HttpException catch (e) {
     // Error de la solicitud HTTP
-    print('Error de la solicitud HTTP: $e');
+    messageError(context,'Error de la solicitud HTTP: $e');
       return false; 
   } catch (e) {
     // Otro tipo de error
-    print('Error inesperado: $e');
+    messageError(context,'Error inesperado: $e');
       return false; 
   }
   }
       return false; 
     }
-  Future<bool> postCloseTurnFood() async {
+  Future<bool> postCloseTurnFood(BuildContext context) async {
     var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
-    print('No hay conexión a Internet.');
+    messageError(context,'No hay conexión a Internet.');
+    return false;
   } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
 
 try {
@@ -246,15 +253,15 @@ try {
       return false; 
      } on SocketException catch (e) {
     // Error de conexión de red (sin conexión a Internet)
-    print('Error de conexión de red: $e');
+    messageError(context,'Error de conexión de red: $e');
       return false; 
   } on HttpException catch (e) {
     // Error de la solicitud HTTP
-    print('Error de la solicitud HTTP: $e');
+    messageError(context,'Error de la solicitud HTTP: $e');
       return false; 
   } catch (e) {
     // Otro tipo de error
-    print('Error inesperado: $e');
+    messageError(context,'Error inesperado: $e');
   }
   }
       return false; 
@@ -265,7 +272,8 @@ Future<bool> postObvFood(TurnFood t,BuildContext context) async {
     var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
-    print('No hay conexión a Internet.');
+    messageError(context,'No hay conexión a Internet.');
+    return false;
   } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
 
 try {
@@ -284,15 +292,15 @@ try {
       return false; 
       } on SocketException catch (e) {
     // Error de conexión de red (sin conexión a Internet)
-    print('Error de conexión de red: $e');
+    messageError(context,'Error de conexión de red: $e');
       return false; 
   } on HttpException catch (e) {
     // Error de la solicitud HTTP
-    print('Error de la solicitud HTTP: $e');
+    messageError(context,'Error de la solicitud HTTP: $e');
       return false; 
   } catch (e) {
     // Otro tipo de error
-    print('Error inesperado: $e');
+    messageError(context,'Error inesperado: $e');
       return false; 
   }
   }
@@ -302,7 +310,8 @@ Future<bool> postObvVehicle(TurnVehicle t,BuildContext context) async {
     var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
-    print('No hay conexión a Internet.');
+    messageError(context,'No hay conexión a Internet.');
+    return false;
   } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
 
 try {
@@ -321,15 +330,15 @@ try {
       return false; 
       } on SocketException catch (e) {
     // Error de conexión de red (sin conexión a Internet)
-    print('Error de conexión de red: $e');
+    messageError(context,'Error de conexión de red: $e');
       return false; 
   } on HttpException catch (e) {
     // Error de la solicitud HTTP
-    print('Error de la solicitud HTTP: $e');
+    messageError(context,'Error de la solicitud HTTP: $e');
       return false; 
   } catch (e) {
     // Otro tipo de error
-    print('Error inesperado: $e');
+    messageError(context,'Error inesperado: $e');
       return false; 
   }
   }
@@ -341,7 +350,8 @@ try {
     var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
-    print('No hay conexión a Internet.');
+    messageError(context,'No hay conexión a Internet.');
+    return result;
   } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
 
 try {
@@ -360,15 +370,15 @@ try {
       return result; 
     } on SocketException catch (e) {
     // Error de conexión de red (sin conexión a Internet)
-    print('Error de conexión de red: $e');
+    messageError(context,'Error de conexión de red: $e');
     return result; 
   } on HttpException catch (e) {
     // Error de la solicitud HTTP
-    print('Error de la solicitud HTTP: $e');
+    messageError(context,'Error de la solicitud HTTP: $e');
     return result; 
   } catch (e) {
     // Otro tipo de error
-    print('Error inesperado: $e');
+    messageError(context,'Error inesperado: $e');
     return result; 
   }
   }
@@ -390,7 +400,8 @@ try {
   var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
-    print('No hay conexión a Internet.');
+    messageError(context,'No hay conexión a Internet.');
+    return result;
   } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
 
 try {
@@ -407,15 +418,15 @@ try {
     return result; 
   } on SocketException catch (e) {
     // Error de conexión de red (sin conexión a Internet)
-    print('Error de conexión de red: $e');
+    messageError(context,'Error de conexión de red: $e');
     return result; 
   } on HttpException catch (e) {
     // Error de la solicitud HTTP
-    print('Error de la solicitud HTTP: $e');
+    messageError(context,'Error de la solicitud HTTP: $e');
     return result; 
   } catch (e) {
     // Otro tipo de error
-    print('Error inesperado: $e');
+    messageError(context,'Error inesperado: $e');
     return result; 
   }
   }
@@ -436,7 +447,8 @@ try {
   var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
-    print('No hay conexión a Internet.');
+    messageError(context,'No hay conexión a Internet.');
+    return result;
   } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
 
 try {
@@ -460,15 +472,15 @@ try {
     return result; 
   } on SocketException catch (e) {
     // Error de conexión de red (sin conexión a Internet)
-    print('Error de conexión de red: $e');
+    messageError(context,'Error de conexión de red: $e');
     return result; 
   } on HttpException catch (e) {
     // Error de la solicitud HTTP
-    print('Error de la solicitud HTTP: $e');
+    messageError(context,'Error de la solicitud HTTP: $e');
     return result; 
   } catch (e) {
     // Otro tipo de error
-    print('Error inesperado: $e');
+    messageError(context,'Error inesperado: $e');
     return result; 
   }
   }
@@ -480,7 +492,8 @@ try {
   var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
-    print('No hay conexión a Internet.');
+    messageError(context,'No hay conexión a Internet.');
+    return result;
   } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
 
 try {
@@ -497,15 +510,15 @@ try {
     return result; 
   } on SocketException catch (e) {
     // Error de conexión de red (sin conexión a Internet)
-    print('Error de conexión de red: $e');
+    messageError(context,'Error de conexión de red: $e');
     return result; 
   } on HttpException catch (e) {
     // Error de la solicitud HTTP
-    print('Error de la solicitud HTTP: $e');
+    messageError(context,'Error de la solicitud HTTP: $e');
     return result; 
   } catch (e) {
     // Otro tipo de error
-    print('Error inesperado: $e');
+    messageError(context,'Error inesperado: $e');
     return result; 
   }
   }
@@ -517,7 +530,8 @@ try {
   var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
-    print('No hay conexión a Internet.');
+    messageError(context,'No hay conexión a Internet.');
+    return result;
   } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
 
 try {
@@ -534,15 +548,15 @@ try {
     return result; 
   } on SocketException catch (e) {
     // Error de conexión de red (sin conexión a Internet)
-    print('Error de conexión de red: $e');
+    messageError(context,'Error de conexión de red: $e');
     return result; 
   } on HttpException catch (e) {
     // Error de la solicitud HTTP
-    print('Error de la solicitud HTTP: $e');
+    messageError(context,'Error de la solicitud HTTP: $e');
     return result; 
   } catch (e) {
     // Otro tipo de error
-    print('Error inesperado: $e');
+    messageError(context,'Error inesperado: $e');
     return result; 
   }
   }
@@ -560,7 +574,8 @@ try {
     var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
-    print('No hay conexión a Internet.');
+    messageError(context,'No hay conexión a Internet.');
+    return [];
   } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
 
 try {
@@ -583,15 +598,15 @@ try {
       return listContainer; 
       } on SocketException catch (e) {
     // Error de conexión de red (sin conexión a Internet)
-    print('Error de conexión de red: $e');
+    messageError(context,'Error de conexión de red: $e');
     return listContainer; 
   } on HttpException catch (e) {
     // Error de la solicitud HTTP
-    print('Error de la solicitud HTTP: $e');
+    messageError(context,'Error de la solicitud HTTP: $e');
     return listContainer; 
   } catch (e) {
     // Otro tipo de error
-    print('Error inesperado: $e');
+    messageError(context,'Error inesperado: $e');
     return listContainer; 
   }
   }
@@ -605,7 +620,8 @@ try {
     var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
-    print('No hay conexión a Internet.');
+    messageError(context,'No hay conexión a Internet.');
+    return [];
   } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
 
 try {
@@ -628,15 +644,15 @@ try {
       return listContainer; 
       } on SocketException catch (e) {
     // Error de conexión de red (sin conexión a Internet)
-    print('Error de conexión de red: $e');
+    messageError(context,'Error de conexión de red: $e');
     return listContainer; 
   } on HttpException catch (e) {
     // Error de la solicitud HTTP
-    print('Error de la solicitud HTTP: $e');
+    messageError(context,'Error de la solicitud HTTP: $e');
     return listContainer; 
   } catch (e) {
     // Otro tipo de error
-    print('Error inesperado: $e');
+    messageError(context,'Error inesperado: $e');
   }
   }
   return listContainer; 
@@ -650,7 +666,8 @@ try {
     var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
-    print('No hay conexión a Internet.');
+    messageError(context,'No hay conexión a Internet.');
+    return [];
   } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
 
 try {
@@ -673,15 +690,15 @@ try {
       return listContainer; 
       } on SocketException catch (e) {
     // Error de conexión de red (sin conexión a Internet)
-    print('Error de conexión de red: $e');
+    messageError(context,'Error de conexión de red: $e');
     return listContainer; 
   } on HttpException catch (e) {
     // Error de la solicitud HTTP
-    print('Error de la solicitud HTTP: $e');
+    messageError(context,'Error de la solicitud HTTP: $e');
     return listContainer; 
   } catch (e) {
     // Otro tipo de error
-    print('Error inesperado: $e');
+    messageError(context,'Error inesperado: $e');
     return listContainer; 
   }
   }
@@ -695,7 +712,8 @@ try {
     var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
-    print('No hay conexión a Internet.');
+    messageError(context,'No hay conexión a Internet.');
+    return listContainer;
   } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
 
 try {
@@ -718,15 +736,15 @@ try {
       return listContainer; 
       } on SocketException catch (e) {
     // Error de conexión de red (sin conexión a Internet)
-    print('Error de conexión de red: $e');
+    messageError(context,'Error de conexión de red: $e');
     return listContainer; 
   } on HttpException catch (e) {
     // Error de la solicitud HTTP
-    print('Error de la solicitud HTTP: $e');
+    messageError(context,'Error de la solicitud HTTP: $e');
     return listContainer; 
   } catch (e) {
     // Otro tipo de error
-    print('Error inesperado: $e');
+    messageError(context,'Error inesperado: $e');
     return listContainer; 
   }
   }
@@ -741,7 +759,8 @@ try {
   var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
-    print('No hay conexión a Internet.');
+    messageError(context,'No hay conexión a Internet.');
+    return result;
   } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
 
 try {
@@ -763,15 +782,15 @@ try {
       return result;
   } on SocketException catch (e) {
     // Error de conexión de red (sin conexión a Internet)
-    print('Error de conexión de red: $e');
+    messageError(context,'Error de conexión de red: $e');
     return result;
   } on HttpException catch (e) {
     // Error de la solicitud HTTP
-    print('Error de la solicitud HTTP: $e');
+    messageError(context,'Error de la solicitud HTTP: $e');
     return result;
   } catch (e) {
     // Otro tipo de error
-    print('Error inesperado: $e');
+    messageError(context,'Error inesperado: $e');
     return result;
   }
   }
@@ -784,7 +803,8 @@ try {
   var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
-    print('No hay conexión a Internet.');
+    messageError(context,'No hay conexión a Internet.');
+    return false;
   } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
 
 try {
@@ -807,15 +827,15 @@ try {
       return false;
   } on SocketException catch (e) {
     // Error de conexión de red (sin conexión a Internet)
-    print('Error de conexión de red: $e');
+    messageError(context,'Error de conexión de red: $e');
      return false;
   } on HttpException catch (e) {
     // Error de la solicitud HTTP
-    print('Error de la solicitud HTTP: $e');
+    messageError(context,'Error de la solicitud HTTP: $e');
      return false;
   } catch (e) {
     // Otro tipo de error
-    print('Error inesperado: $e');
+    messageError(context,'Error inesperado: $e');
      return false;
   }
   }
@@ -824,23 +844,23 @@ try {
 }
  
 
- messageError(BuildContext context){
+ messageError(BuildContext context, String msg){
   return showDialog(
     context: context, // Accede al contexto del widget actual
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text('Error'),
-        content: Text('Se produjo un error durante la solicitud HTTP.'),
+        title: const Text('Error'),
+        content: Text(msg),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.pop(context); // Cierra el diálogo
             },
-            child: Text('Cerrar'),
+            child: const Text('Cerrar'),
           ),
         ],
       );
- });
+    });
  }
 
     /**

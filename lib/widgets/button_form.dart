@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:app_seguimiento_movil/models/models.dart';
 import 'package:app_seguimiento_movil/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -297,6 +299,8 @@ class ButtonForm extends StatelessWidget {
                               de.guard = formValue['guard']!.contenido;
                               List<Map<String, dynamic>> jsonStr = await dpser.selectDateVehicle(de,context);
                               List<Map<String, dynamic>> jsonStrObs = await dpser.selectObsVehicle(de,context);
+                              List<Map<String, dynamic>> dataGuard = await dpser.dataGuard(de.guard!,context);
+
                                 if (jsonStr.isNotEmpty) {
                                   DateTime now = DateTime.now();
                                   String formattedDate = DateFormat('yyyyMMddss').format(now);
@@ -305,13 +309,31 @@ class ButtonForm extends StatelessWidget {
                                    jsonStr,
                                    ['TIPO VEHICULO','COLOR','PLACAS','NOMBRE EMPLEADO', 'DEPARTAMENTO','ENTRADA'], 
                                   jsonStrObs,
-                                   null,
-                                   1,
-                                   fileName, 
-                                   context);   
+                                  dataGuard,
+                                  1,
+                                  fileName, 
+                                  context);
+                                  Navigator.pop(context);
+                                }else{
+                                  showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                   return AlertDialog(
+                                      title: const Text('Mensaje'),
+                                      content: Text('${de.guard} no tiene vehiculos registrados'),
+                                      actions: [
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text('Aceptar',style: getTextStyleButtonField(context)),
+                                        ),
+                                      ],
+                                    );
+                                });
                                 }
-                               Navigator.pop(context);
                             } 
+
                             if (btnPosition == 5) {
                               int i = 0;
                               if (formValue['placas']!.contenido != null && formValue['placas']!.contenido != '') {
@@ -395,6 +417,8 @@ class ButtonForm extends StatelessWidget {
                               de.dateFinal = formValue['date_final_hour']!.contenido!;
                               de.plate = formValue['plate']!.contenido!;
                               List<Map<String, dynamic>> jsonStr = await dpser.selectDateFood(de, context);
+
+                              print(de.toJson());
                               List<Map<String, dynamic>> jsonStrObs = await dpser.selectObsFood(de, context);
 
                                 if (jsonStr.isNotEmpty) {
