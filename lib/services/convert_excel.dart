@@ -150,7 +150,7 @@ Future<void> jsonToExcel(List<Map<String, dynamic>> jsonStr, List<String> header
     cell.setText(dataGuard.length == 1?  dataGuard[0]['name'] : 'S/N');
 
     var cellObservacion = sheet.getRangeByIndex(jsonStr.length + 8 + beginRow,1);
-    cellObservacion.setText('OBSERVACION(ES)');
+    cellObservacion.setText('OBSERVACIONES');
     cellObservacion.cellStyle.bold = true;
     for (var i = 0; i < jsonStrObs.length; i++) {
       var cell2 = sheet.getRangeByIndex(jsonStr.length + 9 + i + beginRow,1);

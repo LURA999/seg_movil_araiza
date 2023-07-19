@@ -64,7 +64,12 @@ class _ControlVehiclesState extends State<ControlVehicles> {
     };
 
     final TextEditingController controller = TextEditingController();
-
+    TextStyle myTextStyleTitle = const TextStyle(
+      color: Color(0xFF293641),
+      fontFamily: 'Inter',
+      fontWeight: FontWeight.w900,
+    );
+    
     return Scaffold(
         body: Column(
       children: [
@@ -77,6 +82,13 @@ class _ControlVehiclesState extends State<ControlVehicles> {
                 child: Padding(
                   padding: const EdgeInsets.all(20),
                   child: Column(children: [
+                    SizedBox(
+                      child: Align(
+                      alignment: Alignment.center,
+                      child: Text('Control de empleados',style: myTextStyleTitle.copyWith(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .05: 0.04) )),          
+                      )
+                    ),
+                    const SizedBox(height: 10,),
                     ButtonForm(
                         control: 1,
                         textButton: 'Inicio turno',

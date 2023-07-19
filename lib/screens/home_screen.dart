@@ -4,10 +4,15 @@ import 'package:flutter/services.dart';
 
 import '../services/letter_mediaquery.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   
   const HomeScreen({Key? key}) : super(key: key);
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     TextStyle myTextStyle = const TextStyle(
@@ -93,6 +98,7 @@ class ContainerOption extends StatefulWidget {
 }
 
 class _ContainerOptionState extends State<ContainerOption> {
+  bool obscureText = true; 
   final DepartamentService depService = DepartamentService(); 
   String? errorMessage;
   String password = '';
@@ -137,10 +143,14 @@ class _ContainerOptionState extends State<ContainerOption> {
             ]),
         child: InkWell(
           onTap: () {
+            
               TextEditingController textController = TextEditingController();
               showDialog(
                 context: context,
-                builder: (BuildContext context) => Dialog(
+                builder: (BuildContext context) => StatefulBuilder(
+                  builder: (BuildContext context, StateSetter setState) { 
+                  
+                  return Dialog(
                 insetPadding: 
                 MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
                   //para celulares
@@ -179,7 +189,16 @@ class _ContainerOptionState extends State<ContainerOption> {
                       enabled: true,
                       textAlign: TextAlign.center,
                       autofocus: autofucus,
-                      obscureText: true,
+                      obscureText: obscureText,
+                      decoration: InputDecoration(
+                      suffixIcon:IconButton(
+                      icon: Icon( obscureText ? Icons.visibility : Icons.visibility_off),
+                      onPressed: () {
+                        setState(() {
+                          obscureText = !obscureText;
+                        });
+                      }),
+                      ),
                       style: getTextStyleButtonField(context),
                       onChanged: (value) {
                         setState(() {
@@ -205,8 +224,9 @@ class _ContainerOptionState extends State<ContainerOption> {
                     ),
                 ),
                 )
-              )
-            );
+              );
+              }
+            ));
           },
           child: Container(
             height: MediaQuery.of(context).size.height * (MediaQuery.of(context).orientation == Orientation.portrait ? 0.05 : 0.1),

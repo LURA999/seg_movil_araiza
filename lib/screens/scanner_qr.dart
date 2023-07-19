@@ -170,7 +170,7 @@ class _ScannerQR extends State<ScannerQR> {
             }else{
               setState(() {
                 color = Colors.red;
-                text = 'Error: Solo se permiten 2 comidas al dia por empleado';
+                text = 'Ah ocurrido un error';
               });
             }
           });

@@ -259,11 +259,49 @@ class ButtonForm extends StatelessWidget {
                                   if((await dpser.postTurnVehicle(t,context)).status == 404){
                                     return;
                                   }
-                                Provider.of<VarProvider>(context, listen: false).updateVariable(true);
+
+                                  return showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                   return Align(
+                                    alignment: Alignment.center,
+                                     child: SingleChildScrollView(
+                                       child: AlertDialog(
+                                          title: const Text('¿Esta seguro de continuar con estos datos?'),
+                                          content: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children:[
+                                            Text('Nombre', style: TextStyle(fontWeight: FontWeight.bold),),
+                                            Text(t.name!),
+                                            Text('Turno', style: TextStyle(fontWeight: FontWeight.bold)),
+                                            Text(t.turn! == '1'?'Primer Turno':t.turn! == '2'?'Segundo Turno': 'Tercer Turno' )
+                                            ]
+                                          ),
+                                          actions: [
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                                Provider.of<VarProvider>(context, listen: false).updateVariable(true);
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text('Aceptar',style: getTextStyleButtonField(context)),
+                                            ),ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text('Cancelar',style: getTextStyleButtonField(context)),
+                                            ),
+                                          ],
+                                        ),
+                                     ),
+                                   );
+                                });
+
+
                                 }else {
                                   return ; 
                                 }
-                                Navigator.pop(context);
                               }
                             }
         
@@ -305,6 +343,7 @@ class ButtonForm extends StatelessWidget {
                                   DateTime now = DateTime.now();
                                   String formattedDate = DateFormat('yyyyMMddss').format(now);
                                   String fileName = '$formattedDate.xlsx';
+
                                    await jsonToExcel(
                                    jsonStr,
                                    ['TIPO VEHICULO','COLOR','PLACAS','NOMBRE EMPLEADO', 'DEPARTAMENTO','ENTRADA'], 
@@ -320,7 +359,7 @@ class ButtonForm extends StatelessWidget {
                                 builder: (BuildContext context) {
                                    return AlertDialog(
                                       title: const Text('Mensaje'),
-                                      content: Text('${de.guard} no tiene vehiculos registrados'),
+                                      content: const Text('No tiene vehiculos registrados'),
                                       actions: [
                                         ElevatedButton(
                                           onPressed: () {
@@ -363,6 +402,7 @@ class ButtonForm extends StatelessWidget {
                             if (btnPosition == 1) {
                               TurnFood t= TurnFood();
                               if(formValue['picture']!.contenido != '' && formValue['picture']!.contenido != null){
+                                t.picture = formValue['picture']!.contenido;
                                 t.plate = formValue['plate']!.contenido;
                                 t.garrison = formValue['garrison']!.contenido;
                                 t.dessert = formValue['dessert']!.contenido;
@@ -396,8 +436,8 @@ class ButtonForm extends StatelessWidget {
                               RegisterFood r= RegisterFood();
                               r.numEmployee = formValue['employee_number']!.contenido;
                               r.name = formValue['name']!.contenido;
-                              r.name = formValue['type_contract']!.contenido;
-                            
+                              r.contract = formValue['type_contract']!.contenido;
+
                               await dpser.postRegisterFood(r,context);
                               Navigator.pop(context);
                             }
@@ -415,10 +455,8 @@ class ButtonForm extends StatelessWidget {
                               DateExcelFood de = DateExcelFood();
                               de.dateStart = formValue['date_start_hour']!.contenido!; 
                               de.dateFinal = formValue['date_final_hour']!.contenido!;
-                              de.plate = formValue['plate']!.contenido!;
+                              de.plate = formValue['plate']!.contenido!.toString();
                               List<Map<String, dynamic>> jsonStr = await dpser.selectDateFood(de, context);
-
-                              print(de.toJson());
                               List<Map<String, dynamic>> jsonStrObs = await dpser.selectObsFood(de, context);
 
                                 if (jsonStr.isNotEmpty) {
@@ -433,8 +471,25 @@ class ButtonForm extends StatelessWidget {
                                    2,
                                    fileName, 
                                    context);  
+                                Navigator.pop(context);
+                                }else{
+                                  showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                   return AlertDialog(
+                                      title: const Text('Mensaje'),
+                                      content: const Text('No tiene empleados registrados'),
+                                      actions: [
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text('Aceptar',style: getTextStyleButtonField(context)),
+                                        ),
+                                      ],
+                                    );
+                                });
                                 }
-                               Navigator.pop(context);
                             } 
                             break;
                           default:

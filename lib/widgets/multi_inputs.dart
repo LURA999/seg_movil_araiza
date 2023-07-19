@@ -85,7 +85,15 @@ final ImagePicker _picker = ImagePicker();
 
     /** Ingrese una imagen*/
     if(widget.formValue[widget.formProperty]!.uploadFile ?? false){
-      return ElevatedButton.icon(onPressed: openCamera, icon: const Icon(Icons.camera_alt_rounded), label: Text('Abrir camara',style: getTextStyleButtonField(context),));
+      return ElevatedButton.icon(onPressed: () async {
+         try{
+          final XFile? image = await _picker.pickImage(source: ImageSource.camera);
+          if (image != null) {
+            widget.formValue[widget.formProperty]!.contenido = image.path;
+          }
+        }catch(Exception){
+      }
+      } , icon: const Icon(Icons.camera_alt_rounded), label: Text('Abrir camara',style: getTextStyleButtonField(context),));
     }
     
     /** Si entra aqui, entra para crear un select */

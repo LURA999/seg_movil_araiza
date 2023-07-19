@@ -454,19 +454,15 @@ try {
 try {
     isSaving = true;
     notifyListeners();
-
-      var request = http.MultipartRequest('POST', Uri.parse('$link/turn_food.php'));
-      request.files.add(await http.MultipartFile.fromPath('photo', session.picture!));
-
-      // Agregar datos adicionales
-      request.fields['date_hour'] = session.date_hour!;
-      request.fields['dessert'] = session.dessert!;
-      request.fields['garrison'] = session.garrison!;
-      request.fields['plate'] = session.plate!;
-      request.fields['received'] = session.received!;
-
+    var request = http.MultipartRequest('POST', Uri.parse('$link/turn_food.php'));
+    request.files.add(await http.MultipartFile.fromPath('photo', session.picture!));
+    // Agregar datos adicionales
+    request.fields['picture'] = session.picture!;
+    request.fields['dessert'] = session.dessert!;
+    request.fields['garrison'] = session.garrison!;
+    request.fields['plate'] = session.plate!;
+    request.fields['received'] = session.received!;
     await request.send();
-
     isSaving = false;
     notifyListeners();
     return result; 
@@ -708,7 +704,6 @@ try {
     
     List<Map<String, dynamic>> listContainer = [];
     AccessMap result = AccessMap();
-
     var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
@@ -810,7 +805,7 @@ try {
 try {
     isSaving = true;
     notifyListeners();
-
+    print(reg.toJson());
     final url = Uri.parse('$link/qr_food.php');
       var response = (await http.post(
       url, 
