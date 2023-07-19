@@ -211,7 +211,7 @@ class _ContainerOptionState extends State<ContainerOption> {
                           } 
                           return null;
                         },
-                      onEditingComplete: () => handleButtonPressed,
+                      onEditingComplete: handleButtonPressed,
                       ),
                       
                       const SizedBox(height: 10,),
