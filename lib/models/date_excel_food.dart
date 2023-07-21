@@ -2,19 +2,19 @@
 class DateExcelFood {
    String? dateStart;
    String? dateFinal;
-   String? plate;
+   String? dish;
 
     DateExcelFood({ 
       this.dateStart, 
       this.dateFinal, 
-      this.plate, 
+      this.dish, 
     });
 
 
     DateExcelFood.fromJson(Map<String, dynamic> json){ 
       dateStart = json['dateStart'];
       dateFinal = json['dateFinal'];
-      plate = json['plate'];
+      dish = json['dish'];
     }
 
 
@@ -22,7 +22,7 @@ class DateExcelFood {
       final Map<String, dynamic> data = {};
        data['dateStart'] = dateStart ?? '';
        data['dateFinal'] = dateFinal ?? '';
-       data['plate'] = plate ?? '';
+       data['dish'] = dish ?? '';
       return data;
     }
 }

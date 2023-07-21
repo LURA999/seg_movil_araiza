@@ -1,10 +1,11 @@
+import 'package:app_seguimiento_movil/services/services.dart';
 import 'package:app_seguimiento_movil/widgets/widgets.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:app_seguimiento_movil/widgets/dropdown_button.dart';
-import '../services/letter_mediaquery.dart';
+import '../models/models.dart';
 
 class Guard {
   String name;
@@ -37,13 +38,13 @@ class MultiInputs extends StatefulWidget {
   final bool obscureText;
   final List<List<String>>? listSelect;
   final bool? autocompleteAsync;
+  final int? screen; 
   final String formProperty;
   late Map<String, dynamic> formValue;
   final bool? autofocus;
   late  TextEditingController? controller;
-
+  Function(dynamic,List<String>)? onFormValueChange;
   
-
   MultiInputs({
     Key? key, 
     this.hintText, 
@@ -60,8 +61,9 @@ class MultiInputs extends StatefulWidget {
     required this.formProperty,
     required this.formValue, 
     required this.maxLines, 
-    required this.autofocus, 
-    this.controller
+    required this.autofocus,
+    this.onFormValueChange, 
+    this.controller, this.screen
     
   }) : super(key: key);
 
@@ -80,7 +82,13 @@ final ImagePicker _picker = ImagePicker();
 
     //automcompletador
     if(widget.formValue[widget.formProperty]!.autocomplete ?? false){
-      return AutocompleteCustom(formProperty: widget.formProperty,formValue: widget.formValue,autocompleteAsync: widget.autocompleteAsync!,labelText: widget.labelText,);
+      return AutocompleteCustom(
+      formProperty: widget.formProperty,
+      formValue: widget.formValue,
+      autocompleteAsync: widget.autocompleteAsync!,
+      labelText: widget.labelText,
+      onFormValueChange: widget.onFormValueChange,
+      screen: widget.screen!);
     }
 
     /** Ingrese una imagen*/
@@ -183,21 +191,6 @@ final ImagePicker _picker = ImagePicker();
             }
             return null;
           }:null,
-          onTap: widget.keyboardType.toString().contains('datetime') ? () async {
-
-            /* DateTime? pickedDate = await showDatePicker(
-            context: context,
-            initialDate: DateTime.now(),
-            firstDate: DateTime(2020),
-            lastDate: DateTime(DateTime.now().year+5),
-            );
-            if (pickedDate != null) {
-              String formattedDate = dateFormat.format(pickedDate);
-              widget.controller!.text = formattedDate;
-              widget.formValue[widget.formProperty]!.contenido = widget.controller!.text;
-            } */
-            
-          }:null,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           decoration:  InputDecoration(
             hintText: widget.hintText,
@@ -226,8 +219,24 @@ final ImagePicker _picker = ImagePicker();
   }
   }catch(Exception){
   }
-
   
 }
+
+
+
+  Future<String> observation() async {
+    VehicleService vs = VehicleService();
+
+     switch (widget.formProperty) {
+      //es para trafico
+      case 'description':
+        AccessMap r = (await vs.getObservation(context));
+        return r.container![0]['observation'].toString();
+
+    }
+
+    return '';
+    
+  }
 
 }

@@ -5,9 +5,6 @@ import 'package:app_seguimiento_movil/widgets/widgets.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import '../services/letter_mediaquery.dart';
-
-
 
 class ControlVehicles extends StatefulWidget {
   const ControlVehicles({Key? key}) : super(key: key);
@@ -26,17 +23,19 @@ class _ControlVehiclesState extends State<ControlVehicles> {
   Widget build(BuildContext context) {
     
     //Nombre del campo :  contenido, ¿obligatorio?, ¿!select?, ¿!enabled?
-     
+    /**
+     * 
+     */
     //Fecha se inserta automaticamente
     final Map<String, MultiInputsForm> formValuesInicioTur = {
-      'name': MultiInputsForm(contenido: '', obligatorio: true,autocomplete: true, autocompleteAsync: true),
+      'guard': MultiInputsForm(contenido: '', obligatorio: true,autocomplete: true, autocompleteAsync: true,screen:0),
       'turn': MultiInputsForm(contenido: '', obligatorio: true, select: true),
       'sign': MultiInputsForm(contenido: '', obligatorio: true, paintSignature: true),
     };
     
     //fecha se inserta manualmente
     final Map<String, MultiInputsForm> formValuesRegistroMan = {
-      'plates' : MultiInputsForm(contenido: '', obligatorio: true),
+      'platesSearch' : MultiInputsForm(contenido: '', obligatorio: true,autocomplete: true, autocompleteAsync: true,screen:  2),
       'typevh' : MultiInputsForm(contenido: '', obligatorio: true),
       'color' : MultiInputsForm(contenido: '', obligatorio: true),
       'employeeName' : MultiInputsForm(contenido: '', obligatorio: true),
@@ -44,31 +43,27 @@ class _ControlVehiclesState extends State<ControlVehicles> {
     };
 
     final Map<String, MultiInputsForm> formValuesObservacion = {
-      'description' : MultiInputsForm(contenido: '', obligatorio: true)
+      'description' : MultiInputsForm(contenido: '  ', obligatorio: true,)
     };
 
     final Map<String, MultiInputsForm> formValuesDescRepor = {
-      'guard' : MultiInputsForm(contenido: '',obligatorio: true,autocomplete: true,autocompleteAsync: false),
+      'guard' : MultiInputsForm(contenido: '',obligatorio: true,autocomplete: true, autocompleteAsync: true, screen: 0),
       'turn': MultiInputsForm(contenido: '', obligatorio: true, select: true),
       'date_start_hour' : MultiInputsForm(contenido: '', obligatorio: true),
       'date_final_hour' : MultiInputsForm(contenido: '', obligatorio: true),
     };
 
     final Map<String, MultiInputsForm> formValuesBuscarVh = {
-      'placas' :MultiInputsForm(contenido: '', obligatorio: true,suffixIcon: Icons.search_outlined),
-      'tipo_vehiculo' :MultiInputsForm(contenido: '', enabled: false),
+      'platesSearch' :MultiInputsForm(contenido: '', obligatorio: true,autocomplete: true, autocompleteAsync: true,
+      suffixIcon: Icons.search_outlined, screen:  1),
+      'typevh' :MultiInputsForm(contenido: '', enabled: false),
       'color' :MultiInputsForm(contenido: '', enabled: false),
-      'nombre' :MultiInputsForm(contenido: '', enabled: false),
-      'entrada' :MultiInputsForm(contenido: '', enabled: false),
-      'salida' :MultiInputsForm(contenido: '', enabled: false),
+      'employeeName' :MultiInputsForm(contenido: '', enabled: false),
+      'entry' :MultiInputsForm(contenido: '', enabled: false),
+      'outt' :MultiInputsForm(contenido: '', enabled: false),
     };
 
     final TextEditingController controller = TextEditingController();
-    TextStyle myTextStyleTitle = const TextStyle(
-      color: Color(0xFF293641),
-      fontFamily: 'Inter',
-      fontWeight: FontWeight.w900,
-    );
     
     return Scaffold(
         body: Column(
@@ -85,7 +80,7 @@ class _ControlVehiclesState extends State<ControlVehicles> {
                     SizedBox(
                       child: Align(
                       alignment: Alignment.center,
-                      child: Text('Control de empleados',style: myTextStyleTitle.copyWith(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .05: 0.04) )),          
+                      child: Text('Control de empleados',style: getTextStyleTitle(context) ),          
                       )
                     ),
                     const SizedBox(height: 10,),
@@ -144,8 +139,8 @@ class _ControlVehiclesState extends State<ControlVehicles> {
                                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                       children:[
                                         ElevatedButton(onPressed: (Provider.of<VarProvider>(context).varSalir) == false ?() async {
-                                          DepartamentService dpser = DepartamentService();
-                                          var salirInt = (await dpser.postCloseTurnVehicle(context));
+                                          VehicleService vs = VehicleService();
+                                          var salirInt = (await vs.postCloseTurnVehicle(context));
                                           if (salirInt) {
                                             Provider.of<VarProvider>(context,listen: false).updateVariable(false);
                                             Provider.of<VarProvider>(context,listen: false).updateVarSalir(true);
@@ -176,7 +171,7 @@ class _ControlVehiclesState extends State<ControlVehicles> {
                         control: 1,
                         textButton: 'Agregar observaciones',
                         btnPosition: 3,
-                        controller: controller,
+                        controller: null,
                         field: const ['Enviar', 'Agregue una descripción...'],
                         formValue: formValuesObservacion,
                         enabled: false),
@@ -233,7 +228,7 @@ class _ControlVehiclesState extends State<ControlVehicles> {
     if (sharedPrefsData['turn'] == null) {
       SessionManager sm = SessionManager()
         ..clearSession().then((value) {
-          DepartamentService dpser = DepartamentService()
+          FoodService dpser = FoodService()
             ..postCloseTurnFood(context).then((value) {
               //cerrar turno anterior
               Provider.of<VarProvider>(context,listen: false).updateVariable(false);

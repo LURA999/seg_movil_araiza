@@ -1,5 +1,5 @@
 class RegisterVehicle {
-  String? plates;
+  String? platesSearch;
   String? typevh;
   String? color;
   String? employeeName;
@@ -9,7 +9,7 @@ class RegisterVehicle {
   String? turn;
   
   RegisterVehicle({
-    this.plates,
+    this.platesSearch,
     this.typevh,
     this.color,
     this.employeeName,
@@ -20,7 +20,7 @@ class RegisterVehicle {
   });
 
   RegisterVehicle.fromJson(Map<String, dynamic> json){
-    plates = json['plates'];
+    platesSearch = json['platesSearch'];
     typevh = json['typevh'];
     color = json['color'];
     employeeName = json['employeeName'];
@@ -32,7 +32,7 @@ class RegisterVehicle {
 
   Map<String, dynamic> toJson() {
     final Map<String, String> data = {};
-    data['plates'] = plates!;
+    data['platesSearch'] = platesSearch!;
     data['typevh'] = typevh!;
     data['color'] = color!;
     data['employeeName'] = employeeName!;

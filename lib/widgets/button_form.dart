@@ -11,9 +11,8 @@ import 'package:intl/intl.dart';
 import 'dart:ui' as ui;
 import 'dart:convert';
 import '../theme/app_theme.dart';
-import '../services/letter_mediaquery.dart';
 
-class ButtonForm extends StatelessWidget {
+class ButtonForm extends StatefulWidget {
   final String textButton;
   final List<String> field;
   final Map<String, MultiInputsForm> formValue;
@@ -22,7 +21,6 @@ class ButtonForm extends StatelessWidget {
   final int btnPosition;
   final int control;
   final TextEditingController? controller;
-  final List<TextEditingController> controllerArr = []; 
 
   ButtonForm({
     super.key,
@@ -33,9 +31,17 @@ class ButtonForm extends StatelessWidget {
     required this.formValue,
     required this.enabled, 
     required this.control, 
+
     this.controller,     
   });
 
+  @override
+  State<ButtonForm> createState() => _ButtonFormState();
+}
+
+class _ButtonFormState extends State<ButtonForm> {
+  final List<TextEditingController> controllerArr = []; 
+ 
   @override
   Widget build(BuildContext context) {
     
@@ -51,21 +57,26 @@ class ButtonForm extends StatelessWidget {
           ),
           onPressed:
               //primer filtro para saber que si el usuario tiene iniciado sesion entonces, se desactiva el primer boton
-              Provider.of<VarProvider>(context, listen: false).varControl == true && btnPosition == 1 ? null : 
+              Provider.of<VarProvider>(context, listen: false).varControl == true && widget.btnPosition == 1 ? null : 
               //de otra forma se desactivan los otros 4 botones (en este caso solo se desactivan 2 botones, porqe los otros dos, no pertencen a esta clase)
-              ((Provider.of<VarProvider>(context, listen: false).varControl || enabled)
-                  ? () {
-                     newMethod(context, formValue, btnPosition);
+              ((Provider.of<VarProvider>(context, listen: false).varControl || widget.enabled)
+                  ? ()  {
+                    
+                     newMethod(context, widget.formValue, widget.btnPosition);
                     }
                   : null),
-          child: Text(textButton, style: getTextStyleButtonField(context))
+          child: Text(widget.textButton, style: getTextStyleButtonField(context))
           
           )
         );      
       }
 
+
   Future<String?> newMethod(BuildContext context,
     Map<String, MultiInputsForm> formValue, int btnPosition) {
+
+   
+
     //vars para el touch paint  
     final sign0 = GlobalKey<SignatureState>();
     ByteData img = ByteData(0);
@@ -75,13 +86,30 @@ class ButtonForm extends StatelessWidget {
     List<Widget> inputFields = [];
     int i = 1;
 
+    onFormValueChange(dynamic value,List<String> keyValue) {
+    int ivalue = 0;
+
+    //se llena los inputs  y su respectivo formvalue, llenarlo solo en el formvalue no es suficiente
+      for (var i = 0; i < inputFields.length; i++) {
+        if (inputFields[i].runtimeType.toString() == 'MultiInputs') {
+          setState(() {
+            (inputFields[i] as MultiInputs).controller!.text = value[0][keyValue[ivalue]] ?? '';
+            formValue[(inputFields[i] as MultiInputs).formProperty]!.contenido = value[0][keyValue[ivalue]];
+            ivalue++;
+          });
+        }
+      } 
+      
+        
+      }
+
     inputFields.add(const SizedBox(height: 15));
     formValue.forEach((key, value) {
       TextEditingController? controllerAux = TextEditingController();
       //Esto es para ayudar al formulario, para que sea mas dinamico
       //Si es nulo, entonces no seran validados los campos
-      if (controller == null) {
-        controllerAux = controller;
+      if (widget.controller == null) {
+        controllerAux = widget.controller;
       } 
       if (key.substring(0, 4) == "date") {
         inputFields.add(
@@ -89,7 +117,7 @@ class ButtonForm extends StatelessWidget {
             maxLines: 1,
             controller:controllerAux,
             autofocus: i == 1 ? true : false,
-            labelText: field[i],
+            labelText: widget.field[i],
             formProperty: key,
             formValue: formValue,
             keyboardType: TextInputType.datetime),
@@ -99,7 +127,7 @@ class ButtonForm extends StatelessWidget {
           inputFields.add(
             Column(
             children: [
-              Text( field[i]),
+              Text( widget.field[i]),
               SizedBox(
                 height: MediaQuery.of(context).size.height *.3,
                 width: MediaQuery.of(context).size.width,
@@ -136,14 +164,16 @@ class ButtonForm extends StatelessWidget {
         inputFields.add(
         MultiInputs(
           maxLines: key.contains("description")? 8 : 1 ,
-          labelText: field[i], 
+          labelText: widget.field[i], 
           controller: controllerAux,
           autofocus: i == 1 ? true : false,
           formProperty: key,
           suffixIcon: value.suffixIcon,
-          listSelect: listSelect,
+          listSelect: widget.listSelect,
           autocompleteAsync: value.autocompleteAsync,
           formValue: formValue,
+          screen: value.screen,
+          onFormValueChange: onFormValueChange,
           keyboardType: key.contains("number")? TextInputType.number : TextInputType.text)
           );
         }
@@ -199,7 +229,7 @@ class ButtonForm extends StatelessWidget {
                       child: Column(children: [
                         Align(
                           alignment: Alignment.bottomLeft,
-                          child: Text(field[0],
+                          child: Text(widget.field[0],
                               style: getTextStyleTitle(context)),
                         ),
                         ...inputFields,
@@ -223,12 +253,14 @@ class ButtonForm extends StatelessWidget {
                         if(!myFormKey.currentState!.validate()){
                           return ;
                         }
-                        DepartamentService dpser = DepartamentService();
-                        switch (control) {
+                        FoodService fService = FoodService();
+                        VehicleService vService = VehicleService();
+
+                        switch (widget.control) {
                           case 1:
                              //Inicio turno
                             if (btnPosition == 1) {
-                              if (sign == null || formValue['name']!.contenido == '' || formValue['name']!.contenido == null || formValue['sign']!.contenido == '' || formValue['sign']!.contenido == null) {
+                              if (sign == null || formValue['guard']!.contenido == '' || formValue['guard']!.contenido == null || formValue['sign']!.contenido == '' || formValue['sign']!.contenido == null) {
                                 showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
@@ -253,10 +285,11 @@ class ButtonForm extends StatelessWidget {
                                 formValue['sign']!.contenido = encoded;
                                 TurnVehicle t= TurnVehicle();
                                 if (formValue['sign']!.contenido != '' && formValue['sign']!.contenido != null) {
-                                  t.name = formValue['name']!.contenido.toString().trim().replaceAll(RegExp('  +'), ' ');
+                                  t.guard = formValue['guard']!.contenido.toString().trim().replaceAll(RegExp('  +'), ' ');
                                   t.sign = formValue['sign']!.contenido;
                                   t.turn = formValue['turn']!.contenido;
-                                  if((await dpser.postTurnVehicle(t,context)).status == 404){
+
+                                  if((await vService.postTurnVehicle(t,context)).status == 404){
                                     return;
                                   }
 
@@ -267,18 +300,20 @@ class ButtonForm extends StatelessWidget {
                                     alignment: Alignment.center,
                                      child: SingleChildScrollView(
                                        child: AlertDialog(
+                                        actionsAlignment: MainAxisAlignment.center,
                                           title: const Text('¿Esta seguro de continuar con estos datos?'),
                                           content: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             mainAxisAlignment: MainAxisAlignment.start,
                                             children:[
-                                            Text('Nombre', style: TextStyle(fontWeight: FontWeight.bold),),
-                                            Text(t.name!),
-                                            Text('Turno', style: TextStyle(fontWeight: FontWeight.bold)),
+                                            const Text('Nombre', style: TextStyle(fontWeight: FontWeight.bold),),
+                                            Text(t.guard!),
+                                            const Text('Turno', style: TextStyle(fontWeight: FontWeight.bold)),
                                             Text(t.turn! == '1'?'Primer Turno':t.turn! == '2'?'Segundo Turno': 'Tercer Turno' )
                                             ]
                                           ),
                                           actions: [
+
                                             ElevatedButton(
                                               onPressed: () {
                                                 Navigator.pop(context);
@@ -307,17 +342,17 @@ class ButtonForm extends StatelessWidget {
         
                             //registro 
                             if (btnPosition == 2) {
+                              print(btnPosition);
                               RegisterVehicle r= RegisterVehicle();
                               VarProvider vh = VarProvider();
-                              vh.arrSharedPreferences();
-
-                              r.turn = 
-                              r.color = formValue['color']!.contenido;
-                              r.employeeName = formValue['employeeName']!.contenido;
-                              r.plates = formValue['plates']!.contenido;
+                              final json = await vh.arrSharedPreferences();
+                              r.turn = json['turn'].toString();
+                              r.color = formValue['color']!.contenido ;
+                              r.employeeName = formValue['employeeName']!.contenido ;
+                              r.platesSearch = formValue['platesSearch']!.contenido ;
                               r.typevh = formValue['typevh']!.contenido;
-                              r.departament = formValue['departament']!.contenido;
-                              await dpser.postRegisterVehicle(r,context);
+                              r.departament = formValue['departament']!.contenido ;
+                              await vService.postRegisterVehicle(r,context);
                               Navigator.pop(context);
                             }
         
@@ -325,7 +360,7 @@ class ButtonForm extends StatelessWidget {
                             if (btnPosition == 3) {
                               TurnVehicle t= TurnVehicle();
                               t.description = formValue['description']!.contenido;
-                              await dpser.postObvVehicle(t,context);
+                              await vService.postObvVehicle(t,context);
                               Navigator.pop(context);
                             }
 
@@ -335,9 +370,9 @@ class ButtonForm extends StatelessWidget {
                               de.dateFinal = formValue['date_final_hour']!.contenido!;
                               de.turn = formValue['turn']!.contenido!;
                               de.guard = formValue['guard']!.contenido;
-                              List<Map<String, dynamic>> jsonStr = await dpser.selectDateVehicle(de,context);
-                              List<Map<String, dynamic>> jsonStrObs = await dpser.selectObsVehicle(de,context);
-                              List<Map<String, dynamic>> dataGuard = await dpser.dataGuard(de.guard!,context);
+                              List<Map<String, dynamic>> jsonStr = await vService.selectDateVehicle(de,context);
+                              List<Map<String, dynamic>> jsonStrObs = await vService.selectObsVehicle(de,context);
+                              List<Map<String, dynamic>> dataGuard = await vService.dataGuard(de.guard!,context);
 
                                 if (jsonStr.isNotEmpty) {
                                   DateTime now = DateTime.now();
@@ -375,17 +410,18 @@ class ButtonForm extends StatelessWidget {
 
                             if (btnPosition == 5) {
                               int i = 0;
-                              if (formValue['placas']!.contenido != null && formValue['placas']!.contenido != '') {
-                                Access r = await dpser.findVehicle(formValue['placas']!.contenido!,context);
+
+                              if (formValue['platesSearch']!.contenido != null && formValue['platesSearch']!.contenido != '') {
+                                Access r = await vService.findVehicle(formValue['platesSearch']!.contenido!,context,1);
                                 if (r.container != null) {
                                   for (var rc in r.container) {
-                                    formValue['placas']!.contenido = rc['plates'];
-                                    formValue['tipo_vehiculo']!.contenido = rc['type_vh'];
+                                    formValue['platesSearch']!.contenido = rc['plates'];
+                                    formValue['typevh']!.contenido = rc['type_vh'];
                                     formValue['color']!.contenido = rc['color'];
-                                    formValue['nombre']!.contenido = rc['employee_name'];
+                                    formValue['employeeName']!.contenido = rc['employee_name'];
                                     // formValue['salida']!.contenido = rc['timeExit'];
-                                    formValue['entrada']!.contenido = rc['time_entry'];
-                                    formValue['salida']!.contenido = '';
+                                    formValue['entry']!.contenido = rc['time_entry'];
+                                    formValue['outt']!.contenido = '';
                                   } 
                                 }
                                 
@@ -403,11 +439,11 @@ class ButtonForm extends StatelessWidget {
                               TurnFood t= TurnFood();
                               if(formValue['picture']!.contenido != '' && formValue['picture']!.contenido != null){
                                 t.picture = formValue['picture']!.contenido;
-                                t.plate = formValue['plate']!.contenido;
+                                t.dish = formValue['dish']!.contenido;
                                 t.garrison = formValue['garrison']!.contenido;
                                 t.dessert = formValue['dessert']!.contenido;
                                 t.received = formValue['received_number']!.contenido;
-                                await dpser.postTurnFood(t,context);
+                                await fService.postTurnFood(t,context);
                               }else{
                                 return showDialog(
                                   context: context,
@@ -438,7 +474,7 @@ class ButtonForm extends StatelessWidget {
                               r.name = formValue['name']!.contenido;
                               r.contract = formValue['type_contract']!.contenido;
 
-                              await dpser.postRegisterFood(r,context);
+                              await fService.postRegisterFood(r,context);
                               Navigator.pop(context);
                             }
         
@@ -446,7 +482,7 @@ class ButtonForm extends StatelessWidget {
                             if (btnPosition == 3) {
                               TurnFood t= TurnFood();
                               t.description = formValue['description']!.contenido;
-                              await dpser.postObvFood(t,context);
+                              await fService.postObvFood(t,context);
                               Navigator.pop(context);
                             }
 
@@ -455,9 +491,9 @@ class ButtonForm extends StatelessWidget {
                               DateExcelFood de = DateExcelFood();
                               de.dateStart = formValue['date_start_hour']!.contenido!; 
                               de.dateFinal = formValue['date_final_hour']!.contenido!;
-                              de.plate = formValue['plate']!.contenido!.toString();
-                              List<Map<String, dynamic>> jsonStr = await dpser.selectDateFood(de, context);
-                              List<Map<String, dynamic>> jsonStrObs = await dpser.selectObsFood(de, context);
+                              de.dish = formValue['dish']!.contenido!.toString();
+                              List<Map<String, dynamic>> jsonStr = await fService.selectDateFood(de, context);
+                              List<Map<String, dynamic>> jsonStrObs = await fService.selectObsFood(de, context);
 
                                 if (jsonStr.isNotEmpty) {
                                   DateTime now = DateTime.now();
@@ -497,7 +533,7 @@ class ButtonForm extends StatelessWidget {
                             break;
                         }
                       },
-                      child: Text(field[0],style: getTextStyleButtonField(context)),
+                      child: Text(widget.field[0],style: getTextStyleButtonField(context)),
                     ),
                   ],
                 ),
@@ -508,5 +544,12 @@ class ButtonForm extends StatelessWidget {
       ),
     );
   }
+  
+  Future observation() async {
+    VehicleService vs = VehicleService();
 
+    AccessMap r = (await vs.getObservation(context));
+
+    print(r.container);
+  }
 }

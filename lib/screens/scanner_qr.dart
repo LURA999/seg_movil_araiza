@@ -17,8 +17,9 @@ class _ScannerQR extends State<ScannerQR> {
   Barcode? result;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  DepartamentService ds = DepartamentService();
-  VarProvider vp = VarProvider();
+  VehicleService vs = VehicleService();
+  FoodService fs = FoodService();
+
  
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
@@ -153,15 +154,15 @@ class _ScannerQR extends State<ScannerQR> {
            for (var e in result!.code.toString().split(',').map((e) => e.trim())) 
            e.split(':')[0].trim() : e.split(':')[1].trim() 
         }; 
-        // var jsonResult = json.decode(result!.code!);
-        // Map<String, dynamic> json = await vp.arrSharedPreferences();
+        Map<String, dynamic> json = await vp.arrSharedPreferences();
+        newQr.fkTurn = int.parse(json['turn']);
         newQr.color = objetoJson['color'];
         newQr.departament = objetoJson['departament'];
         newQr.employeeName = objetoJson['employeeName'];
         newQr.typevh = objetoJson['typevh'];
-        newQr.plates = objetoJson['plates'];
+        newQr.platesSearch = objetoJson['plates'];
         if(isProccesing == true){
-            await ds.postQrVehicle(newQr,context).then((value) {
+            await vs.postQrVehicle(newQr,context).then((value) {
             if(value.status == 200){
               setState(() {
                 color = Colors.green;
@@ -209,7 +210,7 @@ class _ScannerQR extends State<ScannerQR> {
         newQr.contract = objetoJson['contract'];
         newQr.name = objetoJson['name'];
         if(isProccesing == true){
-            await ds.postQrFood(newQr,context).then((value) {
+            await fs.postQrFood(newQr,context).then((value) {
             if(value.status == 200){
               setState(() {
                 color = Colors.green;

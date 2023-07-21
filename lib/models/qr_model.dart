@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 class Qr {
-  String? plates;
+  String? platesSearch;
   String? typevh;
   String? color;
   String? employeeName;
@@ -11,7 +11,7 @@ class Qr {
   int? fkTurn;
 
   Qr({
-    this.plates,
+    this.platesSearch,
     this.typevh,
     this.color,
     this.employeeName,
@@ -22,7 +22,7 @@ class Qr {
   });
 
   Qr.fromJson(Map<String, dynamic> json){
-    plates = json['plates'];
+    platesSearch = json['platesSearch'];
     color = json['color'];
     employeeName = json['employeeName'];
     departament = json['departament'];
@@ -39,7 +39,7 @@ List<dynamic>  toJsonArr(Map<String, dynamic> arr) {
      List<dynamic> jsonArray = jsonDecode(arr["data"]);
     return  jsonArray;
    /*  for (var el in jsonArray) {
-      el['plates'] = plates;
+      el['platesSearch'] = platesSearch;
       el['color'] = color;
       el['employeeName'] = employeeName;
       el['department'] = department;
@@ -53,7 +53,7 @@ List<dynamic>  toJsonArr(Map<String, dynamic> arr) {
 
   Map<String, String> toJson() {
     final Map<String, String> data = {};
-    data['plates'] = plates!;
+    data['platesSearch'] = platesSearch!;
     data['color'] = color!;
     data['employeeName'] = employeeName!;
     data['departament'] = departament!;

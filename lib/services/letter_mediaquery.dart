@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 
   TextStyle getTextStyleTitle(BuildContext context) {
-    double fontSize = MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation ==
-    Orientation.portrait ? .08 : 0.04);
+    //portait es cuando esta horizontal
+    //landscape es cuando esta vertical
+    double fontSize = MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
+    //para celulares
+      MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .07: 0.06):
+    //para tablets
+    MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .05 : 0.04);
+
+  //  print( MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ? 'celulares' : 'tablets');
 
     return TextStyle(
     color: Colors.black,
-    fontFamily: 'Inter',
+    fontFamily: 'GothamBold',
     fontWeight: FontWeight.w700,
     fontSize: fontSize
     );
@@ -15,9 +22,9 @@ import 'package:flutter/material.dart';
   TextStyle getTextStyleButtonField(BuildContext context) {
     double fontSize = MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
     //para celulares
-      MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015):
+      MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.015):
     //para tablets
-    MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.013);
+    MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015);
 
     return TextStyle(
     fontFamily: 'Inter',

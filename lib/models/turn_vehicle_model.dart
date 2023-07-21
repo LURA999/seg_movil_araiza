@@ -1,19 +1,19 @@
 
 class TurnVehicle {
-  String? name;
+  String? guard;
   String? turn;
   String? sign;
   String? description;
 
   TurnVehicle({
-    this.name,
+    this.guard,
     this.turn,
     this.sign,
     this.description
   });
 
   TurnVehicle.fromJson(Map<String, dynamic> json){
-    name = json['name'];
+    guard = json['guard'];
     turn = json['turn'];
     sign = json['sign'];
     description = json['description'];
@@ -21,8 +21,8 @@ class TurnVehicle {
 
   Map<String, String> toJson() {
     final Map<String, String> data = {};
-    if (name!=null && turn!=null && sign!=null) {
-      data['name'] = name!;
+    if (guard!=null && turn!=null && sign!=null) {
+      data['guard'] = guard!;
       data['turn'] = turn!;
       data['sign'] = sign!;
     }

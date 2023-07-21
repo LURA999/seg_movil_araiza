@@ -20,12 +20,11 @@ class _DiningRoomState extends State<DiningRoom> {
  @override
   Widget build(BuildContext context) {
     
-    bool salir = false;
     //Nombre del campo :  contenido, ¿obligatorio?, ¿select?, ¿enabled?
     
     //Fecha se inserta automaticamente
     final Map<String, MultiInputsForm> formValuesInicioTur = {
-      'plate' : MultiInputsForm(contenido: '', obligatorio: true),
+      'dish' : MultiInputsForm(contenido: '', obligatorio: true),
       'garrison' : MultiInputsForm(contenido: '', obligatorio: true),
       'dessert' : MultiInputsForm(contenido: '', obligatorio: false),
       'received_number' : MultiInputsForm(contenido: '', obligatorio: true),
@@ -44,7 +43,7 @@ class _DiningRoomState extends State<DiningRoom> {
     };
 
     final Map<String, MultiInputsForm> formValuesDescRepor = {
-      'plate': MultiInputsForm(contenido: '', obligatorio: false),
+      'dish': MultiInputsForm(contenido: '', obligatorio: false),
       'date_start_hour': MultiInputsForm(contenido: '', obligatorio: true), 
       'date_final_hour': MultiInputsForm(contenido: '', obligatorio: true), 
     };
@@ -132,8 +131,8 @@ TextStyle myTextStyleTitle = const TextStyle(
                                           ElevatedButton(onPressed: (Provider.of<VarProvider>(context).varSalir) == false ? () async {
                                             Provider.of<VarProvider>(context,listen: false).updateVarSalir(true);
                                             Provider.of<VarProvider>(context,listen: false).updateVariable(false);
-                                            DepartamentService dpser = DepartamentService();
-                                              var salirInt =  await dpser.postCloseTurnFood(context);
+                                            FoodService fs = FoodService();
+                                              var salirInt =  await fs.postCloseTurnFood(context);
                                                if (salirInt) {
                                                 Provider.of<VarProvider>(context,listen: false).updateVariable(false);
                                                 Provider.of<VarProvider>(context,listen: false).updateVarSalir(true);
@@ -202,7 +201,7 @@ TextStyle myTextStyleTitle = const TextStyle(
     if (sharedPrefsData['plate'] == null) {
       SessionManager sm = SessionManager()
         ..clearSession().then((value) {
-          DepartamentService dpser = DepartamentService()
+          VehicleService dpser = VehicleService()
             ..postCloseTurnVehicle(context).then((value) {
               //cerrar turno anterior
               Provider.of<VarProvider>(context,listen: false).updateVariable(false);

@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       navigatorKey: navigatorKey,
       navigatorObservers: [navigatorObserver],
-      home: SplashScreen(),
+      home: const ControlVehicles(),
       routes: Routers.routerMain,
       theme: AppTheme.lightTeheme,
 

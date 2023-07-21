@@ -1,5 +1,5 @@
 class TurnFood {
-  String? plate;
+  String? dish;
   String? garrison;
   String? dessert;
   String? received;
@@ -8,7 +8,7 @@ class TurnFood {
   String? picture;
 
   TurnFood({
-    this.plate,
+    this.dish,
     this.garrison,
     this.dessert,
     this.received,
@@ -18,7 +18,7 @@ class TurnFood {
   });
 
   TurnFood.fromJson(Map<String, dynamic> json){
-    plate = json['plate'];
+    dish = json['dish'];
     garrison = json['garrison'];
     dessert = json['dessert'];
     received = json['received'];
@@ -28,7 +28,7 @@ class TurnFood {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = {};
-    data['plate'] = plate;
+    data['dish'] = dish;
     data['garrison'] = garrison;
     data['dessert'] = dessert;
     data['received'] = received;
