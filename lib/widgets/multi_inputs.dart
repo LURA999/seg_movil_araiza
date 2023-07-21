@@ -75,6 +75,17 @@ class _formValuetate extends State<MultiInputs> {
 final ImagePicker _picker = ImagePicker();
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    observation();
+    setState(() {
+      
+    });
+  }
+
+
+  @override
   Widget build(BuildContext context) {
     final RegExp regex = RegExp(
         r'^\d{2}\/(0[1-9]|1[0-2])\/\d{4}$',
@@ -219,23 +230,27 @@ final ImagePicker _picker = ImagePicker();
   }
   }catch(Exception){
   }
+
   
 }
 
 
 
-  Future<String> observation() async {
+  Future observation() async {
     VehicleService vs = VehicleService();
 
      switch (widget.formProperty) {
       //es para trafico
       case 'description':
         AccessMap r = (await vs.getObservation(context));
-        return r.container![0]['observation'].toString();
-
+        setState(() {
+          widget.formValue['description']!.contenido = r.container![0]['observation'];
+          widget.controller!.text =  r.container![0]['observation'];
+          print(widget.formValue['description']!.contenido);
+        });
+        break;
+      default:
     }
-
-    return '';
     
   }
 

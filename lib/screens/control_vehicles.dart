@@ -43,7 +43,7 @@ class _ControlVehiclesState extends State<ControlVehicles> {
     };
 
     final Map<String, MultiInputsForm> formValuesObservacion = {
-      'description' : MultiInputsForm(contenido: '  ', obligatorio: true,)
+      'description' : MultiInputsForm(contenido: '', obligatorio: true,)
     };
 
     final Map<String, MultiInputsForm> formValuesDescRepor = {
@@ -171,7 +171,7 @@ class _ControlVehiclesState extends State<ControlVehicles> {
                         control: 1,
                         textButton: 'Agregar observaciones',
                         btnPosition: 3,
-                        controller: null,
+                        controller: controller,
                         field: const ['Enviar', 'Agregue una descripción...'],
                         formValue: formValuesObservacion,
                         enabled: false),
