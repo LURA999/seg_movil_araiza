@@ -401,7 +401,7 @@ class _ButtonFormState extends State<ButtonForm> {
                                 desactivarButton = true;
                               });
                               TurnVehicle t= TurnVehicle();
-                              t.description = formValue['description']!.contenido;
+                              t.description = formValue['descriptionVehicle']!.contenido;
                               if(await vService.postObvVehicle(t,context)){
                               Navigator.pop(context);
                               }else{
@@ -596,7 +596,7 @@ class _ButtonFormState extends State<ButtonForm> {
                                 desactivarButton = true;
                               });
                               TurnFood t= TurnFood();
-                              t.description = formValue['description']!.contenido;
+                              t.description = formValue['descriptionFood']!.contenido;
                               if(await fService.postObvFood(t,context)){
                               Navigator.pop(context);
                              }else{

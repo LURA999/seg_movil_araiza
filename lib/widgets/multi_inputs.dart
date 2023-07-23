@@ -259,18 +259,16 @@ final ImagePicker _picker = ImagePicker();
           VehicleService vs = VehicleService();
         AccessMap r = (await vs.getObservation(context));
         setState(() {
-          widget.formValue['description']!.contenido = r.container![0]['observation'];
-          widget.controller!.text =  r.container![0]['observation'];
-          print(widget.formValue['description']!.contenido);
+          widget.formValue['descriptionVehicle']!.contenido = r.container![0]['observation'];
+          widget.controller!.text =  r.container![0]['observation'] ?? '';
         });
         break;
       case 'descriptionFood':
       FoodService fs = FoodService();
        AccessMap r = (await fs.getObservation(context));
         setState(() {
-          widget.formValue['description']!.contenido = r.container![0]['observation'];
-          widget.controller!.text =  r.container![0]['observation'];
-          print(widget.formValue['description']!.contenido);
+          widget.formValue['descriptionFood']!.contenido = r.container![0]['observation'];
+          widget.controller!.text =  r.container![0]['observation']?? '';
         });
         break;
       default:

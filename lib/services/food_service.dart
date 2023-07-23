@@ -151,9 +151,6 @@ try {
 
     Future<AccessMap> getObservation(BuildContext context ) async {
   AccessMap result = AccessMap();
-   VarProvider vp = VarProvider();
-    final json = await vp.arrSharedPreferences();
-
   var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
@@ -164,7 +161,7 @@ try {
 try {
     isSaving = true;
     notifyListeners();
-     final url = Uri.parse('$link/turn_vehicle.php?nameTurn=${json["guard"]}');
+     final url = Uri.parse('$link/turn_food.php?description=true');
        var response = (await http.get(url)).body;
       final result = AccessMap.fromJson(jsonDecode(response));
       if (result.status == 200) {
