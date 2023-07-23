@@ -19,6 +19,7 @@ class _ScannerQR extends State<ScannerQR> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   VehicleService vs = VehicleService();
   FoodService fs = FoodService();
+  bool isProccesing = false;
 
  
   // In order to get hot reload to work we need to pause the camera if the platform
@@ -59,7 +60,7 @@ class _ScannerQR extends State<ScannerQR> {
                           child: FutureBuilder(
                             future: controller?.getFlashStatus(),
                             builder: (context, snapshot) {
-                              return Text('Flash: ${snapshot.data ==true?'Prendido':'Apagado'}');
+                              return Text('Flash: ${snapshot.data ==true?'Prendido':'Apagado'}',style: getTextStyleButtonField(context),);
                             },
                           )),
                     ),
@@ -75,8 +76,8 @@ class _ScannerQR extends State<ScannerQR> {
                         onPressed: () async {
                           await controller?.pauseCamera();
                         },
-                        child: const Text('Pausar',
-                            style: TextStyle(fontSize: 20)),
+                        child: Text('Pausar',
+                            style: getTextStyleButtonField(context)),
                       ),
                     ),
                     Container(
@@ -85,8 +86,8 @@ class _ScannerQR extends State<ScannerQR> {
                         onPressed: () async {
                           await controller?.resumeCamera();
                         },
-                        child: const Text('Continuar',
-                          style: TextStyle(fontSize: 20)),
+                        child: Text('Continuar',
+                          style: getTextStyleButtonField(context)),
                       ),
                     ),
                     
@@ -101,7 +102,6 @@ class _ScannerQR extends State<ScannerQR> {
     );
   }
   
-  bool isProccesing = false;
 
   Widget _buildQrView(BuildContext context) {
 
@@ -127,6 +127,7 @@ class _ScannerQR extends State<ScannerQR> {
       onPermissionSet: (ctrl, p) => _onPermissionSet(context, ctrl, p),
     );
   }
+
 
   Future<void> _onQRViewCreated(QRViewController controller) async {
 
@@ -247,12 +248,17 @@ class _ScannerQR extends State<ScannerQR> {
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
     log('${DateTime.now().toIso8601String()}_onPermissionSet $p');
     if (!p) {
+      // Si los permisos se deniegan, establecer isProccesing en false
+      setState(() {
+        isProccesing = false;
+      });
+
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('no Permission')),
+        const SnackBar(content: Text('No se otorgaron los permisos')),
       );
     }
   }
-
+  
   @override
   void dispose() {
     controller?.dispose();

@@ -42,9 +42,6 @@ try {
       isSaving = false;
       notifyListeners();
       return result.container! ;
-    }else{
-    messageError(context,'Error Desconocido');
-
     }
     isSaving = false;
     notifyListeners();
@@ -86,9 +83,6 @@ try {
       isSaving = false;
       notifyListeners();
       return result.container! ;
-    }else{
-    messageError(context,'Error desconocido.');
-
     }
     isSaving = false;
     notifyListeners();
@@ -129,9 +123,6 @@ try {
       isSaving = false;
       notifyListeners();
       return result.container! ;
-    }else{
-    messageError(context,'Error desconocido.');
-
     }
     isSaving = false;
     notifyListeners();
@@ -173,9 +164,6 @@ try {
       isSaving = false;
       notifyListeners();
       return result.container! ;
-    }else{
-    messageError(context,'Error desconocido.');
-
     }
     isSaving = false;
     notifyListeners();
@@ -217,9 +205,6 @@ try {
       isSaving = false;
       notifyListeners();
       return result.container!;
-    }else{
-    messageError(context,'Error desconocido.');
-
     }
     isSaving = false;
     notifyListeners();
@@ -263,9 +248,6 @@ try {
         isSaving = false;
         notifyListeners();
         return true;
-      }else{
-      messageError(context,'Error desconocido.');
-
       }
       isSaving = false;
       notifyListeners();
@@ -306,9 +288,6 @@ try {
         isSaving = false;
         notifyListeners();
         return true;
-      }else{
-      messageError(context,'Error desconocido.');
-
       }
       isSaving = false;
       notifyListeners();
@@ -348,9 +327,6 @@ try {
         isSaving = false;
         notifyListeners();
         return result;
-      }else{
-      messageError(context,'Error desconocido.');
-
       }
       
       isSaving = false;
@@ -404,9 +380,7 @@ try {
     isSaving = false;
     notifyListeners();
     return result;
-    } else {
-      messageError(context,'Error desconocido.');
-    }
+    } 
     return result; 
   } on SocketException catch (e) {
     // Error de conexión de red (sin conexión a Internet)
@@ -447,9 +421,7 @@ try {
         isSaving = false;
         notifyListeners();
         return result;
-      } else {
-        messageError(context,'Error desconocido.');
-      }
+      } 
     return result; 
   } on SocketException catch (e) {
     // Error de conexión de red (sin conexión a Internet)
@@ -539,10 +511,7 @@ try {
         isSaving = false;
         notifyListeners();
         return listContainer; 
-      } else{
-            messageError(context,'Error desconocido.');
-
-      }
+      } 
       isSaving = false;
       notifyListeners();
       return listContainer; 
@@ -590,10 +559,7 @@ try {
         isSaving = false;
         notifyListeners();
         return listContainer; 
-      } else{
-            messageError(context,'Error desconocido.');
-
-      }
+      } 
       isSaving = false;
       notifyListeners();
       return listContainer; 
@@ -638,8 +604,6 @@ try {
         isSaving = false;
         notifyListeners();
         return result;
-      } else{
-        messageError(context,'Error desconocido.');
       }
     isSaving = false;
     notifyListeners();

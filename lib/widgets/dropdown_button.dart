@@ -54,7 +54,7 @@ class _DropdownButtonWidgetState extends State<DropdownButtonWidget> {
           items: list.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,
-              child: Text(value,style: getTextStyleButtonField(context)),
+              child: Text(value,style: getTextStyleText(context,null)),
             );
           }).toList(),
             ),

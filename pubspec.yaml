@@ -128,7 +128,12 @@ flutter:
     - family: GothamBold
       fonts:
         - asset: assets/fonts/Gotham-Font/GothamBold.ttf
-
+    - family: GothamMedium
+      fonts:
+        - asset: assets/fonts/Gotham-Font/Gotham-Medium.ttf
+    - family: GothamBook
+      fonts:
+        - asset: assets/fonts/Gotham-Font/GothamBook.ttf
 
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a

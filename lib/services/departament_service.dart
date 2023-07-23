@@ -36,8 +36,9 @@ try {
       notifyListeners();
       return result;
     }else{
-      messageError(context,'Error desconocido.');
+      messageError(context,'Contraseña incorrecta.');
     }
+
     isSaving = false;
     notifyListeners();
     return result; 

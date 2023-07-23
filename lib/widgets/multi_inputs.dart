@@ -63,7 +63,8 @@ class MultiInputs extends StatefulWidget {
     required this.maxLines, 
     required this.autofocus,
     this.onFormValueChange, 
-    this.controller, this.screen
+    this.controller, 
+    this.screen
     
   }) : super(key: key);
 
@@ -130,13 +131,20 @@ final ImagePicker _picker = ImagePicker();
     if (widget.keyboardType.toString().contains('datetime')) {
       MaterialTapTargetSize tapTargetSize = MaterialTapTargetSize.padded;
 
-        final format = DateFormat("yyyy-MM-dd HH:mm");
+        final format = DateFormat("yyyy-MM-dd ${widget.formValue[widget.formProperty]!.activeClock == true?'HH:mm':''}");
         return DateTimeField(
         controller: widget.controller,
+        style: getTextStyleText(context,null),
         format: format,
-        decoration: const InputDecoration(
-          suffixIcon: Icon(Icons.date_range), 
-          hintText: 'yyyy/mm/dd hh:mm'
+        validator: widget.formValue[widget.formProperty]!.obligatorio == true ? (value ) {
+            if(value == null || value == ''){
+              return 'Este campo es requerido';
+            }
+            return null;
+          }:null,
+        decoration:  InputDecoration(
+          suffixIcon: const Icon(Icons.date_range), 
+          hintText: "yyyy/mm/dd ${widget.formValue[widget.formProperty]!.activeClock == true?'HH:mm':''}"
         ),
         onShowPicker: (context, currentValue) async {
           return await showDatePicker(
@@ -145,7 +153,7 @@ final ImagePicker _picker = ImagePicker();
             initialDate: currentValue ?? DateTime.now(),
             lastDate: DateTime(2100),
           ).then((DateTime? date) async {
-            if (date != null) {
+            if (date != null && widget.formValue[widget.formProperty]!.activeClock == true) {
               final time = await showTimePicker(
               context: context,
               initialTime:
@@ -169,6 +177,12 @@ final ImagePicker _picker = ImagePicker();
               widget.formValue[widget.formProperty]!.contenido = sendFormat.format(DateTimeField.combine(date, time)); 
               return DateTimeField.combine(date, time);
             } else {
+              if (date != null) {
+                final sendFormat = DateFormat("yyyy-MM-dd");
+                sendFormat.format(date);
+                widget.formValue[widget.formProperty]!.contenido = sendFormat.format(date);
+                return DateTimeField.combine(date,null);
+              }
               widget.formValue[widget.formProperty]!.contenido = currentValue;
               return currentValue;
             }
@@ -188,7 +202,7 @@ final ImagePicker _picker = ImagePicker();
           textCapitalization: TextCapitalization.words,
           keyboardType: widget.keyboardType,
           obscureText: widget.obscureText,
-          style: getTextStyleButtonField(context),
+          style: getTextStyleText(context,null),
           onChanged: (value) {
             widget.formValue[widget.formProperty]!.contenido = value;
           },
@@ -237,12 +251,22 @@ final ImagePicker _picker = ImagePicker();
 
 
   Future observation() async {
-    VehicleService vs = VehicleService();
+
 
      switch (widget.formProperty) {
       //es para trafico
-      case 'description':
+      case 'descriptionVehicle':
+          VehicleService vs = VehicleService();
         AccessMap r = (await vs.getObservation(context));
+        setState(() {
+          widget.formValue['description']!.contenido = r.container![0]['observation'];
+          widget.controller!.text =  r.container![0]['observation'];
+          print(widget.formValue['description']!.contenido);
+        });
+        break;
+      case 'descriptionFood':
+      FoodService fs = FoodService();
+       AccessMap r = (await fs.getObservation(context));
         setState(() {
           widget.formValue['description']!.contenido = r.container![0]['observation'];
           widget.controller!.text =  r.container![0]['observation'];

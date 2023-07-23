@@ -46,39 +46,41 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
             return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
           });
         },
-        onSelected: (String selection) {
+        onSelected: (String selection) async {
+
+        widget.formValue[widget.formProperty]!.contenido = selection;
+        if (widget.autocompleteAsync) {
+          switch (widget.formProperty) {
+          case 'guard':
+              // await buscaAutomaticaGuard(value ??'');
+            break;
+          case 'platesSearch':  
+            switch (widget.screen){
+            case 1:
+            Access r = await vService.findVehicle(selection,context,1);
+            widget.onFormValueChange!(r.container,['plates','type_vh','color','employee_name','time_entry','time_exit']);
+            break;
+            case 2:
+            Access r = await vService.findVehicle(selection,context,2);
+            widget.onFormValueChange!(r.container,['plates','type_vh','color','employee_name','department']);
+            break;
+            }
+            
+            break;
+          default:
+        }
+        }
+          setState(() { });
+
         },
         optionsViewBuilder: (BuildContext context, AutocompleteOnSelected<String> onSelected,
           Iterable<String> options) {
             List<ListTile> list = options.map((String option) => ListTile(
-            title: Text(option),
+            title: Text(option,style: getTextStyleText(context,null)),
             onTap: () async {
-              onSelected(option);
-              widget.formValue[widget.formProperty]!.contenido = option;
-
-              if (widget.autocompleteAsync) {
-                switch (widget.formProperty) {
-                case 'guard':
-                    // await buscaAutomaticaGuard(value ??'');
-                  break;
-                case 'platesSearch':  
-                  switch (widget.screen){
-                  case 1:
-                  Access r = await vService.findVehicle(option,context,1);
-                  widget.onFormValueChange!(r.container,['plates','type_vh','color','employee_name','time_entry','time_exit']);
-                  break;
-                  case 2:
-                  Access r = await vService.findVehicle(option,context,2);
-                  widget.onFormValueChange!(r.container,['plates','type_vh','color','employee_name','department']);
-                  break;
-                  }
-                  
-                  break;
-                default:
-              }
-              }
-              
-            
+              setState(() {
+                onSelected(option);
+              });
             },
           )).toList() ;
 
@@ -102,9 +104,11 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
           }, 
           fieldViewBuilder: (BuildContext context, TextEditingController fieldController,
           FocusNode fieldFocusNode, VoidCallback onFieldSubmitted) {
-            return TextField(
+            return TextFormField(
+              
               controller: fieldController,
               focusNode: fieldFocusNode,
+              style: getTextStyleText(context,null),
               decoration: InputDecoration(
                 hintText: widget.labelText
               ),
@@ -118,7 +122,6 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
 
                   await llenarMatAutoComplete(value);  
                   // widget.formValue[widget.formProperty]!.contenido = value;
-                  
                 
                   setState(() {
                     widget.goptions = tempOptions;
@@ -130,26 +133,12 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
                 }
 
               },
-              // onChanged: (value) async {
-              //   if (widget.autocompleteAsync) {
-              //   setState(() { 
-              //     tempOptions = [];
-              //   });
-
-              //     await llenarMatAutoComplete(value);  
-              //     widget.formValue[widget.formProperty]!.contenido = value;
-                
-                
-              //     setState(() {
-              //       widget.goptions = tempOptions;
-              //       tempOptions = null; // Reiniciar la variable temporal
-              //     });
-              //   }else{
-              //     widget.formValue[widget.formProperty]!.contenido = value;
-
-              //   }
-
-              // },
+             validator: widget.formValue[widget.formProperty]!.obligatorio == true ? (value) {
+                if(value == null || value.isEmpty == true || value == ''){
+                  return 'Este campo es requerido';
+                }
+                return null;
+              }:null
             );
           },
         ),

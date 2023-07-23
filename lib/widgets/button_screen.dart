@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/services.dart';
-import '../services/letter_mediaquery.dart';
 
 class ButtonScreen extends StatelessWidget {
   final String textButton;
@@ -15,6 +14,8 @@ class ButtonScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double responsivePadding = MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.width * 0.02 : MediaQuery.of(context).size.height * 0.02;
+
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: ElevatedButton(
@@ -25,7 +26,10 @@ class ButtonScreen extends StatelessWidget {
                 }
               }
             : null,
-        child: Text(textButton,style: getTextStyleButtonField(context)
+        child: Padding(
+          padding: EdgeInsets.all(responsivePadding),
+          child: Text(textButton,style: getTextStyleButtonField(context)
+          ),
         )
       ),
     );

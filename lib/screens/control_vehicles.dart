@@ -43,14 +43,14 @@ class _ControlVehiclesState extends State<ControlVehicles> {
     };
 
     final Map<String, MultiInputsForm> formValuesObservacion = {
-      'description' : MultiInputsForm(contenido: '', obligatorio: true,)
+      'descriptionVehicle' : MultiInputsForm(contenido: '', obligatorio: true,)
     };
 
     final Map<String, MultiInputsForm> formValuesDescRepor = {
-      'guard' : MultiInputsForm(contenido: '',obligatorio: true,autocomplete: true, autocompleteAsync: true, screen: 0),
+      'guard' : MultiInputsForm(contenido: '',obligatorio: false,autocomplete: true, autocompleteAsync: true, screen: 0),
       'turn': MultiInputsForm(contenido: '', obligatorio: true, select: true),
-      'date_start_hour' : MultiInputsForm(contenido: '', obligatorio: true),
-      'date_final_hour' : MultiInputsForm(contenido: '', obligatorio: true),
+      'date_start_hour' : MultiInputsForm(contenido: '', obligatorio: true, activeClock: true),
+      'date_final_hour' : MultiInputsForm(contenido: '', obligatorio: true, activeClock: true),
     };
 
     final Map<String, MultiInputsForm> formValuesBuscarVh = {
@@ -64,7 +64,9 @@ class _ControlVehiclesState extends State<ControlVehicles> {
     };
 
     final TextEditingController controller = TextEditingController();
-    
+    double responsiveHeight = MediaQuery.of(context).size.height * 0.02;
+    double responsivePadding = MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.width * 0.02 : MediaQuery.of(context).size.height * 0.02;
+
     return Scaffold(
         body: Column(
       children: [
@@ -75,15 +77,15 @@ class _ControlVehiclesState extends State<ControlVehicles> {
               alignment: Alignment.center,
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.all(20),
+                  padding: EdgeInsets.only(left: MediaQuery.of(context).size.width*0.08 ,right:  MediaQuery.of(context).size.width*0.08),
                   child: Column(children: [
                     SizedBox(
                       child: Align(
-                      alignment: Alignment.center,
-                      child: Text('Control de empleados',style: getTextStyleTitle(context) ),          
+                      alignment: Alignment.centerLeft,
+                      child: Text('Control de vehículos',style: getTextStyleTitle(context,null) ),          
                       )
                     ),
-                    const SizedBox(height: 10,),
+                    SizedBox(height: responsiveHeight),
                     ButtonForm(
                         control: 1,
                         textButton: 'Inicio turno',
@@ -98,10 +100,12 @@ class _ControlVehiclesState extends State<ControlVehicles> {
                         formValue: formValuesInicioTur,
                         listSelect: const [['Primer Turno', 'Segundo Turno', 'Tercer turno'],[]],
                         enabled: true),
+                    SizedBox(height: responsiveHeight),
                     const ButtonScreen(
                         textButton: 'Escaner QR', 
                         btnPosition: 1
                       ),
+                    SizedBox(height: responsiveHeight),
                     ButtonForm(
                         control: 1,
                         textButton: 'Registro Manual',
@@ -117,6 +121,7 @@ class _ControlVehiclesState extends State<ControlVehicles> {
                         ],
                         formValue: formValuesRegistroMan,
                         enabled: false),
+                    SizedBox(height: responsiveHeight,),
                     SizedBox(
                       width: MediaQuery.of(context).size.width,
                       child: ElevatedButton(
@@ -129,31 +134,32 @@ class _ControlVehiclesState extends State<ControlVehicles> {
                               children: [
                                 SingleChildScrollView(
                                   child: AlertDialog(
-                                    title: Text('Cerrar Turno',style: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
-                                    //para celulares
-                                    TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.015),fontWeight: FontWeight.bold):
-                                    //para tablets
-                                    TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),fontWeight: FontWeight.bold,)
-                                    ),
+                                    title: Text('Cerrar Turno',style: getTextStyleText(context, null) ),
                                     content: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                       children:[
-                                        ElevatedButton(onPressed: (Provider.of<VarProvider>(context).varSalir) == false ?() async {
+                                        ElevatedButton(onPressed:(){
+                                          Navigator.of(context).pop(context);
+                                        },child: Text('Cancelar', style: getTextStyleButtonField(context)
+                                        )),
+                                        const SizedBox(width: 8),
+                                        ElevatedButton(onPressed: (Provider.of<VarProvider>(context).varSalir) == true?() async {
                                           VehicleService vs = VehicleService();
+                                          Provider.of<VarProvider>(context,listen: false).updateVariable(false);
+                                          Provider.of<VarProvider>(context,listen: false).updateVarSalir(false);
                                           var salirInt = (await vs.postCloseTurnVehicle(context));
                                           if (salirInt) {
-                                            Provider.of<VarProvider>(context,listen: false).updateVariable(false);
-                                            Provider.of<VarProvider>(context,listen: false).updateVarSalir(true);
                                             Navigator.of(context).pop(context);
                                             Navigator.of(context).pushNamed('home');
+                                            Provider.of<VarProvider>(context,listen: false).updateVarSalir(true);
+                                            Provider.of<VarProvider>(context,listen: false).updateVariable(false);
+
+                                          }else{
+                                            Provider.of<VarProvider>(context,listen: false).updateVariable(true);
                                             Provider.of<VarProvider>(context,listen: false).updateVarSalir(false);
                                           }
                                         }: null, child: Text('Aceptar', style: getTextStyleButtonField(context)
                                         )),
-                                        ElevatedButton(onPressed:(Provider.of<VarProvider>(context).varSalir) == false ?(){
-                                          Navigator.of(context).pop(context);
-                                        }: null,child: Text('Cancelar', style: getTextStyleButtonField(context)
-                                        ))
                                       ]
                                     ),
                                   ),
@@ -163,10 +169,14 @@ class _ControlVehiclesState extends State<ControlVehicles> {
                           }
                           );
                         }:null,
-                        child:  Text('Cerrar turno',style: getTextStyleButtonField(context)
+                        child:  Padding(
+                          padding: EdgeInsets.all(responsivePadding),
+                          child: Text('Cerrar turno',style: getTextStyleButtonField(context)
+                          ),
                         )
                       ),
                     ),
+                    SizedBox(height: responsiveHeight),
                     ButtonForm(
                         control: 1,
                         textButton: 'Agregar observaciones',
@@ -175,6 +185,7 @@ class _ControlVehiclesState extends State<ControlVehicles> {
                         field: const ['Enviar', 'Agregue una descripción...'],
                         formValue: formValuesObservacion,
                         enabled: false),
+                    SizedBox(height: responsiveHeight),
                     ButtonForm(
                         control: 1,
                         controller: controller,
@@ -190,6 +201,7 @@ class _ControlVehiclesState extends State<ControlVehicles> {
                         listSelect: const [['Primer Turno', 'Segundo Turno', 'Tercer turno', 'Todos los turnos'],[]],
                         formValue: formValuesDescRepor,
                         enabled: true),
+                    SizedBox(height: responsiveHeight),
                     ButtonForm(
                       control: 1,
                       controller: controller,

@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:app_seguimiento_movil/widgets/widgets.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-
 import '../models/multi_inputs_model.dart';
-import '../services/letter_mediaquery.dart';
 import '../services/services.dart';
 
 
@@ -19,7 +17,9 @@ class DiningRoom extends StatefulWidget {
 class _DiningRoomState extends State<DiningRoom> {
  @override
   Widget build(BuildContext context) {
-    
+    double responsiveHeight = MediaQuery.of(context).size.height * 0.02;
+    double responsivePadding = MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.width * 0.02 : MediaQuery.of(context).size.height * 0.02;
+
     //Nombre del campo :  contenido, ¿obligatorio?, ¿select?, ¿enabled?
     
     //Fecha se inserta automaticamente
@@ -39,22 +39,16 @@ class _DiningRoomState extends State<DiningRoom> {
     };
 
     final Map<String, MultiInputsForm> formValuesObservacion = {
-      'description': MultiInputsForm(contenido: '',obligatorio: true,select: false,enabled: true)
+      'descriptionFood': MultiInputsForm(contenido: '',obligatorio: true,select: false,enabled: true)
     };
 
     final Map<String, MultiInputsForm> formValuesDescRepor = {
       'dish': MultiInputsForm(contenido: '', obligatorio: false),
-      'date_start_hour': MultiInputsForm(contenido: '', obligatorio: true), 
-      'date_final_hour': MultiInputsForm(contenido: '', obligatorio: true), 
+      'date_start_hour': MultiInputsForm(contenido: '', obligatorio: true, activeClock: false), 
+      'date_final_hour': MultiInputsForm(contenido: '', obligatorio: true, activeClock: false), 
     };
     final TextEditingController controller = TextEditingController();
 
-TextStyle myTextStyleTitle = const TextStyle(
-      color: Color(0xFF293641),
-      fontFamily: 'Inter',
-      fontWeight: FontWeight.w900,
-    );
-    
     return Scaffold(
       body: Column(
       children: [
@@ -65,15 +59,15 @@ TextStyle myTextStyleTitle = const TextStyle(
               alignment: Alignment.center,
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.all(20),
+                  padding: EdgeInsets.only(left: MediaQuery.of(context).size.width*0.08 ,right:  MediaQuery.of(context).size.width*0.08),
                   child: Column(children: [
                     SizedBox(
                       child: Align(
-                      alignment: Alignment.center,
-                      child: Text('Control de empleados',style: myTextStyleTitle.copyWith(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .05: 0.04) )),          
+                      alignment: Alignment.centerLeft,
+                      child: Text('Control de empleados',style: getTextStyleTitle(context,null)),          
                       )
                     ),
-                    const SizedBox(height: 10),
+                    SizedBox(height: responsiveHeight),
                     ButtonForm(
                         controller: controller,
                         control: 2,
@@ -89,10 +83,12 @@ TextStyle myTextStyleTitle = const TextStyle(
                         ],
                         formValue: formValuesInicioTur,
                         enabled: true),
+                    SizedBox(height: responsiveHeight),
                     const ButtonScreen(
                         textButton: 'Escaner QR', 
                         btnPosition: 1
                       ),
+                    SizedBox(height: responsiveHeight),
                     ButtonForm(
                         controller: controller,
                         control: 2,
@@ -104,9 +100,10 @@ TextStyle myTextStyleTitle = const TextStyle(
                           'Nombre',
                           'Tipo de contrato'
                         ],
-                        listSelect: const [['Sindicalizado','No sindicalizado','Corporativo']],
+                        listSelect: const [['Proveedor','Externo','Empleado']],
                         formValue: formValuesRegistroMan,
                         enabled: false),
+                    SizedBox(height: responsiveHeight),
                     SizedBox(
                       width: MediaQuery.of(context).size.width,
                       child: ElevatedButton(
@@ -120,33 +117,33 @@ TextStyle myTextStyleTitle = const TextStyle(
                                 children: [
                                   SingleChildScrollView(
                                     child: AlertDialog(
-                                      title: Text('Cerrar Turno',style:  MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
-                                      //para celulares
-                                      TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.015),fontWeight: FontWeight.bold):
-                                      //para tablets
-                                      TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),fontWeight: FontWeight.bold,)),
+                                      title: Text('Cerrar Turno',style: getTextStyleTitle2(context,null)),
                                       content: Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                         children:[
-                                          ElevatedButton(onPressed: (Provider.of<VarProvider>(context).varSalir) == false ? () async {
-                                            Provider.of<VarProvider>(context,listen: false).updateVarSalir(true);
-                                            Provider.of<VarProvider>(context,listen: false).updateVariable(false);
+                                          ElevatedButton(onPressed:  (){
+                                            Navigator.of(context).pop(context);
+
+                                          },child: Text('Cancelar', style: getTextStyleButtonField(context)),
+                                          ),
+                                          ElevatedButton(onPressed: (Provider.of<VarProvider>(context).varSalir) == true ? () async {
+                                            
+                                          Provider.of<VarProvider>(context,listen: false).updateVariable(false);
+                                          Provider.of<VarProvider>(context,listen: false).updateVarSalir(false);
                                             FoodService fs = FoodService();
                                               var salirInt =  await fs.postCloseTurnFood(context);
                                                if (salirInt) {
-                                                Provider.of<VarProvider>(context,listen: false).updateVariable(false);
-                                                Provider.of<VarProvider>(context,listen: false).updateVarSalir(true);
                                                 Navigator.of(context).pop(context);
                                                 Navigator.of(context).pushNamed('home');
+                                                Provider.of<VarProvider>(context,listen: false).updateVarSalir(true);
+                                                Provider.of<VarProvider>(context,listen: false).updateVariable(false);
+
+                                              }else{
+                                                Provider.of<VarProvider>(context,listen: false).updateVariable(true);
                                                 Provider.of<VarProvider>(context,listen: false).updateVarSalir(false);
                                               }
                                             }: null, child: Text('Aceptar',style: getTextStyleButtonField(context))
                                           ),
-                                          ElevatedButton(onPressed: (Provider.of<VarProvider>(context).varSalir) == false ? (){
-                                            Navigator.of(context).pop(context);
-
-                                          }: null,child: Text('Cancelar', style: getTextStyleButtonField(context)),
-                                          )
                                         ]
                                       ),
                                     ),
@@ -157,8 +154,12 @@ TextStyle myTextStyleTitle = const TextStyle(
                           }
                           );
                         }:null,
-                        child: Text('Cerrar turno',style: getTextStyleButtonField(context))),
+                        child: Padding(
+                          padding: EdgeInsets.all(responsivePadding),
+                          child: Text('Cerrar turno',style: getTextStyleButtonField(context)),
+                        )),
                     ),
+                    SizedBox(height: responsiveHeight),
                     ButtonForm(
                         controller: controller,
                         control: 2,
@@ -167,6 +168,7 @@ TextStyle myTextStyleTitle = const TextStyle(
                         field: const ['Enviar', 'Agregue una descripción...'],
                         formValue: formValuesObservacion,
                         enabled: false),
+                    SizedBox(height: responsiveHeight),
                     ButtonForm(
                         controller: controller,
                         control: 2,
@@ -198,7 +200,7 @@ TextStyle myTextStyleTitle = const TextStyle(
 
    VarProvider vh = VarProvider()
   ..arrSharedPreferences().then((Map<String, dynamic> sharedPrefsData) {
-    if (sharedPrefsData['plate'] == null) {
+    if (sharedPrefsData['dish'] == null) {
       SessionManager sm = SessionManager()
         ..clearSession().then((value) {
           VehicleService dpser = VehicleService()

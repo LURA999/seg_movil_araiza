@@ -40,6 +40,8 @@ class MultiInputsForm implements BaseInputsForm {
   bool? autocomplete;
   bool? autocompleteAsync;
   int? screen;
+  bool? activeClock;
+  
 
   MultiInputsForm({
     this.suffixIcon,
@@ -51,6 +53,7 @@ class MultiInputsForm implements BaseInputsForm {
     this.select,
     this.enabled,
     this.paintSignature,
+    this.activeClock,
     this.screen,
   });
 

@@ -44,7 +44,8 @@ class _ButtonFormState extends State<ButtonForm> {
  
   @override
   Widget build(BuildContext context) {
-    
+    double responsivePadding = MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.width * 0.02 : MediaQuery.of(context).size.height * 0.02;
+  
     return SizedBox(
         width: MediaQuery.of(context).size.width,
         child: ElevatedButton(
@@ -65,7 +66,10 @@ class _ButtonFormState extends State<ButtonForm> {
                      newMethod(context, widget.formValue, widget.btnPosition);
                     }
                   : null),
-          child: Text(widget.textButton, style: getTextStyleButtonField(context))
+          child: Padding(
+            padding: EdgeInsets.all(responsivePadding),
+            child: Text(widget.textButton, style: getTextStyleButtonField(context)),
+          )
           
           )
         );      
@@ -127,7 +131,7 @@ class _ButtonFormState extends State<ButtonForm> {
           inputFields.add(
             Column(
             children: [
-              Text( widget.field[i]),
+              Text( widget.field[i], style: getTextStyleText(context,null),),
               SizedBox(
                 height: MediaQuery.of(context).size.height *.3,
                 width: MediaQuery.of(context).size.width,
@@ -188,10 +192,14 @@ class _ButtonFormState extends State<ButtonForm> {
 
       
     });
-
+    
+    bool desactivarButton =false;
     return showDialog<String>(
       context: context,
-      builder: (BuildContext context ) => Dialog(
+      builder: (BuildContext context ) => StatefulBuilder(
+      builder: (BuildContext context, StateSetter setState) {
+      
+      return Dialog(
         insetPadding: 
         MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
           //para celulares
@@ -230,7 +238,7 @@ class _ButtonFormState extends State<ButtonForm> {
                         Align(
                           alignment: Alignment.bottomLeft,
                           child: Text(widget.field[0],
-                              style: getTextStyleTitle(context)),
+                              style: getTextStyleTitle(context,null)),
                         ),
                         ...inputFields,
                       ]),
@@ -249,7 +257,7 @@ class _ButtonFormState extends State<ButtonForm> {
                       child:  Text('Cerrar',style: getTextStyleButtonField(context)),
                     ),
                     ElevatedButton(
-                        onPressed: () async {
+                        onPressed: !desactivarButton ? () async {
                         if(!myFormKey.currentState!.validate()){
                           return ;
                         }
@@ -288,51 +296,71 @@ class _ButtonFormState extends State<ButtonForm> {
                                   t.guard = formValue['guard']!.contenido.toString().trim().replaceAll(RegExp('  +'), ' ');
                                   t.sign = formValue['sign']!.contenido;
                                   t.turn = formValue['turn']!.contenido;
-                                      VehicleService vs = VehicleService();
-
-                                  if((await vService.postTurnVehicle(t,context)).status == 404){
-                                    return;
-                                  }
+                                  setState((){
+                                    desactivarButton = true;
+                                  });
+                                 
 
                                   return showDialog(
                                 context: context,
-                                builder: (BuildContext context) {
-                                   return Align(
-                                    alignment: Alignment.center,
-                                     child: SingleChildScrollView(
-                                       child: AlertDialog(
-                                        actionsAlignment: MainAxisAlignment.center,
-                                          title: const Text('¿Esta seguro de continuar con estos datos?'),
-                                          content: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            children:[
-                                            const Text('Nombre', style: TextStyle(fontWeight: FontWeight.bold),),
-                                            Text(t.guard!),
-                                            const Text('Turno', style: TextStyle(fontWeight: FontWeight.bold)),
-                                            Text(t.turn! == '1'?'Primer Turno':t.turn! == '2'?'Segundo Turno': 'Tercer Turno' )
-                                            ]
-                                          ),
-                                          actions: [
-
-                                            ElevatedButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                                Provider.of<VarProvider>(context, listen: false).updateVariable(true);
-                                                Navigator.pop(context);
-                                              },
-                                              child: Text('Aceptar',style: getTextStyleButtonField(context)),
-                                            ),ElevatedButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                              child: Text('Cancelar',style: getTextStyleButtonField(context)),
+                                builder: (BuildContext context) => Stack(
+                                  children: [
+                                    const ModalBarrier(
+                                      dismissible: false,
+                                      color:  Color.fromARGB(80, 0, 0, 0),
+                                    ),
+                                    StatefulBuilder(
+                                    builder: (BuildContext context, StateSetter setState) {
+                                       return Align(
+                                        alignment: Alignment.center,
+                                         child: SingleChildScrollView(
+                                           child: AlertDialog(
+                                            actionsAlignment: MainAxisAlignment.center,
+                                              title: Text('¿Desea continuar?',style: getTextStyleTitle2(context, null)),
+                                              content: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                children:[
+                                                Text('Nombre:', style: getTextStyleText(context, FontWeight.bold),),
+                                                Text(t.guard!, style: getTextStyleText(context, null),),
+                                                const SizedBox(height: 10,),
+                                                Text('Turno:', style: getTextStyleText(context, FontWeight.bold)),
+                                                Text(t.turn! == '1'?'Primer Turno':t.turn! == '2'?'Segundo Turno': 'Tercer Turno', style: getTextStyleText(context,null), )
+                                                ]
+                                              ),
+                                              actions: [
+                                                ElevatedButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                    setState((){
+                                                      desactivarButton = false;
+                                                    });
+                                                  },
+                                                  child: Text('Cancelar',style: getTextStyleButtonField(context)),
+                                                ),
+                                                ElevatedButton(
+                                                  
+                                                  onPressed: desactivarButton == true? () async {
+                                                   setState((){
+                                                        desactivarButton = false;
+                                                      });
+                                                     if((await vService.postTurnVehicle(t,context)).status != 200){
+                                                      Navigator.pop(context);
+                                                    }else{
+                                                      Navigator.pop(context);
+                                                      Provider.of<VarProvider>(context, listen: false).updateVariable(true);
+                                                      Navigator.pop(context);
+                                                    }
+                                                  } : null,
+                                                  child: Text('Aceptar',style: getTextStyleButtonField(context)),
+                                                ),
+                                              ],
                                             ),
-                                          ],
-                                        ),
-                                     ),
-                                   );
-                                });
+                                         ),
+                                       );
+                                    }),
+                                  ],
+                                ));
 
 
                                 }else {
@@ -343,7 +371,6 @@ class _ButtonFormState extends State<ButtonForm> {
         
                             //registro 
                             if (btnPosition == 2) {
-                              print(btnPosition);
                               RegisterVehicle r= RegisterVehicle();
                               VarProvider vh = VarProvider();
                               final json = await vh.arrSharedPreferences();
@@ -353,29 +380,52 @@ class _ButtonFormState extends State<ButtonForm> {
                               r.platesSearch = formValue['platesSearch']!.contenido ;
                               r.typevh = formValue['typevh']!.contenido;
                               r.departament = formValue['departament']!.contenido ;
-                              await vService.postRegisterVehicle(r,context);
+                              setState((){
+                                  desactivarButton = true;
+                              });
+
+                             Access res =  await vService.postRegisterVehicle(r,context);
+
+                             if(res.status == 200){
                               Navigator.pop(context);
+                             }else{
+                              setState((){
+                                desactivarButton = false;
+                              });
+                             }
                             }
         
                             //Agregar observaciones
                             if (btnPosition == 3) {
+                              setState((){
+                                desactivarButton = true;
+                              });
                               TurnVehicle t= TurnVehicle();
                               t.description = formValue['description']!.contenido;
-                              await vService.postObvVehicle(t,context);
+                              if(await vService.postObvVehicle(t,context)){
                               Navigator.pop(context);
+                              }else{
+                                setState((){
+                                  desactivarButton = false;
+                                });
+                              }
                             }
 
                               if(btnPosition == 4) {
-                              DateExcelVehicle de = DateExcelVehicle();
-                              de.dateStart = formValue['date_start_hour']!.contenido!; 
-                              de.dateFinal = formValue['date_final_hour']!.contenido!;
-                              de.turn = formValue['turn']!.contenido!;
-                              de.guard = formValue['guard']!.contenido;
-                              List<Map<String, dynamic>> jsonStr = await vService.selectDateVehicle(de,context);
-                              List<Map<String, dynamic>> jsonStrObs = await vService.selectObsVehicle(de,context);
-                              List<Map<String, dynamic>> dataGuard = await vService.dataGuard(de.guard!,context);
+                                if ((formValue['date_start_hour']!.contenido! != '') || formValue['date_final_hour']!.contenido! !=''){
+                                 setState((){
+                                  desactivarButton = true;
+                                });
+                                  DateExcelVehicle de = DateExcelVehicle();
+                                  de.dateStart = formValue['date_start_hour']!.contenido!; 
+                                  de.dateFinal = formValue['date_final_hour']!.contenido!;
+                                  de.turn = formValue['turn']!.contenido!;
+                                  de.guard = formValue['guard']!.contenido;
+                                  List<Map<String, dynamic>> jsonStr = await vService.selectDateVehicle(de,context);
+                                  List<Map<String, dynamic>> jsonStrObs = await vService.selectObsVehicle(de,context);
+                                  List<Map<String, dynamic>> dataGuard = await vService.dataGuard(de.guard!,context);
 
-                                if (jsonStr.isNotEmpty) {
+                                  if (jsonStr.isNotEmpty) {
                                   DateTime now = DateTime.now();
                                   String formattedDate = DateFormat('yyyyMMddss').format(now);
                                   String fileName = '$formattedDate.xlsx';
@@ -390,12 +440,16 @@ class _ButtonFormState extends State<ButtonForm> {
                                   context);
                                   Navigator.pop(context);
                                 }else{
+                                  setState((){
+                                  desactivarButton = false;
+                                });
+                                
                                   showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
                                    return AlertDialog(
-                                      title: const Text('Mensaje'),
-                                      content: const Text('No tiene vehiculos registrados'),
+                                      title: Text('Mensaje',style: getTextStyleText(context, FontWeight.bold)),
+                                      content: Text('No tiene vehiculos registrados', style: getTextStyleText(context, null),),
                                       actions: [
                                         ElevatedButton(
                                           onPressed: () {
@@ -407,12 +461,36 @@ class _ButtonFormState extends State<ButtonForm> {
                                     );
                                 });
                                 }
+                              }else{
+                                 setState((){
+                                  desactivarButton = false;
+                                });
+                                showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                   return AlertDialog(
+                                      title: Text('Mensaje',style: getTextStyleText(context, FontWeight.bold)),
+                                      content: Text('Por favor llene los campos necesarios', style: getTextStyleText(context, null),),
+                                      actions: [
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text('Aceptar',style: getTextStyleButtonField(context)),
+                                        ),
+                                      ],
+                                    );
+                                });
+                              }
                             } 
 
                             if (btnPosition == 5) {
                               int i = 0;
 
                               if (formValue['platesSearch']!.contenido != null && formValue['platesSearch']!.contenido != '') {
+                                setState((){
+                                  desactivarButton = true;
+                                });
                                 Access r = await vService.findVehicle(formValue['platesSearch']!.contenido!,context,1);
                                 if (r.container != null) {
                                   for (var rc in r.container) {
@@ -430,6 +508,10 @@ class _ButtonFormState extends State<ButtonForm> {
                                   controllerArr[i].text = formValue[key]!.contenido!;
                                   i++;
                                 });
+
+                                setState((){
+                                  desactivarButton = false;
+                                });
                               }
                             }
 
@@ -438,23 +520,45 @@ class _ButtonFormState extends State<ButtonForm> {
                             //Inicio turno
                             if (btnPosition == 1) {
                               TurnFood t= TurnFood();
+
                               if(formValue['picture']!.contenido != '' && formValue['picture']!.contenido != null){
+                                setState((){
+                                  desactivarButton = true;
+                                });
                                 t.picture = formValue['picture']!.contenido;
                                 t.dish = formValue['dish']!.contenido;
                                 t.garrison = formValue['garrison']!.contenido;
                                 t.dessert = formValue['dessert']!.contenido;
                                 t.received = formValue['received_number']!.contenido;
-                                await fService.postTurnFood(t,context);
+                                Access result = await fService.postTurnFood(t,context);
+
+                                if (result.status != 200) {
+                                  setState((){
+                                    desactivarButton = false;
+                                  });
+                                }else{
+                                  Provider.of<VarProvider>(context, listen: false).updateVariable(true);
+                                  Navigator.pop(context);
+                                }
+                            
+
                               }else{
+                                setState((){
+                                  desactivarButton = true;
+                                });
                                 return showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      title: const Text('Llene todos los campos'),
-                                      content: const Text('Por favor suba una foto del platillo.'),
+                                      title:  Text('Llene todos los campos', style: getTextStyleText(context, FontWeight.bold),),
+                                      content: Text('Por favor suba una foto del platillo.', style: getTextStyleText(context, null),),
                                       actions: [
                                         ElevatedButton(
-                                          onPressed: () {
+                                          onPressed: () async { 
+                                             
+                                          setState((){
+                                            desactivarButton = false;
+                                          });
                                             Navigator.pop(context);
                                           },
                                           child: Text('Aceptar',style: getTextStyleButtonField(context)),
@@ -464,31 +568,50 @@ class _ButtonFormState extends State<ButtonForm> {
                                   },
                                 );
                               }
-                            Provider.of<VarProvider>(context, listen: false).updateVariable(true);
-                            Navigator.pop(context);
                             }
         
                             //registro
                             if (btnPosition == 2) {
+                              setState((){
+                                desactivarButton = true;
+                              });
                               RegisterFood r= RegisterFood();
                               r.numEmployee = formValue['employee_number']!.contenido;
                               r.name = formValue['name']!.contenido;
                               r.contract = formValue['type_contract']!.contenido;
 
-                              await fService.postRegisterFood(r,context);
+                            if(await fService.postRegisterFood(r,context)){
+                              Navigator.pop(context);
+                             }else{
+                              setState((){
+                                desactivarButton = false;
+                              });
+                             }
                               Navigator.pop(context);
                             }
         
                             //Agregar observaciones
                             if (btnPosition == 3) {
+                              setState((){
+                                desactivarButton = true;
+                              });
                               TurnFood t= TurnFood();
                               t.description = formValue['description']!.contenido;
-                              await fService.postObvFood(t,context);
+                              if(await fService.postObvFood(t,context)){
                               Navigator.pop(context);
+                             }else{
+                              setState((){
+                                desactivarButton = false;
+                              });
+                             }
                             }
 
 
                             if(btnPosition == 4) {
+                              if ((formValue['date_start_hour']!.contenido! != '') || formValue['date_final_hour']!.contenido! !=''){
+                                setState((){
+                                desactivarButton = true;
+                              });
                               DateExcelFood de = DateExcelFood();
                               de.dateStart = formValue['date_start_hour']!.contenido!; 
                               de.dateFinal = formValue['date_final_hour']!.contenido!;
@@ -527,13 +650,34 @@ class _ButtonFormState extends State<ButtonForm> {
                                     );
                                 });
                                 }
-                            } 
+                            } else{
+                              setState((){
+                                desactivarButton = false;
+                              });
+                              showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text('Mensaje',style: getTextStyleText(context, FontWeight.bold)),
+                                    content: Text('Por favor llene los campos necesarios', style: getTextStyleText(context, null),),
+                                    actions: [
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text('Aceptar',style: getTextStyleButtonField(context)),
+                                      ),
+                                    ],
+                                  );
+                              });
+                            }
+                            }
                             break;
                           default:
                             
                             break;
                         }
-                      },
+                      }:null,
                       child: Text(widget.field[0],style: getTextStyleButtonField(context)),
                     ),
                   ],
@@ -542,7 +686,8 @@ class _ButtonFormState extends State<ButtonForm> {
             ],
           ),
         ),
-      ),
+      );
+    })
     );
   }
   

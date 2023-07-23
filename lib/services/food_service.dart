@@ -35,9 +35,6 @@ try {
         isSaving = false;
         notifyListeners();
         return true;
-      }else{
-          messageError(context,'Error desconocido.');
-
       }
       isSaving = false;
       notifyListeners();
@@ -77,9 +74,6 @@ try {
         isSaving = false;
         notifyListeners();
         return true;
-      }else{
-              messageError(context,'Error desconocido.');
-
       }
       isSaving = false;
       notifyListeners();
@@ -103,7 +97,6 @@ try {
 
   Future<Access> postTurnFood( TurnFood session,BuildContext context ) async {
   final sm = SessionManager();
-  TurnFood tn = TurnFood();
   final key = encrypt.Key.fromLength(32);
   final iv = encrypt.IV.fromLength(16);
   final encrypter = encrypt.Encrypter(encrypt.AES(key));
@@ -130,7 +123,12 @@ try {
     request.fields['garrison'] = session.garrison!;
     request.fields['dish'] = session.dish!;
     request.fields['received'] = session.received!;
-    await request.send();
+    
+    if ((await request.send()).statusCode == 200) {
+      result.status = 200;
+      return result;
+    }
+     
     isSaving = false;
     notifyListeners();
     return result; 
@@ -150,6 +148,48 @@ try {
   }
     return result; 
   } 
+
+    Future<AccessMap> getObservation(BuildContext context ) async {
+  AccessMap result = AccessMap();
+   VarProvider vp = VarProvider();
+    final json = await vp.arrSharedPreferences();
+
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
+    return result;
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    isSaving = true;
+    notifyListeners();
+     final url = Uri.parse('$link/turn_vehicle.php?nameTurn=${json["guard"]}');
+       var response = (await http.get(url)).body;
+      final result = AccessMap.fromJson(jsonDecode(response));
+      if (result.status == 200) {
+        isSaving = false;
+        notifyListeners();
+        return result;
+      } 
+    return result; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+    return result; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return result; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+    return result; 
+  }
+  }
+    return result; 
+  }
+
 Future<List<Map<String, dynamic>>> selectObsFood( DateExcelFood  e,BuildContext context ) async {
     
     List<Map<String, dynamic>> listContainer = [];
@@ -176,9 +216,6 @@ try {
         isSaving = false;
         notifyListeners();
         return listContainer; 
-      } else{
-      messageError(context,'Error desconocido.');
-
       }
       isSaving = false;
       notifyListeners();
@@ -219,8 +256,6 @@ try {
       
       if (result.status == 200) {
         return result; 
-      } else {
-        messageError(context,'Error desconocido.');
       }
     isSaving = false;
     notifyListeners();
@@ -263,9 +298,6 @@ try {
         isSaving = false;
         notifyListeners();
         return true;
-      }else{
-    messageError(context,'Error desconocido.');
-
       }
 
     isSaving = false;
@@ -313,9 +345,6 @@ try {
         isSaving = false;
         notifyListeners();
         return listContainer; 
-      } else{
-      messageError(context,'Error desconocido.');
-
       }
       isSaving = false;
       notifyListeners();
