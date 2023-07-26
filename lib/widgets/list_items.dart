@@ -34,10 +34,10 @@ class TableCustom extends StatelessWidget {
             child: Ink(
               height: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
                 //para celulares
-                ( MediaQuery.of(context).size.height * .1 )
+                ( MediaQuery.of(context).size.height * .15 )
                 :
                 //para tablets 
-                (MediaQuery.of(context).size.height * .15 ),
+                (MediaQuery.of(context).size.height * .2 ),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10.0),
@@ -54,22 +54,34 @@ class TableCustom extends StatelessWidget {
                 onTap: opcion.navigator,
                 child: Row(
                   children: [
-                    Expanded(
+                    opcion.img != null ? Expanded(
                       child: Container(
                         padding: const EdgeInsets.all(8.0),
                         child: SvgPicture.asset(
-                          opcion.img,
-                          width: MediaQuery.of(context).size.width *
-                              opcion.width,
+                          opcion.img!,
+                          width: MediaQuery.of(context).orientation == Orientation.landscape? 
+                              MediaQuery.of(context).size.height * opcion.width:
+                              MediaQuery.of(context).size.width * opcion.width,
                         ),
                       ),
-                    ),
+                    ): SizedBox(width: MediaQuery.of(context).size.width *
+                          (MediaQuery.of(context).orientation ==
+                                  Orientation.portrait
+                              ? 0.1
+                              : 0.08 ), child: Container()),
+    
                     SizedBox(
-                      width: MediaQuery.of(context).size.width *
+                      width: 
+                      opcion.img != null?
+                      MediaQuery.of(context).size.width *
                           (MediaQuery.of(context).orientation ==
                                   Orientation.portrait
                               ? 0.5
-                              : 0.65),
+                              : 0.65) : MediaQuery.of(context).size.width *
+                          (MediaQuery.of(context).orientation ==
+                                  Orientation.portrait
+                              ? 0.65
+                              : 0.7),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,

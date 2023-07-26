@@ -249,13 +249,6 @@ class _MedicalRecordsState extends State<MedicalRecords> {
                                 child: Text(file.type,softWrap: true,style: myTextSyleBody.copyWith(fontSize: MediaQuery.of(context).size.width  * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.013)))
                               ),
                             ),
-                            SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.17,
-                              child: Container(
-                                padding: paddingCell,
-                                child: Text(file.lastModify,softWrap: true,style: myTextSyleBody.copyWith(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.013)))
-                              ),
-                            ),
                             Expanded(
                               child: Row(
                                 children: [

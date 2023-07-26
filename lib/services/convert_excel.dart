@@ -55,7 +55,7 @@ Future<void> requestPermission(Function(bool) onPermissionResult) async {
 }
 
 
-Future<void> jsonToExcel(List<Map<String, dynamic>> jsonStr, List<String> headersPerso,List<Map<String, dynamic>> jsonStrObs, List<Map<String,dynamic>>? dataGuard, int Screen, String fileName, BuildContext context) async {
+Future<void> jsonToExcel(List<Map<String, dynamic>> jsonStr, List<String> headersPerso,List<Map<String, dynamic>> jsonStrObs, List<Map<String,dynamic>>? dataGuard, List<Map<String,dynamic>>? dataComments, int screen, String fileName, BuildContext context) async {
   bool storagePermissionGranted = false;
   if (Platform.isAndroid || Platform.isIOS) {
   await requestPermission((bool granted) {
@@ -96,15 +96,7 @@ Future<void> jsonToExcel(List<Map<String, dynamic>> jsonStr, List<String> header
   pictureLogo.width = 130; // Ancho de la imagen en unidades de 1/256 de un carácter
   pictureLogo.height = 70; 
   
-  // AJUSTANDO TITULO
-  sheet.getRangeByIndex(2,3).setText('');
-  // Fusionar celdas
-  final Range rangeTitle = sheet.getRangeByName('B2:F2');
-  rangeTitle.cellStyle.bold = true;
-  rangeTitle.cellStyle.fontSize = 16;
-  rangeTitle.merge();
-  rangeTitle.cellStyle.hAlign = HAlignType.center;
-  rangeTitle.cellStyle.vAlign = VAlignType.center;
+ 
 
 
 
@@ -116,6 +108,7 @@ Future<void> jsonToExcel(List<Map<String, dynamic>> jsonStr, List<String> header
    header.cellStyle.bold = true;
   }
 
+  //Contenido de las cabeceras agregadas
   for (var i = 0; i < jsonStr.length; i++) {
     var keys = jsonStr[i].keys.toList();
     var values = jsonStr[i].values.toList();
@@ -134,12 +127,18 @@ Future<void> jsonToExcel(List<Map<String, dynamic>> jsonStr, List<String> header
   sheet.autoFitColumn(7);
   
   //TRAFICO
-  if (Screen == 1) {
+  if (screen == 1) {
     //AJUSTANDO FECHA
     sheet.getRangeByIndex(4,6).setText('Fecha: $formattedDate');
 
     // AJUSTANDO TITULO
-    sheet.getRangeByIndex(2,3).setText('CONTROL DE VEHICULOS EMPLEADOS');
+    sheet.getRangeByIndex(2,3).setText('CONTROL DE VEHICULOS EMPLEADOS'); // Fusionar celdas
+    final Range rangeTitle = sheet.getRangeByName('B2:F2');
+    rangeTitle.cellStyle.bold = true;
+    rangeTitle.cellStyle.fontSize = 16;
+    rangeTitle.merge();
+    rangeTitle.cellStyle.hAlign = HAlignType.center;
+    rangeTitle.cellStyle.vAlign = VAlignType.center;
     String base64Image = dataGuard!.length == 1?  dataGuard[0]['sign'] : 'iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAAAXNSR0IArs4c6QAABSJJREFUeF7t1bERwDAMxLB4/6UzgV2wfaRXIci8nM9HgMBV4LAhQOAuIBCvg8BDQCCeBwGBeAMEmoA/SHMzNSIgkJFDW7MJCKS5mRoREMjIoa3ZBATS3EyNCAhk5NDWbAICaW6mRgQEMnJoazYBgTQ3UyMCAhk5tDWbgECam6kRAYGMHNqaTUAgzc3UiIBARg5tzSYgkOZmakRAICOHtmYTEEhzMzUiIJCRQ1uzCQikuZkaERDIyKGt2QQE0txMjQgIZOTQ1mwCAmlupkYEBDJyaGs2AYE0N1MjAgIZObQ1m4BAmpupEQGBjBzamk1AIM3N1IiAQEYObc0mIJDmZmpEQCAjh7ZmExBIczM1IiCQkUNbswkIpLmZGhEQyMihrdkEBNLcTI0ICGTk0NZsAgJpbqZGBAQycmhrNgGBNDdTIwICGTm0NZuAQJqbqREBgYwc2ppNQCDNzdSIgEBGDm3NJiCQ5mZqREAgI4e2ZhMQSHMzNSIgkJFDW7MJCKS5mRoREMjIoa3ZBATS3EyNCAhk5NDWbAICaW6mRgQEMnJoazYBgTQ3UyMCAhk5tDWbgECam6kRAYGMHNqaTUAgzc3UiIBARg5tzSYgkOZmakRAICOHtmYTEEhzMzUiIJCRQ1uzCQikuZkaERDIyKGt2QQE0txMjQgIZOTQ1mwCAmlupkYEBDJyaGs2AYE0N1MjAgIZObQ1m4BAmpupEQGBjBzamk1AIM3N1IiAQEYObc0mIJDmZmpEQCAjh7ZmExBIczM1IiCQkUNbswkIpLmZGhEQyMihrdkEBNLcTI0ICGTk0NZsAgJpbqZGBAQycmhrNgGBNDdTIwICGTm0NZuAQJqbqREBgYwc2ppNQCDNzdSIgEBGDm3NJiCQ5mZqREAgI4e2ZhMQSHMzNSIgkJFDW7MJCKS5mRoREMjIoa3ZBATS3EyNCAhk5NDWbAICaW6mRgQEMnJoazYBgTQ3UyMCAhk5tDWbgECam6kRAYGMHNqaTUAgzc3UiIBARg5tzSYgkOZmakRAICOHtmYTEEhzMzUiIJCRQ1uzCQikuZkaERDIyKGt2QQE0txMjQgIZOTQ1mwCAmlupkYEBDJyaGs2AYE0N1MjAgIZObQ1m4BAmpupEQGBjBzamk1AIM3N1IiAQEYObc0mIJDmZmpEQCAjh7ZmExBIczM1IiCQkUNbswkIpLmZGhEQyMihrdkEBNLcTI0ICGTk0NZsAgJpbqZGBAQycmhrNgGBNDdTIwICGTm0NZuAQJqbqREBgYwc2ppNQCDNzdSIgEBGDm3NJiCQ5mZqREAgI4e2ZhMQSHMzNSIgkJFDW7MJCKS5mRoREMjIoa3ZBATS3EyNCAhk5NDWbAICaW6mRgQEMnJoazYBgTQ3UyMCAhk5tDWbgECam6kRAYGMHNqaTUAgzc3UiIBARg5tzSYgkOZmakRAICOHtmYTEEhzMzUiIJCRQ1uzCQikuZkaERDIyKGt2QQE0txMjQgIZOTQ1mwCAmlupkYEBDJyaGs2AYE0N1MjAgIZObQ1m4BAmpupEQGBjBzamk1AIM3N1IiAQEYObc0mIJDmZmpEQCAjh7ZmExBIczM1IiCQkUNbswkIpLmZGhEQyMihrdkEBNLcTI0ICGTk0NZsAgJpbqZGBAQycmhrNgGBNDdTIwICGTm0NZuAQJqbqREBgYwc2ppNQCDNzdSIgEBGDm3NJiCQ5mZqREAgI4e2ZhMQSHMzNSIgkJFDW7MJCKS5mRoR+AErVADJkrjltgAAAABJRU5ErkJggg==';
     List<int> imageData = base64Decode(base64Image);
 
@@ -168,15 +167,63 @@ Future<void> jsonToExcel(List<Map<String, dynamic>> jsonStr, List<String> header
     //COMEDOR
 
     // AJUSTANDO TITULO
-    sheet.getRangeByIndex(2,3).setText('CONTROL DEL COMEDOR DE EMPLEADOS');
+    sheet.getRangeByIndex(2,4).setText('CONTROL DEL COMEDOR DE EMPLEADOS'); // Fusionar celdas
+    final Range rangeTitle = sheet.getRangeByName('D2:H2');
+    rangeTitle.cellStyle.bold = true;
+    rangeTitle.cellStyle.fontSize = 16;
+    rangeTitle.merge();
+    rangeTitle.cellStyle.hAlign = HAlignType.center;
+    rangeTitle.cellStyle.vAlign = VAlignType.center;
     var cellObservacion = sheet.getRangeByIndex(jsonStr.length + 8 + beginRow,1);
     cellObservacion.setText('OBSERVACION(ES)');
+    cellObservacion.cellStyle.bold = true;
     for (var i = 0; i < jsonStrObs.length; i++) {
       var cell2 = sheet.getRangeByIndex(jsonStr.length + 9 + i + beginRow,1);
       cell2.setText(jsonStrObs[i]['description']);
       Range obs =   sheet.getRangeByName('A${jsonStr.length + 9 + i + beginRow}:E${jsonStr.length + 9 + i + beginRow}');
       obs.merge();
     }
+    
+    var cellComentarios = sheet.getRangeByIndex(beginRow-1,7);
+    cellComentarios.setText('COMENTARIOS');
+    cellComentarios.cellStyle.bold = true;
+    var headComentarios4 = sheet.getRangeByIndex(beginRow,7);
+    headComentarios4.setText('Numero de empleado');
+    headComentarios4.cellStyle.bold = true;
+    var headComentarios1 = sheet.getRangeByIndex(beginRow,8);
+    headComentarios1.setText('Calificación');
+    headComentarios1.cellStyle.bold = true;
+    var headComentarios3 = sheet.getRangeByIndex(beginRow,9);
+    headComentarios3.setText('Comentario');
+    headComentarios3.cellStyle.bold = true;
+    var headComentarios2 = sheet.getRangeByIndex(beginRow,10);
+    headComentarios2.setText('¿Que platillo le gustaría?');
+    headComentarios2.cellStyle.bold = true;
+    
+
+    if (dataComments != null) {
+      for (var i = 0; i < dataComments.length; i++) {
+        var cell1 = sheet.getRangeByIndex(beginRow + (i+1),7);
+        cell1.setText(dataComments[i]['employee_num']);
+        var cell2 = sheet.getRangeByIndex(beginRow + (i+1),8);
+        cell2.setText(dataComments[i]['rate']);
+        var cell4 = sheet.getRangeByIndex(beginRow + (i+1),9);
+        cell4.setText(dataComments[i]['comment']);
+        var cell3 = sheet.getRangeByIndex(beginRow + (i+1),10);
+        cell3.setText(dataComments[i]['suggestion']);
+      }
+
+      sheet.autoFitColumn(7);
+      sheet.autoFitColumn(8);
+      sheet.autoFitColumn(9);
+      sheet.autoFitColumn(10);
+      
+    } else {
+      var cell3 = sheet.getRangeByIndex(6,7);
+      cell3.setText("No hay comentarios registrados");
+    }
+    
+
 
   }
   

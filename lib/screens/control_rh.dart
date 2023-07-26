@@ -1,3 +1,4 @@
+import 'package:app_seguimiento_movil/services/services.dart';
 import 'package:app_seguimiento_movil/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:app_seguimiento_movil/models/models.dart';
@@ -27,17 +28,6 @@ class RhControl extends StatelessWidget {
        )
     ];
 
-    TextStyle myTextStyleTitle = const TextStyle(
-      color: Color(0xFF293641),
-      fontFamily: 'Inter',
-      fontWeight: FontWeight.w900,
-    );
-    
-    TextStyle myTextStyleSubtitule = const TextStyle(
-      color: Color(0xFF293641),
-      fontFamily: 'Inter',
-      fontWeight: FontWeight.normal,
-    );
 
     return Scaffold(
       resizeToAvoidBottomInset:false,
@@ -56,8 +46,8 @@ class RhControl extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                Text('Recursos Humanos',style: myTextStyleTitle.copyWith(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .08: 0.04) )),
-                Text('Selecciona una opción:',style: myTextStyleSubtitule.copyWith(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04 : 0.02) )),
+                Text('Recursos Humanos',style: getTextStyleTitle(context, null)),
+                Text('Selecciona una opción:',style: getTextStyleTitle2(context, null)),
                 ]
               ),
             ),

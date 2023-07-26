@@ -143,17 +143,16 @@ class _ControlVehiclesState extends State<ControlVehicles> {
                                         },child: Text('Cancelar', style: getTextStyleButtonField(context)
                                         )),
                                         const SizedBox(width: 8),
-                                        ElevatedButton(onPressed: (Provider.of<VarProvider>(context).varSalir) == true?() async {
+                                        ElevatedButton(onPressed: (Provider.of<VarProvider>(context).varSalir) == false?() async {
                                           VehicleService vs = VehicleService();
                                           Provider.of<VarProvider>(context,listen: false).updateVariable(false);
-                                          Provider.of<VarProvider>(context,listen: false).updateVarSalir(false);
+                                          Provider.of<VarProvider>(context,listen: false).updateVarSalir(true);
                                           var salirInt = (await vs.postCloseTurnVehicle(context));
                                           if (salirInt) {
+                                            Provider.of<VarProvider>(context,listen: false).updateVarSalir(false);
                                             Navigator.of(context).pop(context);
                                             Navigator.of(context).pushNamed('home');
-                                            Provider.of<VarProvider>(context,listen: false).updateVarSalir(true);
-                                            Provider.of<VarProvider>(context,listen: false).updateVariable(false);
-
+                                            Provider.of<VarProvider>(context,listen: false).updateVariable(true);
                                           }else{
                                             Provider.of<VarProvider>(context,listen: false).updateVariable(true);
                                             Provider.of<VarProvider>(context,listen: false).updateVarSalir(false);

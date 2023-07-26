@@ -22,7 +22,7 @@ class ButtonForm extends StatefulWidget {
   final int control;
   final TextEditingController? controller;
 
-  ButtonForm({
+  const ButtonForm({
     super.key,
     required this.textButton,
     required this.btnPosition,
@@ -330,12 +330,12 @@ class _ButtonFormState extends State<ButtonForm> {
                                               ),
                                               actions: [
                                                 ElevatedButton(
-                                                  onPressed: () {
+                                                  onPressed: desactivarButton == true? () {
                                                     Navigator.pop(context);
                                                     setState((){
                                                       desactivarButton = false;
                                                     });
-                                                  },
+                                                  }:null,
                                                   child: Text('Cancelar',style: getTextStyleButtonField(context)),
                                                 ),
                                                 ElevatedButton(
@@ -435,6 +435,7 @@ class _ButtonFormState extends State<ButtonForm> {
                                    ['TIPO VEHICULO','COLOR','PLACAS','NOMBRE EMPLEADO', 'DEPARTAMENTO','ENTRADA'], 
                                   jsonStrObs,
                                   dataGuard,
+                                  null,
                                   1,
                                   fileName, 
                                   context);
@@ -530,16 +531,72 @@ class _ButtonFormState extends State<ButtonForm> {
                                 t.garrison = formValue['garrison']!.contenido;
                                 t.dessert = formValue['dessert']!.contenido;
                                 t.received = formValue['received_number']!.contenido;
-                                Access result = await fService.postTurnFood(t,context);
 
-                                if (result.status != 200) {
-                                  setState((){
-                                    desactivarButton = false;
-                                  });
-                                }else{
-                                  Provider.of<VarProvider>(context, listen: false).updateVariable(true);
-                                  Navigator.pop(context);
-                                }
+                                return showDialog(
+                                context: context,
+                                builder: (BuildContext context) => Stack(
+                                  children: [
+                                    const ModalBarrier(
+                                      dismissible: false,
+                                      color:  Color.fromARGB(80, 0, 0, 0),
+                                    ),
+                                    StatefulBuilder(
+                                    builder: (BuildContext context, StateSetter setState) {
+                                       return Align(
+                                        alignment: Alignment.center,
+                                         child: SingleChildScrollView(
+                                           child: AlertDialog(
+                                            actionsAlignment: MainAxisAlignment.center,
+                                              title: Text('¿Desea continuar?',style: getTextStyleTitle2(context, null)),
+                                              content: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                children:[
+                                                Text('Platillo:', style: getTextStyleText(context, FontWeight.bold),),
+                                                Text(t.dish!, style: getTextStyleText(context, null),),
+                                                const SizedBox(height: 10,),
+                                                Text('Guarnicion:', style: getTextStyleText(context, FontWeight.bold)),
+                                                Text(t.garrison!, style: getTextStyleText(context,null), ),
+                                                const SizedBox(height: 10,),
+                                                Text('Postre:', style: getTextStyleText(context, FontWeight.bold)),
+                                                Text(t.dessert! == '' || t.dessert == null ?'N/A': t.dessert!, style: getTextStyleText(context,null), ),
+                                                const SizedBox(height: 10,),
+                                                Text('Cantidad recibida:', style: getTextStyleText(context, FontWeight.bold)),
+                                                Text(t.received!, style: getTextStyleText(context,null), )
+                                                ]
+                                              ),
+                                              actions: [
+                                                ElevatedButton(
+                                                  onPressed: desactivarButton == true? () {
+                                                    Navigator.pop(context);
+                                                    setState((){
+                                                      desactivarButton = false;
+                                                    });
+                                                  } : null,
+                                                  child: Text('Cancelar',style: getTextStyleButtonField(context)),
+                                                ),
+                                                ElevatedButton(
+                                                  onPressed: desactivarButton == true? () async {
+                                                   setState((){
+                                                        desactivarButton = false;
+                                                      });
+                                                     if(( await fService.postTurnFood(t,context)).status != 200){
+                                                      Navigator.pop(context);
+                                                    }else{
+                                                      Navigator.pop(context);
+                                                      Provider.of<VarProvider>(context, listen: false).updateVariable(true);
+                                                      Navigator.pop(context);
+                                                    }
+                                                  } : null,
+                                                  child: Text('Aceptar',style: getTextStyleButtonField(context)),
+                                                ),
+                                              ],
+                                            ),
+                                         ),
+                                       );
+                                    }),
+                                  ],
+                                ));
                             
 
                               }else{
@@ -587,7 +644,6 @@ class _ButtonFormState extends State<ButtonForm> {
                                 desactivarButton = false;
                               });
                              }
-                              Navigator.pop(context);
                             }
         
                             //Agregar observaciones
@@ -609,7 +665,7 @@ class _ButtonFormState extends State<ButtonForm> {
 
                             if(btnPosition == 4) {
                               if ((formValue['date_start_hour']!.contenido! != '') || formValue['date_final_hour']!.contenido! !=''){
-                                setState((){
+                              setState((){
                                 desactivarButton = true;
                               });
                               DateExcelFood de = DateExcelFood();
@@ -618,7 +674,7 @@ class _ButtonFormState extends State<ButtonForm> {
                               de.dish = formValue['dish']!.contenido!.toString();
                               List<Map<String, dynamic>> jsonStr = await fService.selectDateFood(de, context);
                               List<Map<String, dynamic>> jsonStrObs = await fService.selectObsFood(de, context);
-
+                              List<Map<String, dynamic>> jsonStrCom = await fService.selectDateFoodComment(de, context);
                                 if (jsonStr.isNotEmpty) {
                                   DateTime now = DateTime.now();
                                   String formattedDate = DateFormat('yyyyMMddss').format(now);
@@ -628,11 +684,18 @@ class _ButtonFormState extends State<ButtonForm> {
                                    ['Numero de empleado','Nombre','Contrato','Fecha comida'], 
                                    jsonStrObs,
                                    null,
+                                   jsonStrCom,
                                    2,
                                    fileName, 
                                    context);  
                                 Navigator.pop(context);
+                                setState((){
+                                  desactivarButton = false;
+                                });
                                 }else{
+                                setState((){
+                                  desactivarButton = false;
+                                });
                                   showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
@@ -671,6 +734,10 @@ class _ButtonFormState extends State<ButtonForm> {
                                   );
                               });
                             }
+                            }
+
+                            if(btnPosition == 5){
+
                             }
                             break;
                           default:

@@ -139,7 +139,6 @@ class _ButtonNavSvgState extends State<ButtonNavSvg> {
               // print("Donde se encuentra la pantalla actual : ${routes.indexOf(routes.firstWhere((e) => e.settings.name == widget.contexto2))}: ${widget.contexto2} = el numero de pantalla que son en total : ${Routers.namesRouter.length}");
               // print('El historial a crecido hasta ${routes.length} widgets');
               // print('Estas en la pantalla ${widget.contexto2} y quieres ir para adelante a la pantalla ${routes.indexOf(routes.reversed.firstWhere((e) => e.settings.name == widget.contexto2)) + 1}');
-    
               if (indice <  namesRoute.length-1) { 
                 indice+=1;
                 //se disminuye uno, porque estamos accediendo a la ultima vista, que se accedio, ignorando la actual.

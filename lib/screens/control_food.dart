@@ -123,20 +123,18 @@ class _DiningRoomState extends State<DiningRoom> {
                                         children:[
                                           ElevatedButton(onPressed:  (){
                                             Navigator.of(context).pop(context);
-
                                           },child: Text('Cancelar', style: getTextStyleButtonField(context)),
                                           ),
-                                          ElevatedButton(onPressed: (Provider.of<VarProvider>(context).varSalir) == true ? () async {
-                                            
+                                          ElevatedButton(onPressed: (Provider.of<VarProvider>(context).varSalir) == false ? () async {
                                           Provider.of<VarProvider>(context,listen: false).updateVariable(false);
-                                          Provider.of<VarProvider>(context,listen: false).updateVarSalir(false);
+                                          Provider.of<VarProvider>(context,listen: false).updateVarSalir(true);
                                             FoodService fs = FoodService();
                                               var salirInt =  await fs.postCloseTurnFood(context);
                                                if (salirInt) {
+                                                Provider.of<VarProvider>(context,listen: false).updateVarSalir(false);
                                                 Navigator.of(context).pop(context);
                                                 Navigator.of(context).pushNamed('home');
-                                                Provider.of<VarProvider>(context,listen: false).updateVarSalir(true);
-                                                Provider.of<VarProvider>(context,listen: false).updateVariable(false);
+                                                Provider.of<VarProvider>(context,listen: false).updateVariable(true);
 
                                               }else{
                                                 Provider.of<VarProvider>(context,listen: false).updateVariable(true);

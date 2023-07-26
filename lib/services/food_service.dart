@@ -364,6 +364,56 @@ try {
   
     }
 
+
+
+   Future<List<Map<String, dynamic>>> selectDateFoodComment( DateExcelFood  e,BuildContext context ) async {
+    
+    List<Map<String, dynamic>> listContainer = [];
+    AccessMap result = AccessMap();
+    var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
+    return listContainer;
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+      isSaving = true;
+      notifyListeners();
+      final url = Uri.parse('$link/comment_food.php');
+      var response = (await http.post(
+      url, 
+      body: json.encode(e.toJson()))).body;
+      result = AccessMap.fromJson(json.decode(response));
+      
+      if (result.status == 200){ 
+        listContainer =  result.container!;
+        isSaving = false;
+        notifyListeners();
+        return listContainer; 
+      }
+      isSaving = false;
+      notifyListeners();
+      return listContainer; 
+      } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+    return listContainer; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return listContainer; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+    return listContainer; 
+  }
+  }
+  return listContainer; 
+  
+    }
+
+
 }
 
 

@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       navigatorKey: navigatorKey,
       navigatorObservers: [navigatorObserver],
-      home: const CustomBackBvuttonInterceptor(child: DiningRoom(),),
+      home:  CustomBackBvuttonInterceptor(child: SplashScreen(),),
       routes: Routers.routerMain,
       theme: AppTheme.lightTeheme,
 

@@ -1,3 +1,4 @@
+import 'package:app_seguimiento_movil/services/services.dart';
 import 'package:app_seguimiento_movil/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import '../models/models.dart';
@@ -14,30 +15,21 @@ class SehControl extends StatelessWidget {
         description: 'Revisión de las instalaciones por el comité de Seguridad e Higiene.',
         img: 'assets/images/main/tour_of_areas.svg',
         width : 0.3,
-        navigator: null
+        navigator: () {
+          Navigator.of(context).pushNamed('routes_seh');
+        }
       ),
        Option(
         title: 'Examen médico',
         description: 'Creación y consulta de expedientes de colaboradores.',
         img: 'assets/images/main/medical_exam.svg',
         width :  0.1,
-        navigator: () {
+        navigator: null /* () {
           Navigator.of(context).pushNamed('medical_records');
-        }
+        } */
        )
     ];
 
-    TextStyle myTextStyleTitle = const TextStyle(
-      color: Color(0xFF293641),
-      fontFamily: 'Inter',
-      fontWeight: FontWeight.w900,
-    );
-    
-    TextStyle myTextStyleSubtitule = const TextStyle(
-      color: Color(0xFF293641),
-      fontFamily: 'Inter',
-      fontWeight: FontWeight.normal,
-    );
 
     return Scaffold(
       
@@ -56,8 +48,8 @@ class SehControl extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                Text('Seguridad e Higiene',style: myTextStyleTitle.copyWith(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .08: 0.04) )),
-                Text('Selecciona una opción:',style: myTextStyleSubtitule.copyWith(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04 : 0.02) )),
+                Text('Seguridad e Higiene',style: getTextStyleTitle(context, null) ),
+                Text('Selecciona una opción:',style: getTextStyleTitle2(context, null)),
                 ]
               ),
             ),
