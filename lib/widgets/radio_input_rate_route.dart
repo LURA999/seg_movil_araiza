@@ -1,3 +1,4 @@
+import 'package:app_seguimiento_movil/services/letter_mediaquery.dart';
 import 'package:flutter/material.dart';
 
 import '../models/models.dart';
@@ -46,8 +47,9 @@ class _RadioInputRateRouteState extends State<RadioInputRateRoute> {
           mainAxisSize: MainAxisSize.min,
           children: [
               SizedBox(
+              width: 180,
                 child: ListTile(
-                title: Text(widget.titulo![0]),
+                title: Text(widget.titulo![0], style: getTextStyleText(context, null)),
                 leading: Radio<rateRoute>(
                   activeColor: AppTheme.primary,
                   fillColor: MaterialStateProperty.resolveWith(getColor),
@@ -64,7 +66,7 @@ class _RadioInputRateRouteState extends State<RadioInputRateRoute> {
             SizedBox(
               width: 180,
               child: ListTile(
-                title: Text(widget.titulo![1]),
+                title: Text(widget.titulo![1], style: getTextStyleText(context, null),),
                 leading: Radio<rateRoute>(
                   activeColor: AppTheme.primary,
                   fillColor: MaterialStateProperty.resolveWith(getColor),
@@ -81,7 +83,7 @@ class _RadioInputRateRouteState extends State<RadioInputRateRoute> {
             SizedBox(
               width: 180,
               child: ListTile(
-                title: Text(widget.titulo![2]),
+                title: Text(widget.titulo![2], style: getTextStyleText(context, null)),
                 leading: Radio<rateRoute>(
                   activeColor: AppTheme.primary,
                   fillColor: MaterialStateProperty.resolveWith(getColor),

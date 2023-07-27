@@ -417,60 +417,23 @@ class QuestRoute extends StatelessWidget {
       break;
     }
 
-    List<String> segundaLinea  = ["PUNTOS A REVISIÓN"];
-    List<String> respuestas = ["B","R","M"];
+    
+    List<Column> temas =[];
 
     for (var i = 0; i < preguntasHeaders.length; i++) {
-      for (var i = 0; i < 3; i++) {
-        segundaLinea.add(respuestas[i]);
-      }
-    }
-
-    Color getColor(Set<MaterialState> states) {
-      const Set<MaterialState> interactiveStates = <MaterialState>{
-        MaterialState.pressed,
-        MaterialState.hovered,
-        MaterialState.focused,
-      };
-      if (states.any(interactiveStates.contains)) {
-        return AppTheme.primary;
-      }
-      return AppTheme.primary;
-      }
-
-    // Color? colorBack;
-    // int i = 0;
-    // int i2 = 0;
-    // int i3 = 0;
-    return Scaffold(
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Column(
+      temas.add(
+        Column(
+            children: [
+              Container(
+                margin: const EdgeInsets.all(15),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Text(preguntasHeaders[i], style: getTextStyleTitle2(context, null),),
+                ),
+              ),
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SizedBox(
-                          width: widthPreguntas,
-                          child: Container(
-                            alignment: Alignment.center,
-                            height: 70,
-                            padding: const EdgeInsets.only(top: 5,bottom: 5),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.black)
-                            ),
-                            child: const Text('Preguntas')
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
                   ...preguntasVerticales.map((e) {
                     return Row(
                     mainAxisSize: MainAxisSize.min,
@@ -479,11 +442,11 @@ class QuestRoute extends StatelessWidget {
                         width: widthPreguntas,
                         child: Container(
                           alignment: Alignment.center,
-                          child: Text(e, style:TextStyle(color:Colors.black)),
                           height: 70,
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.black, width: widthLineTable)
-                          )
+                          ),
+                          child: Text(e, style: getTextStyleText(context, null))
                         ),
                       ),
                       RadioInputRateRoute(titulo: const ["Bueno","Regular","Malo"],index: 0,tipoEnum: 3,rateRoutes: rateRoutes ),
@@ -493,9 +456,22 @@ class QuestRoute extends StatelessWidget {
                 }) 
                 ],
               ),
+            ],
+          )
+      );
+    }
+
+    return Scaffold(
+      body: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: temas,
+              ),
             ),
           ),
-        const SizedBox(child: Navbar(contexto2: 'tour_seh',))
+         const SizedBox(child: Navbar(contexto2: 'tour_seh',))
         ],
       )
 
