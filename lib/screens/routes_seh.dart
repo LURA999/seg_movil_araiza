@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../models/models.dart';
 import '../services/services.dart';
 import '../widgets/widgets.dart';
 
-class RoutesSeh extends StatelessWidget {
+class RoutesSeh extends StatefulWidget {
   const RoutesSeh({Key? key}) : super(key: key);
+
+  @override
+  State<RoutesSeh> createState() => _RoutesSehState();
+}
+
+class _RoutesSehState extends State<RoutesSeh> {
+  @override
+  void initState() { 
+    super.initState();
+    SystemChannels.textInput.invokeMethod('TextInput.hide');
+  }
   @override
   Widget build(BuildContext context) {
      List<Option> opciones = [
@@ -15,9 +27,28 @@ class RoutesSeh extends StatelessWidget {
         img: null,
         width : 0.3,
         navigator: () {
-          Navigator.of(context).pushNamed('tour_seh', arguments: {
-            'periodo': 1,
-          });
+          List<void Function()> functions =[
+            (){
+            Navigator.of(context).pushNamed('tour_seh', arguments: {
+              'periodo': 1,
+              'recorrido' : 1
+            });
+            },
+            (){
+            Navigator.of(context).pushNamed('tour_seh', arguments: {
+              'periodo': 1,
+              'recorrido' : 2  
+            });
+            },
+            (){
+            Navigator.of(context).pushNamed('tour_seh', arguments: {
+              'periodo': 1,
+              'recorrido' : 3
+            });
+            },
+          ];
+          selectedArea(context,functions);
+          
         }
       ), 
       Option(
@@ -26,9 +57,28 @@ class RoutesSeh extends StatelessWidget {
         img: null,
         width : 0.3,
         navigator: () {
-          Navigator.of(context).pushNamed('tour_seh', arguments: {
-            'periodo': 2,
-          });
+          List<void Function()> functions =[
+            (){
+            Navigator.of(context).pushNamed('tour_seh', arguments: {
+              'periodo': 2,
+              'recorrido' : 1
+            });
+            },
+            (){
+            Navigator.of(context).pushNamed('tour_seh', arguments: {
+              'periodo': 2,
+              'recorrido' : 2  
+            });
+            },
+            (){
+            Navigator.of(context).pushNamed('tour_seh', arguments: {
+              'periodo': 2,
+              'recorrido' : 3
+            });
+            },
+          ];
+          selectedArea(context,functions);
+        
         }
       ),
       Option(
@@ -37,9 +87,27 @@ class RoutesSeh extends StatelessWidget {
         img: null,
         width : 0.3,
         navigator: () {
-          Navigator.of(context).pushNamed('tour_seh', arguments: {
-            'periodo': 3,
-          });
+          List<void Function()> functions =[
+            (){
+            Navigator.of(context).pushNamed('tour_seh', arguments: {
+              'periodo': 3,
+              'recorrido' : 1
+            });
+            },
+            (){
+            Navigator.of(context).pushNamed('tour_seh', arguments: {
+              'periodo': 3,
+              'recorrido' : 2  
+            });
+            },
+            (){
+            Navigator.of(context).pushNamed('tour_seh', arguments: {
+              'periodo': 3,
+              'recorrido' : 3
+            });
+            },
+          ];
+          selectedArea(context,functions);
         }
       ),
       Option(
@@ -48,9 +116,27 @@ class RoutesSeh extends StatelessWidget {
         img: null,
         width : 0.3,
         navigator: () {
-          Navigator.of(context).pushNamed('tour_seh', arguments: {
-            'periodo': 4,
-          });
+          List<void Function()> functions =[
+            (){
+            Navigator.of(context).pushNamed('tour_seh', arguments: {
+              'periodo': 4,
+              'recorrido' : 1
+            });
+            },
+            (){
+            Navigator.of(context).pushNamed('tour_seh', arguments: {
+              'periodo': 4,
+              'recorrido' : 2  
+            });
+            },
+            (){
+            Navigator.of(context).pushNamed('tour_seh', arguments: {
+              'periodo': 4,
+              'recorrido' : 3
+            });
+            },
+          ];
+          selectedArea(context,functions);
         }
       )
      ];
@@ -90,5 +176,39 @@ class RoutesSeh extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<dynamic> selectedArea(BuildContext context,List<void Function()> function ) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return  Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SingleChildScrollView(
+                child: AlertDialog(
+                  title: Text('Selecciona el area',style: getTextStyleText(context, null) ),
+                  content: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children:[
+                      ElevatedButton(
+                      onPressed: function[0]
+                      ,child: Text('Area A ', style: getTextStyleButtonField(context)
+                      )),
+                      const SizedBox(width: 8),
+                      ElevatedButton(onPressed: function[1]
+                      ,child: Text('Area B', style: getTextStyleButtonField(context)
+                      )),
+                      ElevatedButton(onPressed: function[2],
+                      child: Text('Area C', style: getTextStyleButtonField(context)
+                      ))
+                    ]
+                  ),
+                ),
+              )
+            ],
+          );
+        }
+        );
   }
 }

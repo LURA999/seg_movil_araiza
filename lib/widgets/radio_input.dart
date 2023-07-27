@@ -8,10 +8,18 @@ class RadioInput extends StatefulWidget {
   final List<Cause>? causeEnum;
   final List<YesNot>? yesNotEnum;
   final List<manoDominante>? manoDomEnum;
+  final List<String>? titulo;
 
   final int index;
   final int tipoEnum;
-  const RadioInput({Key? key, required this.tipoEnum, this.causeEnum, this.yesNotEnum, required this.index, this.manoDomEnum}) : super(key: key);
+
+  const RadioInput({Key? key, 
+  required this.tipoEnum, 
+  this.causeEnum, 
+  this.yesNotEnum, 
+  required this.index, 
+  this.manoDomEnum, 
+  required this.titulo}) : super(key: key);
 
   @override
   State<RadioInput> createState() => _RadioInputState();
@@ -38,8 +46,7 @@ class _RadioInputState extends State<RadioInput> {
           mainAxisSize: MainAxisSize.min,
           children: [
               ListTile(
-                
-              title: const Text('Diestro'),
+              title: Text(widget.titulo![0]),
               leading: Radio<manoDominante>(
                 activeColor: AppTheme.primary,
                 fillColor: MaterialStateProperty.resolveWith(getColor),
@@ -53,7 +60,7 @@ class _RadioInputState extends State<RadioInput> {
               ),
             ),
             ListTile(
-              title: const Text('Zurdo'),
+              title: Text(widget.titulo![1]),
               leading: Radio<manoDominante>(
                 activeColor: AppTheme.primary,
                 fillColor: MaterialStateProperty.resolveWith(getColor),
@@ -67,7 +74,7 @@ class _RadioInputState extends State<RadioInput> {
               )
             ),
             ListTile(
-              title: const Text('Ambos'),
+              title: Text(widget.titulo![2]),
               leading: Radio<manoDominante>(
                 activeColor: AppTheme.primary,
                 fillColor: MaterialStateProperty.resolveWith(getColor),

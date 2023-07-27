@@ -37,10 +37,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       navigatorKey: navigatorKey,
       navigatorObservers: [navigatorObserver],
-      home:  CustomBackBvuttonInterceptor(child: SplashScreen(),),
+      home:  CustomBackBvuttonInterceptor(child: RoutesSeh(),),
       routes: Routers.routerMain,
       theme: AppTheme.lightTeheme,
-
+      
     );
   }
 }

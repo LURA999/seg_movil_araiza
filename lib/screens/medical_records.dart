@@ -51,11 +51,6 @@ class _MedicalRecordsState extends State<MedicalRecords> {
       fontWeight: FontWeight.w900,
     );
     
-    TextStyle myTextStyleSubtitule = const TextStyle(
-      color: Color(0xFF293641),
-      fontFamily: 'Inter',
-      fontWeight: FontWeight.normal,
-    );
 
     final Map<String, MultiInputsForm> formValuesBuscar = {
       'search' : MultiInputsForm(contenido: '', obligatorio: false, select: false, enabled: true, paintSignature: false,uploadFile: false) // 'search':['',false,false, true]
