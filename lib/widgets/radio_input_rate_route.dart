@@ -1,4 +1,3 @@
-import 'package:app_seguimiento_movil/services/letter_mediaquery.dart';
 import 'package:flutter/material.dart';
 
 import '../models/models.dart';
@@ -26,6 +25,7 @@ class RadioInputRateRoute extends StatefulWidget {
   State<RadioInputRateRoute> createState() => _RadioInputRateRouteState();
 }
 
+
 class _RadioInputRateRouteState extends State<RadioInputRateRoute> {
   Color getColor(Set<MaterialState> states) {
   const Set<MaterialState> interactiveStates = <MaterialState>{
@@ -39,65 +39,79 @@ class _RadioInputRateRouteState extends State<RadioInputRateRoute> {
   return AppTheme.primary;
   }
 
+TextStyle getTextStyleText(BuildContext context, FontWeight? ft) {
+    double fontSize = MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
+    //para celulares
+      MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.010):
+    //para tablets
+    MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015);
+
+    return TextStyle(
+    fontFamily: 'GothamMedium',
+    fontWeight: ft ?? FontWeight.normal,
+    fontSize: fontSize
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-
-        return Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
+        return SingleChildScrollView(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+                SizedBox(
+                width: 180,
+                  child: ListTile(
+                  title: Text(widget.titulo![0], style: getTextStyleText(context, null)),
+                  leading: Radio<rateRoute>(
+                    activeColor: AppTheme.primary,
+                    fillColor: MaterialStateProperty.resolveWith(getColor),
+                    value: rateRoute.bueno,
+                    groupValue: widget.rateRoutes![widget.index],
+                    onChanged: (rateRoute? value) {
+                      setState(() {
+                        widget.rateRoutes![widget.index] = value!;
+                      });
+                    },
+                  ),
+                ),
+                ),
               SizedBox(
-              width: 180,
+                width: 180,
                 child: ListTile(
-                title: Text(widget.titulo![0], style: getTextStyleText(context, null)),
-                leading: Radio<rateRoute>(
-                  activeColor: AppTheme.primary,
-                  fillColor: MaterialStateProperty.resolveWith(getColor),
-                  value: rateRoute.bueno,
-                  groupValue: widget.rateRoutes![widget.index],
-                  onChanged: (rateRoute? value) {
-                    setState(() {
-                      widget.rateRoutes![widget.index] = value!;
-                    });
-                  },
-                ),
-                          ),
-              ),
-            SizedBox(
-              width: 180,
-              child: ListTile(
-                title: Text(widget.titulo![1], style: getTextStyleText(context, null),),
-                leading: Radio<rateRoute>(
-                  activeColor: AppTheme.primary,
-                  fillColor: MaterialStateProperty.resolveWith(getColor),
-                  value: rateRoute.regular,
-                  groupValue: widget.rateRoutes![widget.index],
-                  onChanged: (rateRoute? value) {
-                    setState(() {
-                      widget.rateRoutes![widget.index] = value!;
-                    });
-                  },
-                )
-              ),
-            ),
-            SizedBox(
-              width: 180,
-              child: ListTile(
-                title: Text(widget.titulo![2], style: getTextStyleText(context, null)),
-                leading: Radio<rateRoute>(
-                  activeColor: AppTheme.primary,
-                  fillColor: MaterialStateProperty.resolveWith(getColor),
-                  value: rateRoute.malo,
-                  groupValue: widget.rateRoutes![widget.index],
-                  onChanged: (rateRoute? value) {
-                    setState(() {
-                      widget.rateRoutes![widget.index] = value!;
-                    });
-                  },
+                  title: Text(widget.titulo![1], style: getTextStyleText(context, null),),
+                  leading: Radio<rateRoute>(
+                    activeColor: AppTheme.primary,
+                    fillColor: MaterialStateProperty.resolveWith(getColor),
+                    value: rateRoute.regular,
+                    groupValue: widget.rateRoutes![widget.index],
+                    onChanged: (rateRoute? value) {
+                      setState(() {
+                        widget.rateRoutes![widget.index] = value!;
+                      });
+                    },
+                  )
                 ),
               ),
-            )
-          ],
+              SizedBox(
+                width: 180,
+                child: ListTile(
+                  title: Text(widget.titulo![2], style: getTextStyleText(context, null)),
+                  leading: Radio<rateRoute>(
+                    activeColor: AppTheme.primary,
+                    fillColor: MaterialStateProperty.resolveWith(getColor),
+                    value: rateRoute.malo,
+                    groupValue: widget.rateRoutes![widget.index],
+                    onChanged: (rateRoute? value) {
+                      setState(() {
+                        widget.rateRoutes![widget.index] = value!;
+                      });
+                    },
+                  ),
+                ),
+              )
+            ],
+          ),
         );
   }
 }

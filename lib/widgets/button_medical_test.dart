@@ -58,7 +58,6 @@ class _MedicalTestState extends State<MedicalTest> {
   int countYesNotEnum = 0;
   int countManoDomEnum = 0;
 
-  List<String> esZurdo =['Diestro' ,'Zurdo' ,'Ambos'];
   //Estas son variables para guardar los resultados de los checkbox
   List<List<bool>> listChecked =[
     [false,false,false,false,false,false,false,false,false,false],
@@ -129,10 +128,10 @@ class _MedicalTestState extends State<MedicalTest> {
      '1.- Fecha' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
      '1.- Puesto' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
      '1.- Causa' : const Align(alignment: Alignment.centerLeft, child: Text('Causa',style: TextStyle(fontSize: 20))),
-     '1.- Causas' : RadioInput(titulo: esZurdo,tipoEnum: 2, causeEnum: causeEnum ,index: countCauseEnum++,),
+     '1.- Causas' : RadioInput(tipoEnum: 2, causeEnum: causeEnum ,index: countCauseEnum++,),
      '1.- Nombre de la lesión o enfermedad' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
      '1.- Incapacidad' : const Align(alignment: Alignment.centerLeft, child: Text('Incapacidad',style: TextStyle(fontSize: 20))),
-     '1.- YesNot' : RadioInput(titulo: esZurdo,tipoEnum: 1, yesNotEnum: yesNotEnum, index: countYesNotEnum++,),
+     '1.- YesNot' : RadioInput(tipoEnum: 1, yesNotEnum: yesNotEnum, index: countYesNotEnum++,),
      '1.- Número de dias de incapacidad' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
      '2.- Sized' : const SizedBox(height: 20,),
      '2.- Titulo' : const Align(alignment: Alignment.centerLeft, child: Text('Segunda empresa',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))),
@@ -140,10 +139,10 @@ class _MedicalTestState extends State<MedicalTest> {
      '2.- Fecha' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
      '2.- Puesto' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
      '2.- Causa' : const Align(alignment: Alignment.centerLeft, child: Text('Causa',style: TextStyle(fontSize: 20))),
-     '2.- Causas' : RadioInput(titulo: esZurdo,tipoEnum: 2, causeEnum: causeEnum ,index: countCauseEnum++,),
+     '2.- Causas' : RadioInput(tipoEnum: 2, causeEnum: causeEnum ,index: countCauseEnum++,),
      '2.- Nombre de la lesión o enfermedad' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
      '2.- Incapacidad' : const Align(alignment: Alignment.centerLeft, child: Text('Incapacidad',style: TextStyle(fontSize: 20))),
-     '2.- YesNot' : RadioInput(titulo: esZurdo, tipoEnum: 1, yesNotEnum: yesNotEnum, index: countYesNotEnum++,),
+     '2.- YesNot' : RadioInput( tipoEnum: 1, yesNotEnum: yesNotEnum, index: countYesNotEnum++,),
      '2.- Número de dias de incapacidad' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
      '3.- Sized' : const SizedBox(height: 20,),
      '3.- Titulo' : const Align(alignment: Alignment.centerLeft, child: Text('Tercera empresa',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))),
@@ -151,10 +150,10 @@ class _MedicalTestState extends State<MedicalTest> {
      '3.- Fecha' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
      '3.- Puesto' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
      '3.- Causa' : const Align(alignment: Alignment.centerLeft, child: Text('Causa',style: TextStyle(fontSize: 20))),
-     '3.- Causas' : RadioInput(titulo: esZurdo, tipoEnum: 2, causeEnum: causeEnum ,index: countCauseEnum++,),
+     '3.- Causas' : RadioInput( tipoEnum: 2, causeEnum: causeEnum ,index: countCauseEnum++,),
      '3.- Nombre de la lesión o enfermedad' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
      '3.- Incapacidad' : const Align(alignment: Alignment.centerLeft, child: Text('Incapacidad',style: TextStyle(fontSize: 20))),
-     '3.- YesNot' : RadioInput(titulo: esZurdo, tipoEnum: 1, yesNotEnum: yesNotEnum, index: countYesNotEnum++,),
+     '3.- YesNot' : RadioInput( tipoEnum: 1, yesNotEnum: yesNotEnum, index: countYesNotEnum++,),
      '3.- Número de dias de incapacidad' : MultiInputsForm(contenido: '', obligatorio: true, select: false, enabled: true, paintSignature: false,uploadFile: false),
     },
     { //4.- ANTECEDENTES HEREDITARIOS Y FAMILIARES DE SALUD 
@@ -232,7 +231,7 @@ class _MedicalTestState extends State<MedicalTest> {
     },
     {//5.-ANTECEDENTES PERSONALES (Con una X anote los datos positivos según sea el caso)
       '¿Eres?' : const Align(alignment: Alignment.centerLeft, child: Text('hijos',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))),
-      '5.- mano' : RadioInput(titulo: esZurdo,index: countManoDomEnum,tipoEnum: 3,manoDomEnum: manoDomEnum ),         
+      '5.- mano' : RadioInput(index: countManoDomEnum,tipoEnum: 3,manoDomEnum: manoDomEnum ),         
     } 
 
 

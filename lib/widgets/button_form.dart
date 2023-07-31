@@ -79,8 +79,6 @@ class _ButtonFormState extends State<ButtonForm> {
   Future<String?> newMethod(BuildContext context,
     Map<String, MultiInputsForm> formValue, int btnPosition) {
 
-   
-
     //vars para el touch paint  
     final sign0 = GlobalKey<SignatureState>();
     ByteData img = ByteData(0);

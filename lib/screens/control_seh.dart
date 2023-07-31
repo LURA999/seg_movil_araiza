@@ -24,9 +24,9 @@ class SehControl extends StatelessWidget {
         description: 'Creación y consulta de expedientes de colaboradores.',
         img: 'assets/images/main/medical_exam.svg',
         width :  0.1,
-        navigator: null /* () {
+        navigator:  () {
           Navigator.of(context).pushNamed('medical_records');
-        } */
+        }
        )
     ];
 

@@ -91,7 +91,6 @@ final ImagePicker _picker = ImagePicker();
     final RegExp regex = RegExp(
         r'^\d{2}\/(0[1-9]|1[0-2])\/\d{4}$',
     );
-
     //automcompletador
     if(widget.formValue[widget.formProperty]!.autocomplete ?? false){
       return AutocompleteCustom(

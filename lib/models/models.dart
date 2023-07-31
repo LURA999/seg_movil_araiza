@@ -17,4 +17,6 @@ export 'package:app_seguimiento_movil/models/date_excel_food.dart';
 export 'package:app_seguimiento_movil/models/date_excel_vehicle.dart';
 export 'package:app_seguimiento_movil/models/qr_food.dart';
 export 'package:app_seguimiento_movil/models/enum_rate.dart';
+export 'package:app_seguimiento_movil/models/accessListInt_model.dart';
+export 'package:app_seguimiento_movil/models/comments_seh.dart';
 
