@@ -1,84 +1,71 @@
+
+
 import 'package:app_seguimiento_movil/models/models.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import '../services/seh_excel_route.dart';
 import '../services/services.dart';
 import '../widgets/widgets.dart';
 
-class QuestRoute extends StatelessWidget {
+
+class QuestData {
+  final List<int> answers;
+  final List<Map<String, dynamic>> comments;
+  final List<Map<String, dynamic>> descriptions;
+
+  QuestData({
+    required this.answers,
+    required this.comments,
+    required this.descriptions,
+  });
+}
+
+class QuestRoute extends StatefulWidget {
   const QuestRoute({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  State<QuestRoute> createState() => _QuestRouteState();
+}
 
-    SehTourService seht= SehTourService();
-    final Map<String, dynamic> param = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
-    // Accede a los parámetros individualmente
-    int periodo = param['periodo'];
-    int recorrido = param['recorrido'];
-    double responsiveHeight = MediaQuery.of(context).size.height * 0.1;
-    double widthPreguntas = MediaQuery.of(context).size.width * .3;
-    double widthLineTable = 0.5;
-    int form = param['form'];
-    String area = "";
-    List<String> preguntasVerticales= [];    
-    List<String> preguntasHeaders = [];
-    List<String> comments = [];
+class _QuestRouteState extends State<QuestRoute>  {
+  List<TextEditingController> arrEdConComment = [];
+  List<TextEditingController> arrEdConDescription = [TextEditingController(),TextEditingController()];
+  List<rateRoute> rateRoutes =[];
+  bool soloUnaVez= true;
+  bool soloUnaVez2= true;
+  bool soloUnaVez3= true;
+  List<Column> temas =[];
+ SehTourService seht= SehTourService();
+  double widthLineTable = 0.5;
+  String area = "";
+  List<String> preguntasVerticales= [];    
+  List<String> preguntasHeaders = [];
+  List<String> comments = [];
+  List<String> formPropertyComment = [];
+  String titleDescription = "";
+  String titleDescription2 = "";
+  List<Map<String,dynamic>> formValue =[];
+  int periodo = 0;
+  int recorrido = 0;
+  double responsiveHeight = 0;
+  int form = 0;
+  bool desactivarbtnsave = false;
+  bool desactivarbtndownload = false;
+  double widthPreguntas = 0;
 
-    List<String> formPropertyComment = [];
-    String titleDescription = "";
-    String titleDescription2 = "";
-    List<Map<String,dynamic>> formValue =[];
-    
+@override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Accede a los parámetros individualmente y asigna los valores a las variables de clase
+     final Map<String, dynamic> param = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+     periodo = param['periodo'];
+     recorrido = param['recorrido'];
+     responsiveHeight = MediaQuery.of(context).size.height * 0.1;
+      widthPreguntas = MediaQuery.of(context).size.height * 0.3;
 
-    Future<List<List<dynamic>>> fetchData() async {
-      List<int> answers = await seht.getAnswer(form, context);
-      List<Map<String,dynamic>> comments = await seht.getComments(form, context);
-      List<Map<String,dynamic>> descriptions = await seht.getDescriptions(form, context);
-      return [answers, comments, descriptions];
-    }
+     form = param['form'];
 
-    return FutureBuilder<List<List<dynamic>>>(
-      future: fetchData(),
-      builder: (context, snapshot) {
-      
- 
-
-      List<int> transformEnumArrayToInteger(List<rateRoute> enumArray) {
-        // El método map realiza el mapeo automáticamente sin necesidad de recorrer explícitamente
-        return enumArray.map((element) {
-          switch (element) {
-            case rateRoute.none:
-              return 0; // Puedes asignar el valor entero que desees para cada elemento de la enumeración
-            case rateRoute.bueno:
-              return 1;
-            case rateRoute.regular:
-              return 2;
-            case rateRoute.malo:
-              return 3;
-            default:
-              return 0; // Opción por defecto si hay algún valor inesperado en la enumeración
-          }
-        }).toList(); // Convertimos el iterable resultante en una lista de enteros
-      }
-
-       List<rateRoute> transIntegerformToEnumArray(List<int> enumArray) {
-        // El método map realiza el mapeo automáticamente sin necesidad de recorrer explícitamente
-        return enumArray.map((element) {
-          switch (element) {
-            case  0:
-              return rateRoute.none; // Puedes asignar el valor entero que desees para cada elemento de la enumeración
-            case 1 :
-              return rateRoute.bueno;
-            case 2:
-              return rateRoute.regular;
-            case 3:
-              return rateRoute.malo;
-            default:
-              return rateRoute.none; // Opción por defecto si hay algún valor inesperado en la enumeración
-          }
-        }).toList(); // Convertimos el iterable resultante en una lista de enteros
-      }
-
-      switch (recorrido) {
+    switch (recorrido) {
         case 1:
           area = "Area A";
         break;
@@ -384,16 +371,69 @@ class QuestRoute extends StatelessWidget {
         preguntasVerticales= [];
       break;
     }
+  }
+
+
+  Future<QuestData> fetchData() async {
+    List<int> answers = await seht.getAnswer(form, context);
+    List<Map<String,dynamic>> comments = await seht.getComments(form, context);
+    List<Map<String,dynamic>> descriptions = await seht.getDescriptions(form, context);
+  return QuestData(answers: answers, comments: comments, descriptions: descriptions);
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<QuestData>(
+      future: fetchData(),
+      builder: (context, snapshot) {
+
+         
+
+      List<int> transformEnumArrayToInteger(List<rateRoute> enumArray) {
+        // El método map realiza el mapeo automáticamente sin necesidad de recorrer explícitamente
+        return enumArray.map((element) {
+          switch (element) {
+            case rateRoute.none:
+              return 0; // Puedes asignar el valor entero que desees para cada elemento de la enumeración
+            case rateRoute.bueno:
+              return 1;
+            case rateRoute.regular:
+              return 2;
+            case rateRoute.malo:
+              return 3;
+            default:
+              return 0; // Opción por defecto si hay algún valor inesperado en la enumeración
+          }
+        }).toList(); // Convertimos el iterable resultante en una lista de enteros
+      }
+    
+       List<rateRoute> transIntegerformToEnumArray(List<int> enumArray) {
+        // El método map realiza el mapeo automáticamente sin necesidad de recorrer explícitamente
+        return enumArray.map((element) {
+          switch (element) {
+            case  0:
+              return rateRoute.none; // Puedes asignar el valor entero que desees para cada elemento de la enumeración
+            case 1 :
+              return rateRoute.bueno;
+            case 2:
+              return rateRoute.regular;
+            case 3:
+              return rateRoute.malo;
+            default:
+              return rateRoute.none; // Opción por defecto si hay algún valor inesperado en la enumeración
+          }
+        }).toList(); // Convertimos el iterable resultante en una lista de enteros
+      }
+    
+      
     // print(snapshot.data == null?  [] : snapshot.data![1] as List<Map<String,dynamic>>);
     // List<rateRoute> rateRoutes = transIntegerformToEnumArray(snapshot.data!);
-    List<rateRoute> rateRoutes = snapshot.data ==null ? List.generate(preguntasVerticales.length * preguntasHeaders.length, 
-    (index) => rateRoute.none ): transIntegerformToEnumArray(snapshot.data![0] as List<int>) ; 
-
-
-
+     
+    
+    
+    
     int index = 0;
-    List<Column> temas =[];
-
     if (!snapshot.hasData && !snapshot.hasError) {
       return Scaffold(
         body: Center(
@@ -408,28 +448,49 @@ class QuestRoute extends StatelessWidget {
     } else if (snapshot.hasError) {
       return Text('Error: ${snapshot.error}');
     } else {
+    
+     if (snapshot.hasData) {
+    
+     if (soloUnaVez) {
+      soloUnaVez = false;
+    rateRoutes = snapshot.data ==null ? List.generate(preguntasVerticales.length * preguntasHeaders.length, 
+    (index) => rateRoute.none ): transIntegerformToEnumArray(snapshot.data!.answers) ; 
+      
+    }
 
- if (snapshot.hasData) {
-        
+    if (soloUnaVez2) {
     for (var i = 0; i < preguntasHeaders.length; i++) {
-      if (periodo != 3) {  
+       if (periodo != 3) {  
+        arrEdConComment.add(TextEditingController());
         formPropertyComment.add("comment$i");
-        print(snapshot.data![2]);
+    
         if (i == 0 ) {
         formValue.add({
-          'comment$i':  MultiInputsForm(contenido: snapshot.data == null?  '' : (snapshot.data![1] as List<Map<String,dynamic>>)[i]['comment_text'] ?? '' , obligatorio: false),
-          'description1':  MultiInputsForm(contenido: snapshot.data == null?  '' : (snapshot.data![2] as List<Map<String,dynamic>>)[0]['description1']?? '', obligatorio: false),
-          'description2':  MultiInputsForm(contenido: snapshot.data == null?  '' : (snapshot.data![2] as List<Map<String,dynamic>>)[0]['description2']?? '', obligatorio: false)
+          'comment$i':   snapshot.data == null?  '' : snapshot.data!.comments[i]['comment_text'],
+          'description1':   snapshot.data == null?  '' : snapshot.data!.descriptions[0]['description1'],
+          'description2':   snapshot.data == null?  '' : snapshot.data!.descriptions[0]['description2']
         });
         }else{
         formValue.add({
-          'comment$i':  MultiInputsForm(contenido: snapshot.data == null?  '' : (snapshot.data![1] as List<Map<String,dynamic>>)[i]['comment_text'] ?? '' , obligatorio: false),
+          'comment$i':   snapshot.data == null?  '' : snapshot.data!.comments[i]['comment_text'] ,
         });
         }
         
-
+    
+      }else{
+        arrEdConComment.add(TextEditingController());
+        formPropertyComment.add("comment$i");
+          formValue.add({
+          'comment$i':   snapshot.data == null?  '' : snapshot.data!.comments[i]['comment_text'] ,
+        });
       }
+    
+    }
+    soloUnaVez2 = false;
+    }
 
+  if (soloUnaVez3) {
+    for (var i = 0; i < preguntasHeaders.length; i++) {
       temas.add(
         Column(
             children: [
@@ -450,8 +511,7 @@ class QuestRoute extends StatelessWidget {
                         Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          SizedBox(
-                            width: widthPreguntas,
+                          Expanded(
                             child: Container(
                               alignment: Alignment.center,
                               padding: EdgeInsets.all(MediaQuery.of(context).size.height * .01) ,
@@ -473,13 +533,28 @@ class QuestRoute extends StatelessWidget {
                     );
                 }),
                  const SizedBox(height: 15,),
-                 if(periodo != 3)
                  Column(
                   children: [
                     Text('Comentarios',style: getTextStyleTitle2(context, null),),
                      Padding(
                       padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.05),
-                      child: MultiInputs( formProperty: formPropertyComment[i], formValue: formValue[i], maxLines: 4, autofocus: false,  controller: null, ),
+                      child: TextFormField(
+                        initialValue: formValue[i][formPropertyComment[i]],
+                        // controller: arrEdCon[i],
+                        textCapitalization: TextCapitalization.characters,
+                        style: getTextStyleText(context,null),
+                        onChanged: (value) {
+                            arrEdConComment[i].text = value;
+                        },
+                        maxLines: 4,
+                        decoration:  InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(0),
+                          )
+                        )
+                      ) 
+                      
+                      // MultiInputs( formProperty: formPropertyComment[i], formValue: formValue[i], maxLines: 4, autofocus: false,  controller: null, ),
                      ),
                   ],
                  )
@@ -489,10 +564,13 @@ class QuestRoute extends StatelessWidget {
           )
       );
     }
- 
-}
-}
-
+     
+    }
+    }
+    soloUnaVez3 = false;
+  }
+    
+    
     return Scaffold(
       body: Column(
         children: [
@@ -500,58 +578,154 @@ class QuestRoute extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       SizedBox(height: responsiveHeight,),
-                      ElevatedButton(onPressed: () async { 
+                      SizedBox(width: MediaQuery.of(context).size.width * 0.01,),
+                      ElevatedButton(onPressed: desactivarbtnsave == false ? () async { 
+                        setState(() {
+                        desactivarbtnsave = true;
+                      });
                         await seht.postForm(transformEnumArrayToInteger(rateRoutes), form, context);
                         for (var i = 0; i < formValue.length; i++) {
-                          comments.add(formValue[i]['comment$i']);
+                          comments.add(arrEdConComment[i].text == ''?formValue[i][formPropertyComment[i]] :arrEdConComment[i].text);
                         }
                         await seht.postComments(comments, form, context);
-                      },
+                        final intf = DescriptionsSeh(
+                          description1: arrEdConDescription[0].text == ''?formValue[0]['description1'] :arrEdConDescription[0].text,
+                          description2: arrEdConDescription[1].text == ''?formValue[0]['description2'] :arrEdConDescription[1].text,
+                        );
+                        await seht.postDescriptions(intf, form, context);
+                        comments = [];
+                        setState(() {
+                        desactivarbtnsave = false;
+                      });
+                      }:null,
                       child: const Text('Guardar'),
                       ),
-                      ElevatedButton(onPressed: () { 
-                        
-                      },
+                      SizedBox(width: MediaQuery.of(context).size.width * 0.01,),
+                      ElevatedButton(onPressed: desactivarbtndownload == false? () async { 
+                      setState(() {
+                        desactivarbtndownload = true;
+                      });
+
+                      final intf = DescriptionsSeh(
+                          description1: arrEdConDescription[0].text == ''?formValue[0]['description1'] :arrEdConDescription[0].text,
+                          description2: arrEdConDescription[1].text == ''?formValue[0]['description2'] :arrEdConDescription[1].text,
+                        );
+
+                        for (var i = 0; i < formValue.length; i++) {
+                          comments.add(arrEdConComment[i].text == ''?formValue[i][formPropertyComment[i]] :arrEdConComment[i].text);
+                        }
+
+                        DateTime now = DateTime.now();
+                        String formattedDate = DateFormat('yyyyMMddss').format(now);
+                        String fileName = '$formattedDate.xlsx';                        
+                        await jsonToExcelSehExcel(preguntasVerticales,preguntasHeaders,transformEnumArrayToInteger(rateRoutes),area, comments, intf,'Seh_$fileName',context);
+                      setState(() {
+                        desactivarbtndownload = false;
+                      });
+                      }: null,
                       child: const Text('Descargar'),
                       )
                     ],
                   ), 
-                ...temas,
-
+                  ...temas,
+    
                 if( periodo !=3)
                 Column(
                   children: [
                   Text(titleDescription,style: getTextStyleTitle2(context, null),),
                     Padding(
                     padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.05),
-                    child: MultiInputs( formProperty: "description1", formValue: formValue[0], maxLines: 4, autofocus: false ,  controller: null),
+                    child: TextFormField(
+                        initialValue: formValue[0]['description1'],
+                        textCapitalization: TextCapitalization.characters,
+                        style: getTextStyleText(context,null),
+                        onChanged: (value) {                          
+                          arrEdConDescription[0].text = value;
+                        },
+                        maxLines: 4,
+                        decoration:  InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(0),
+                          )
+                        )
+                      ) ,
                     ),
                   Text(titleDescription2,style: getTextStyleTitle2(context, null),),
                     Padding(
                     padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.05),
-                    child: MultiInputs( formProperty: "description2", formValue: formValue[0], maxLines: 4, autofocus: false,  controller: null ),
+                    child: TextFormField(
+                        initialValue: formValue[0]['description2'],
+                        textCapitalization: TextCapitalization.characters,
+                        style: getTextStyleText(context,null),
+                        onChanged: (value) {
+                          arrEdConDescription[1].text = value;
+    
+                        },
+                        maxLines: 4,
+                        decoration:  InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(0),
+                          )
+                        )
+                      ),
                     ),
                   ],
                 ),
                     
                   Row(
                   children: [
-                    ElevatedButton(onPressed: () async { 
+                    ElevatedButton(onPressed: desactivarbtnsave == false ? () async { 
+                      setState(() {
+                        desactivarbtnsave = true;
+                      });
                       await seht.postForm(transformEnumArrayToInteger(rateRoutes), form, context);
-                      // await seht.postComments(transformEnumArrayToInteger(rateRoutes), form, context);
-                    },
+                        for (var i = 0; i < formValue.length; i++) {
+                          comments.add(arrEdConComment[i].text);
+                        }
+                        await seht.postComments(comments, form, context);
+    
+                        final intf = DescriptionsSeh(
+                          description1: arrEdConDescription[0].text ,
+                          description2: arrEdConDescription[1].text ,
+                        );
+                        print(intf.toJson());
+                        await seht.postDescriptions(intf, form, context);
+                        comments = [];
+                       setState(() {
+                        desactivarbtnsave = false;
+                      });
+                    }:null,
                     child: const Text('Guardar'),
                     ),
-                    ElevatedButton(onPressed: () { 
-                      transformEnumArrayToInteger(rateRoutes);
-                    },
-                    child: const Text('Descargar'),
-                    )
+                     SizedBox(width: MediaQuery.of(context).size.width * 0.01,),
+                      ElevatedButton(onPressed: desactivarbtndownload == false? () async { 
+                      setState(() {
+                        desactivarbtndownload = true;
+                      });
+
+                      final intf = DescriptionsSeh(
+                          description1: arrEdConDescription[0].text == ''?formValue[0]['description1'] :arrEdConDescription[0].text,
+                          description2: arrEdConDescription[1].text == ''?formValue[0]['description2'] :arrEdConDescription[1].text,
+                        );
+
+                        for (var i = 0; i < formValue.length; i++) {
+                          comments.add(arrEdConComment[i].text == ''?formValue[i][formPropertyComment[i]] :arrEdConComment[i].text);
+                        }
+
+                        DateTime now = DateTime.now();
+                        String formattedDate = DateFormat('yyyyMMddss').format(now);
+                        String fileName = '$formattedDate.xlsx';                        
+                        await jsonToExcelSehExcel(preguntasVerticales,preguntasHeaders,transformEnumArrayToInteger(rateRoutes),area, comments, intf,'Seh_$fileName',context);
+                      setState(() {
+                        desactivarbtndownload = false;
+                      });
+                      }: null,
+                      child: const Text('Descargar'),
+                      )
                   ],
                   ),
                 ],
@@ -564,7 +738,8 @@ class QuestRoute extends StatelessWidget {
        );
       // Si no hay datos o error, puedes mostrar un mensaje o un widget vacío
     
-  });
+    });
     
   }
 }
+

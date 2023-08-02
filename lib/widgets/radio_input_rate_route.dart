@@ -55,63 +55,61 @@ TextStyle getTextStyleText(BuildContext context, FontWeight? ft) {
 
   @override
   Widget build(BuildContext context) {
-        return SingleChildScrollView(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-                SizedBox(
-                width: 180,
-                  child: ListTile(
-                  title: Text(widget.titulo![0], style: getTextStyleText(context, null)),
-                  leading: Radio<rateRoute>(
-                    activeColor: AppTheme.primary,
-                    fillColor: MaterialStateProperty.resolveWith(getColor),
-                    value: rateRoute.bueno,
-                    groupValue: widget.rateRoutes![widget.index],
-                    onChanged: (rateRoute? value) {
-                      setState(() {
-                        widget.rateRoutes![widget.index] = value!;
-                      });
-                    },
-                  ),
-                ),
-                ),
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
               SizedBox(
-                width: 180,
+              width: 180,
                 child: ListTile(
-                  title: Text(widget.titulo![1], style: getTextStyleText(context, null),),
-                  leading: Radio<rateRoute>(
-                    activeColor: AppTheme.primary,
-                    fillColor: MaterialStateProperty.resolveWith(getColor),
-                    value: rateRoute.regular,
-                    groupValue: widget.rateRoutes![widget.index],
-                    onChanged: (rateRoute? value) {
-                      setState(() {
-                        widget.rateRoutes![widget.index] = value!;
-                      });
-                    },
-                  )
+                title: Text(widget.titulo![0], style: getTextStyleText(context, null)),
+                leading: Radio<rateRoute>(
+                  activeColor: AppTheme.primary,
+                  fillColor: MaterialStateProperty.resolveWith(getColor),
+                  value: rateRoute.bueno,
+                  groupValue: widget.rateRoutes![widget.index],
+                  onChanged: (rateRoute? value) {
+                    setState(() {
+                      widget.rateRoutes![widget.index] = value!;
+                    });
+                  },
                 ),
               ),
-              SizedBox(
-                width: 180,
-                child: ListTile(
-                  title: Text(widget.titulo![2], style: getTextStyleText(context, null)),
-                  leading: Radio<rateRoute>(
-                    activeColor: AppTheme.primary,
-                    fillColor: MaterialStateProperty.resolveWith(getColor),
-                    value: rateRoute.malo,
-                    groupValue: widget.rateRoutes![widget.index],
-                    onChanged: (rateRoute? value) {
-                      setState(() {
-                        widget.rateRoutes![widget.index] = value!;
-                      });
-                    },
-                  ),
+              ),
+            SizedBox(
+              width: 180,
+              child: ListTile(
+                title: Text(widget.titulo![1], style: getTextStyleText(context, null),),
+                leading: Radio<rateRoute>(
+                  activeColor: AppTheme.primary,
+                  fillColor: MaterialStateProperty.resolveWith(getColor),
+                  value: rateRoute.regular,
+                  groupValue: widget.rateRoutes![widget.index],
+                  onChanged: (rateRoute? value) {
+                    setState(() {
+                      widget.rateRoutes![widget.index] = value!;
+                    });
+                  },
+                )
+              ),
+            ),
+            SizedBox(
+              width: 180,
+              child: ListTile(
+                title: Text(widget.titulo![2], style: getTextStyleText(context, null)),
+                leading: Radio<rateRoute>(
+                  activeColor: AppTheme.primary,
+                  fillColor: MaterialStateProperty.resolveWith(getColor),
+                  value: rateRoute.malo,
+                  groupValue: widget.rateRoutes![widget.index],
+                  onChanged: (rateRoute? value) {
+                    setState(() {
+                      widget.rateRoutes![widget.index] = value!;
+                    });
+                  },
                 ),
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         );
   }
 }

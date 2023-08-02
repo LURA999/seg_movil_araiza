@@ -1,4 +1,5 @@
 import 'dart:async'; 
+import 'package:app_seguimiento_movil/models/models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -54,7 +55,7 @@ Future<void> requestPermission(Function(bool) onPermissionResult) async {
 }
 
 
-Future<void> jsonToExcel(List<Map<String, dynamic>> jsonStr, List<String> headers,List<Map<String, dynamic>> jsonStrObs, List<Map<String,dynamic>>? dataComments, String fileName, BuildContext context) async {
+Future<void> jsonToExcelSehExcel(List<String> preguntas,List<String> headers,List<int> res,String area,  List<String> comments, DescriptionsSeh descriptionsSeh, String fileName, BuildContext context) async {
   bool storagePermissionGranted = false;
   if (Platform.isAndroid || Platform.isIOS) {
   await requestPermission((bool granted) {
@@ -68,29 +69,130 @@ Future<void> jsonToExcel(List<Map<String, dynamic>> jsonStr, List<String> header
   // Crea el archivo Excel
   final workbook = Workbook();
   final sheet = workbook.worksheets[0];
-  DateTime dateToday = DateTime.now();
-  var formatter =  DateFormat("yyyy-MM-dd");
-  String formattedDate = formatter.format(dateToday);
+  // DateTime dateToday = DateTime.now();
+  // var formatter =  DateFormat("yyyy-MM-dd");
+  // String formattedDate = formatter.format(dateToday);
 
   // Agrega las celdas de encabezado
+ final Range headerFirst = sheet.getRangeByIndex(1, 1, 1, 2);
+  headerFirst.setText(area);
+  headerFirst.cellStyle.bold = true;
+  headerFirst.cellStyle.fontSize = 26;
+  headerFirst.cellStyle.fontName = 'Arial';
+  headerFirst.merge();
 
   for (var i = 0; i < headers.length; i++) {
-    if (i == 0) {
-       final Range header = sheet.getRangeByIndex(1, i);
-        header.setText(headers[i]);
-        header.cellStyle.bold = true;
-        header.cellStyle.fontSize = 26;
-        header.cellStyle.fontName = 'Arial';
-    } else if(i == headers.length-1) {
-        final Range header = sheet.getRangeByIndex(1,1);
-        header.setText(headers[i]);
-        header.cellStyle.bold = true;
-        header.cellStyle.fontSize = 20;
-        header.cellStyle.fontName = 'Calibri (Cuerpo)';
-        header.merge();
-    }
-   
+     // Obtenemos el índice del header actual y los siguientes dos headers
+    int startIdx = 3 + (i * 3);
+    int endIdx = 5 + (i * 3);
+
+    // Fusionamos las celdas de los tres headers
+    final Range mergedHeader = sheet.getRangeByIndex(1, startIdx, 1, endIdx);
+    mergedHeader.merge();
+    
+    // Establecemos el texto del header correspondiente a cada grupo de celdas fusionadas
+    final Range headerCell = sheet.getRangeByIndex(1, startIdx);
+    headerCell.setText(headers[i]);
+    headerCell.cellStyle.bold = true;
+    headerCell.cellStyle.fontSize = 11;
+    headerCell.cellStyle.fontName = 'Calibri';
+    headerCell.cellStyle.rotation = 90;
+    headerCell.cellStyle.hAlign = HAlignType.center;
+    headerCell.cellStyle.vAlign = VAlignType.center;
   }
+
+  sheet.autoFitRow(1);
+
+
+//Preguntas verticales
+
+   final Range ptrevision = sheet.getRangeByIndex(2, 1, 2, 2);
+  ptrevision.setText('Puntos de revision');
+  ptrevision.cellStyle.bold = true;
+  ptrevision.cellStyle.fontSize = 10;
+  ptrevision.cellStyle.backColor = '#c0bcbc';
+  ptrevision.cellStyle.fontName = 'Arial';
+  ptrevision.merge();
+
+
+  List<String> brmArr = ['B','R','M'];
+  int x =0;
+  for (var i = 0; i < headers.length *3; i++) {
+    final Range brm = sheet.getRangeByIndex(2, 3+i);
+    brm.setText(brmArr[x]);
+    brm.cellStyle.bold = true;
+    brm.cellStyle.fontSize = 14;
+    brm.cellStyle.fontName = 'Calibri';
+    sheet.autoFitColumn(3+i);
+    if(x==2){
+      x = 0;
+    }else{
+      x++;
+    }
+
+  }
+
+  for (var i = 0; i < preguntas.length; i++) {
+    //indice
+    final Range indice = sheet.getRangeByIndex(3+i, 1);
+    indice.setText((i+1).toString());
+    indice.cellStyle.fontSize = 11;
+    indice.cellStyle.fontName = 'Arial';
+
+    //pregunta
+    final Range ptrevision = sheet.getRangeByIndex(3+i, 2);
+    ptrevision.setText(preguntas[i]);
+    ptrevision.cellStyle.bold = true;
+    ptrevision.cellStyle.fontSize = 10;
+    ptrevision.cellStyle.fontName = 'Arial';
+
+  }
+
+  //respuesta
+    int r = 0;
+    for (var z = 0; z < headers.length; z++) {
+      for (var i = 0; i < preguntas.length; i++) {
+        if (res[r] != 0 ) {
+          var cell1 = sheet.getRangeByIndex(i+3, (res[r] + (z>0 ? z*3 + 1 : 1)) +1 );
+          cell1.setText('X');
+          cell1.cellStyle.fontSize = 10;
+          cell1.cellStyle.fontName = 'Arial';
+         
+        }
+         r++;
+      }
+    }
+
+
+  
+
+ final Range headerSecond = sheet.getRangeByIndex(preguntas.length + 6,2);
+  headerSecond.setText("COMENTARIOS");
+  headerSecond.cellStyle.bold = true;
+  headerSecond.cellStyle.fontSize = 20;
+  headerSecond.cellStyle.fontName = 'Calibri';
+
+  int reng = 0;
+  for (var i = 0; i < headers.length; i++) {
+    final Range preguntasRange = sheet.getRangeByIndex(preguntas.length + 7 + i + reng, 2);
+    preguntasRange.setText(headers[i]);
+    preguntasRange.cellStyle.bold = true;
+    preguntasRange.cellStyle.fontSize = 10;
+    preguntasRange.cellStyle.fontName = 'Calibri';
+
+    final Range commentsRange = sheet.getRangeByIndex(preguntas.length + 8 + i + reng, 2);
+    commentsRange.setText(comments[i]);
+    commentsRange.cellStyle.fontSize = 11;
+    commentsRange.cellStyle.fontName = 'Calibri';
+
+    reng ++;    
+  }
+
+
+  
+  sheet.autoFitColumn(1);
+  sheet.autoFitColumn(2);
+  sheet.autoFitRow(preguntas.length + 6);
 
 /*   //Contenido de las cabeceras agregadas
   for (var i = 0; i < jsonStr.length; i++) {
@@ -134,5 +236,5 @@ Future<void> jsonToExcel(List<Map<String, dynamic>> jsonStr, List<String> header
       //path = await getDownloadDirectoryPath();
     }
       
-    }
+  } 
 }

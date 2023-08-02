@@ -198,12 +198,15 @@ final ImagePicker _picker = ImagePicker();
           controller: widget.controller,
           autofocus: widget.autofocus!,
           initialValue: widget.controller == null ? widget.formValue[widget.formProperty]!.contenido : null,
-          textCapitalization: TextCapitalization.words,
+          textCapitalization: TextCapitalization.characters,
           keyboardType: widget.keyboardType,
           obscureText: widget.obscureText,
           style: getTextStyleText(context,null),
           onChanged: (value) {
-            widget.formValue[widget.formProperty]!.contenido = value;
+            setState(() {
+             widget.formValue[widget.formProperty]!.contenido = value;
+
+            });
           },
           validator: widget.formValue[widget.formProperty]!.obligatorio == true ? (value) {
             if(value == null || value.isEmpty == true || value == ''){

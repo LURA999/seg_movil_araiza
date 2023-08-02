@@ -18,6 +18,7 @@ class SehTourService extends ChangeNotifier{
  Future<bool> postForm(List<int> answer,int formAB, BuildContext context) async {
 
     var connectivityResult = await (Connectivity().checkConnectivity());  
+    print(connectivityResult == ConnectivityResult.none);
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
     messageError(context,'No hay conexión a Internet.');
@@ -55,7 +56,8 @@ try {
 
 
 Future<bool> postComments(List<String> input,int formComment, BuildContext context) async {
-
+ /*  print('$link/tour_seh.php?formComment=$formComment');
+    print(json.encode({'data':input})); */
     var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
@@ -66,8 +68,50 @@ Future<bool> postComments(List<String> input,int formComment, BuildContext conte
 try {
       isSaving = true;
       notifyListeners();
+      
+      print('$link/tour_seh.php?formComment=$formComment');
       final url = Uri.parse('$link/tour_seh.php?formComment=$formComment');
+      print(json.encode({'data':input}));
       var response = (await http.patch(url, body: json.encode({'data':input}))).body;
+      if (response.contains('200')){  
+        isSaving = false;
+        notifyListeners();
+        return true;
+      }
+      isSaving = false;
+      notifyListeners();
+      return false; 
+     } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+      return false; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+      return false; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+  }
+  }
+      return false; 
+    }
+
+    Future<bool> postDescriptions(DescriptionsSeh input,int formComment, BuildContext context) async {
+ /*  print('$link/tour_seh.php?formComment=$formComment');
+    print(json.encode({'data':input})); */
+    var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
+    return false;
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+      isSaving = true;
+      notifyListeners();
+      final url = Uri.parse('$link/tour_seh.php?formDescription=$formComment');
+      var response = (await http.patch(url, body: json.encode(input.toJson()))).body;
       if (response.contains('200')){  
         isSaving = false;
         notifyListeners();
