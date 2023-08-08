@@ -173,7 +173,7 @@ class _RoutesSehState extends State<RoutesSeh> {
                         MediaQuery.of(context).size.height * 0.2:
                         MediaQuery.of(context).size.width * 0.2,
                         child: Align(
-                        alignment: Alignment.bottomCenter,
+                        alignment: Alignment.center,
                         child: Text('Recorridos de Seguridad e Higiene',style: getTextStyleTitle(context,null)),          
                         )
                       ),
@@ -199,7 +199,7 @@ class _RoutesSehState extends State<RoutesSeh> {
             children: [
               SingleChildScrollView(
                 child: AlertDialog(
-                  title: Text('Selecciona el area',style: getTextStyleText(context, null) ),
+                  title: Text('Selecciona el area',style: getTextStyleTitle2(context, null) ),
                   content: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children:[

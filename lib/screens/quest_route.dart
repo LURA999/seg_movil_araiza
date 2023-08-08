@@ -53,6 +53,7 @@ class _QuestRouteState extends State<QuestRoute>  {
   bool desactivarbtndownload = false;
   double widthPreguntas = 0;
   Orientation? AuxOrientation ;
+  
 @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -455,10 +456,13 @@ class _QuestRouteState extends State<QuestRoute>  {
           }
         }).toList(); // Convertimos el iterable resultante en una lista de enteros
       }
-    
+      Orientation orientation = MediaQuery.of(context).orientation;
+
     int index = 0;
-    if (!snapshot.hasData && !snapshot.hasError) {
-      return Scaffold(
+    if (!snapshot.hasData && !snapshot.hasError || orientation !=  AuxOrientation) {
+      AuxOrientation = orientation;
+      soloUnaVez3 = true;
+      return CustomBackBvuttonInterceptor(child:Scaffold(
         body: Center(
           child: FractionallySizedBox(
             widthFactor: MediaQuery.of(context).orientation == Orientation.portrait ? 0.1 : 0.05,
@@ -466,7 +470,7 @@ class _QuestRouteState extends State<QuestRoute>  {
             child: const CircularProgressIndicator(),
           ),
         ),
-      );
+      ));
     
     } else if (snapshot.hasError) {
       return Text('Error: ${snapshot.error}');
@@ -476,7 +480,7 @@ class _QuestRouteState extends State<QuestRoute>  {
     
      if (soloUnaVez) {
         soloUnaVez = false;
-        rateRoutes = snapshot.data ==null ? List.generate(preguntasVerticales.length * preguntasHeaders.length, 
+        rateRoutes = snapshot.data ==null ? List.generate((preguntasVerticales.length + preguntasVerticales2.length) * preguntasHeaders.length, 
         (index) => rateRoute.none ): transIntegerformToEnumArray(snapshot.data!.answers) ; 
       }
 
@@ -510,10 +514,8 @@ class _QuestRouteState extends State<QuestRoute>  {
     soloUnaVez2 = false;
     }
 
-  Orientation orientation = MediaQuery.of(context).orientation;
 
-  if (soloUnaVez3 || orientation !=  AuxOrientation) {  
-    AuxOrientation = orientation;
+  if (soloUnaVez3 ) {  
 
     double responsiveRow = MediaQuery.of(context).size.height * (orientation == Orientation.landscape? 0.1 : 0.05 ); 
     double responsiveComment = MediaQuery.of(context).size.height * (orientation == Orientation.landscape? 0.05 : 0.01 ); 
@@ -532,7 +534,7 @@ class _QuestRouteState extends State<QuestRoute>  {
                   height: MediaQuery.of(context).size.height * (orientation == Orientation.landscape? 0.1 : 0.05 ),
                   child: Container(
                     decoration: const BoxDecoration(
-                      color: Color.fromARGB(255, 188, 188, 188)
+                      color: Color.fromRGBO(156, 39, 50, 1.0)
                     ),
                     margin: const EdgeInsets.only(top: 10,bottom: 10),
                     child: Align(
@@ -546,18 +548,17 @@ class _QuestRouteState extends State<QuestRoute>  {
                   alignment: Alignment.center,
                   child: Column(
                     children: [
-                     //En esta parte se imprime las preguntas verticales, personalizadas
-                      if(i == preguntasHeaders.length - (periodo==1 && recorrido == 3 ? 1 : preguntasHeaders.length -1 ))
-                    ...preguntasVerticales2.map((e) {
-                        index++;
-                        return columnOrRow(responsiveRow, e, index);
-                    }
-                    ),
+                     
                     //En esta parte se imprime las preguntas verticales (perono se imprimen las preguntas verticales2)
                       if(i < preguntasHeaders.length - (periodo==1 && recorrido == 3 ? 1 : 0 ))
                       ...preguntasVerticales.map((e) {
-                        index++;
-                        return columnOrRow(responsiveRow, e, index); 
+                        return columnOrRow(responsiveRow, e, ++index); 
+                    }
+                    ),
+                    //En esta parte se imprime las preguntas verticales, personalizadas
+                      if(i == preguntasHeaders.length - (periodo==1 && recorrido == 3 ? 1 : preguntasHeaders.length -1 ))
+                    ...preguntasVerticales2.map((e) {
+                        return columnOrRow(responsiveRow, e, ++index);
                     }
                     ),
                     SizedBox(height: responsiveComment,),
@@ -591,10 +592,10 @@ class _QuestRouteState extends State<QuestRoute>  {
         )
       );
     }
-     
+         soloUnaVez3 = false;
+
     }
     }
-    soloUnaVez3 = false;
   }
 
     return Scaffold(
@@ -710,7 +711,7 @@ class _QuestRouteState extends State<QuestRoute>  {
                         desactivarbtnsave = true;
                       });
                         await seht.postForm(transformEnumArrayToInteger(rateRoutes), form, context);
-
+                        print(transformEnumArrayToInteger(rateRoutes));
                         for (var i = 0; i < formValue.length; i++) {
                           comments.add(arrEdConComment[i].text);
                         }

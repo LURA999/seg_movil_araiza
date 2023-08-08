@@ -26,6 +26,7 @@ class SehTourService extends ChangeNotifier{
 try {
       isSaving = true;
       notifyListeners();
+      print('$link/tour_seh.php?formAB=$formAB');
       final url = Uri.parse('$link/tour_seh.php?formAB=$formAB');
       var response = (await http.patch(url, body: json.encode({'data':answer}))).body;
       if (response.contains('200')){  

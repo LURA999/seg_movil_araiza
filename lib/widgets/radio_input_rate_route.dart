@@ -55,6 +55,7 @@ TextStyle getTextStyleText(BuildContext context, FontWeight? ft) {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.rateRoutes![widget.index]);
         return Row(
           mainAxisSize: MainAxisSize.min,
           children: [

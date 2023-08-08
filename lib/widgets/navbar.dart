@@ -32,11 +32,30 @@ class Navbar extends StatelessWidget {
         child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
            children:  [
-            ButtonNavSvg(img:'assets/images/main/arrow_prev.svg', height: (height * (MediaQuery.of(context).orientation == Orientation.portrait ? .05 : .07)), route:'prev', contexto2: contexto2),
+            ButtonNavSvg(img:'assets/images/main/arrow_prev.svg', 
+            height: (height * (MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
+            (MediaQuery.of(context).orientation == Orientation.portrait ? .05: 0.07)
+            : 
+            (MediaQuery.of(context).orientation == Orientation.portrait ? .05: .07))
+
+            ), 
+            route:'prev', contexto2: contexto2),
             SizedBox(width: width * 0.15),
-            ButtonNavSvg(img:'assets/images/main/home.svg', height:(height * (MediaQuery.of(context).orientation == Orientation.portrait ? .05 : .07)), route:'home', contexto2: contexto2),
+
+            ButtonNavSvg(img:'assets/images/main/home.svg', 
+            height:(height * (MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
+            (MediaQuery.of(context).orientation == Orientation.portrait ? .05: 0.07)
+            : 
+            (MediaQuery.of(context).orientation == Orientation.portrait ? .05: .07))), 
+            route:'home', contexto2: contexto2),
             SizedBox(width: width * 0.15),
-            ButtonNavSvg(img:'assets/images/main/arrow_next.svg', height:(height * (MediaQuery.of(context).orientation == Orientation.portrait ? .05 : .07)), route:'next', contexto2: contexto2),
+
+            ButtonNavSvg(img:'assets/images/main/arrow_next.svg', 
+            height:(height * (MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
+            (MediaQuery.of(context).orientation == Orientation.portrait ? .05: 0.07)
+            : 
+            (MediaQuery.of(context).orientation == Orientation.portrait ? .05: .07))), 
+            route:'next', contexto2: contexto2),
           ],
         ),
        ),
