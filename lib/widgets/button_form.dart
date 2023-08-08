@@ -432,6 +432,7 @@ class _ButtonFormState extends State<ButtonForm> {
                                    jsonStr,
                                    ['TIPO VEHICULO','COLOR','PLACAS','NOMBRE EMPLEADO', 'DEPARTAMENTO','ENTRADA'], 
                                   jsonStrObs,
+                                  null,
                                   dataGuard,
                                   null,
                                   1,
@@ -529,6 +530,7 @@ class _ButtonFormState extends State<ButtonForm> {
                                 t.garrison = formValue['garrison']!.contenido;
                                 t.dessert = formValue['dessert']!.contenido;
                                 t.received = formValue['received_number']!.contenido;
+                                t.menu_portal = formValue['menu_portal']!.contenido;
 
                                 return showDialog(
                                 context: context,
@@ -560,7 +562,10 @@ class _ButtonFormState extends State<ButtonForm> {
                                                 Text(t.dessert! == '' || t.dessert == null ?'N/A': t.dessert!, style: getTextStyleText(context,null), ),
                                                 const SizedBox(height: 10,),
                                                 Text('Cantidad recibida:', style: getTextStyleText(context, FontWeight.bold)),
-                                                Text(t.received!, style: getTextStyleText(context,null), )
+                                                Text(t.received!, style: getTextStyleText(context,null), ),
+                                                const SizedBox(height: 10,),
+                                                Text('Menu de Hoy (Portal de Comunicación):', style: getTextStyleText(context, FontWeight.bold)),
+                                                Text(t.menu_portal!, style: getTextStyleText(context,null), )
                                                 ]
                                               ),
                                               actions: [
@@ -672,6 +677,7 @@ class _ButtonFormState extends State<ButtonForm> {
                               de.dish = formValue['dish']!.contenido!.toString();
                               List<Map<String, dynamic>> jsonStr = await fService.selectDateFood(de, context);
                               List<Map<String, dynamic>> jsonStrObs = await fService.selectObsFood(de, context);
+                              List<Map<String, dynamic>> jsonStrMenu = await fService.selectFoodMenu(de, context);
                               List<Map<String, dynamic>> jsonStrCom = await fService.selectDateFoodComment(de, context);
                                 if (jsonStr.isNotEmpty) {
                                   DateTime now = DateTime.now();
@@ -681,6 +687,7 @@ class _ButtonFormState extends State<ButtonForm> {
                                    jsonStr,
                                    ['Numero de empleado','Nombre','Contrato','Fecha comida'], 
                                    jsonStrObs,
+                                   jsonStrMenu,
                                    null,
                                    jsonStrCom,
                                    2,

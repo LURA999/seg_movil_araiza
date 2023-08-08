@@ -4,10 +4,7 @@ import 'package:http/http.dart' as http;
 
 void main() async {
  var handler = const shelf.Pipeline().addHandler(_handleRequest);
-
-
   var server = await shelf_io.serve(handler, 'localhost', 8080);
-  print('Servidor escuchando en http://${server.address.host}:${server.port}');
 }
 
 shelf.Response _handleRequest(shelf.Request request) {

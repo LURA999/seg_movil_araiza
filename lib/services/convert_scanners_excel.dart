@@ -54,8 +54,9 @@ Future<void> requestPermission(Function(bool) onPermissionResult) async {
 
 }
 
-
-Future<void> jsonToExcel(List<Map<String, dynamic>> jsonStr, List<String> headersPerso,List<Map<String, dynamic>> jsonStrObs, List<Map<String,dynamic>>? dataGuard, List<Map<String,dynamic>>? dataComments, int screen, String fileName, BuildContext context) async {
+//dataguard es para los de trafico
+//jsonStrFood es para el comedor
+Future<void> jsonToExcel(List<Map<String, dynamic>> jsonStr, List<String> headersPerso,List<Map<String, dynamic>> jsonStrObs,List<Map<String, dynamic>>? jsonStrFood, List<Map<String,dynamic>>? dataGuard, List<Map<String,dynamic>>? dataComments, int screen, String fileName, BuildContext context) async {
   bool storagePermissionGranted = false;
   if (Platform.isAndroid || Platform.isIOS) {
   await requestPermission((bool granted) {
@@ -223,6 +224,39 @@ Future<void> jsonToExcel(List<Map<String, dynamic>> jsonStr, List<String> header
       cell3.setText("No hay comentarios registrados");
     }
     
+
+    var cellComida = sheet.getRangeByIndex(beginRow-1,13);
+    cellComida.setText('COMPARAR COMIDA');
+    cellComida.cellStyle.bold = true;
+    var cellComida1 = sheet.getRangeByIndex(beginRow,13);
+    cellComida1.setText('Fecha');
+    cellComida1.cellStyle.bold = true;
+    var cellComida2 = sheet.getRangeByIndex(beginRow,14);
+    cellComida2.setText('Comida que se presento');
+    cellComida2.cellStyle.bold = true;
+    var cellComida3 = sheet.getRangeByIndex(beginRow,15);
+    cellComida3.setText('Comida que se sirvio');
+    cellComida3.cellStyle.bold = true;
+    
+
+    if (jsonStrFood != null) {
+      for (var i = 0; i < jsonStrFood.length; i++) {
+        var cell0 = sheet.getRangeByIndex(beginRow + (i+1),13);
+        cell0.setText(jsonStrFood[i]['fecha']);
+        var cell1 = sheet.getRangeByIndex(beginRow + (i+1),14);
+        cell1.setText(jsonStrFood[i]['menu_portal']);
+        var cell2 = sheet.getRangeByIndex(beginRow + (i+1),15);
+        cell2.setText(jsonStrFood[i]['menu_movil']);
+      }
+
+      sheet.autoFitColumn(13);
+      sheet.autoFitColumn(14);
+      sheet.autoFitColumn(15);
+      
+    } else {
+      var cell3 = sheet.getRangeByIndex(6,13);
+      cell3.setText("No hay comidas registradas");
+    }
 
 
   }

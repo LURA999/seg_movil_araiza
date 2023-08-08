@@ -152,7 +152,7 @@ class _ControlVehiclesState extends State<ControlVehicles> {
                                             Provider.of<VarProvider>(context,listen: false).updateVarSalir(false);
                                             Navigator.of(context).pop(context);
                                             Navigator.of(context).pushNamed('home');
-                                            Provider.of<VarProvider>(context,listen: false).updateVariable(true);
+                                            
                                           }else{
                                             Provider.of<VarProvider>(context,listen: false).updateVariable(true);
                                             Provider.of<VarProvider>(context,listen: false).updateVarSalir(false);

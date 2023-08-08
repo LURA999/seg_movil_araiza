@@ -16,9 +16,7 @@ class SehTourService extends ChangeNotifier{
 
 
  Future<bool> postForm(List<int> answer,int formAB, BuildContext context) async {
-
     var connectivityResult = await (Connectivity().checkConnectivity());  
-    print(connectivityResult == ConnectivityResult.none);
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
     messageError(context,'No hay conexión a Internet.');
@@ -55,9 +53,7 @@ try {
     }
 
 
-Future<bool> postComments(List<String> input,int formComment, BuildContext context) async {
- /*  print('$link/tour_seh.php?formComment=$formComment');
-    print(json.encode({'data':input})); */
+Future<bool> postComments(List<String?> input,int formComment, BuildContext context) async {
     var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
@@ -68,10 +64,7 @@ Future<bool> postComments(List<String> input,int formComment, BuildContext conte
 try {
       isSaving = true;
       notifyListeners();
-      
-      print('$link/tour_seh.php?formComment=$formComment');
       final url = Uri.parse('$link/tour_seh.php?formComment=$formComment');
-      print(json.encode({'data':input}));
       var response = (await http.patch(url, body: json.encode({'data':input}))).body;
       if (response.contains('200')){  
         isSaving = false;
@@ -98,8 +91,6 @@ try {
     }
 
     Future<bool> postDescriptions(DescriptionsSeh input,int formComment, BuildContext context) async {
- /*  print('$link/tour_seh.php?formComment=$formComment');
-    print(json.encode({'data':input})); */
     var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
@@ -226,7 +217,6 @@ try {
 try {
     isSaving = true;
     notifyListeners();
-    print('$link/tour_seh.php?form=$form&descriptions=true');
      final url = Uri.parse('$link/tour_seh.php?form=$form&descriptions=true');
        var response = (await http.get(url)).body;
       final result =  AccessMap.fromJson(jsonDecode(response));

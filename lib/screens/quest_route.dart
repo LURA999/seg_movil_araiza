@@ -1,5 +1,3 @@
-
-
 import 'package:app_seguimiento_movil/models/models.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -34,13 +32,15 @@ class _QuestRouteState extends State<QuestRoute>  {
   bool soloUnaVez= true;
   bool soloUnaVez2= true;
   bool soloUnaVez3= true;
-  List<Column> temas =[];
+  bool soloUnaVez4FutureBuilder= true;
+  List<SizedBox> temas =[];
  SehTourService seht= SehTourService();
   double widthLineTable = 0.5;
   String area = "";
   List<String> preguntasVerticales= [];    
+  List<String> preguntasVerticales2= [];    
   List<String> preguntasHeaders = [];
-  List<String> comments = [];
+  List<String?> comments = [];
   List<String> formPropertyComment = [];
   String titleDescription = "";
   String titleDescription2 = "";
@@ -52,7 +52,7 @@ class _QuestRouteState extends State<QuestRoute>  {
   bool desactivarbtnsave = false;
   bool desactivarbtndownload = false;
   double widthPreguntas = 0;
-
+  Orientation? AuxOrientation ;
 @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -78,7 +78,7 @@ class _QuestRouteState extends State<QuestRoute>  {
       }
 
       switch(periodo) {
-      case 1:
+      case 1: 
       titleDescription = "Posturas correctas/forzadas\nRFSHMAT.ART.102";
       titleDescription2 = "Fuerza manual extrema\nRFSHMAT.ART.101";
       preguntasVerticales = [
@@ -134,8 +134,16 @@ class _QuestRouteState extends State<QuestRoute>  {
           //Enero-Marzo
           //Area C
           case 3:
+            preguntasVerticales2 = [
+              "Detectores de humo NOM-002-STPS-2010",
+              "Verificación de la ubicación de extintores NOM-002-STPS-2010",
+              "Limpieza de pisos y paredes RFSHMAT, ART. 109",
+              "Estados de los equipos NOM-004-STPS-1999",
+              "Estado y limpieza de cuartos fríos RFSHMAT, ART. 109",
+              "Estados de los alimentos RFSHMAT, ART. 109	"
+            ];
+
           preguntasHeaders = [
-              "PUNTOS A REVISIÓN"
               "Centro de convenciones",			
               "Fonda / Privado",			
               "Salon Guaycura",			
@@ -147,6 +155,7 @@ class _QuestRouteState extends State<QuestRoute>  {
               "Taller Mantenimiento",			
               "Cuarto de Boylers",			
               "Caseta #1",			
+              "Cocina empleados y cocina general",
               "Cocina empleados y cocina general" 		
             ];
           break;
@@ -375,9 +384,30 @@ class _QuestRouteState extends State<QuestRoute>  {
 
 
   Future<QuestData> fetchData() async {
-    List<int> answers = await seht.getAnswer(form, context);
-    List<Map<String,dynamic>> comments = await seht.getComments(form, context);
-    List<Map<String,dynamic>> descriptions = await seht.getDescriptions(form, context);
+
+    List<int> answers = [];
+    List<Map<String,dynamic>> comments = [];
+    List<Map<String,dynamic>> descriptions = [];
+
+    if (soloUnaVez4FutureBuilder) {
+    answers = await seht.getAnswer(form, context);
+    comments = await seht.getComments(form, context);
+    descriptions = await seht.getDescriptions(form, context);
+
+    
+      for (var i = 0; i < comments.length; i++) {
+        arrEdConComment.add(TextEditingController());
+        arrEdConComment[i].text = comments[i]['comment_text'];
+      }
+
+      arrEdConDescription[0].text = descriptions[0]['description1'];
+      arrEdConDescription[1].text = descriptions[0]['description2'];
+     
+
+      soloUnaVez4FutureBuilder = false;
+    }
+   
+
   return QuestData(answers: answers, comments: comments, descriptions: descriptions);
   }
 
@@ -426,13 +456,6 @@ class _QuestRouteState extends State<QuestRoute>  {
         }).toList(); // Convertimos el iterable resultante en una lista de enteros
       }
     
-      
-    // print(snapshot.data == null?  [] : snapshot.data![1] as List<Map<String,dynamic>>);
-    // List<rateRoute> rateRoutes = transIntegerformToEnumArray(snapshot.data!);
-     
-    
-    
-    
     int index = 0;
     if (!snapshot.hasData && !snapshot.hasError) {
       return Scaffold(
@@ -452,36 +475,34 @@ class _QuestRouteState extends State<QuestRoute>  {
      if (snapshot.hasData) {
     
      if (soloUnaVez) {
-      soloUnaVez = false;
-    rateRoutes = snapshot.data ==null ? List.generate(preguntasVerticales.length * preguntasHeaders.length, 
-    (index) => rateRoute.none ): transIntegerformToEnumArray(snapshot.data!.answers) ; 
-      
-    }
+        soloUnaVez = false;
+        rateRoutes = snapshot.data ==null ? List.generate(preguntasVerticales.length * preguntasHeaders.length, 
+        (index) => rateRoute.none ): transIntegerformToEnumArray(snapshot.data!.answers) ; 
+      }
 
     if (soloUnaVez2) {
     for (var i = 0; i < preguntasHeaders.length; i++) {
        if (periodo != 3) {  
-        arrEdConComment.add(TextEditingController());
+        
         formPropertyComment.add("comment$i");
     
         if (i == 0 ) {
         formValue.add({
-          'comment$i':   snapshot.data == null?  '' : snapshot.data!.comments[i]['comment_text'],
-          'description1':   snapshot.data == null?  '' : snapshot.data!.descriptions[0]['description1'],
-          'description2':   snapshot.data == null?  '' : snapshot.data!.descriptions[0]['description2']
+          'comment$i':   arrEdConComment[i].text,
+          'description1':   arrEdConDescription[0].text,
+          'description2':   arrEdConDescription[1].text
         });
         }else{
         formValue.add({
-          'comment$i':   snapshot.data == null?  '' : snapshot.data!.comments[i]['comment_text'] ,
+          'comment$i':   arrEdConComment[i].text ,
         });
         }
         
     
       }else{
-        arrEdConComment.add(TextEditingController());
         formPropertyComment.add("comment$i");
           formValue.add({
-          'comment$i':   snapshot.data == null?  '' : snapshot.data!.comments[i]['comment_text'] ,
+          'comment$i':   arrEdConComment[i].text ,
         });
       }
     
@@ -489,79 +510,85 @@ class _QuestRouteState extends State<QuestRoute>  {
     soloUnaVez2 = false;
     }
 
-  if (soloUnaVez3) {
+  Orientation orientation = MediaQuery.of(context).orientation;
+
+  if (soloUnaVez3 || orientation !=  AuxOrientation) {  
+    AuxOrientation = orientation;
+
+    double responsiveRow = MediaQuery.of(context).size.height * (orientation == Orientation.landscape? 0.1 : 0.05 ); 
+    double responsiveComment = MediaQuery.of(context).size.height * (orientation == Orientation.landscape? 0.05 : 0.01 ); 
+
+    temas = [];
     for (var i = 0; i < preguntasHeaders.length; i++) {
+
+
       temas.add(
-        Column(
-            children: [
-              Container(
-                margin: const EdgeInsets.only(top: 10,bottom: 10),
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Text(preguntasHeaders[i], style: getTextStyleTitle2(context, null),),
+        SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+              children: [
+                SizedBox(
+                  width: MediaQuery.of(context).size.width ,
+                  height: MediaQuery.of(context).size.height * (orientation == Orientation.landscape? 0.1 : 0.05 ),
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: Color.fromARGB(255, 188, 188, 188)
+                    ),
+                    margin: const EdgeInsets.only(top: 10,bottom: 10),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(preguntasHeaders[i], style: getTextStyleTitle2(context, Colors.white)),
+                    ),
+                  ),
                 ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ...preguntasVerticales.map((e) {
-                    index++;
-                    return Column(
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  alignment: Alignment.center,
+                  child: Column(
+                    children: [
+                     //En esta parte se imprime las preguntas verticales, personalizadas
+                      if(i == preguntasHeaders.length - (periodo==1 && recorrido == 3 ? 1 : preguntasHeaders.length -1 ))
+                    ...preguntasVerticales2.map((e) {
+                        index++;
+                        return columnOrRow(responsiveRow, e, index);
+                    }
+                    ),
+                    //En esta parte se imprime las preguntas verticales (perono se imprimen las preguntas verticales2)
+                      if(i < preguntasHeaders.length - (periodo==1 && recorrido == 3 ? 1 : 0 ))
+                      ...preguntasVerticales.map((e) {
+                        index++;
+                        return columnOrRow(responsiveRow, e, index); 
+                    }
+                    ),
+                    SizedBox(height: responsiveComment,),
+                     Column(
                       children: [
-                        Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Expanded(
-                            child: Container(
-                              alignment: Alignment.center,
-                              padding: EdgeInsets.all(MediaQuery.of(context).size.height * .01) ,
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.black, width: widthLineTable)
-                              ),
-                              child: Text(e, style: getTextStyleText(context, null))
-                            ),
-                          ),
-                          Expanded(
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child:  RadioInputRateRoute(titulo: const ["Bueno","Regular","Malo"],index: index-1,tipoEnum: 3,rateRoutes: rateRoutes,  )
-                            ),
-                          )
-                        ],
-                        ),
+                        Text('Comentarios',style: getTextStyleTitle2(context, null),),
+                         Padding(
+                           padding: EdgeInsets.all(responsiveComment),
+                           child: TextFormField(
+                             initialValue: arrEdConComment[i].text,
+                             textCapitalization: TextCapitalization.characters,
+                             style: getTextStyleText(context,null),
+                             onChanged: (value) {
+                                arrEdConComment[i].text = value;
+                             },
+                             maxLines: 4,
+                             decoration:  InputDecoration(
+                               border: OutlineInputBorder(
+                                 borderRadius: BorderRadius.circular(0),
+                               )
+                             )
+                           ),
+                         ),
                       ],
-                    );
-                }),
-                 const SizedBox(height: 15,),
-                 Column(
-                  children: [
-                    Text('Comentarios',style: getTextStyleTitle2(context, null),),
-                     Padding(
-                      padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.05),
-                      child: TextFormField(
-                        initialValue: formValue[i][formPropertyComment[i]],
-                        // controller: arrEdCon[i],
-                        textCapitalization: TextCapitalization.characters,
-                        style: getTextStyleText(context,null),
-                        onChanged: (value) {
-                            arrEdConComment[i].text = value;
-                        },
-                        maxLines: 4,
-                        decoration:  InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(0),
-                          )
-                        )
-                      ) 
-                      
-                      // MultiInputs( formProperty: formPropertyComment[i], formValue: formValue[i], maxLines: 4, autofocus: false,  controller: null, ),
-                     ),
-                  ],
-                 )
-                ],
-              ),
-            ],
-          )
+                     )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+        )
       );
     }
      
@@ -569,8 +596,7 @@ class _QuestRouteState extends State<QuestRoute>  {
     }
     soloUnaVez3 = false;
   }
-    
-    
+
     return Scaffold(
       body: Column(
         children: [
@@ -588,21 +614,22 @@ class _QuestRouteState extends State<QuestRoute>  {
                         desactivarbtnsave = true;
                       });
                         await seht.postForm(transformEnumArrayToInteger(rateRoutes), form, context);
-                        for (var i = 0; i < formValue.length; i++) {
-                          comments.add(arrEdConComment[i].text == ''?formValue[i][formPropertyComment[i]] :arrEdConComment[i].text);
+                        for (var i = 0; i < arrEdConComment.length; i++) {
+                          comments.add(arrEdConComment[i].text);
                         }
                         await seht.postComments(comments, form, context);
                         final intf = DescriptionsSeh(
-                          description1: arrEdConDescription[0].text == ''?formValue[0]['description1'] :arrEdConDescription[0].text,
-                          description2: arrEdConDescription[1].text == ''?formValue[0]['description2'] :arrEdConDescription[1].text,
+                          description1: arrEdConDescription[0].text,
+                          description2: arrEdConDescription[1].text,
                         );
+
                         await seht.postDescriptions(intf, form, context);
                         comments = [];
                         setState(() {
                         desactivarbtnsave = false;
                       });
                       }:null,
-                      child: const Text('Guardar'),
+                      child: Text('Guardar', style: getTextStyleButtonField(context)),
                       ),
                       SizedBox(width: MediaQuery.of(context).size.width * 0.01,),
                       ElevatedButton(onPressed: desactivarbtndownload == false? () async { 
@@ -611,23 +638,23 @@ class _QuestRouteState extends State<QuestRoute>  {
                       });
 
                       final intf = DescriptionsSeh(
-                          description1: arrEdConDescription[0].text == ''?formValue[0]['description1'] :arrEdConDescription[0].text,
-                          description2: arrEdConDescription[1].text == ''?formValue[0]['description2'] :arrEdConDescription[1].text,
-                        );
+                        description1: arrEdConDescription[0].text,
+                        description2: arrEdConDescription[1].text,
+                      );
 
-                        for (var i = 0; i < formValue.length; i++) {
-                          comments.add(arrEdConComment[i].text == ''?formValue[i][formPropertyComment[i]] :arrEdConComment[i].text);
-                        }
+                      for (var i = 0; i < formValue.length; i++) {
+                        comments.add(arrEdConComment[i].text);
+                      }
 
                         DateTime now = DateTime.now();
                         String formattedDate = DateFormat('yyyyMMddss').format(now);
                         String fileName = '$formattedDate.xlsx';                        
-                        await jsonToExcelSehExcel(preguntasVerticales,preguntasHeaders,transformEnumArrayToInteger(rateRoutes),area, comments, intf,'Seh_$fileName',context);
+                        await jsonToExcelSehExcel(preguntasVerticales,preguntasHeaders,preguntasVerticales2,transformEnumArrayToInteger(rateRoutes),area, comments,[titleDescription,titleDescription2], intf,'Seh_$fileName',context);
                       setState(() {
                         desactivarbtndownload = false;
                       });
                       }: null,
-                      child: const Text('Descargar'),
+                      child: Text('Descargar', style: getTextStyleButtonField(context)),
                       )
                     ],
                   ), 
@@ -640,7 +667,7 @@ class _QuestRouteState extends State<QuestRoute>  {
                     Padding(
                     padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.05),
                     child: TextFormField(
-                        initialValue: formValue[0]['description1'],
+                        initialValue: arrEdConDescription[0].text,
                         textCapitalization: TextCapitalization.characters,
                         style: getTextStyleText(context,null),
                         onChanged: (value) {                          
@@ -658,7 +685,7 @@ class _QuestRouteState extends State<QuestRoute>  {
                     Padding(
                     padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.05),
                     child: TextFormField(
-                        initialValue: formValue[0]['description2'],
+                        initialValue: arrEdConDescription[1].text,
                         textCapitalization: TextCapitalization.characters,
                         style: getTextStyleText(context,null),
                         onChanged: (value) {
@@ -679,27 +706,27 @@ class _QuestRouteState extends State<QuestRoute>  {
                   Row(
                   children: [
                     ElevatedButton(onPressed: desactivarbtnsave == false ? () async { 
-                      setState(() {
+                        setState(() {
                         desactivarbtnsave = true;
                       });
-                      await seht.postForm(transformEnumArrayToInteger(rateRoutes), form, context);
+                        await seht.postForm(transformEnumArrayToInteger(rateRoutes), form, context);
+
                         for (var i = 0; i < formValue.length; i++) {
                           comments.add(arrEdConComment[i].text);
                         }
+
                         await seht.postComments(comments, form, context);
-    
                         final intf = DescriptionsSeh(
-                          description1: arrEdConDescription[0].text ,
-                          description2: arrEdConDescription[1].text ,
+                          description1: arrEdConDescription[0].text,
+                          description2: arrEdConDescription[1].text,
                         );
-                        print(intf.toJson());
                         await seht.postDescriptions(intf, form, context);
                         comments = [];
-                       setState(() {
+                      setState(() {
                         desactivarbtnsave = false;
                       });
                     }:null,
-                    child: const Text('Guardar'),
+                    child:  Text('Guardar', style: getTextStyleButtonField(context),),
                     ),
                      SizedBox(width: MediaQuery.of(context).size.width * 0.01,),
                       ElevatedButton(onPressed: desactivarbtndownload == false? () async { 
@@ -708,23 +735,22 @@ class _QuestRouteState extends State<QuestRoute>  {
                       });
 
                       final intf = DescriptionsSeh(
-                          description1: arrEdConDescription[0].text == ''?formValue[0]['description1'] :arrEdConDescription[0].text,
-                          description2: arrEdConDescription[1].text == ''?formValue[0]['description2'] :arrEdConDescription[1].text,
+                          description1: arrEdConDescription[0].text,
+                          description2: arrEdConDescription[1].text,
                         );
-
+                      
                         for (var i = 0; i < formValue.length; i++) {
-                          comments.add(arrEdConComment[i].text == ''?formValue[i][formPropertyComment[i]] :arrEdConComment[i].text);
+                          comments.add(arrEdConComment[i].text);
                         }
-
                         DateTime now = DateTime.now();
                         String formattedDate = DateFormat('yyyyMMddss').format(now);
                         String fileName = '$formattedDate.xlsx';                        
-                        await jsonToExcelSehExcel(preguntasVerticales,preguntasHeaders,transformEnumArrayToInteger(rateRoutes),area, comments, intf,'Seh_$fileName',context);
+                        await jsonToExcelSehExcel(preguntasVerticales,preguntasHeaders, preguntasVerticales2,transformEnumArrayToInteger(rateRoutes),area, comments,[titleDescription,titleDescription2], intf,'Seh_$fileName',context);
                       setState(() {
                         desactivarbtndownload = false;
                       });
                       }: null,
-                      child: const Text('Descargar'),
+                      child:  Text('Descargar',style: getTextStyleButtonField(context)),
                       )
                   ],
                   ),
@@ -735,11 +761,39 @@ class _QuestRouteState extends State<QuestRoute>  {
          const SizedBox(child: Navbar(contexto2: 'tour_seh',))
         ],
       )
-       );
-      // Si no hay datos o error, puedes mostrar un mensaje o un widget vacío
-    
+      );
     });
     
   }
+  Row columnOrRow(double responsiveRow, String e, int index) {
+  // Ejemplo de uso:
+  
+  return Row(
+    children: [
+      Expanded(
+        child: Container(
+          height: responsiveRow,
+          alignment: Alignment.center,
+          child: Text(e, style: getTextStyleText(context, null)),
+          padding: EdgeInsets.only(left: 15),
+          decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+        ),
+      ),
+      Expanded(
+        child:  Container(
+        height: responsiveRow,
+        width: (MediaQuery.of(context).size.width ) ,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+            child: RadioInputRateRoute(titulo: const ["Bueno","Regular","Malo"],index: index-1,tipoEnum: 3,rateRoutes: rateRoutes,  ))
+        ),
+      )            
+    ],
+  );
 }
+}
+
+
 

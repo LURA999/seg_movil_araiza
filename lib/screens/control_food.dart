@@ -28,6 +28,7 @@ class _DiningRoomState extends State<DiningRoom> {
       'garrison' : MultiInputsForm(contenido: '', obligatorio: true),
       'dessert' : MultiInputsForm(contenido: '', obligatorio: false),
       'received_number' : MultiInputsForm(contenido: '', obligatorio: true),
+      'menu_portal' : MultiInputsForm(contenido: '', obligatorio: true),
       'picture' :  MultiInputsForm(contenido: '', obligatorio: true,uploadFile: true),
     };
 
@@ -79,6 +80,7 @@ class _DiningRoomState extends State<DiningRoom> {
                           'Guarnición',
                           'Postre',
                           'Número de platillos recibidos',
+                          'Menu de Hoy (Portal de Comunicación)',
                           'Subir imagen'
                         ],
                         formValue: formValuesInicioTur,
@@ -134,8 +136,6 @@ class _DiningRoomState extends State<DiningRoom> {
                                                 Provider.of<VarProvider>(context,listen: false).updateVarSalir(false);
                                                 Navigator.of(context).pop(context);
                                                 Navigator.of(context).pushNamed('home');
-                                                Provider.of<VarProvider>(context,listen: false).updateVariable(true);
-
                                               }else{
                                                 Provider.of<VarProvider>(context,listen: false).updateVariable(true);
                                                 Provider.of<VarProvider>(context,listen: false).updateVarSalir(false);

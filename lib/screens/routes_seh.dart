@@ -27,7 +27,7 @@ class _RoutesSehState extends State<RoutesSeh> {
         img: null,
         width : 0.3,
         navigator: () {
-          List<void Function()> functions =[
+          List<void Function()?> functions =[
             (){
             Navigator.of(context).pushNamed('tour_seh', arguments: {
               'periodo': 1,
@@ -41,7 +41,7 @@ class _RoutesSehState extends State<RoutesSeh> {
               'recorrido' : 2,
               'form':2,  
             });
-            },
+            }, 
             (){
             Navigator.of(context).pushNamed('tour_seh', arguments: {
               'periodo': 1,
@@ -190,7 +190,7 @@ class _RoutesSehState extends State<RoutesSeh> {
     );
   }
 
-  Future<dynamic> selectedArea(BuildContext context,List<void Function()> function ) {
+  Future<dynamic> selectedArea(BuildContext context,List<void Function()?> function ) {
     return showDialog(
         context: context,
         builder: (BuildContext context) {
