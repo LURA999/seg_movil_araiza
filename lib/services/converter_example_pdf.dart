@@ -1,4 +1,4 @@
-import 'dart:io';
+/*import 'dart:io';
 import 'dart:typed_data';
 import 'package:app_seguimiento_movil/services/services.dart';
 import 'package:file_picker/file_picker.dart';
@@ -174,6 +174,6 @@ final Uint8List bytes = await pdf.save();
 }
 
 
-
+*/
 
 

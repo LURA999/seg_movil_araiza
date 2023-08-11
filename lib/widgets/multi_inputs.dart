@@ -133,7 +133,7 @@ final ImagePicker _picker = ImagePicker();
         final format = DateFormat("yyyy-MM-dd ${widget.formValue[widget.formProperty]!.activeClock == true?'HH:mm':''}");
         return DateTimeField(
         controller: widget.controller,
-        style: getTextStyleText(context,null),
+        style: getTextStyleText(context,null,null),
         format: format,
         validator: widget.formValue[widget.formProperty]!.obligatorio == true ? (value ) {
             if(value == null || value == ''){
@@ -201,7 +201,7 @@ final ImagePicker _picker = ImagePicker();
           textCapitalization: TextCapitalization.characters,
           keyboardType: widget.keyboardType,
           obscureText: widget.obscureText,
-          style: getTextStyleText(context,null),
+          style: getTextStyleText(context,null,null),
           onChanged: (value) {
             setState(() {
              widget.formValue[widget.formProperty]!.contenido = value;

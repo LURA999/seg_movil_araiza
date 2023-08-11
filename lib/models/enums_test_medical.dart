@@ -10,7 +10,7 @@ enum YesNot {
   none
 }
 
-enum manoDominante {
+enum ManoDominante {
   diestro,
   zurdo,
   ambos,

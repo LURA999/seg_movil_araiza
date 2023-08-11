@@ -53,7 +53,7 @@ class _MedicalTestState extends State<MedicalTest> {
   //Estos son variables para guardar los resultados de los resultados radiobutton
   List<Cause> causeEnum = [Cause.none,Cause.none,Cause.none];
   List<YesNot> yesNotEnum = [YesNot.none,YesNot.none,YesNot.none];
-  List<manoDominante> manoDomEnum = [manoDominante.none];
+  List<ManoDominante> manoDomEnum = [ManoDominante.none];
   int countCauseEnum =0;
   int countYesNotEnum = 0;
   int countManoDomEnum = 0;
@@ -296,7 +296,7 @@ class _MedicalTestState extends State<MedicalTest> {
       onTap: () => SystemChannels.textInput.invokeMethod('TextInput.hide'),
       child: Dialog(
         insetPadding:  
-        MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
+        MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <900  ?
           //para celulares
           EdgeInsets.fromLTRB(
           MediaQuery.of(context).size.width * .07,

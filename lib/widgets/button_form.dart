@@ -129,7 +129,7 @@ class _ButtonFormState extends State<ButtonForm> {
           inputFields.add(
             Column(
             children: [
-              Text( widget.field[i], style: getTextStyleText(context,null),),
+              Text( widget.field[i], style: getTextStyleText(context,null,null),),
               SizedBox(
                 height: MediaQuery.of(context).size.height *.3,
                 width: MediaQuery.of(context).size.width,
@@ -199,7 +199,7 @@ class _ButtonFormState extends State<ButtonForm> {
       
       return Dialog(
         insetPadding: 
-        MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
+        MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <900  ?
           //para celulares
           EdgeInsets.fromLTRB(
           MediaQuery.of(context).size.width * .07,
@@ -271,7 +271,7 @@ class _ButtonFormState extends State<ButtonForm> {
                                 context: context,
                                 builder: (BuildContext context) {
                                  return AlertDialog(
-                                    title: Text('Por favor acomplete todos los campos',style:  MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
+                                    title: Text('Por favor acomplete todos los campos',style:  MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <900  ?
                                     //para celulares
                                     TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.015),fontWeight: FontWeight.bold):
                                     //para tablets
@@ -319,11 +319,11 @@ class _ButtonFormState extends State<ButtonForm> {
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 mainAxisAlignment: MainAxisAlignment.start,
                                                 children:[
-                                                Text('Nombre:', style: getTextStyleText(context, FontWeight.bold),),
-                                                Text(t.guard!, style: getTextStyleText(context, null),),
+                                                Text('Nombre:', style: getTextStyleText(context,FontWeight.bold,null),),
+                                                Text(t.guard!, style: getTextStyleText(context,null,null),),
                                                 const SizedBox(height: 10,),
-                                                Text('Turno:', style: getTextStyleText(context, FontWeight.bold)),
-                                                Text(t.turn! == '1'?'Primer Turno':t.turn! == '2'?'Segundo Turno': 'Tercer Turno', style: getTextStyleText(context,null), )
+                                                Text('Turno:', style: getTextStyleText(context,FontWeight.bold,null)),
+                                                Text(t.turn! == '1'?'Primer Turno':t.turn! == '2'?'Segundo Turno': 'Tercer Turno', style: getTextStyleText(context,null,null), )
                                                 ]
                                               ),
                                               actions: [
@@ -448,8 +448,8 @@ class _ButtonFormState extends State<ButtonForm> {
                                 context: context,
                                 builder: (BuildContext context) {
                                    return AlertDialog(
-                                      title: Text('Mensaje',style: getTextStyleText(context, FontWeight.bold)),
-                                      content: Text('No tiene vehiculos registrados', style: getTextStyleText(context, null),),
+                                      title: Text('Mensaje',style: getTextStyleText(context,FontWeight.bold,null)),
+                                      content: Text('No tiene vehiculos registrados', style: getTextStyleText(context,null,null),),
                                       actions: [
                                         ElevatedButton(
                                           onPressed: () {
@@ -469,8 +469,8 @@ class _ButtonFormState extends State<ButtonForm> {
                                 context: context,
                                 builder: (BuildContext context) {
                                    return AlertDialog(
-                                      title: Text('Mensaje',style: getTextStyleText(context, FontWeight.bold)),
-                                      content: Text('Por favor llene los campos necesarios', style: getTextStyleText(context, null),),
+                                      title: Text('Mensaje',style: getTextStyleText(context,FontWeight.bold,null)),
+                                      content: Text('Por favor llene los campos necesarios', style: getTextStyleText(context,null,null),),
                                       actions: [
                                         ElevatedButton(
                                           onPressed: () {
@@ -552,20 +552,20 @@ class _ButtonFormState extends State<ButtonForm> {
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 mainAxisAlignment: MainAxisAlignment.start,
                                                 children:[
-                                                Text('Platillo:', style: getTextStyleText(context, FontWeight.bold),),
-                                                Text(t.dish!, style: getTextStyleText(context, null),),
+                                                Text('Platillo:', style: getTextStyleText(context,FontWeight.bold,null),),
+                                                Text(t.dish!, style: getTextStyleText(context,null,null),),
                                                 const SizedBox(height: 10,),
-                                                Text('Guarnicion:', style: getTextStyleText(context, FontWeight.bold)),
-                                                Text(t.garrison!, style: getTextStyleText(context,null), ),
+                                                Text('Guarnicion:', style: getTextStyleText(context,FontWeight.bold,null)),
+                                                Text(t.garrison!, style: getTextStyleText(context,null,null), ),
                                                 const SizedBox(height: 10,),
-                                                Text('Postre:', style: getTextStyleText(context, FontWeight.bold)),
-                                                Text(t.dessert! == '' || t.dessert == null ?'N/A': t.dessert!, style: getTextStyleText(context,null), ),
+                                                Text('Postre:', style: getTextStyleText(context,FontWeight.bold,null)),
+                                                Text(t.dessert! == '' || t.dessert == null ?'N/A': t.dessert!, style: getTextStyleText(context,null,null), ),
                                                 const SizedBox(height: 10,),
-                                                Text('Cantidad recibida:', style: getTextStyleText(context, FontWeight.bold)),
-                                                Text(t.received!, style: getTextStyleText(context,null), ),
+                                                Text('Cantidad recibida:', style: getTextStyleText(context,FontWeight.bold,null)),
+                                                Text(t.received!, style: getTextStyleText(context,null,null), ),
                                                 const SizedBox(height: 10,),
-                                                Text('Menu de Hoy (Portal de Comunicación):', style: getTextStyleText(context, FontWeight.bold)),
-                                                Text(t.menu_portal!, style: getTextStyleText(context,null), )
+                                                Text('Menu de Hoy (Portal de Comunicación):', style: getTextStyleText(context,FontWeight.bold,null)),
+                                                Text(t.menu_portal!, style: getTextStyleText(context,null,null), )
                                                 ]
                                               ),
                                               actions: [
@@ -610,8 +610,8 @@ class _ButtonFormState extends State<ButtonForm> {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      title:  Text('Llene todos los campos', style: getTextStyleText(context, FontWeight.bold),),
-                                      content: Text('Por favor suba una foto del platillo.', style: getTextStyleText(context, null),),
+                                      title:  Text('Llene todos los campos', style: getTextStyleText(context,FontWeight.bold,null),),
+                                      content: Text('Por favor suba una foto del platillo.', style: getTextStyleText(context,null,null),),
                                       actions: [
                                         ElevatedButton(
                                           onPressed: () async { 
@@ -726,8 +726,8 @@ class _ButtonFormState extends State<ButtonForm> {
                               context: context,
                               builder: (BuildContext context) {
                                   return AlertDialog(
-                                    title: Text('Mensaje',style: getTextStyleText(context, FontWeight.bold)),
-                                    content: Text('Por favor llene los campos necesarios', style: getTextStyleText(context, null),),
+                                    title: Text('Mensaje',style: getTextStyleText(context,FontWeight.bold,null)),
+                                    content: Text('Por favor llene los campos necesarios', style: getTextStyleText(context,null,null),),
                                     actions: [
                                       ElevatedButton(
                                         onPressed: () {

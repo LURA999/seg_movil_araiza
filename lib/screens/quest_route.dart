@@ -51,6 +51,7 @@ class _QuestRouteState extends State<QuestRoute>  {
   int form = 0;
   bool desactivarbtnsave = false;
   bool desactivarbtndownload = false;
+  bool limpiar = false;
   double widthPreguntas = 0;
   Orientation? AuxOrientation ;
   bool isLoading = false;
@@ -62,8 +63,12 @@ class _QuestRouteState extends State<QuestRoute>  {
      final Map<String, dynamic> param = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
      periodo = param['periodo'];
      recorrido = param['recorrido'];
-     responsiveHeight = MediaQuery.of(context).size.height * 0.1;
-      widthPreguntas = MediaQuery.of(context).size.height * 0.3;
+     responsiveHeight = 
+     MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <900?
+     MediaQuery.of(context).size.height * (MediaQuery.of(context).orientation == Orientation.landscape? 0.23 : 0.1)
+     :
+     MediaQuery.of(context).size.height * (MediaQuery.of(context).orientation == Orientation.landscape? 0.12 : 0.08);
+     widthPreguntas = MediaQuery.of(context).size.height * 0.3;
 
      form = param['form'];
 
@@ -460,8 +465,10 @@ class _QuestRouteState extends State<QuestRoute>  {
       Orientation orientation = MediaQuery.of(context).orientation;
 
     int index = 0;
-    if (!snapshot.hasData && !snapshot.hasError ) {
+    if (!snapshot.hasData && !snapshot.hasError || orientation !=  AuxOrientation) {
       
+    AuxOrientation = orientation;
+         soloUnaVez3 = true;
       return CustomBackBvuttonInterceptor(child:Scaffold(
         body: Center(
           child: FractionallySizedBox(
@@ -514,99 +521,19 @@ class _QuestRouteState extends State<QuestRoute>  {
     soloUnaVez2 = false;
     }
 
-    if (isLoading) {
-      return Center(
-        child: CircularProgressIndicator(), // Muestra el indicador de progreso
-      );
-    } 
-
-  isLoading = true; // Mostrar el indicador de progreso
-    
-
-
-  if (soloUnaVez3 || orientation !=  AuxOrientation) {
+  if (soloUnaVez3 ) {
       
-    AuxOrientation = orientation;
 
-    double responsiveRow = MediaQuery.of(context).size.height * (orientation == Orientation.landscape? 0.1 : 0.05 ); 
+    double responsiveRow = MediaQuery.of(context).size.height * (orientation == Orientation.landscape? 
+    MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <900 ? 0.15 :
+     0.1 : 0.05 ); 
     double responsiveComment = MediaQuery.of(context).size.height * (orientation == Orientation.landscape? 0.05 : 0.01 ); 
 
     temas = [];
-    for (var i = 0; i < preguntasHeaders.length; i++) {
-      temas.add(
-        SizedBox(
-          width: MediaQuery.of(context).size.width,
-          child: Column(
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width ,
-                  height: MediaQuery.of(context).size.height * (orientation == Orientation.landscape? 0.1 : 0.05 ),
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      color: Color.fromRGBO(156, 39, 50, 1.0)
-                    ),
-                    margin: const EdgeInsets.only(top: 10,bottom: 10),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text(preguntasHeaders[i], style: getTextStyleTitle2(context, Colors.white)),
-                    ),
-                  ),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  alignment: Alignment.center,
-                  child: Column(
-                    children: [
-                     
-                    //En esta parte se imprime las preguntas verticales (perono se imprimen las preguntas verticales2)
-                      if(i < preguntasHeaders.length - (periodo==1 && recorrido == 3 ? 1 : 0 ))
-                      ...preguntasVerticales.map((e) {
-                        return columnOrRow(responsiveRow, e, ++index,orientation); 
-                    }
-                    ),
-                    //En esta parte se imprime las preguntas verticales, personalizadas
-                      if(i == preguntasHeaders.length - (periodo==1 && recorrido == 3 ? 1 : preguntasHeaders.length -1 ))
-                    ...preguntasVerticales2.map((e) {
-                        return columnOrRow(responsiveRow, e, ++index,orientation);
-                    }
-                    ),
-                    SizedBox(height: responsiveComment,),
-                     Column(
-                      children: [
-                        Text('Comentarios',style: getTextStyleTitle2(context, null),),
-                         Padding(
-                           padding: EdgeInsets.all(responsiveComment),
-                           child: TextFormField(
-                             initialValue: arrEdConComment[i].text,
-                             textCapitalization: TextCapitalization.characters,
-                             style: getTextStyleText(context,null),
-                             onChanged: (value) {
-                                arrEdConComment[i].text = value;
-                             },
-                             maxLines: 4,
-                             decoration:  InputDecoration(
-                               border: OutlineInputBorder(
-                                 borderRadius: BorderRadius.circular(0),
-                               )
-                             )
-                           ),
-                         ),
-                      ],
-                     )
-                    ],
-                  ),
-                ),
-              ],
-            ),
-        )
-      );
-    }
-         soloUnaVez3 = false;
-
+    llenarFormulario(responsiveRow, index, orientation, responsiveComment);
+    soloUnaVez3 = false;
     }
 
-      isLoading = false; // Ocultar el indicador de progreso
-    
     }
   }
   
@@ -618,7 +545,7 @@ class _QuestRouteState extends State<QuestRoute>  {
               child: Column(
                 children: [
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       SizedBox(height: responsiveHeight,),
                       SizedBox(width: MediaQuery.of(context).size.width * 0.01,),
@@ -668,24 +595,47 @@ class _QuestRouteState extends State<QuestRoute>  {
                       });
                       }: null,
                       child: Text('Descargar', style: getTextStyleButtonField(context)),
-                      )
+                      ),
+                     SizedBox(width: MediaQuery.of(context).size.width * 0.01,),
+                      ElevatedButton(onPressed: desactivarbtndownload == false? () async { 
+                     
+                      double responsiveRow = MediaQuery.of(context).size.height * (orientation == Orientation.landscape? 
+                      MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <900 ? 0.15 :
+                      0.1 : 0.05 ); 
+                      double responsiveComment = MediaQuery.of(context).size.height * (orientation == Orientation.landscape? 0.05 : 0.01 ); 
+                     rateRoutes = List.generate((preguntasVerticales.length + preguntasVerticales2.length) * preguntasHeaders.length, 
+                     (index) => rateRoute.none );
+                      temas = [];
+                      comments = [];
+                      for (var i = 0; i < arrEdConComment.length; i++) {
+                        arrEdConComment[i].clear();
+                      }
+
+                      arrEdConDescription[0].text = '';
+                      arrEdConDescription[1].text = '';
+
+                      llenarFormulario(responsiveRow, index, orientation, responsiveComment,);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Se ha vaciado el formulario', style: getTextStyleText(context, FontWeight.bold, Colors.white),),backgroundColor: Colors.green),
+                      );
+                      setState(() { });
+                      }: null,
+                      child:  Text('Limpiar',style: getTextStyleButtonField(context)),
+                      ) 
                     ],
                   ), 
                   ...temas,
     
                 if( periodo !=3)
-                Column(
+                Row(
                   children: [
                   Text(titleDescription,style: getTextStyleTitle2(context, null),),
                     Padding(
                     padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.05),
                     child: TextFormField(
-                        initialValue: arrEdConDescription[0].text,
+                        controller: arrEdConDescription[0],
                         textCapitalization: TextCapitalization.characters,
-                        style: getTextStyleText(context,null),
-                        onChanged: (value) {                          
-                          arrEdConDescription[0].text = value;
-                        },
+                        style: getTextStyleText(context,null,null),
                         maxLines: 4,
                         decoration:  InputDecoration(
                           border: OutlineInputBorder(
@@ -698,13 +648,9 @@ class _QuestRouteState extends State<QuestRoute>  {
                     Padding(
                     padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.05),
                     child: TextFormField(
-                        initialValue: arrEdConDescription[1].text,
+                        controller: arrEdConDescription[1],
                         textCapitalization: TextCapitalization.characters,
-                        style: getTextStyleText(context,null),
-                        onChanged: (value) {
-                          arrEdConDescription[1].text = value;
-    
-                        },
+                        style: getTextStyleText(context,null,null),
                         maxLines: 4,
                         decoration:  InputDecoration(
                           border: OutlineInputBorder(
@@ -723,7 +669,7 @@ class _QuestRouteState extends State<QuestRoute>  {
                         desactivarbtnsave = true;
                       });
                         await seht.postForm(transformEnumArrayToInteger(rateRoutes), form, context);
-                        print(transformEnumArrayToInteger(rateRoutes));
+
                         for (var i = 0; i < formValue.length; i++) {
                           comments.add(arrEdConComment[i].text);
                         }
@@ -740,31 +686,60 @@ class _QuestRouteState extends State<QuestRoute>  {
                       });
                     }:null,
                     child:  Text('Guardar', style: getTextStyleButtonField(context),),
-                    ),
-                     SizedBox(width: MediaQuery.of(context).size.width * 0.01,),
-                      ElevatedButton(onPressed: desactivarbtndownload == false? () async { 
-                      setState(() {
-                        desactivarbtndownload = true;
-                      });
+                      ) ,
+                      SizedBox(width: MediaQuery.of(context).size.width * 0.01,),
+                        ElevatedButton(onPressed: desactivarbtndownload == false? () async { 
+                        setState(() {
+                          desactivarbtndownload = true;
+                        });
 
-                      final intf = DescriptionsSeh(
-                          description1: arrEdConDescription[0].text,
-                          description2: arrEdConDescription[1].text,
-                        );
-                      
-                        for (var i = 0; i < formValue.length; i++) {
-                          comments.add(arrEdConComment[i].text);
+                        final intf = DescriptionsSeh(
+                            description1: arrEdConDescription[0].text,
+                            description2: arrEdConDescription[1].text,
+                          );
+                        
+                          for (var i = 0; i < formValue.length; i++) {
+                            comments.add(arrEdConComment[i].text);
+                          }
+                          DateTime now = DateTime.now();
+                          String formattedDate = DateFormat('yyyyMMddss').format(now);
+                          String fileName = '$formattedDate.xlsx';                        
+                          await jsonToExcelSehExcel(preguntasVerticales,preguntasHeaders, preguntasVerticales2,transformEnumArrayToInteger(rateRoutes),area, comments,[titleDescription,titleDescription2], intf,'Seh_$fileName',context);
+                        setState(() {
+                          desactivarbtndownload = false;
+                        });
+                        }: null,
+                        child:  Text('Descargar',style: getTextStyleButtonField(context)),
+                        ),
+                      SizedBox(width: MediaQuery.of(context).size.width * 0.01,),
+                        ElevatedButton(onPressed: () { 
+                          
+                        double responsiveRow = MediaQuery.of(context).size.height * (orientation == Orientation.landscape? 
+                        MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <900 ? 0.15 :
+                        0.1 : 0.05 ); 
+                        double responsiveComment = MediaQuery.of(context).size.height * (orientation == Orientation.landscape? 0.05 : 0.01 ); 
+                      rateRoutes = List.generate((preguntasVerticales.length + preguntasVerticales2.length) * preguntasHeaders.length, 
+                      (index) => rateRoute.none );
+                        temas = [];
+
+                        arrEdConDescription[0].text = '';
+                        arrEdConDescription[1].text = '';
+
+                        for (var i = 0; i < arrEdConComment.length; i++) {
+                        setState(() {
+                          arrEdConComment[i].text = '';
+                        });
                         }
-                        DateTime now = DateTime.now();
-                        String formattedDate = DateFormat('yyyyMMddss').format(now);
-                        String fileName = '$formattedDate.xlsx';                        
-                        await jsonToExcelSehExcel(preguntasVerticales,preguntasHeaders, preguntasVerticales2,transformEnumArrayToInteger(rateRoutes),area, comments,[titleDescription,titleDescription2], intf,'Seh_$fileName',context);
-                      setState(() {
-                        desactivarbtndownload = false;
-                      });
-                      }: null,
-                      child:  Text('Descargar',style: getTextStyleButtonField(context)),
-                      )
+
+                        llenarFormulario(responsiveRow, index, orientation, responsiveComment);
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Se ha vaciado el formulario', style: getTextStyleText(context, FontWeight.bold, Colors.white),),backgroundColor: Colors.green),
+                        );
+
+                        },
+                        child:  Text('Limpiar',style: getTextStyleButtonField(context)),
+                        ) 
                   ],
                   ),
                 ],
@@ -788,7 +763,7 @@ class _QuestRouteState extends State<QuestRoute>  {
         child: preguntaContainer(responsiveRow, e),
       ),
       Expanded(
-        child:  respuestasContainer(responsiveRow, index),
+        child: respuestasContainer(responsiveRow, index),
       )            
     ],
   );
@@ -796,13 +771,13 @@ class _QuestRouteState extends State<QuestRoute>  {
      return Column(
     children: [
       preguntaContainer(responsiveRow, e),
-      respuestasContainer(responsiveRow, index),
+      respuestasContainer(null, index),
     ],
   );
   }
 }
 
-  Container respuestasContainer(double responsiveRow, int index) {
+  Container respuestasContainer(double? responsiveRow, int index) {
     return Container(
       height: responsiveRow,
       width: (MediaQuery.of(context).size.width ) ,
@@ -810,18 +785,93 @@ class _QuestRouteState extends State<QuestRoute>  {
       decoration: BoxDecoration(border: Border.all(color: Colors.black)),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-          child: RadioInputRateRoute(titulo: const ["Bueno","Regular","Malo"],index: index-1,tipoEnum: 3,rateRoutes: rateRoutes,  ))
+        child: RadioInputRateRoute(titulo: const ["Bueno","Regular","Malo"],index: index-1,tipoEnum: 3,rateRoutes: rateRoutes,  ))
       );
   }
 
   Container preguntaContainer(double responsiveRow, String e) {
     return Container(
         height: responsiveRow,
-        alignment: Alignment.center,
-        child: Text(e, style: getTextStyleText(context, null)),
-        padding: EdgeInsets.only(left: 15),
+        alignment: Alignment.centerLeft,
         decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+        child: Text(e, style: getTextStyleText(context, null ,null).copyWith(height:  1.2) ),
       );
+  }
+
+
+  llenarFormulario(double responsiveRow,int index,Orientation orientation, double responsiveComment) {
+ for (var i = 0; i < preguntasHeaders.length; i++) {
+      temas.add(
+        SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+              children: [
+                SizedBox(
+                  width: MediaQuery.of(context).size.width ,
+                  height: MediaQuery.of(context).size.height * 
+                  (MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <900 ?
+                  (orientation == Orientation.landscape? 0.16 : 0.07 )
+                  :
+                  (orientation == Orientation.landscape? 0.1 : 0.05 )),
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: Color.fromRGBO(156, 39, 50, 1.0)
+                    ),
+                    margin: const EdgeInsets.only(top: 10,bottom: 10),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(preguntasHeaders[i], style: getTextStyleTitle2(context, Colors.white)),
+                    ),
+                  ),
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  alignment: Alignment.center,
+                  child: Column(
+                    children: [
+                     
+                    //En esta parte se imprime las preguntas verticales (perono se imprimen las preguntas verticales2)
+                      if(i < preguntasHeaders.length - (periodo==1 && recorrido == 3 ? 1 : 0 ))
+                      ...preguntasVerticales.map((e) {
+                        return columnOrRow(responsiveRow, e, ++index,orientation); 
+                    }
+                    ),
+                    //En esta parte se imprime las preguntas verticales, personalizadas
+                      if(i == preguntasHeaders.length - (periodo==1 && recorrido == 3 ? 1 : preguntasHeaders.length -1 ))
+                    ...preguntasVerticales2.map((e) {
+                        return columnOrRow(responsiveRow, e, ++index,orientation);
+                    }
+                    ),
+                    SizedBox(height: responsiveComment,),
+                     Column(
+                      children: [
+                        Text('Comentarios',style: getTextStyleTitle2(context, null),),
+                         Padding(
+                           padding: EdgeInsets.all(responsiveComment),
+                           child: TextFormField(
+                              controller: arrEdConComment[i],
+                             textCapitalization: TextCapitalization.characters,
+                             style: getTextStyleText(context,null,null),
+                             maxLines: 4,
+                             decoration:  InputDecoration(
+                               border: OutlineInputBorder(
+                                 borderRadius: BorderRadius.circular(0),
+                               )
+                             )
+                           ),
+                         ),
+                      ],
+                     )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+        )
+      );
+
+    }
+
   }
 }
 

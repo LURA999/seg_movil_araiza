@@ -12,13 +12,13 @@ class TableCustom extends StatelessWidget {
 
   TextStyle myTextStyleTitle = const TextStyle(
     color: Color(0xFF293641),
-    fontFamily: 'Inter',
+    fontFamily: 'GothamMedium',
     fontWeight: FontWeight.w600,
   );
 
   TextStyle myTextStyleDescription = const TextStyle(
     color: Color(0xFF293641),
-    fontFamily: 'Inter',
+    fontFamily: 'GothamBook',
     fontWeight: FontWeight.normal,
   );
 
@@ -32,12 +32,13 @@ class TableCustom extends StatelessWidget {
             padding: EdgeInsets.only(
             bottom: MediaQuery.of(context).size.height * .02),
             child: Ink(
-              height: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
+              height: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <900  ?
                 //para celulares
-                ( MediaQuery.of(context).size.height * .15 )
+                ( MediaQuery.of(context).size.height * (MediaQuery.of(context).orientation == Orientation.landscape ? .3 : .15))
                 :
                 //para tablets 
                 (MediaQuery.of(context).size.height * .2 ),
+
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10.0),
@@ -54,7 +55,7 @@ class TableCustom extends StatelessWidget {
                 onTap: opcion.navigator,
                 child: Row(
                   children: [
-                    opcion.img != null ? Expanded(
+                    Expanded(
                       child: Container(
                         padding: const EdgeInsets.all(8.0),
                         child: SvgPicture.asset(
@@ -64,24 +65,14 @@ class TableCustom extends StatelessWidget {
                               MediaQuery.of(context).size.width * opcion.width,
                         ),
                       ),
-                    ): SizedBox(width: MediaQuery.of(context).size.width *
-                          (MediaQuery.of(context).orientation ==
-                                  Orientation.portrait
-                              ? 0.1
-                              : 0.08 ), child: Container()),
-    
+                    ),
                     SizedBox(
                       width: 
-                      opcion.img != null?
                       MediaQuery.of(context).size.width *
                           (MediaQuery.of(context).orientation ==
                                   Orientation.portrait
                               ? 0.5
-                              : 0.65) : MediaQuery.of(context).size.width *
-                          (MediaQuery.of(context).orientation ==
-                                  Orientation.portrait
-                              ? 0.65
-                              : 0.7),
+                              : 0.65),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,

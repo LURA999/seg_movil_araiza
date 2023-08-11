@@ -58,6 +58,7 @@ dependencies:
   image_picker: ^1.0.1
   datetime_picker_formfield: ^2.0.1
   connectivity_plus: ^4.0.1
+  docx_template: ^0.3.4
   #easy_autocomplete: ^1.6.0
   #flutter_async_autocomplete: ^0.1.1
   #flutter_datetime_picker: 1.5.1

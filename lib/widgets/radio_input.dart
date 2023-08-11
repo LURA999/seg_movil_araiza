@@ -7,7 +7,7 @@ import '../theme/app_theme.dart';
 class RadioInput extends StatefulWidget {
   final List<Cause>? causeEnum;
   final List<YesNot>? yesNotEnum;
-  final List<manoDominante>? manoDomEnum;
+  final List<ManoDominante>? manoDomEnum;
  
   final int index;
   final int tipoEnum;
@@ -44,13 +44,13 @@ class _RadioInputState extends State<RadioInput> {
           mainAxisSize: MainAxisSize.min,
           children: [
               ListTile(
-              title: Text('Diestro'),
-              leading: Radio<manoDominante>(
+              title: const Text('Diestro'),
+              leading: Radio<ManoDominante>(
                 activeColor: AppTheme.primary,
                 fillColor: MaterialStateProperty.resolveWith(getColor),
-                value: manoDominante.diestro,
+                value: ManoDominante.diestro,
                 groupValue: widget.manoDomEnum![widget.index],
-                onChanged: (manoDominante? value) {
+                onChanged: (ManoDominante? value) {
                   setState(() {
                     widget.manoDomEnum![widget.index] = value!;
                   });
@@ -58,13 +58,13 @@ class _RadioInputState extends State<RadioInput> {
               ),
             ),
             ListTile(
-              title: Text('Zurdo'),
-              leading: Radio<manoDominante>(
+              title: const Text('Zurdo'),
+              leading: Radio<ManoDominante>(
                 activeColor: AppTheme.primary,
                 fillColor: MaterialStateProperty.resolveWith(getColor),
-                value: manoDominante.zurdo,
+                value: ManoDominante.zurdo,
                 groupValue: widget.manoDomEnum![widget.index],
-                onChanged: (manoDominante? value) {
+                onChanged: (ManoDominante? value) {
                   setState(() {
                     widget.manoDomEnum![widget.index] = value!;
                   });
@@ -72,13 +72,13 @@ class _RadioInputState extends State<RadioInput> {
               )
             ),
             ListTile(
-              title: Text('Ambos'),
-              leading: Radio<manoDominante>(
+              title: const Text('Ambos'),
+              leading: Radio<ManoDominante>(
                 activeColor: AppTheme.primary,
                 fillColor: MaterialStateProperty.resolveWith(getColor),
-                value: manoDominante.ambos,
+                value: ManoDominante.ambos,
                 groupValue: widget.manoDomEnum![widget.index],
-                onChanged: (manoDominante? value) {
+                onChanged: (ManoDominante? value) {
                   setState(() {
                     widget.manoDomEnum![widget.index] = value!;
                   });

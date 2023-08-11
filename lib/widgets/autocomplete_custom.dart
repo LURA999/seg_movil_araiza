@@ -76,7 +76,7 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
         optionsViewBuilder: (BuildContext context, AutocompleteOnSelected<String> onSelected,
           Iterable<String> options) {
             List<ListTile> list = options.map((String option) => ListTile(
-            title: Text(option,style: getTextStyleText(context,null)),
+            title: Text(option,style: getTextStyleText(context,null,null)),
             onTap: () async {
               setState(() {
                 onSelected(option);
@@ -108,7 +108,7 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
               
               controller: fieldController,
               focusNode: fieldFocusNode,
-              style: getTextStyleText(context,null),
+              style: getTextStyleText(context,null,null),
               decoration: InputDecoration(
                 hintText: widget.labelText
               ),

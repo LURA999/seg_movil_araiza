@@ -1,13 +1,15 @@
-import 'dart:ui';
-
-class Option {
+class OptionRoute {
   final String title;
   final String description;
   final String? img;
   final double width;
-  final VoidCallback? navigator;
+  final List<void Function()> navigator;
+  final int monthInitial;
+  final int monthFinal;
 
-  Option({
+  OptionRoute({
+    required this.monthInitial,
+    required this.monthFinal,
     required this.title,
     required this.description,
     required this.img,

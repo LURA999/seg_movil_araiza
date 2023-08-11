@@ -60,7 +60,10 @@ class _DiningRoomState extends State<DiningRoom> {
               alignment: Alignment.center,
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: EdgeInsets.only(left: MediaQuery.of(context).size.width*0.08 ,right:  MediaQuery.of(context).size.width*0.08),
+                  padding: 
+                  MediaQuery.of(context).orientation == Orientation.portrait ? 
+                  EdgeInsets.only(left: MediaQuery.of(context).size.width*0.08 ,right:  MediaQuery.of(context).size.width*0.08) :
+                  EdgeInsets.only(left: MediaQuery.of(context).size.width*0.08 ,right: MediaQuery.of(context).size.width*0.08, top: MediaQuery.of(context).size.height*0.1),
                   child: Column(children: [
                     SizedBox(
                       child: Align(

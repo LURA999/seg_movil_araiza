@@ -35,9 +35,16 @@ class RhControl extends StatelessWidget {
       body: Column(
         children: [
           Container(
-            padding: EdgeInsets.fromLTRB(
+            padding: MediaQuery.of(context).orientation == Orientation.portrait ? 
+            EdgeInsets.fromLTRB(
             MediaQuery.of(context).size.width * .05,
             MediaQuery.of(context).size.height * .05,
+            MediaQuery.of(context).size.width * .05,
+            MediaQuery.of(context).size.height * .02)
+            :
+            EdgeInsets.fromLTRB(
+            MediaQuery.of(context).size.width * .05,
+            MediaQuery.of(context).size.height * .1,
             MediaQuery.of(context).size.width * .05,
             MediaQuery.of(context).size.height * .02),
             child: Align(

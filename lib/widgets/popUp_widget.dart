@@ -7,8 +7,8 @@ messageError(BuildContext context, String msg){
     context: context, // Accede al contexto del widget actual
     builder: (BuildContext context) {
       return AlertDialog(
-        title:  Text('Error',style: getTextStyleText(context, FontWeight.bold),),
-        content: Text(msg, style: getTextStyleText(context, null)),
+        title:  Text('Error',style: getTextStyleText(context,FontWeight.bold,null),),
+        content: Text(msg, style: getTextStyleText(context,null,null)),
         actions: [
           TextButton(
             onPressed: () {

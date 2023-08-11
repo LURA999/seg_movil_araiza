@@ -36,32 +36,48 @@ class SehControl extends StatelessWidget {
       backgroundColor: const Color.fromRGBO(246, 247, 252, 2),
       body: Column(
         children: [
-          Container(
-            padding: EdgeInsets.fromLTRB(
-            MediaQuery.of(context).size.width * .05,
-            MediaQuery.of(context).size.height * .05,
-            MediaQuery.of(context).size.width * .05,
-            MediaQuery.of(context).size.height * .02),
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                Text('Seguridad e Higiene',style: getTextStyleTitle(context, null) ),
-                Text('Selecciona una opción:',style: getTextStyleTitle2(context, null)),
-                ]
-              ),
-            ),
-          ),
           Expanded(
-            child: Container(
-              padding: EdgeInsets.fromLTRB(
-              MediaQuery.of(context).size.width * .05,
-              MediaQuery.of(context).size.height * .0,
-              MediaQuery.of(context).size.width * .05,
-              MediaQuery.of(context).size.height * .0),
-              child:  TableCustom(opciones: opciones),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Container(
+                    padding: 
+                    MediaQuery.of(context).orientation == Orientation.portrait ? 
+                    EdgeInsets.fromLTRB(
+                    MediaQuery.of(context).size.width * .05,
+                    MediaQuery.of(context).size.height * .05,
+                    MediaQuery.of(context).size.width * .05,
+                    MediaQuery.of(context).size.height * .02)
+                    :
+                    EdgeInsets.fromLTRB(
+                    MediaQuery.of(context).size.width * .05,
+                    MediaQuery.of(context).size.height * .1,
+                    MediaQuery.of(context).size.width * .05,
+                    MediaQuery.of(context).size.height * .02)
+                    ,
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                        Text('Seguridad e Higiene',style: getTextStyleTitle(context, null) ),
+                        Text('Selecciona una opción:',style: getTextStyleTitle2(context, null)),
+                        ]
+                      ),
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.fromLTRB(
+                    MediaQuery.of(context).size.width * .05,
+                    MediaQuery.of(context).size.height * .0,
+                    MediaQuery.of(context).size.width * .05,
+                    MediaQuery.of(context).size.height * .0),
+                    child:  TableCustom(opciones: opciones),
+                  ),
+                 
+                ],
+              ),
             ),
           ),
           const SizedBox(child: Navbar(contexto2: 'control_seh'))

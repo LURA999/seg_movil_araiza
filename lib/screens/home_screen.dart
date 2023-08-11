@@ -160,7 +160,7 @@ class _ContainerOptionState extends State<ContainerOption> {
                       }
                       return Dialog(
                     insetPadding: 
-                    MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
+                    MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <900  ?
                       //para celulares
                       EdgeInsets.fromLTRB(
                       MediaQuery.of(context).size.width * .2,
@@ -251,7 +251,7 @@ class _ContainerOptionState extends State<ContainerOption> {
             height: MediaQuery.of(context).size.height * (MediaQuery.of(context).orientation == Orientation.portrait ? 0.05 : 0.1),
             //Si es verdadero, se tiene que aplicar para celulares, y si no, para tablets
             /** Medidas genericas desde cuando un movil se convierte en una tablet */
-            padding: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
+            padding: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <900  ?
                   ( MediaQuery.of(context).orientation == Orientation.portrait ? 
                   //pare celulares
                   EdgeInsets.fromLTRB(

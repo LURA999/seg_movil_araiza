@@ -24,7 +24,7 @@ class _MedicalRecordsState extends State<MedicalRecords> {
     MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .005: .01),
     MediaQuery.of(context).size.height * (MediaQuery.of(context).orientation == Orientation.portrait ? .005: .01));
     
-    EdgeInsets paddingIcon = MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
+    EdgeInsets paddingIcon = MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <900  ?
     //para celulares
     (EdgeInsets.fromLTRB(
     MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .003: .01),
@@ -41,13 +41,13 @@ class _MedicalRecordsState extends State<MedicalRecords> {
 
     TextStyle myTextSyleBody = const TextStyle(
       color: Color(0xFF293641),
-      fontFamily: 'Inter',
+      fontFamily: 'GothamMedium',
       fontWeight: FontWeight.normal
     );
 
     TextStyle myTextStyleTitle = const TextStyle(
       color: Color(0xFF293641),
-      fontFamily: 'Inter',
+      fontFamily: 'GothamBold',
       fontWeight: FontWeight.w900,
     );
     
@@ -113,7 +113,7 @@ class _MedicalRecordsState extends State<MedicalRecords> {
                          Row(
                            children: [
                                 SizedBox(
-                                  width: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <600  ?
+                                  width: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <900  ?
                                   //para celulares
                                   ( MediaQuery.of(context).size.width * .4 )
                                   :

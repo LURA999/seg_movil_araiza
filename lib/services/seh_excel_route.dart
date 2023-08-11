@@ -367,12 +367,9 @@ final Range desc1 = sheet.getRangeByIndex(preguntas.length + 7,16,preguntas.leng
 }
 
 
+    String? path =  await pickDownloadDirectory(context);
 
-
-
-  String? path =  await pickDownloadDirectory(context);
-
-  Directory directory = Directory(path!);
+    Directory directory = Directory(path!);
     if (await directory.exists()) {
      final file = File('$path/$fileName');  
      try {
