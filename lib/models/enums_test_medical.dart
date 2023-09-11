@@ -16,3 +16,13 @@ enum ManoDominante {
   ambos,
   none
 }
+
+enum MetodoAnti{
+  pastillas, 
+  dispositivo, 
+  condon, 
+  otb, 
+  inyeccion,
+  implante,
+  none
+}

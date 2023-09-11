@@ -1,4 +1,5 @@
 import 'package:app_seguimiento_movil/models/models.dart';
+import 'package:app_seguimiento_movil/models/qr_assistance.dart';
 import 'package:app_seguimiento_movil/services/services.dart';
 import 'package:app_seguimiento_movil/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ class _ScannerQR extends State<ScannerQR> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   VehicleService vs = VehicleService();
   FoodService fs = FoodService();
+  AssistanceService as = AssistanceService();
   bool isProccesing = false;
 
  
@@ -156,12 +158,15 @@ class _ScannerQR extends State<ScannerQR> {
            e.split(':')[0].trim() : e.split(':')[1].trim() 
         }; 
         Map<String, dynamic> json = await vp.arrSharedPreferences();
-        newQr.fkTurn = int.parse(json['turn']);
+      
+        newQr.fkTurn = json['idTurn'];
         newQr.color = objetoJson['color'];
         newQr.departament = objetoJson['departament'];
         newQr.employeeName = objetoJson['employeeName'];
         newQr.typevh = objetoJson['typevh'];
         newQr.platesSearch = objetoJson['plates'];
+        newQr.employee_num = objetoJson['numEmployee'];
+    
         if(isProccesing == true){
             await vs.postQrVehicle(newQr,context).then((value) {
             if(value.status == 200){
@@ -172,7 +177,55 @@ class _ScannerQR extends State<ScannerQR> {
             }else{
               setState(() {
                 color = Colors.red;
-                text = 'Ah ocurrido un error';
+                text = 'Error: ${value.container![0]["error"]}';
+              });
+            }
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+            duration: const Duration(seconds: 5),
+            backgroundColor: color,
+            content: Text(text,style: const TextStyle(color: Colors.white)),
+          ));
+          await Future.delayed(const Duration(seconds: 5));
+        }
+
+        setState(() {
+          isProccesing = false;
+          this.controller = controller;
+          controller.resumeCamera();
+        });
+
+      });
+    }else if(json["dish"] != null){
+      controller.scannedDataStream.listen((scanData) async {
+      setState(() {
+        isProccesing = true;
+        this.controller = controller;
+      });
+        result = scanData;
+        controller.stopCamera();
+        QrFood newQr = QrFood();
+        Map<String, dynamic> objetoJson = { 
+           for (var e in result!.code.toString().split(',').map((e) => e.trim())) 
+           e.split(':')[0].trim() : e.split(':')[1].trim() 
+        }; 
+        // var jsonResult = json.decode(result!.code!);
+        // Map<String, dynamic> json = await vp.arrSharedPreferences();
+        newQr.numEmployee = objetoJson['numEmployee'];
+        newQr.contract = objetoJson['contract'];
+        newQr.name = objetoJson['employeeName'];
+        if(isProccesing == true){
+            await fs.postQrFood(newQr,context).then((value) {
+            if(value.status == 200){
+              setState(() {
+                color = Colors.green;
+                text = 'Scanner completado.';
+              });
+            }else{
+              setState(() {
+                color = Colors.red;
+                text = 'Error: ${value.container![0]["error"]}';
               });
             }
           });
@@ -200,18 +253,17 @@ class _ScannerQR extends State<ScannerQR> {
       });
         result = scanData;
         controller.stopCamera();
-        QrFood newQr = QrFood();
+        QrAssistance newQr = QrAssistance();
         Map<String, dynamic> objetoJson = { 
            for (var e in result!.code.toString().split(',').map((e) => e.trim())) 
            e.split(':')[0].trim() : e.split(':')[1].trim() 
         }; 
         // var jsonResult = json.decode(result!.code!);
         // Map<String, dynamic> json = await vp.arrSharedPreferences();
-        newQr.numEmployee = objetoJson['numEmployee'];
-        newQr.contract = objetoJson['contract'];
-        newQr.name = objetoJson['name'];
+        newQr.employee_num = objetoJson['numEmployee'];
+        newQr.idTurn = json['idTurn'];
         if(isProccesing == true){
-            await fs.postQrFood(newQr,context).then((value) {
+            await as.postQrAssistance(newQr,context).then((value) {
             if(value.status == 200){
               setState(() {
                 color = Colors.green;
@@ -220,7 +272,7 @@ class _ScannerQR extends State<ScannerQR> {
             }else{
               setState(() {
                 color = Colors.red;
-                text = 'Error: Solo se permiten 2 comidas al dia por empleado';
+                text = 'Error: ${value.container![0]["error"]}';
               });
             }
           });

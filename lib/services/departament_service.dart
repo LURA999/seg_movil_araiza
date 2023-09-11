@@ -61,6 +61,51 @@ try {
   } 
 
 
+ Future<List<Map<String,dynamic>>> getDepartament( BuildContext context ) async {
+  AccessMap result = AccessMap();
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
+    return [];
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    isSaving = true;
+    notifyListeners();
+    final url = Uri.parse('https://www.comunicadosaraiza.com/portal_api/API/Users/userLogin.php?departamento=true');
+    var response = (await http.get(url)).body;
+      final result = AccessMap.fromJson(jsonDecode(response));
+    // var response = await http.post(url, body: {'pass': pass, 'departament': departament});
+    if (result.status == 200){
+      isSaving = false;
+      notifyListeners();
+      return result.container!;
+    }else{
+     // messageError(context,'Contraseña incorrecta.');
+    }
+
+    isSaving = false;
+    notifyListeners();
+    return []; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+    return []; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return []; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+    return []; 
+  }
+  }
+  // messageError(context,'Error desconocido.');
+    return []; 
+  } 
+
 }
 
 

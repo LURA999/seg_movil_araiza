@@ -47,7 +47,9 @@ class _QuestRouteState extends State<QuestRoute>  {
   List<Map<String,dynamic>> formValue =[];
   int periodo = 0;
   int recorrido = 0;
-  double responsiveHeight = 0;
+  String title = '';
+  double responsiveHeightTitle = 0;
+  double responsiveHeightSub = 0;
   int form = 0;
   bool desactivarbtnsave = false;
   bool desactivarbtndownload = false;
@@ -63,11 +65,20 @@ class _QuestRouteState extends State<QuestRoute>  {
      final Map<String, dynamic> param = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
      periodo = param['periodo'];
      recorrido = param['recorrido'];
-     responsiveHeight = 
-     MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <900?
-     MediaQuery.of(context).size.height * (MediaQuery.of(context).orientation == Orientation.landscape? 0.23 : 0.1)
+     title = param['title'];
+     responsiveHeightTitle = 
+     MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <500?
+     MediaQuery.of(context).size.height * (MediaQuery.of(context).orientation == Orientation.landscape? 0.23 : 0.06)
      :
      MediaQuery.of(context).size.height * (MediaQuery.of(context).orientation == Orientation.landscape? 0.12 : 0.08);
+     widthPreguntas = MediaQuery.of(context).size.height * 0.3;
+
+     
+     responsiveHeightSub = 
+     MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <500?
+     MediaQuery.of(context).size.height * (MediaQuery.of(context).orientation == Orientation.landscape? 0.6 : 0.04)
+     :
+     MediaQuery.of(context).size.height * (MediaQuery.of(context).orientation == Orientation.landscape? 0.06 : 0.04);
      widthPreguntas = MediaQuery.of(context).size.height * 0.3;
 
      form = param['form'];
@@ -424,9 +435,6 @@ class _QuestRouteState extends State<QuestRoute>  {
     return FutureBuilder<QuestData>(
       future: fetchData(),
       builder: (context, snapshot) {
-
-         
-
       List<int> transformEnumArrayToInteger(List<rateRoute> enumArray) {
         // El método map realiza el mapeo automáticamente sin necesidad de recorrer explícitamente
         return enumArray.map((element) {
@@ -543,11 +551,21 @@ class _QuestRouteState extends State<QuestRoute>  {
           Expanded(
             child: SingleChildScrollView(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  SizedBox(height: responsiveHeightTitle,),
+                  Column(
+                  mainAxisAlignment: MainAxisAlignment.start ,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(title,style: getTextStyleTitle(context,null)),
+                      Text('Selecciona la opción correcta:',style: getTextStyleTitle2(context,null))
+                    ],
+                  ),
+                  SizedBox(height: responsiveHeightSub,),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SizedBox(height: responsiveHeight,),
                       SizedBox(width: MediaQuery.of(context).size.width * 0.01,),
                       ElevatedButton(onPressed: desactivarbtnsave == false ? () async { 
                         setState(() {
@@ -598,27 +616,51 @@ class _QuestRouteState extends State<QuestRoute>  {
                       ),
                      SizedBox(width: MediaQuery.of(context).size.width * 0.01,),
                       ElevatedButton(onPressed: desactivarbtndownload == false? () async { 
-                     
-                      double responsiveRow = MediaQuery.of(context).size.height * (orientation == Orientation.landscape? 
-                      MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <900 ? 0.15 :
-                      0.1 : 0.05 ); 
-                      double responsiveComment = MediaQuery.of(context).size.height * (orientation == Orientation.landscape? 0.05 : 0.01 ); 
-                     rateRoutes = List.generate((preguntasVerticales.length + preguntasVerticales2.length) * preguntasHeaders.length, 
-                     (index) => rateRoute.none );
-                      temas = [];
-                      comments = [];
-                      for (var i = 0; i < arrEdConComment.length; i++) {
-                        arrEdConComment[i].clear();
-                      }
+                      showDialog(
+                          context: context, // Accede al contexto del widget actual
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title:  Text("¿Estás seguro que desea continuar?",style: getTextStyleText(context,FontWeight.bold,null),),
+                              content: Text("Los datos no se guardarán automaticamente, los cambios se guardan manualmente.", style: getTextStyleText(context,null,null)),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context); // Cierra el diálogo
+                                  },
+                                  child:  Text('Cancelar', style: getTextStyleButtonField(context),),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    double responsiveRow = MediaQuery.of(context).size.height * (orientation == Orientation.landscape? 
+                                    MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <900 ? 0.15 :
+                                    0.1 : 0.05 ); 
+                                    double responsiveComment = MediaQuery.of(context).size.height * (orientation == Orientation.landscape? 0.05 : 0.01 ); 
+                                  rateRoutes = List.generate((preguntasVerticales.length + preguntasVerticales2.length) * preguntasHeaders.length, 
+                                  (index) => rateRoute.none );
+                                    temas = [];
+                                    comments = [];
+                                    for (var i = 0; i < arrEdConComment.length; i++) {
+                                      arrEdConComment[i].clear();
+                                    }
 
-                      arrEdConDescription[0].text = '';
-                      arrEdConDescription[1].text = '';
+                                    arrEdConDescription[0].text = '';
+                                    arrEdConDescription[1].text = '';
 
-                      llenarFormulario(responsiveRow, index, orientation, responsiveComment,);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Se ha vaciado el formulario', style: getTextStyleText(context, FontWeight.bold, Colors.white),),backgroundColor: Colors.green),
-                      );
-                      setState(() { });
+                                    llenarFormulario(responsiveRow, index, orientation, responsiveComment,);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text('Se ha vaciado el formulario', style: getTextStyleText(context, FontWeight.bold, Colors.white),),backgroundColor: Colors.green),
+                                    );
+                                    setState(() { });
+                                    Navigator.pop(context); // Cierra el diálogo
+                                  },
+                                  child:  Text('Aceptar', style: getTextStyleButtonField(context),),
+                                )
+                              ],
+                            );
+                          });
+
+                      
+                      
                       }: null,
                       child:  Text('Limpiar',style: getTextStyleButtonField(context)),
                       ) 
@@ -627,9 +669,9 @@ class _QuestRouteState extends State<QuestRoute>  {
                   ...temas,
     
                 if( periodo !=3)
-                Row(
+                Column(
                   children: [
-                  Text(titleDescription,style: getTextStyleTitle2(context, null),),
+                  Text( titleDescription,style: getTextStyleTitle2(context, null),),
                     Padding(
                     padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.05),
                     child: TextFormField(
@@ -871,7 +913,6 @@ class _QuestRouteState extends State<QuestRoute>  {
       );
 
     }
-
   }
 }
 

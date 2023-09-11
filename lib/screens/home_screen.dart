@@ -46,11 +46,22 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: MediaQuery.of(context).size.height * (MediaQuery.of(context).orientation == Orientation.portrait ? 0.8 : 0.65),
                     width: MediaQuery.of(context).size.width,
                     child: Padding(
-                      padding:  EdgeInsets.fromLTRB(
+                      padding:  
+                      
+                       MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <500  ?
+                      //para celulares
+                      EdgeInsets.fromLTRB(
+                      MediaQuery.of(context).size.width * .03,
+                      MediaQuery.of(context).size.height * .03,
+                      MediaQuery.of(context).size.width * .03,
+                      MediaQuery.of(context).size.height * .0,
+                    ):
+                      //para tablets
+                      EdgeInsets.fromLTRB(
                       MediaQuery.of(context).size.width * .05,
                       MediaQuery.of(context).size.height * .05,
                       MediaQuery.of(context).size.width * .05,
-                      MediaQuery.of(context).size.height * 0,
+                      MediaQuery.of(context).size.height * .0,
                     ),
                       child: GridView.count(
                         primary: false,
@@ -160,7 +171,7 @@ class _ContainerOptionState extends State<ContainerOption> {
                       }
                       return Dialog(
                     insetPadding: 
-                    MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <900  ?
+                    MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <500  ?
                       //para celulares
                       EdgeInsets.fromLTRB(
                       MediaQuery.of(context).size.width * .2,
@@ -186,8 +197,9 @@ class _ContainerOptionState extends State<ContainerOption> {
                           child: Column ( 
                           children:[
                           Container(
+
                             padding: const EdgeInsets.only(bottom: 10),
-                            child: Text('Ingrese la contraseña ',style: getTextStyleTitle2(context,null)),
+                            child: Center(child: Text('Ingrese la contraseña ',style: getTextStyleTitle2(context,null))),
                           ),
                           TextFormField(
                           controller: textController,
@@ -248,17 +260,18 @@ class _ContainerOptionState extends State<ContainerOption> {
           });
           },
           child: Container(
+            
             height: MediaQuery.of(context).size.height * (MediaQuery.of(context).orientation == Orientation.portrait ? 0.05 : 0.1),
             //Si es verdadero, se tiene que aplicar para celulares, y si no, para tablets
             /** Medidas genericas desde cuando un movil se convierte en una tablet */
-            padding: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <900  ?
+            padding: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <500  ?
                   ( MediaQuery.of(context).orientation == Orientation.portrait ? 
                   //pare celulares
                   EdgeInsets.fromLTRB(
-                    MediaQuery.of(context).size.width * .025,
-                    MediaQuery.of(context).size.height * .025,
-                    MediaQuery.of(context).size.width * .025,
-                    MediaQuery.of(context).size.height * .025) 
+                    MediaQuery.of(context).size.width * .023,
+                    MediaQuery.of(context).size.height * .023,
+                    MediaQuery.of(context).size.width * .023,
+                    MediaQuery.of(context).size.height * .023) 
                   : EdgeInsets.fromLTRB(
                     MediaQuery.of(context).size.width * .06,
                     MediaQuery.of(context).size.height * .06,

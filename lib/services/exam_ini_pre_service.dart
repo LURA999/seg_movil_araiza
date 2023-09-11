@@ -1,28 +1,23 @@
-// ignore_for_file: use_build_context_synchronously
 
-import 'package:app_seguimiento_movil/models/models.dart';
-import 'package:app_seguimiento_movil/services/services.dart';
-import 'package:dio/dio.dart';
 import 'dart:io';
-import 'dart:convert';
-import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:encrypt/encrypt.dart' as encrypt;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter/foundation.dart';
+import 'package:app_seguimiento_movil/models/models.dart';
+import 'dart:convert';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:app_seguimiento_movil/widgets/widgets.dart';
 
-//,headers: {HttpHeaders.contentTypeHeader: "application/json"}
-class VehicleService extends ChangeNotifier {
+class ExamIniPreService extends ChangeNotifier{
 
-
-  bool isSaving = true;
-  final dio = Dio();
-  //Esta en modo desarrollo?
   bool modoApk = kDebugMode?true:false; 
+  bool isSaving = true;
   late String link = modoApk?'https://www.comunicadosaraiza.com/movil_scan_api/API':'https://www.comunicadosaraiza.com/movil_scan_api/API';
 
- Future<List<Map<String, dynamic>>> nameGuard( String name,BuildContext context ) async { 
+
+
+ Future<List<Map<String,dynamic>>> getDepartament( BuildContext context ) async {
+  AccessMap result = AccessMap();
   var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
@@ -33,171 +28,7 @@ class VehicleService extends ChangeNotifier {
 try {
     isSaving = true;
     notifyListeners();
-    final url = Uri.parse('$link/turn_vehicle.php?name=$name');
-    var response = (await http.get(url)).body;
-      final result = AccessMap.fromJson(json.decode(response));
-    // var response = await http.post(url, body: {'pass': pass, 'departament': departament});
-
-    if (result.status == 200){
-      isSaving = false;
-      notifyListeners();
-      return result.container! ;
-    }
-    isSaving = false;
-    notifyListeners();
-    return []; 
-  } on SocketException catch (e) {
-    // Error de conexión de red (sin conexión a Internet)
-    messageError(context,'Error de conexión de red: $e');
-    return []; 
-  } on HttpException catch (e) {
-    // Error de la solicitud HTTP
-    messageError(context,'Error de la solicitud HTTP: $e');
-    return []; 
-  } catch (e) {
-    // Otro tipo de error
-    messageError(context,'Error inesperado: $e');
-    return []; 
-  }
-  }
-    return []; 
-  
-  } 
-
-  Future<List<Map<String, dynamic>>> namesGuard(BuildContext context) async {
-  var connectivityResult = await (Connectivity().checkConnectivity());
-  if (connectivityResult == ConnectivityResult.none) {
-    // No hay conexión a Internet
-    messageError(context,'No hay conexión a Internet.');
-    return [];
-  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
-try {
-    isSaving = true;
-    notifyListeners();
-    final url = Uri.parse('$link/turn_vehicle.php?names=true');
-    var response = (await http.get(url)).body;
-      final result = AccessMap.fromJson(json.decode(response));
-    // var response = await http.post(url, body: {'pass': pass, 'departament': departament});
-
-    if (result.status == 200){
-      isSaving = false;
-      notifyListeners();
-      return result.container! ;
-    }
-    isSaving = false;
-    notifyListeners();
-    return []; 
-  } on SocketException catch (e) {
-    // Error de conexión de red (sin conexión a Internet)
-    messageError(context,'Error de conexión de red: $e');
-    return []; 
-  } on HttpException catch (e) {
-    // Error de la solicitud HTTP
-    messageError(context,'Error de la solicitud HTTP: $e');
-    return []; 
-  } catch (e) {
-    // Otro tipo de error
-    messageError(context,'Error inesperado: $e');
-    return []; 
-  }
-  }
-    return []; 
-  } 
-
-
-  Future<List<Map<String, dynamic>>> showPlateRegister(String value,BuildContext context) async {
-  var connectivityResult = await (Connectivity().checkConnectivity());
-  if (connectivityResult == ConnectivityResult.none) {
-    // No hay conexión a Internet
-    messageError(context,'No hay conexión a Internet.');
-    return [];
-  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
-try {
-    isSaving = true;
-    notifyListeners();
-    final url = Uri.parse('$link/qr_vehicle.php?platesSearch=$value');
-    var response = (await http.get(url)).body;
-    final result = AccessMap.fromJson(json.decode(response));
-    // var response = await http.post(url, body: {'pass': pass, 'departament': departament});
-    if (result.status == 200){
-      isSaving = false;
-      notifyListeners();
-      return result.container! ;
-    }
-    isSaving = false;
-    notifyListeners();
-    return []; 
-  } on SocketException catch (e) {
-    // Error de conexión de red (sin conexión a Internet)
-    messageError(context,'Error de conexión de red: $e');
-    return []; 
-  } on HttpException catch (e) {
-    // Error de la solicitud HTTP
-    messageError(context,'Error de la solicitud HTTP: $e');
-    return []; 
-  } catch (e) {
-    // Otro tipo de error
-    messageError(context,'Error inesperado: $e');
-    return []; 
-  }
-  }
-    return []; 
-  } 
-
-
-  Future<List<Map<String, dynamic>>> insertPlateRegister(String value,BuildContext context) async {
-  var connectivityResult = await (Connectivity().checkConnectivity());
-  if (connectivityResult == ConnectivityResult.none) {
-    // No hay conexión a Internet
-    messageError(context,'No hay conexión a Internet.');
-    return [];
-  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
-try {
-    isSaving = true;
-    notifyListeners();
-    final url = Uri.parse('$link/qr_vehicle.php?platesSearch=$value');
-    var response = (await http.get(url)).body;
-      final result = AccessMap.fromJson(json.decode(response));
-    // var response = await http.post(url, body: {'pass': pass, 'departament': departament});
-
-    if (result.status == 200){
-      isSaving = false;
-      notifyListeners();
-      return result.container! ;
-    }
-    isSaving = false;
-    notifyListeners();
-    return []; 
-  } on SocketException catch (e) {
-    // Error de conexión de red (sin conexión a Internet)
-    messageError(context,'Error de conexión de red: $e');
-    return []; 
-  } on HttpException catch (e) {
-    // Error de la solicitud HTTP
-    messageError(context,'Error de la solicitud HTTP: $e');
-    return []; 
-  } catch (e) {
-    // Otro tipo de error
-    messageError(context,'Error inesperado: $e');
-    return []; 
-  }
-  }
-    return []; 
-  } 
-
-
-Future<List<Map<String, dynamic>>> dataGuard( String idGuard,BuildContext context ) async {
-  var connectivityResult = await (Connectivity().checkConnectivity());
-  if (connectivityResult == ConnectivityResult.none) {
-    // No hay conexión a Internet
-    messageError(context,'No hay conexión a Internet.');
-    return [];
-  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
-
-try {
-    isSaving = true;
-    notifyListeners();
-    final url = Uri.parse('$link/turn_vehicle.php?nameSign=$idGuard');
+    final url = Uri.parse('https://www.comunicadosaraiza.com/portal_api/API/Users/userLogin.php?departamento=true');
     var response = (await http.get(url)).body;
       final result = AccessMap.fromJson(jsonDecode(response));
     // var response = await http.post(url, body: {'pass': pass, 'departament': departament});
@@ -205,7 +36,10 @@ try {
       isSaving = false;
       notifyListeners();
       return result.container!;
+    }else{
+     // messageError(context,'Contraseña incorrecta.');
     }
+
     isSaving = false;
     notifyListeners();
     return []; 
@@ -223,141 +57,12 @@ try {
     return []; 
   }
   }
+  // messageError(context,'Error desconocido.');
     return []; 
-  
   } 
 
-  
-  
-    Future<bool> postCloseTurnVehicle(BuildContext context) async {
-    var connectivityResult = await (Connectivity().checkConnectivity());
-  if (connectivityResult == ConnectivityResult.none) {
-    // No hay conexión a Internet
-    messageError(context,'No hay conexión a Internet.');
-    
-    return false;
-  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
 
-try {
-      isSaving = true;
-      notifyListeners();
-      VarProvider vh = VarProvider();
-      final t2 = await vh.arrSharedPreferences();
-      final url = Uri.parse('$link/turn_vehicle.php?idTurn=true');
-      var response = (await http.post(url, body: json.encode({'idTurn': t2["idTurn"] }))).body;
-      
-      if (response.contains('200')){  
-        isSaving = false;
-        notifyListeners();
-        return true;
-      }
-      isSaving = false;
-      notifyListeners();
-      return false; 
-     } on SocketException catch (e) {
-    // Error de conexión de red (sin conexión a Internet)
-    messageError(context,'Error de conexión de red: $e');
-      return false; 
-  } on HttpException catch (e) {
-    // Error de la solicitud HTTP
-    messageError(context,'Error de la solicitud HTTP: $e');
-      return false; 
-  } catch (e) {
-    // Otro tipo de error
-    messageError(context,'Error inesperado: $e');
-      return false; 
-  }
-  }
-      return false; 
-    }
- 
-    
-Future<bool> postObvVehicle(TurnVehicle t,BuildContext context) async {
-    var connectivityResult = await (Connectivity().checkConnectivity());
-  if (connectivityResult == ConnectivityResult.none) {
-    // No hay conexión a Internet
-    messageError(context,'No hay conexión a Internet.');
-    return false;
-  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
-
-try {
-      isSaving = true;
-      notifyListeners();
-      VarProvider vh = VarProvider();
-      final t2 = await vh.arrSharedPreferences();
-      t.idTurn = t2["idTurn"];
-      final url = Uri.parse('$link/turn_vehicle.php');
-      var response = (await http.post(url, body: json.encode(t.toJson()))).body;
-      
-      if (response.contains('200')){  
-        isSaving = false;
-        notifyListeners();
-        return true;
-      }
-      isSaving = false;
-      notifyListeners();
-      return false; 
-      } on SocketException catch (e) {
-    // Error de conexión de red (sin conexión a Internet)
-    messageError(context,'Error de conexión de red: $e');
-      return false; 
-  } on HttpException catch (e) {
-    // Error de la solicitud HTTP
-    messageError(context,'Error de la solicitud HTTP: $e');
-      return false; 
-  } catch (e) {
-    // Otro tipo de error
-    messageError(context,'Error inesperado: $e');
-      return false; 
-  }
-  }
-      return false; 
-    }
-
-  Future<Access> findVehicle(String plate,BuildContext context,int condition) async {
-    Access result = Access();
-    var connectivityResult = await (Connectivity().checkConnectivity());
-  if (connectivityResult == ConnectivityResult.none) {
-    // No hay conexión a Internet
-    messageError(context,'No hay conexión a Internet.');
-    return result;
-  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
-
-try {
-      notifyListeners();
-      final url = Uri.parse('$link/qr_vehicle.php?plate=$plate&condition=$condition');
-      var response = (await http.get(url)).body;
-      final result = Access.fromJson(jsonDecode(response));
-      if (result.status == 200){
-        isSaving = false;
-        notifyListeners();
-        return result;
-      }
-      
-      isSaving = false;
-      notifyListeners();
-      return result; 
-    } on SocketException catch (e) {
-    // Error de conexión de red (sin conexión a Internet)
-    messageError(context,'Error de conexión de red: $e');
-    return result; 
-  } on HttpException catch (e) {
-    // Error de la solicitud HTTP
-    messageError(context,'Error de la solicitud HTTP: $e');
-    return result; 
-  } catch (e) {
-    // Otro tipo de error
-    messageError(context,'Error inesperado: $e');
-    return result; 
-  }
-  }
-    return result; 
-    
-  }
-
-  Future<AccessMap> postTurnVehicle( TurnVehicle session,BuildContext context ) async {
-  
-
+Future<AccessMap> post_examMa( ExamMaModel obj,BuildContext context ) async {
   AccessMap result = AccessMap();
   var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
@@ -367,227 +72,74 @@ try {
   } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
 
 try {
-    isSaving = true;
-    notifyListeners();
-    final url = Uri.parse('$link/turn_vehicle.php');
-      var response = (await http.post(
-      url, 
-      body: json.encode(session.toJson()))).body;
-      result =AccessMap.fromJson(jsonDecode(response));
-
+    final url = Uri.parse('$link/medical_exam.php?post_examMa=true');
+    var response = (await http.post(url, body: json.encode(obj.toJson()),headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+    final result = AccessMap.fromJson(jsonDecode(response));
     if (result.status == 200) {
-    isSaving = false;
-    notifyListeners();
-    final sm = SessionManager();
-    final key = encrypt.Key.fromLength(32);
-    final iv = encrypt.IV.fromLength(16);
-    final encrypter = encrypt.Encrypter(encrypt.AES(key));
-    session.idTurn = result.container![0]["ultimoId"];
-    final encrypted = encrypter.encrypt(session.toJson().toString(), iv: iv);
-    await sm.initialize();
-    await sm.saveSession(encrypted.base64.toString());
-    return result;
-    } 
-    return result; 
-  } on SocketException catch (e) {
-    // Error de conexión de red (sin conexión a Internet)
-    messageError(context,'Error de conexión de red: $e');
-    return result; 
-  } on HttpException catch (e) {
-    // Error de la solicitud HTTP
-    messageError(context,'Error de la solicitud HTTP: $e');
-    return result; 
-  } catch (e) {
-    // Otro tipo de error
-    messageError(context,'Error inesperado: $e');
-    return result; 
-  }
-  }
-    return result; 
-  } 
-
-  
-  Future<AccessMap> postQrVehicle( Qr scn,BuildContext context ) async {
-  AccessMap result = AccessMap();
-  
-  var connectivityResult = await (Connectivity().checkConnectivity());
-  if (connectivityResult == ConnectivityResult.none) {
-    // No hay conexión a Internet
-    messageError(context,'No hay conexión a Internet.');
-    return result;
-  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
-
-try {
-    isSaving = true;  
-    notifyListeners();
-     final url = Uri.parse('$link/qr_vehicle.php');
-      var response = (await http.post(
-      url, 
-      body:json.encode(scn.toJson()))).body;
-      result =AccessMap.fromJson(jsonDecode(response));
-      if (result.status == 200) {
-        isSaving = false;
-        notifyListeners();
-        return result;
-      } 
-    return result; 
-  } on SocketException catch (e) {
-    // Error de conexión de red (sin conexión a Internet)
-    messageError(context,'Error de conexión de red: $e');
-    return result; 
-  } on HttpException catch (e) {
-    // Error de la solicitud HTTP
-    messageError(context,'Error de la solicitud HTTP: $e');
-    return result; 
-  } catch (e) {
-    // Otro tipo de error
-    messageError(context,'Error inesperado: $e');
-    return result; 
-  }
-  }
-    return result; 
-  }
-
- 
-  Future<AccessMap> getObservation(BuildContext context ) async {
-  AccessMap result = AccessMap();
-   VarProvider vp = VarProvider();
-    final json = await vp.arrSharedPreferences();
-
-  var connectivityResult = await (Connectivity().checkConnectivity());
-  if (connectivityResult == ConnectivityResult.none) {
-    // No hay conexión a Internet
-    messageError(context,'No hay conexión a Internet.');
-    return result;
-  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
-
-try {
-    isSaving = true;
-    notifyListeners();
-     final url = Uri.parse('$link/turn_vehicle.php?nameTurn=${json["guard"]}');
-       var response = (await http.get(url)).body;
-      final result = AccessMap.fromJson(jsonDecode(response));
-      if (result.status == 200) {
-        isSaving = false;
-        notifyListeners();
-        return result;
-      } 
-    return result; 
-  } on SocketException catch (e) {
-    // Error de conexión de red (sin conexión a Internet)
-    messageError(context,'Error de conexión de red: $e');
-    return result; 
-  } on HttpException catch (e) {
-    // Error de la solicitud HTTP
-    messageError(context,'Error de la solicitud HTTP: $e');
-    return result; 
-  } catch (e) {
-    // Otro tipo de error
-    messageError(context,'Error inesperado: $e');
-    return result; 
-  }
-  }
-    return result; 
-  }
-
-    Future<List<Map<String, dynamic>>> selectObsVehicle( DateExcelVehicle  e,BuildContext context ) async {
-    
-    List<Map<String, dynamic>> listContainer = [];
-    AccessMap result = AccessMap();
-
-    var connectivityResult = await (Connectivity().checkConnectivity());
-  if (connectivityResult == ConnectivityResult.none) {
-    // No hay conexión a Internet
-    messageError(context,'No hay conexión a Internet.');
-    return [];
-  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
-
-try {
       isSaving = true;
       notifyListeners();
-      final url = Uri.parse('$link/turn_vehicle.php');
-      var response = (await http.post(
-      url, 
-      body: json.encode(e.toJson()))).body;
-      result = AccessMap.fromJson(json.decode(response));
-      
-      if (result.status == 200){ 
-        listContainer =  result.container!;
-        isSaving = false;
-        notifyListeners();
-        return listContainer; 
-      } 
-      isSaving = false;
-      notifyListeners();
-      return listContainer; 
-      } on SocketException catch (e) {
-    // Error de conexión de red (sin conexión a Internet)
-    messageError(context,'Error de conexión de red: $e');
-    return listContainer; 
-  } on HttpException catch (e) {
-    // Error de la solicitud HTTP
-    messageError(context,'Error de la solicitud HTTP: $e');
-    return listContainer; 
-  } catch (e) {
-    // Otro tipo de error
-    messageError(context,'Error inesperado: $e');
-    return listContainer; 
-  }
-  }
-  return listContainer; 
+      return result;
     }
      
-  
-    Future<List<Map<String, dynamic>>> selectDateVehicle( DateExcelVehicle  e,BuildContext context ) async {
-    
-    List<Map<String, dynamic>> listContainer = [];
-    AccessMap result = AccessMap();
+    isSaving = false;
+    notifyListeners();
+    return result; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red 3: $e');
+    return result; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud 3 HTTP: $e');
+    return result; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado 3: $e');
+    return result; 
+  }
+  }
+    return result; 
+  }
 
-    var connectivityResult = await (Connectivity().checkConnectivity());
+ Future<AccessMap> post_examDe(ExamDeModel obj ,BuildContext context ) async {
+  AccessMap result = AccessMap();
+  var connectivityResult = await (Connectivity().checkConnectivity());
+
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
     messageError(context,'No hay conexión a Internet.');
-    return [];
+    return result;
   } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
 
 try {
-      isSaving = true;
-      notifyListeners();
-      final url = Uri.parse('$link/qr_vehicle.php');
-      var response = (await http.post(
-      url, 
-      body: json.encode(e.toJson()))).body;
-      result = AccessMap.fromJson(json.decode(response));
-      
-      if (result.status == 200){ 
-        listContainer =  result.container!;
-        isSaving = false;
-        notifyListeners();
-        return listContainer; 
-      } 
-      isSaving = false;
-      notifyListeners();
-      return listContainer; 
-      } on SocketException catch (e) {
+    final url = Uri.parse('$link/medical_exam.php?post_examDe=true');
+    var response = (await http.post(url, body: json.encode(obj.toJson()),headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+    final result = AccessMap.fromJson(jsonDecode(response));
+    if (result.status == 200) {
+      return result;
+    }
+     
+    isSaving = false;
+    notifyListeners();
+    return result; 
+  } on SocketException catch (e) {
     // Error de conexión de red (sin conexión a Internet)
     messageError(context,'Error de conexión de red: $e');
-    return listContainer; 
+    return result; 
   } on HttpException catch (e) {
     // Error de la solicitud HTTP
     messageError(context,'Error de la solicitud HTTP: $e');
-    return listContainer; 
+    return result; 
   } catch (e) {
     // Otro tipo de error
     messageError(context,'Error inesperado: $e');
-    return listContainer; 
+    return result; 
   }
   }
-  return listContainer; 
-    }
-   
+    return result; 
+  } 
 
-
-  Future<AccessMap> postRegisterVehicle( RegisterVehicle reg,BuildContext context ) async {
+  Future<AccessMap> post_examAc(ExamAcModel obj,BuildContext context ) async {
   AccessMap result = AccessMap();
   var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
@@ -595,47 +147,488 @@ try {
     messageError(context,'No hay conexión a Internet.');
     return result;
   } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
-    
-  try {
-    isSaving = true;
-    notifyListeners();
-    final url = Uri.parse('$link/qr_vehicle.php');
-      var response = (await http.post(
-      url, 
-      body: json.encode(reg.toJson()))).body;
-      result =AccessMap.fromJson(json.decode(response));
-      if (result.status == 200){ 
-        isSaving = false;
-        notifyListeners();
-        return result;
-      }
+
+try {
+    final url = Uri.parse('$link/medical_exam.php?post_examAc=true');
+    var response = (await http.post(url, body: json.encode(obj.toJson()),headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+    final result = AccessMap.fromJson(jsonDecode(response));
+    if (result.status == 200) {
+ 
+      notifyListeners();
+      return result;
+    }
+     
     isSaving = false;
     notifyListeners();
-      return result;
+    return result; 
   } on SocketException catch (e) {
     // Error de conexión de red (sin conexión a Internet)
     messageError(context,'Error de conexión de red: $e');
-    return result;
+    return result; 
   } on HttpException catch (e) {
     // Error de la solicitud HTTP
     messageError(context,'Error de la solicitud HTTP: $e');
-    return result;
+    return result; 
   } catch (e) {
     // Otro tipo de error
     messageError(context,'Error inesperado: $e');
+    return result; 
+  }
+  }
+    return result; 
+  } 
+
+  Future<AccessMap> post_examAp(ExamApModel obj,BuildContext context ) async {
+  AccessMap result = AccessMap();
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
     return result;
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    final url = Uri.parse('$link/medical_exam.php?post_examAp=true');
+    var response = (await http.post(url, body: json.encode(obj.toJson()),headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+    final result = AccessMap.fromJson(jsonDecode(response));
+    if (result.status == 200) {
+      return result;
+    }
+     
+    isSaving = false;
+    notifyListeners();
+    return result; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+    return result; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return result; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+    return result; 
   }
   }
-  return result;
+    return result; 
+  } 
+
+  Future<AccessMap> post_examGy(ExamGyModel obj,BuildContext context ) async {
+  AccessMap result = AccessMap();
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
+    return result;
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    final url = Uri.parse('$link/medical_exam.php?post_examGy=true');
+    var response = (await http.post(url, body: json.encode(obj.toJson()),headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+    final result = AccessMap.fromJson(jsonDecode(response));
+    if (result.status == 200) {
+      return result;
+    }
+     
+    isSaving = false;
+    notifyListeners();
+    return result; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+    return result; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return result; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+    return result; 
   }
+  }
+    return result; 
+  } 
+
+  Future<AccessMap> post_examHeF(List<int> obj ,BuildContext context ) async {
+  AccessMap result = AccessMap();
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
+    return result;
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    final url = Uri.parse('$link/medical_exam.php?post_examHeF=true');
+    var response = (await http.post(url, body: json.encode(obj),headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+    final result = AccessMap.fromJson(jsonDecode(response));
+    if (result.status == 200) {
+      return result;
+    }
+     
+    isSaving = false;
+    notifyListeners();
+    return result; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+    return result; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return result; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+    return result; 
+  }
+  }
+    return result; 
+  } 
+
+  Future<AccessMap> post_examHeP(ExamHePModel obj,BuildContext context ) async {
+  AccessMap result = AccessMap();
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
+    return result;
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    final url = Uri.parse('$link/medical_exam.php?post_examHeP=true');
+    var response = (await http.post(url, body: json.encode(obj.toJson()),headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+    final result = AccessMap.fromJson(jsonDecode(response));
+    if (result.status == 200) {
+      return result;
+    }
+     
+    isSaving = false;
+    notifyListeners();
+    return result; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+    return result; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return result; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+    return result; 
+  }
+  }
+    return result; 
+  } 
+
+  Future<AccessMap> post_examHi(ExamHiModel obj,BuildContext context ) async {
+  AccessMap result = AccessMap();
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
+    return result;
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+  
+    final url = Uri.parse('$link/medical_exam.php?post_examHi=true');
+    var response = (await http.post(url, body: json.encode(obj.toJson()),headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+    final result = AccessMap.fromJson(jsonDecode(response));
+    if (result.status == 200) {
+      notifyListeners();
+      return result;
+    }
+     
+    isSaving = false;
+    notifyListeners();
+    return result; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+    return result; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return result; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+    return result; 
+  }
+  }
+    return result; 
+  } 
+
+  Future<AccessMap> post_examIm( ExamImModel obj,BuildContext context ) async {
+  AccessMap result = AccessMap();
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
+    return result;
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    final url = Uri.parse('$link/medical_exam.php?post_examIm=true');
+    var response = (await http.post(url, body: json.encode(obj.toJson()),headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+    final result = AccessMap.fromJson(jsonDecode(response));
+    if (result.status == 200) {
+      return result;
+    }
+     
+    isSaving = false;
+    notifyListeners();
+    return result; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+    return result; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return result; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+    return result; 
+  }
+  }
+    return result; 
+  } 
+
+  Future<AccessMap> post_examLa(ExamLaModel obj,BuildContext context ) async {
+  AccessMap result = AccessMap();
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
+    return result;
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    final url = Uri.parse('$link/medical_exam.php?post_examLa=true');
+    var response = (await http.post(url, body: json.encode(obj.toJson()),headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+    final result = AccessMap.fromJson(jsonDecode(response));
+    if (result.status == 200) {
+      return result;
+    }
+     
+    isSaving = false;
+    notifyListeners();
+    return result; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+    return result; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return result; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+    return result; 
+  }
+  }
+    return result; 
+  } 
+
+  Future<AccessMap> post_examIn(ExamInModel obj,BuildContext context ) async {
+  AccessMap result = AccessMap();
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
+    return result;
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    final url = Uri.parse('$link/medical_exam.php?post_examIn=true');
+    var response = (await http.post(url, body: json.encode(obj.toJson()),headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+    final result = AccessMap.fromJson(jsonDecode(response));
+    if (result.status == 200) {
+      return result;
+    }
+     
+    isSaving = false;
+    notifyListeners();
+    return result; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+    return result; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return result; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+    return result; 
+  }
+  }
+    return result; 
+  } 
+
+  Future<AccessMap> post_examPa( ExamPaModel obj,BuildContext context ) async {
+  AccessMap result = AccessMap();
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
+    return result;
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    final url = Uri.parse('$link/medical_exam.php?post_examPa=true');
+    var response = (await http.post(url, body: json.encode(obj.toJson()),headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+    final result = AccessMap.fromJson(jsonDecode(response));
+    if (result.status == 200) {
+      return result;
+    }
+     
+    isSaving = false;
+    notifyListeners();
+    return result; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+    return result; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return result; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+    return result; 
+  }
+  }
+    return result; 
+  } 
+
+  Future<AccessMap> post_examPe( ExamPeModel obj,BuildContext context ) async {
+  AccessMap result = AccessMap();
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
+    return result;
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    final url = Uri.parse('$link/medical_exam.php?post_examPe=true');
+    var response = (await http.post(url, body: json.encode(obj.toJson()),headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+    final result = AccessMap.fromJson(jsonDecode(response));
+    if (result.status == 200) {
+      return result;
+    }
+     
+    isSaving = false;
+    notifyListeners();
+    return result; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+    return result; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return result; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+    return result; 
+  }
+  }
+    return result; 
+  } 
+
+  Future<AccessMap> post_examPhX(ExamPhXModel obj,BuildContext context ) async {
+  AccessMap result = AccessMap();
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
+    return result;
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    final url = Uri.parse('$link/medical_exam.php?post_examPhX=true');
+    var response = (await http.post(url, body: json.encode(obj.toJson()),headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+    final result = AccessMap.fromJson(jsonDecode(response));
+    if (result.status == 200) {
+      return result;
+    }
+     
+    isSaving = false;
+    notifyListeners();
+    return result; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+    return result; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return result; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+    return result; 
+  }
+  }
+    return result; 
+  } 
+
+  Future<AccessMap> post_examPhY( ExamPhYModel obj,BuildContext context ) async {
+  AccessMap result = AccessMap();
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
+    return result;
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    final url = Uri.parse('$link/medical_exam.php?post_examPhY=true');
+    var response = (await http.post(url, body: json.encode(obj.toJson()),headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+    final result = AccessMap.fromJson(jsonDecode(response));
+    if (result.status == 200) {
+      return result;
+    }
+     
+    isSaving = false;
+    notifyListeners();
+    return result; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+    return result; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return result; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+    return result; 
+  }
+  }
+    return result; 
+  } 
+
+  
+
 
 }
 
 
 
-    /**
-     * headers = {'Content-type': 'application/json'}
-     * url = 'http://tu_url.com/api/tu_endpoint'
-     * response = requests.post(url, data=json.dumps(data), headers=headers)
-     */
-    
+

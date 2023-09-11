@@ -4,6 +4,7 @@ class TurnVehicle {
   String? turn;
   String? sign;
   String? description;
+  String? idTurn;
 
   TurnVehicle({
     this.guard,
@@ -17,6 +18,7 @@ class TurnVehicle {
     turn = json['turn'];
     sign = json['sign'];
     description = json['description'];
+    idTurn = json['idTurn'];
   }
 
   Map<String, String> toJson() {
@@ -30,6 +32,8 @@ class TurnVehicle {
     if(description != null){
       data['description'] = description!;
     }
+
+    data['idTurn'] = idTurn ?? '';
     return data;
   }
 

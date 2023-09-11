@@ -41,6 +41,8 @@ class MultiInputsForm implements BaseInputsForm {
   bool? autocompleteAsync;
   int? screen;
   bool? activeClock;
+  List<String>? listselect;
+  TextInputType? keyboardType;
   
 
   MultiInputsForm({
@@ -55,6 +57,8 @@ class MultiInputsForm implements BaseInputsForm {
     this.paintSignature,
     this.activeClock,
     this.screen,
+    this.listselect,
+    this.keyboardType
   });
 
 }

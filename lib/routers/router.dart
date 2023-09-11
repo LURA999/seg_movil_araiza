@@ -10,7 +10,7 @@ class Routers {
       {
         'control_vehicles',
         'control_rh',
-        'control_seh'
+        'control_seh',
       },
       {
         'scanner_qr',
@@ -18,6 +18,7 @@ class Routers {
         'medical_records',
         'routes_seh',
         'tour_seh',
+        'control_assistance'
       }
     ];
 
@@ -38,6 +39,8 @@ class Routers {
     /*medical_records*/ namesRouter[2].toList()[2] : ( _ ) => const CustomBackBvuttonInterceptor(child:MedicalRecords()),
     /*routes_seh*/ namesRouter[2].toList()[3] : ( _ ) => const CustomBackBvuttonInterceptor(child:RoutesSeh()),
     /*tour_seh*/ namesRouter[2].toList()[4] : ( _ ) => const CustomBackBvuttonInterceptor(child:QuestRoute()),
+    /*control_assistance*/ namesRouter[2].toList()[5] : ( _ ) => const CustomBackBvuttonInterceptor(child:ControlAssistance()),
+
 
   }; 
 }

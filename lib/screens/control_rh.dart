@@ -24,7 +24,9 @@ class RhControl extends StatelessWidget {
         description: 'Registro de colaboradores participantes.',
         img: 'assets/images/main/asistencia_comedor_logo.svg',
         width :  0.1,
-        navigator: null
+        navigator: () {
+          Navigator.of(context).pushNamed('control_assistance');
+        }
        )
     ];
 

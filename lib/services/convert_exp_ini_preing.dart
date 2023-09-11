@@ -1024,7 +1024,7 @@ pw.Container buildTableAccident_Illness() {
             child: pw.Container(
               alignment: pw.Alignment.center,
               child: pw.Text(
-                '',
+                'Procter & Gamble Home Care Fabric & Home Care Innovation Center',
                 style: littleLetterStyle,
                 textAlign: pw.TextAlign.center,
               ),
@@ -1221,7 +1221,7 @@ pdf.addPage(
       children: [
         pw.Text('FECHA: ',style: letterBold12), 
         pw.Container(
-          child: pw.Text('15 DE JUNIO DEL 2023'),
+          child: pw.Text('15 DE SEPTIEMBRE DEL 2023'),
             decoration: pw.BoxDecoration(
               border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
             )
@@ -1230,7 +1230,7 @@ pdf.addPage(
         pw.Spacer(),
         pw.Text('DEPARTAMENTO: ',style: letterBold12), 
         pw.Container(
-          child: pw.Text('RECURSOS HUMANOS'),
+          child: pw.Text('AUX LIMPIEZA COMEDOR EMPLEADOS'),
             decoration: pw.BoxDecoration(
               border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
             )
@@ -1242,7 +1242,7 @@ pdf.addPage(
       children: [
         pw.Text('PUESTO: ',style: letterBold12), 
         pw.Container(
-          child: pw.Text('PROGRAMADOR RH'),
+          child: pw.Text('AUX LIMPIEZA COMEDOR EMPLEADOS'),
             decoration: pw.BoxDecoration(
               border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
             )
@@ -2057,7 +2057,7 @@ pdf.addPage(
                       border:pw.Border.all(width: widthLineTable, color: PdfColors.black), 
                     )
                   ),
-                  pw.Text(' Si ',style: letterText10), 
+                  pw.Text(' No ',style: letterText10), 
                   pw.Container(
                   margin: const pw.EdgeInsets.all(4),
                   padding: const pw.EdgeInsets.all(4),
@@ -2075,7 +2075,7 @@ pdf.addPage(
                       border:pw.Border.all(width: widthLineTable, color: PdfColors.black), 
                     )
                   ),
-                  pw.Text(' Si ',style: letterText10), 
+                  pw.Text(' No ',style: letterText10), 
                   pw.Container(
                   margin: const pw.EdgeInsets.all(4),
                   padding: const pw.EdgeInsets.all(4),

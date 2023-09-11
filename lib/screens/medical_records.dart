@@ -16,12 +16,41 @@ class MedicalRecords extends StatefulWidget {
 }
 
 class _MedicalRecordsState extends State<MedicalRecords> {
+  ScrollController _scrollController = ScrollController();
+  bool stretching = false;
+
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_handleScroll);
+  }
+
+  void _handleScroll() {
+    if (_scrollController.position.pixels == 0 ||
+        _scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+      setState(() {
+        stretching = true;
+      });
+    } else {
+      setState(() {
+        stretching = false;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     EdgeInsets paddingCell = EdgeInsets.fromLTRB(
     MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .005: .01),
     MediaQuery.of(context).size.height * (MediaQuery.of(context).orientation == Orientation.portrait ? .005: .01),
-    MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .005: .01),
+    0,
     MediaQuery.of(context).size.height * (MediaQuery.of(context).orientation == Orientation.portrait ? .005: .01));
     
     EdgeInsets paddingIcon = MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <900  ?
@@ -169,28 +198,25 @@ class _MedicalRecordsState extends State<MedicalRecords> {
                             ),
                           ),
                           SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.1,
+                          width: MediaQuery.of(context).size.width * 0.17,
                             child: Container(
                               padding: paddingCell,
                               child: Text('Fecha',softWrap: true,style: myTextSyleBody.copyWith(fontSize: MediaQuery.of(context).size.width  * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.013)))
                             ),
                           ),
                           SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.17,
+                          width: MediaQuery.of(context).size.width * 0.23,
                             child: Container(
                               padding: paddingCell,
                               child: Text('Tipo',softWrap: true,style: myTextSyleBody.copyWith(fontSize: MediaQuery.of(context).size.width  * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.013)))
                             ),
                           ),
-                          SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.17,
+                          Expanded(
                             child: Container(
+                              width: MediaQuery.of(context).size.width,
                               padding: paddingCell,
-                              child: Text('Última modificación',softWrap: true,style: myTextSyleBody.copyWith(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.013)))
+                              child: Text('Opciones',softWrap: true,style: myTextSyleBody.copyWith(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.013)))
                             ),
-                          ),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width  * (MediaQuery.of(context).orientation == Orientation.portrait ? .16: 0.13),
                           )
                         ],
                       ),
@@ -231,14 +257,14 @@ class _MedicalRecordsState extends State<MedicalRecords> {
                               ),
                             ),
                             SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.1,
+                            width: MediaQuery.of(context).size.width * 0.17,
                               child: Container(
                                 padding: paddingCell,
                                 child: Text(file.date,softWrap: true,style: myTextSyleBody.copyWith(fontSize: MediaQuery.of(context).size.width  * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.013)))
                               ),
                             ),
                             SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.17,
+                            width: MediaQuery.of(context).size.width * 0.23,
                               child: Container(
                                 padding: paddingCell,
                                 child: Text(file.type,softWrap: true,style: myTextSyleBody.copyWith(fontSize: MediaQuery.of(context).size.width  * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.013)))

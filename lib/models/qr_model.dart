@@ -8,7 +8,8 @@ class Qr {
   String? departament;
   DateTime? timeEntry;
   DateTime? timeExit;
-  int? fkTurn;
+  String? fkTurn;
+  String? employee_num;
 
   Qr({
     this.platesSearch,
@@ -18,18 +19,20 @@ class Qr {
     this.departament,
     this.timeEntry,
     this.timeExit,
-    this.fkTurn
+    this.fkTurn,
+    this.employee_num
   });
 
   Qr.fromJson(Map<String, dynamic> json){
-    platesSearch = json['platesSearch'];
-    color = json['color'];
-    employeeName = json['employeeName'];
-    departament = json['departament'];
-    fkTurn = json['fkTurn'];
-    typevh = json['typevh'];
-    timeEntry = json['timeEntry'];
-    timeExit = json['timeExit'];
+    platesSearch = json['platesSearch'] ?? '' ;
+    color = json['color'] ?? '';
+    employeeName = json['employeeName'] ?? '';
+    departament = json['departament'] ?? '';
+    fkTurn = json['fkTurn'] ?? '';
+    typevh = json['typevh'] ?? '';
+    timeEntry = json['timeEntry'] ?? '';
+    timeExit = json['timeExit'] ?? '';
+    employee_num = json['employee_num'] ?? '';
   }
 
 
@@ -53,12 +56,13 @@ List<dynamic>  toJsonArr(Map<String, dynamic> arr) {
 
   Map<String, String> toJson() {
     final Map<String, String> data = {};
-    data['platesSearch'] = platesSearch!;
-    data['color'] = color!;
-    data['employeeName'] = employeeName!;
-    data['departament'] = departament!;
-    data['typevh'] = typevh!;
+    data['platesSearch'] = platesSearch?? '';
+    data['color'] = color?? '';
+    data['employeeName'] = employeeName?? '';
+    data['departament'] = departament?? '';
+    data['typevh'] = typevh ?? '';
     data['fkTurn'] = fkTurn!.toString();
+    data['employee_num'] = employee_num!.toString();
 
     if(timeEntry != null && timeExit != null){
       data['timeEntry'] = timeEntry!.toString();

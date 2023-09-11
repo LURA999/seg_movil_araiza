@@ -56,7 +56,7 @@ Future<void> requestPermission(Function(bool) onPermissionResult) async {
 
 //dataguard es para los de trafico
 //jsonStrFood es para el comedor
-Future<void> jsonToExcel(List<Map<String, dynamic>> jsonStr, List<String> headersPerso,List<Map<String, dynamic>> jsonStrObs,List<Map<String, dynamic>>? jsonStrFood, List<Map<String,dynamic>>? dataGuard, List<Map<String,dynamic>>? dataComments, int screen, String fileName, BuildContext context) async {
+Future<void> jsonToExcel(List<Map<String, dynamic>> jsonStr, List<String> headersPerso,List<Map<String, dynamic>>? jsonStrObs,List<Map<String, dynamic>>? jsonStrFood, List<Map<String,dynamic>>? dataGuard, List<Map<String,dynamic>>? dataComments, int screen, String fileName, BuildContext context) async {
   bool storagePermissionGranted = false;
   if (Platform.isAndroid || Platform.isIOS) {
   await requestPermission((bool granted) {
@@ -127,46 +127,48 @@ Future<void> jsonToExcel(List<Map<String, dynamic>> jsonStr, List<String> header
   sheet.autoFitColumn(6);
   sheet.autoFitColumn(7);
   
-  //TRAFICO
-  if (screen == 1) {
-    //AJUSTANDO FECHA
-    sheet.getRangeByIndex(4,6).setText('Fecha: $formattedDate');
 
-    // AJUSTANDO TITULO
-    sheet.getRangeByIndex(2,3).setText('CONTROL DE VEHICULOS EMPLEADOS'); // Fusionar celdas
-    final Range rangeTitle = sheet.getRangeByName('B2:F2');
-    rangeTitle.cellStyle.bold = true;
-    rangeTitle.cellStyle.fontSize = 16;
-    rangeTitle.merge();
-    rangeTitle.cellStyle.hAlign = HAlignType.center;
-    rangeTitle.cellStyle.vAlign = VAlignType.center;
-    String base64Image = dataGuard!.length == 1?  dataGuard[0]['sign'] : 'iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAAAXNSR0IArs4c6QAABSJJREFUeF7t1bERwDAMxLB4/6UzgV2wfaRXIci8nM9HgMBV4LAhQOAuIBCvg8BDQCCeBwGBeAMEmoA/SHMzNSIgkJFDW7MJCKS5mRoREMjIoa3ZBATS3EyNCAhk5NDWbAICaW6mRgQEMnJoazYBgTQ3UyMCAhk5tDWbgECam6kRAYGMHNqaTUAgzc3UiIBARg5tzSYgkOZmakRAICOHtmYTEEhzMzUiIJCRQ1uzCQikuZkaERDIyKGt2QQE0txMjQgIZOTQ1mwCAmlupkYEBDJyaGs2AYE0N1MjAgIZObQ1m4BAmpupEQGBjBzamk1AIM3N1IiAQEYObc0mIJDmZmpEQCAjh7ZmExBIczM1IiCQkUNbswkIpLmZGhEQyMihrdkEBNLcTI0ICGTk0NZsAgJpbqZGBAQycmhrNgGBNDdTIwICGTm0NZuAQJqbqREBgYwc2ppNQCDNzdSIgEBGDm3NJiCQ5mZqREAgI4e2ZhMQSHMzNSIgkJFDW7MJCKS5mRoREMjIoa3ZBATS3EyNCAhk5NDWbAICaW6mRgQEMnJoazYBgTQ3UyMCAhk5tDWbgECam6kRAYGMHNqaTUAgzc3UiIBARg5tzSYgkOZmakRAICOHtmYTEEhzMzUiIJCRQ1uzCQikuZkaERDIyKGt2QQE0txMjQgIZOTQ1mwCAmlupkYEBDJyaGs2AYE0N1MjAgIZObQ1m4BAmpupEQGBjBzamk1AIM3N1IiAQEYObc0mIJDmZmpEQCAjh7ZmExBIczM1IiCQkUNbswkIpLmZGhEQyMihrdkEBNLcTI0ICGTk0NZsAgJpbqZGBAQycmhrNgGBNDdTIwICGTm0NZuAQJqbqREBgYwc2ppNQCDNzdSIgEBGDm3NJiCQ5mZqREAgI4e2ZhMQSHMzNSIgkJFDW7MJCKS5mRoREMjIoa3ZBATS3EyNCAhk5NDWbAICaW6mRgQEMnJoazYBgTQ3UyMCAhk5tDWbgECam6kRAYGMHNqaTUAgzc3UiIBARg5tzSYgkOZmakRAICOHtmYTEEhzMzUiIJCRQ1uzCQikuZkaERDIyKGt2QQE0txMjQgIZOTQ1mwCAmlupkYEBDJyaGs2AYE0N1MjAgIZObQ1m4BAmpupEQGBjBzamk1AIM3N1IiAQEYObc0mIJDmZmpEQCAjh7ZmExBIczM1IiCQkUNbswkIpLmZGhEQyMihrdkEBNLcTI0ICGTk0NZsAgJpbqZGBAQycmhrNgGBNDdTIwICGTm0NZuAQJqbqREBgYwc2ppNQCDNzdSIgEBGDm3NJiCQ5mZqREAgI4e2ZhMQSHMzNSIgkJFDW7MJCKS5mRoREMjIoa3ZBATS3EyNCAhk5NDWbAICaW6mRgQEMnJoazYBgTQ3UyMCAhk5tDWbgECam6kRAYGMHNqaTUAgzc3UiIBARg5tzSYgkOZmakRAICOHtmYTEEhzMzUiIJCRQ1uzCQikuZkaERDIyKGt2QQE0txMjQgIZOTQ1mwCAmlupkYEBDJyaGs2AYE0N1MjAgIZObQ1m4BAmpupEQGBjBzamk1AIM3N1IiAQEYObc0mIJDmZmpEQCAjh7ZmExBIczM1IiCQkUNbswkIpLmZGhEQyMihrdkEBNLcTI0ICGTk0NZsAgJpbqZGBAQycmhrNgGBNDdTIwICGTm0NZuAQJqbqREBgYwc2ppNQCDNzdSIgEBGDm3NJiCQ5mZqREAgI4e2ZhMQSHMzNSIgkJFDW7MJCKS5mRoR+AErVADJkrjltgAAAABJRU5ErkJggg==';
-    List<int> imageData = base64Decode(base64Image);
+  switch (screen) {
+    
+    //TRAFICO
+    case 1:
+      //AJUSTANDO FECHA
+      sheet.getRangeByIndex(4,6).setText('Fecha: $formattedDate');
+      // AJUSTANDO TITULO
+      sheet.getRangeByIndex(2,3).setText('CONTROL DE VEHICULOS EMPLEADOS'); // Fusionar celdas
+      final Range rangeTitle = sheet.getRangeByName('B2:F2');
+      rangeTitle.cellStyle.bold = true;
+      rangeTitle.cellStyle.fontSize = 16;
+      rangeTitle.merge();
+      rangeTitle.cellStyle.hAlign = HAlignType.center;
+      rangeTitle.cellStyle.vAlign = VAlignType.center;
+      String base64Image = dataGuard!.length == 1?  dataGuard[0]['sign'] : 'iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAAAXNSR0IArs4c6QAABSJJREFUeF7t1bERwDAMxLB4/6UzgV2wfaRXIci8nM9HgMBV4LAhQOAuIBCvg8BDQCCeBwGBeAMEmoA/SHMzNSIgkJFDW7MJCKS5mRoREMjIoa3ZBATS3EyNCAhk5NDWbAICaW6mRgQEMnJoazYBgTQ3UyMCAhk5tDWbgECam6kRAYGMHNqaTUAgzc3UiIBARg5tzSYgkOZmakRAICOHtmYTEEhzMzUiIJCRQ1uzCQikuZkaERDIyKGt2QQE0txMjQgIZOTQ1mwCAmlupkYEBDJyaGs2AYE0N1MjAgIZObQ1m4BAmpupEQGBjBzamk1AIM3N1IiAQEYObc0mIJDmZmpEQCAjh7ZmExBIczM1IiCQkUNbswkIpLmZGhEQyMihrdkEBNLcTI0ICGTk0NZsAgJpbqZGBAQycmhrNgGBNDdTIwICGTm0NZuAQJqbqREBgYwc2ppNQCDNzdSIgEBGDm3NJiCQ5mZqREAgI4e2ZhMQSHMzNSIgkJFDW7MJCKS5mRoREMjIoa3ZBATS3EyNCAhk5NDWbAICaW6mRgQEMnJoazYBgTQ3UyMCAhk5tDWbgECam6kRAYGMHNqaTUAgzc3UiIBARg5tzSYgkOZmakRAICOHtmYTEEhzMzUiIJCRQ1uzCQikuZkaERDIyKGt2QQE0txMjQgIZOTQ1mwCAmlupkYEBDJyaGs2AYE0N1MjAgIZObQ1m4BAmpupEQGBjBzamk1AIM3N1IiAQEYObc0mIJDmZmpEQCAjh7ZmExBIczM1IiCQkUNbswkIpLmZGhEQyMihrdkEBNLcTI0ICGTk0NZsAgJpbqZGBAQycmhrNgGBNDdTIwICGTm0NZuAQJqbqREBgYwc2ppNQCDNzdSIgEBGDm3NJiCQ5mZqREAgI4e2ZhMQSHMzNSIgkJFDW7MJCKS5mRoREMjIoa3ZBATS3EyNCAhk5NDWbAICaW6mRgQEMnJoazYBgTQ3UyMCAhk5tDWbgECam6kRAYGMHNqaTUAgzc3UiIBARg5tzSYgkOZmakRAICOHtmYTEEhzMzUiIJCRQ1uzCQikuZkaERDIyKGt2QQE0txMjQgIZOTQ1mwCAmlupkYEBDJyaGs2AYE0N1MjAgIZObQ1m4BAmpupEQGBjBzamk1AIM3N1IiAQEYObc0mIJDmZmpEQCAjh7ZmExBIczM1IiCQkUNbswkIpLmZGhEQyMihrdkEBNLcTI0ICGTk0NZsAgJpbqZGBAQycmhrNgGBNDdTIwICGTm0NZuAQJqbqREBgYwc2ppNQCDNzdSIgEBGDm3NJiCQ5mZqREAgI4e2ZhMQSHMzNSIgkJFDW7MJCKS5mRoREMjIoa3ZBATS3EyNCAhk5NDWbAICaW6mRgQEMnJoazYBgTQ3UyMCAhk5tDWbgECam6kRAYGMHNqaTUAgzc3UiIBARg5tzSYgkOZmakRAICOHtmYTEEhzMzUiIJCRQ1uzCQikuZkaERDIyKGt2QQE0txMjQgIZOTQ1mwCAmlupkYEBDJyaGs2AYE0N1MjAgIZObQ1m4BAmpupEQGBjBzamk1AIM3N1IiAQEYObc0mIJDmZmpEQCAjh7ZmExBIczM1IiCQkUNbswkIpLmZGhEQyMihrdkEBNLcTI0ICGTk0NZsAgJpbqZGBAQycmhrNgGBNDdTIwICGTm0NZuAQJqbqREBgYwc2ppNQCDNzdSIgEBGDm3NJiCQ5mZqREAgI4e2ZhMQSHMzNSIgkJFDW7MJCKS5mRoR+AErVADJkrjltgAAAABJRU5ErkJggg==';
+      List<int> imageData = base64Decode(base64Image);
 
-    var cellNombre = sheet.getRangeByIndex(jsonStr.length + 6 + beginRow,1);
-    cellNombre.setText('NOMBRE');
-    cellNombre.cellStyle.bold = true;
-    var cell = sheet.getRangeByIndex(jsonStr.length + 7 + beginRow,1);
-    cell.setText(dataGuard.length == 1?  dataGuard[0]['name'] : 'S/N');
+      var cellNombre = sheet.getRangeByIndex(jsonStr.length + 6 + beginRow,1);
+      cellNombre.setText('NOMBRE');
+      cellNombre.cellStyle.bold = true;
+      var cell = sheet.getRangeByIndex(jsonStr.length + 7 + beginRow,1);
+      cell.setText(dataGuard.length == 1?  dataGuard[0]['name'] : 'S/N');
 
-    var cellObservacion = sheet.getRangeByIndex(jsonStr.length + 8 + beginRow,1);
-    cellObservacion.setText('OBSERVACIONES');
-    cellObservacion.cellStyle.bold = true;
-    for (var i = 0; i < jsonStrObs.length; i++) {
-      var cell2 = sheet.getRangeByIndex(jsonStr.length + 9 + i + beginRow,1);
-      cell2.setText( jsonStrObs[i]['date']+' - '+jsonStrObs[i]['observation']);
-      Range obs =   sheet.getRangeByName('A${jsonStr.length + 9 + i + beginRow}:D${jsonStr.length + 9 + i + beginRow}');
-      obs.merge();
-    }
-    var cell3 = sheet.getRangeByIndex(jsonStr.length + 6 + beginRow,6);
-    cell3.cellStyle.bold = true;
-    cell3.setText( 'FIRMA');
-    final Picture picture = sheet.pictures.addStream(jsonStr.length + 7 + beginRow, 6, imageData);
-    picture.width = 140; // Ancho de la imagen en unidades de 1/256 de un carácter
-    picture.height = 70; // Altura de la imagen en unidades de 1/20 de un punto
-  } else {
+      var cellObservacion = sheet.getRangeByIndex(jsonStr.length + 8 + beginRow,1);
+      cellObservacion.setText('OBSERVACIONES');
+      cellObservacion.cellStyle.bold = true;
+      for (var i = 0; i < jsonStrObs!.length; i++) {
+        var cell2 = sheet.getRangeByIndex(jsonStr.length + 9 + i + beginRow,1);
+        cell2.setText( jsonStrObs[i]['date']+' - '+jsonStrObs[i]['observation']);
+        Range obs =   sheet.getRangeByName('A${jsonStr.length + 9 + i + beginRow}:D${jsonStr.length + 9 + i + beginRow}');
+        obs.merge();
+      }
+      var cell3 = sheet.getRangeByIndex(jsonStr.length + 6 + beginRow,6);
+      cell3.cellStyle.bold = true;
+      cell3.setText( 'FIRMA');
+      final Picture picture = sheet.pictures.addStream(jsonStr.length + 7 + beginRow, 6, imageData);
+      picture.width = 140; // Ancho de la imagen en unidades de 1/256 de un carácter
+      picture.height = 70; // Altura de la imagen en unidades de 1/20 de un punto
+      break;
+    case 2:
     //COMEDOR
-
     // AJUSTANDO TITULO
     sheet.getRangeByIndex(2,4).setText('CONTROL DEL COMEDOR DE EMPLEADOS'); // Fusionar celdas
     final Range rangeTitle = sheet.getRangeByName('D2:H2');
@@ -178,7 +180,7 @@ Future<void> jsonToExcel(List<Map<String, dynamic>> jsonStr, List<String> header
     var cellObservacion = sheet.getRangeByIndex(jsonStr.length + 8 + beginRow,1);
     cellObservacion.setText('OBSERVACION(ES)');
     cellObservacion.cellStyle.bold = true;
-    for (var i = 0; i < jsonStrObs.length; i++) {
+    for (var i = 0; i < jsonStrObs!.length; i++) {
       var cell2 = sheet.getRangeByIndex(jsonStr.length + 9 + i + beginRow,1);
       cell2.setText(jsonStrObs[i]['description']);
       Range obs =   sheet.getRangeByName('A${jsonStr.length + 9 + i + beginRow}:E${jsonStr.length + 9 + i + beginRow}');
@@ -257,10 +259,21 @@ Future<void> jsonToExcel(List<Map<String, dynamic>> jsonStr, List<String> header
       var cell3 = sheet.getRangeByIndex(6,13);
       cell3.setText("No hay comidas registradas");
     }
-
-
+    break;
+    case 3:
+      //AJUSTANDO FECHA
+      sheet.getRangeByIndex(4,6).setText('Fecha: $formattedDate');
+      // AJUSTANDO TITULO
+      sheet.getRangeByIndex(2,3).setText('CONTROL DE ASISTENCIA'); // Fusionar celdas
+      final Range rangeTitle = sheet.getRangeByName('B2:F2');
+      rangeTitle.cellStyle.bold = true;
+      rangeTitle.cellStyle.fontSize = 16;
+      rangeTitle.merge();
+      rangeTitle.cellStyle.hAlign = HAlignType.center;
+      rangeTitle.cellStyle.vAlign = VAlignType.center;
+    break;
+    default:
   }
-  
 
   String? path =  await pickDownloadDirectory(context);
 

@@ -38,8 +38,8 @@ class _ControlVehiclesState extends State<ControlVehicles> {
       'platesSearch' : MultiInputsForm(contenido: '', obligatorio: true,autocomplete: true, autocompleteAsync: true,screen:  2),
       'typevh' : MultiInputsForm(contenido: '', obligatorio: true),
       'color' : MultiInputsForm(contenido: '', obligatorio: true),
-      'employeeName' : MultiInputsForm(contenido: '', obligatorio: true),
-      'departament' : MultiInputsForm(contenido: '',obligatorio: true),
+      'employeeName' : MultiInputsForm(contenido: '', obligatorio: true, enabled:  false),
+      'departament' : MultiInputsForm(contenido: '',obligatorio: true, enabled:  false),
     };
 
     final Map<String, MultiInputsForm> formValuesObservacion = {
@@ -96,6 +96,7 @@ class _ControlVehiclesState extends State<ControlVehicles> {
                         controller: controller,
                         field: const [
                           'Iniciar Turno',
+                          'Iniciar',
                           'Nombre del guardia',
                           'Turno',
                           'Firma'
@@ -116,6 +117,7 @@ class _ControlVehiclesState extends State<ControlVehicles> {
                         controller: controller,
                         field: const [
                           'Registro Manual',
+                          'Registrar',
                           'placas',
                           'Tipo de vehículo',
                           'Color',
@@ -184,7 +186,7 @@ class _ControlVehiclesState extends State<ControlVehicles> {
                         textButton: 'Agregar observaciones',
                         btnPosition: 3,
                         controller: controller,
-                        field: const ['Enviar', 'Agregue una descripción...'],
+                        field: const ['Enviar','Enviar', 'Agregue una descripción...'],
                         formValue: formValuesObservacion,
                         enabled: false),
                     SizedBox(height: responsiveHeight),
@@ -195,6 +197,7 @@ class _ControlVehiclesState extends State<ControlVehicles> {
                         btnPosition: 4,
                         field: const [
                           'Descargar reporte',
+                          'Descargar',
                           'Guardia',
                           'Turno',
                           'Fecha inicial y hora',
@@ -211,6 +214,7 @@ class _ControlVehiclesState extends State<ControlVehicles> {
                       btnPosition: 5,
                       field: const [
                         'Buscar vehículo',
+                        'Buscar',
                         'Placas',
                         'Tipo de vehículo',
                         'Color',

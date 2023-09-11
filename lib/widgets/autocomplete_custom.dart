@@ -8,11 +8,12 @@ class AutocompleteCustom extends StatefulWidget {
   List<int>? goptionsId;
   final bool autocompleteAsync;
   final String? labelText;
-  final int screen;
+  final int? screen;
   final String? formProperty;
   late Map<String, dynamic> formValue;
+  final bool onSelect = true;
   Function(dynamic,List<String>)? onFormValueChange;
-
+  
    AutocompleteCustom({
     Key? key,
     required this.autocompleteAsync,
@@ -28,8 +29,10 @@ class AutocompleteCustom extends StatefulWidget {
 }
 
 class __AutocompleteCustomState extends State<AutocompleteCustom> {
+  List<Map<String,dynamic>> arr= [];
   List<String>? tempOptions; // Variable temporal para almacenar los resultados de la base de datos
   VehicleService vService = VehicleService();
+  AssistanceService aService = AssistanceService();
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +52,7 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
         onSelected: (String selection) async {
 
         widget.formValue[widget.formProperty]!.contenido = selection;
+
         if (widget.autocompleteAsync) {
           switch (widget.formProperty) {
           case 'guard':
@@ -57,19 +61,24 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
           case 'platesSearch':  
             switch (widget.screen){
             case 1:
-            Access r = await vService.findVehicle(selection,context,1);
-            widget.onFormValueChange!(r.container,['plates','type_vh','color','employee_name','time_entry','time_exit']);
+              Access r = await vService.findVehicle(selection,context,1);
+              widget.onFormValueChange!(r.container,['plates','type_vh','color','employee_name','time_entry','time_exit']);
             break;
             case 2:
-            Access r = await vService.findVehicle(selection,context,2);
-            widget.onFormValueChange!(r.container,['plates','type_vh','color','employee_name','department']);
+              Access r = await vService.findVehicle(selection,context,2);
+              widget.onFormValueChange!(r.container,['plates','type_vh','color','employee_name','department']);
             break;
             }
-            
             break;
+          case 'nameSearch': 
+              widget.onFormValueChange!([arr[widget.goptions!.indexOf(selection)]],['usuario']);
+            break;
+          case 'course_name':
+          break;
           default:
         }
         }
+        
           setState(() { });
 
         },
@@ -105,33 +114,40 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
           fieldViewBuilder: (BuildContext context, TextEditingController fieldController,
           FocusNode fieldFocusNode, VoidCallback onFieldSubmitted) {
             return TextFormField(
-              
               controller: fieldController,
               focusNode: fieldFocusNode,
+              onFieldSubmitted: ( value2) async {
+                fieldFocusNode.requestFocus();
+                final String value =  fieldController.text;
+                if (widget.autocompleteAsync) {
+                  setState(() { 
+                  tempOptions = [];
+                  });
+                  await llenarMatAutoComplete(value);  
+                  setState(() {
+                    widget.goptions = tempOptions;
+                    tempOptions = null; // Reiniciar la variable temporal
+                  });
+                switch (widget.formProperty) {
+                  case 'course_name':
+                    widget.formValue[widget.formProperty]!.contenido = value;
+                  break;
+                  default:
+                }
+                }
+              },
               style: getTextStyleText(context,null,null),
               decoration: InputDecoration(
                 hintText: widget.labelText
               ),
               key: widget.key,
-              onTap: ()  async {
-                final String value =  fieldController.text;
-                if (widget.autocompleteAsync) {
-                setState(() { 
-                  tempOptions = [];
-                });
-
-                  await llenarMatAutoComplete(value);  
-                  // widget.formValue[widget.formProperty]!.contenido = value;
-                
-                  setState(() {
-                    widget.goptions = tempOptions;
-                    tempOptions = null; // Reiniciar la variable temporal
-                  });
-                }else{
-                  // widget.formValue[widget.formProperty]!.contenido = value;
-
-                }
-
+              onTap: ()   {
+               /* switch (widget.formProperty) {
+                  case 'course_name':
+                    widget.formValue[widget.formProperty]!.contenido = value;
+                  break;
+                  default:
+                } */
               },
              validator: widget.formValue[widget.formProperty]!.obligatorio == true ? (value) {
                 if(value == null || value.isEmpty == true || value == ''){
@@ -151,7 +167,6 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
     widget.goptions = [];
     widget.goptionsId = [];
     llenarMatAutoComplete(null);
-   
     super.initState();
   }
 
@@ -170,45 +185,74 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
           await buscaAutomaticaPlatesSearch(value ??'');
         }
         break;
+      case 'nameSearch':
+          await buscaAutomaticaEmployeesSearch(value ??'');
+        break;
+      case 'course_name':
+        await buscarAutomaticaCoursesSearch(value ?? '');
+      break;
       default:
     }
   }
 
   Future llenarOpcionesGuard() async {
   VehicleService vs = VehicleService();
-  List<Map<String,dynamic>> arr=  await vs.namesGuard(context);
+  setState(() { widget.goptionsId = []; });
+  arr=  await vs.namesGuard(context);
     for (var i = 0; i < arr.length; i++) {
       widget.goptions!.add(arr[i]['name']);
       widget.goptionsId!.add(int.parse(arr[i]['id']));
     }
+    setState(() { });
   }
 
   Future<List<Map<String,dynamic>>> buscaAutomaticaGuard(String value) async {
   VehicleService vs = VehicleService();
-  List<Map<String,dynamic>> arr= await vs.nameGuard(value.toLowerCase(),context);
+  arr= await vs.nameGuard(value.toLowerCase(),context);
     for (var i = 0; i < arr.length; i++) {
       if (tempOptions !=null) {
-        setState(() { 
           tempOptions!.add(arr[i]['name']);
-        });
       }
     }
+
+    setState(() { });
     return arr;  
   }
 
   Future<List<Map<String,dynamic>>> buscaAutomaticaPlatesSearch(String value) async {
   VehicleService vs = VehicleService();
-  List<Map<String,dynamic>> arr= await vs.showPlateRegister(value.toLowerCase(),context);
+  arr= await vs.showPlateRegister(value.toLowerCase(),context);
     for (var i = 0; i < arr.length; i++) {
       if (tempOptions !=null) {
-        setState(() { 
-          tempOptions!.add(arr[i]['plates']);
-        });
+        tempOptions!.add(arr[i]['plates']);
       }
     }
+    setState(() { });
     return arr;  
   }
 
-  
+  Future<List<Map<String,dynamic>>> buscaAutomaticaEmployeesSearch(String value) async {
+  AssistanceService vs = AssistanceService();
+  arr= await vs.showEmployeeAssistance(value.toLowerCase(),context);
+    for (var i = 0; i < arr.length; i++) {
+      if (tempOptions !=null) {
+        tempOptions!.add(arr[i]['complete_name']);
+      }
+    }
+    setState(() { });
+    return arr;  
+  }
+
+  Future<List<Map<String,dynamic>>> buscarAutomaticaCoursesSearch(String value) async {
+  AssistanceService vs = AssistanceService();
+  arr= await vs.showCoursesAssistance(value.toLowerCase(),context);
+    for (var i = 0; i < arr.length; i++) {
+      if (tempOptions !=null) {
+        tempOptions!.add(arr[i]['course_name']);
+      }
+    }
+    setState(() { });
+    return arr;  
+  }
 }
 

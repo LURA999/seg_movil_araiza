@@ -36,7 +36,8 @@ class MultiInputs extends StatefulWidget {
   final IconData? icon;
   final TextInputType? keyboardType;
   final bool obscureText;
-  final List<List<String>>? listSelect;
+  final List<List<String>>? listSelectButton;
+  final List<String>? listSelectForm;
   final bool? autocompleteAsync;
   final int? screen; 
   final String formProperty;
@@ -54,7 +55,8 @@ class MultiInputs extends StatefulWidget {
     this.icon,
     this.suffixIcon,
     this.prefix,
-    this.listSelect,
+    this.listSelectButton,
+    this.listSelectForm,
     this.keyboardType,
     this.autocompleteAsync,
     this.obscureText = false,
@@ -80,9 +82,7 @@ final ImagePicker _picker = ImagePicker();
     // TODO: implement initState
     super.initState();
     observation();
-    setState(() {
-      
-    });
+    setState(() { });
   }
 
 
@@ -99,7 +99,7 @@ final ImagePicker _picker = ImagePicker();
       autocompleteAsync: widget.autocompleteAsync!,
       labelText: widget.labelText,
       onFormValueChange: widget.onFormValueChange,
-      screen: widget.screen!);
+      screen: widget.screen);
     }
 
     /** Ingrese una imagen*/
@@ -118,13 +118,22 @@ final ImagePicker _picker = ImagePicker();
     /** Si entra aqui, entra para crear un select */
     if (widget.formValue[widget.formProperty]!.select ?? false) {
       int indice = 0;
+      if (widget.formValue is MultiInputsForm) {
       widget.formValue.forEach((key, value) {
-        if(widget.formValue[key]!.select == true){
-          indice++; 
-          return;
-        } 
-      });
-      return DropdownButtonWidget(list: widget.listSelect![indice-1],formValue: widget.formValue,formProperty: widget.formProperty);
+        print(widget.formValue[key]!.select);
+       
+          if(widget.formValue[key]!.select ?? false == true){
+            indice++; 
+            return;
+          } 
+        });
+      }
+      
+      if (widget.listSelectButton == null) {   
+        return DropdownButtonWidget(list: widget.listSelectForm,formValue: widget.formValue,formProperty: widget.formProperty);
+      }else{
+        return DropdownButtonWidget(list: widget.listSelectButton![indice-1],formValue: widget.formValue,formProperty: widget.formProperty);
+      }
     }
 
     if (widget.keyboardType.toString().contains('datetime')) {
@@ -198,7 +207,6 @@ final ImagePicker _picker = ImagePicker();
           controller: widget.controller,
           autofocus: widget.autofocus!,
           initialValue: widget.controller == null ? widget.formValue[widget.formProperty]!.contenido : null,
-          textCapitalization: TextCapitalization.characters,
           keyboardType: widget.keyboardType,
           obscureText: widget.obscureText,
           style: getTextStyleText(context,null,null),
@@ -240,14 +248,12 @@ final ImagePicker _picker = ImagePicker();
 
   Future<void> openCamera() async {
   try{
-  final XFile? image = await _picker.pickImage(source: ImageSource.camera);
-  if (image != null) {
-    widget.formValue[widget.formProperty]!.contenido = image.path;
-  }
+    final XFile? image = await _picker.pickImage(source: ImageSource.camera);
+    if (image != null) {
+      widget.formValue[widget.formProperty]!.contenido = image.path;
+    }
   }catch(Exception){
-  }
-
-  
+  } 
 }
 
 
@@ -258,13 +264,13 @@ final ImagePicker _picker = ImagePicker();
      switch (widget.formProperty) {
       //es para trafico
       case 'descriptionVehicle':
-          VehicleService vs = VehicleService();
+        VehicleService vs = VehicleService();
         AccessMap r = (await vs.getObservation(context));
         setState(() {
           widget.formValue['descriptionVehicle']!.contenido = r.container![0]['observation'];
           widget.controller!.text =  r.container![0]['observation'] ?? '';
         });
-        break;
+      break;
       case 'descriptionFood':
       FoodService fs = FoodService();
        AccessMap r = (await fs.getObservation(context));
@@ -272,8 +278,19 @@ final ImagePicker _picker = ImagePicker();
           widget.formValue['descriptionFood']!.contenido = r.container![0]['observation'];
           widget.controller!.text =  r.container![0]['observation']?? '';
         });
-        break;
+      break;
+      case 'descriptionAssistance':
+      AssistanceService as = AssistanceService();
+       AccessMap r = (await as.getObservation(context));
+       if(r.status == 200){
+        setState(() {
+          widget.formValue['descriptionAssistance']!.contenido = r.container![0]['observation'];
+          widget.controller!.text =  r.container![0]['observation']?? '';
+        });
+       }
+      break;
       default:
+
     }
     
   }

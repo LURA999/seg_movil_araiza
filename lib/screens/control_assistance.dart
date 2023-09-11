@@ -6,15 +6,15 @@ import '../models/multi_inputs_model.dart';
 import '../services/services.dart';
 
 
-class DiningRoom extends StatefulWidget {
-  const DiningRoom({Key? key}) : super(key: key);
+class ControlAssistance extends StatefulWidget {
+  const ControlAssistance({Key? key}) : super(key: key);
 
   @override
-  State<DiningRoom> createState() => _DiningRoomState();
+  State<ControlAssistance> createState() => _ControlAssistanceState();
 }
 
 
-class _DiningRoomState extends State<DiningRoom> {
+class _ControlAssistanceState extends State<ControlAssistance> {
  @override
   Widget build(BuildContext context) {
     double responsiveHeight = MediaQuery.of(context).size.height * 0.02;
@@ -24,30 +24,26 @@ class _DiningRoomState extends State<DiningRoom> {
     
     //Fecha se inserta automaticamente
     final Map<String, MultiInputsForm> formValuesInicioTur = {
-      'dish' : MultiInputsForm(contenido: '', obligatorio: true),
-      'garrison' : MultiInputsForm(contenido: '', obligatorio: true),
-      'dessert' : MultiInputsForm(contenido: '', obligatorio: false),
-      'received_number' : MultiInputsForm(contenido: '', obligatorio: true),
-      'menu_portal' : MultiInputsForm(contenido: '', obligatorio: true),
-      'picture' :  MultiInputsForm(contenido: '', obligatorio: true,uploadFile: true),
+      'course_name' : MultiInputsForm(contenido: '', obligatorio: true, autocomplete: true, autocompleteAsync: true),
+      'schedule' : MultiInputsForm(contenido: '', obligatorio: true),
     };
 
     //fecha se inserta manualmente
     final Map<String, MultiInputsForm> formValuesRegistroMan = {
       'employee_number' : MultiInputsForm(contenido: '', obligatorio: true), 
-      'name' : MultiInputsForm(contenido: '', obligatorio: true),   
-      'type_contract' : MultiInputsForm(contenido: '', obligatorio: true, select: true), 
+      'nameSearch' : MultiInputsForm(contenido: '', obligatorio: false, autocomplete: true, autocompleteAsync: true),   
     };
 
     final Map<String, MultiInputsForm> formValuesObservacion = {
-      'descriptionFood': MultiInputsForm(contenido: '',obligatorio: true,select: false,enabled: true)
+      'descriptionAssistance': MultiInputsForm(contenido: '',obligatorio: true,select: false,enabled: true)
     };
 
     final Map<String, MultiInputsForm> formValuesDescRepor = {
-      'dish': MultiInputsForm(contenido: '', obligatorio: false),
-      'date_start_hour': MultiInputsForm(contenido: '', obligatorio: true, activeClock: false), 
-      'date_final_hour': MultiInputsForm(contenido: '', obligatorio: true, activeClock: false), 
+      'course_name': MultiInputsForm(contenido: '', obligatorio: false, autocomplete: true, autocompleteAsync: true),
+      'date_start_hour': MultiInputsForm(contenido: '', obligatorio: true, activeClock: true), 
+      'date_final_hour': MultiInputsForm(contenido: '', obligatorio: true, activeClock: true), 
     };
+
     final TextEditingController controller = TextEditingController();
 
     return Scaffold(
@@ -68,24 +64,21 @@ class _DiningRoomState extends State<DiningRoom> {
                     SizedBox(
                       child: Align(
                       alignment: Alignment.centerLeft,
-                      child: Text('Control de empleados',style: getTextStyleTitle(context,null)),          
+                      child: Text('Asistencia a curso',style: getTextStyleTitle(context,null)),          
                       )
                     ),
                     SizedBox(height: responsiveHeight),
                     ButtonForm(
                         controller: controller,
-                        control: 2,
-                        textButton: 'Inicio turno',
+                        control: 3,
+                        textButton: 'Inicio tomar de asistencia',
                         btnPosition: 1,
                         field: const [
-                          'Iniciar Turno',
+                          'Iniciar toma de asistencia',
                           'Iniciar',
-                          'Platillo',
-                          'Guarnición',
-                          'Postre',
-                          'Número de platillos recibidos',
-                          'Menu de Hoy (Portal de Comunicación)',
-                          'Subir imagen'
+                          'Nombre del curso',
+                          'Horario',
+                          'Fecha'
                         ],
                         formValue: formValuesInicioTur,
                         enabled: true),
@@ -97,15 +90,14 @@ class _DiningRoomState extends State<DiningRoom> {
                     SizedBox(height: responsiveHeight),
                     ButtonForm(
                         controller: controller,
-                        control: 2,
+                        control: 3,
                         textButton: 'Registro Manual',
                         btnPosition: 2,
                         field: const [
                           'Registro Manual',
                           'Registrar',
                           'Número de empleado',
-                          'Nombre',
-                          'Tipo de contrato'
+                          'Nombre de empleado'
                         ],
                         listSelect: const [['Proveedor','Externo','Empleado']],
                         formValue: formValuesRegistroMan,
@@ -129,14 +121,14 @@ class _DiningRoomState extends State<DiningRoom> {
                                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                         children:[
                                           ElevatedButton(onPressed:  (){
-                                            Navigator.of(context).pop(context);
-                                          },child: Text('Cancelar', style: getTextStyleButtonField(context)),
+                                              Navigator.of(context).pop(context);
+                                            },child: Text('Cancelar', style: getTextStyleButtonField(context)),
                                           ),
                                           ElevatedButton(onPressed: (Provider.of<VarProvider>(context).varSalir) == false ? () async {
                                           Provider.of<VarProvider>(context,listen: false).updateVariable(false);
                                           Provider.of<VarProvider>(context,listen: false).updateVarSalir(true);
-                                            FoodService fs = FoodService();
-                                              var salirInt =  await fs.postCloseTurnFood(context);
+                                            AssistanceService fs = AssistanceService();
+                                              var salirInt =  await fs.postCloseTurnAssistance(context);
                                                if (salirInt) {
                                                 Provider.of<VarProvider>(context,listen: false).updateVarSalir(false);
                                                 Navigator.of(context).pop(context);
@@ -159,13 +151,13 @@ class _DiningRoomState extends State<DiningRoom> {
                         }:null,
                         child: Padding(
                           padding: EdgeInsets.all(responsivePadding),
-                          child: Text('Cerrar turno',style: getTextStyleButtonField(context)),
+                          child: Text('Finalizar toma de asistencia',style: getTextStyleButtonField(context)),
                         )),
                     ),
                     SizedBox(height: responsiveHeight),
                     ButtonForm(
                         controller: controller,
-                        control: 2,
+                        control: 3,
                         textButton: 'Agregar observaciones',
                         btnPosition: 3,
                         field: const ['Enviar','Enviar', 'Agregue una descripción...'],
@@ -174,13 +166,13 @@ class _DiningRoomState extends State<DiningRoom> {
                     SizedBox(height: responsiveHeight),
                     ButtonForm(
                         controller: controller,
-                        control: 2,
+                        control: 3,
                         textButton: 'Descargar reporte',
                         btnPosition: 4,
                         field: const [
                           'Descargar reporte',
                           'Descargar',
-                          'Busca un postre,platillo o guarnición',
+                          'Buscar curso',
                           'Fecha inicial y hora',
                           'Fecha final y hora'
                         ],
@@ -192,7 +184,7 @@ class _DiningRoomState extends State<DiningRoom> {
             ),
           ),
         ),
-        const SizedBox(child: Navbar(contexto2: 'control_food',))
+        const SizedBox(child: Navbar(contexto2: 'control_assistance',))
       ],
     ));
   }
@@ -201,10 +193,9 @@ class _DiningRoomState extends State<DiningRoom> {
   initState() { 
     super.initState();
     SystemChannels.textInput.invokeMethod('TextInput.hide');
-
    VarProvider vh = VarProvider()
   ..arrSharedPreferences().then((Map<String, dynamic> sharedPrefsData) {
-    if (sharedPrefsData['dish'] == null) {
+    if (sharedPrefsData['course_name'] == null) {
       SessionManager sm = SessionManager()
         ..clearSession().then((value) {
           VehicleService dpser = VehicleService()

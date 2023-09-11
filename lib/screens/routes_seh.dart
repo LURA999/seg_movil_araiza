@@ -50,6 +50,7 @@ class _RoutesSehState extends State<RoutesSeh> {
                 'periodo': 1,
                 'recorrido' : 1,
                 'form':1,
+                'title' : '1er trimestre - Área A'
               });
             },   
             () {
@@ -57,6 +58,7 @@ class _RoutesSehState extends State<RoutesSeh> {
                   'periodo': 1,
                   'recorrido' : 2,
                   'form':2,
+                  'title' : '1er trimestre - Área B'
                 });
               
             },   
@@ -65,6 +67,7 @@ class _RoutesSehState extends State<RoutesSeh> {
                 'periodo': 1,
                 'recorrido' : 3,
                 'form':3,
+                  'title' : '1er trimestre - Área C'
               });
             },   
           ]
@@ -82,6 +85,7 @@ class _RoutesSehState extends State<RoutesSeh> {
                 'periodo': 2,
                 'recorrido' : 1,
                 'form':4,
+                'title' : '2do trimestre - Área A'
               });
             },
             () {
@@ -89,6 +93,7 @@ class _RoutesSehState extends State<RoutesSeh> {
                 'periodo': 2,
                 'recorrido' : 2,
                 'form':5,
+                'title' : '2do trimestre - Área B'
               });
             },
             () {
@@ -96,6 +101,7 @@ class _RoutesSehState extends State<RoutesSeh> {
                 'periodo': 2,
                 'recorrido' : 3,
                 'form':6,
+                'title' : '2do trimestre - Área C'
               });
             },
           ]
@@ -113,6 +119,7 @@ class _RoutesSehState extends State<RoutesSeh> {
                 'periodo': 3,
                 'recorrido' : 1,
                 'form':7,
+                'title' : '3er trimestre - Área A'
               });
             },
             () {
@@ -120,6 +127,7 @@ class _RoutesSehState extends State<RoutesSeh> {
                 'periodo': 3,
                 'recorrido' : 2,
                 'form':8,
+                'title' : '3er trimestre - Área B'
               });
             },
             () {
@@ -127,6 +135,7 @@ class _RoutesSehState extends State<RoutesSeh> {
                 'periodo': 3,
                 'recorrido' : 3,
                 'form':9,
+                'title' : '3er trimestre - Área C'
               });
             },
           ]
@@ -144,6 +153,7 @@ class _RoutesSehState extends State<RoutesSeh> {
                 'periodo': 4,
                 'recorrido' : 1,
                 'form':10,
+                'title' : '4to trimestre - Área A'
               });
             },
             () {
@@ -151,6 +161,7 @@ class _RoutesSehState extends State<RoutesSeh> {
                 'periodo': 4,
                 'recorrido' : 2,
                 'form':11,
+                'title' : '4to trimestre - Área B'
               });
             },
             () {
@@ -158,6 +169,7 @@ class _RoutesSehState extends State<RoutesSeh> {
                 'periodo': 4,
                 'recorrido' : 3,
                 'form':12,
+                'title' : '4to trimestre - Área C'
               });
             
             },
