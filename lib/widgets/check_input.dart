@@ -22,8 +22,6 @@ class CheckInput extends StatefulWidget {
 class _CheckInputState extends State<CheckInput> {
   @override
   Widget build(BuildContext context) {
-    // print('[${widget.indexPrincipal}][${widget.indexSecundario}]');
-
      Color getColor(Set<MaterialState> states) {
       const Set<MaterialState> interactiveStates = <MaterialState>{
         MaterialState.pressed,

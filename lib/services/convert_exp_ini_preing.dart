@@ -20,7 +20,7 @@ void generatePDF( BuildContext context, bool save) async {
     try {
       throw Exception('No se han concedido los permisos de almacenamiento.');      
     } catch (e) {
-      print(e);
+    //  print(e);
     }
   }
 
@@ -3494,7 +3494,7 @@ pdf.addPage(
   })
   );
   stopwatch.stop();
-  print(' El Tiempo de renderizado del pdf es de : ${stopwatch.elapsedMilliseconds} milisegundos');
+ // print(' El Tiempo de renderizado del pdf es de : ${stopwatch.elapsedMilliseconds} milisegundos');
 
 
 

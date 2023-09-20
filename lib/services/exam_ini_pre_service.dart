@@ -61,6 +61,231 @@ try {
     return []; 
   } 
 
+Future<List<Map<String,dynamic>>> getOneExamPart1(int idExam, BuildContext context ) async {
+  AccessMap result = AccessMap();
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
+    return [];
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    isSaving = true;
+    notifyListeners();
+    final url = Uri.parse('$link/medical_exam.php?getOneExamPart1=true');
+    var response = (await http.post(url, body: json.encode([idExam]),headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+    final result = AccessMap.fromJson(jsonDecode(response));
+    // var response = await http.post(url, body: {'pass': pass, 'departament': departament});
+    if (result.status == 200){
+      isSaving = false;
+      notifyListeners();
+      return result.container!;
+    }else{
+     // messageError(context,'Contraseña incorrecta.');
+    }
+
+    isSaving = false;
+    notifyListeners();
+    return []; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+    return []; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return []; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+    return []; 
+  }
+  }
+  // messageError(context,'Error desconocido.');
+    return []; 
+  } 
+
+Future<List<Map<String,dynamic>>> getExamAcciddentDisease(int idExam, BuildContext context ) async {
+  AccessMap result = AccessMap();
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
+    return [];
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    isSaving = true;
+    notifyListeners();
+    final url = Uri.parse('$link/medical_exam.php?getExamAcciddentDisease=true');
+    var response = (await http.post(url, body: json.encode([idExam]),headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+    final result = AccessMap.fromJson(jsonDecode(response));
+    // var response = await http.post(url, body: {'pass': pass, 'departament': departament});
+    if (result.status == 200){
+      isSaving = false;
+      notifyListeners();
+      return result.container!;
+    }else{
+     // messageError(context,'Contraseña incorrecta.');
+    }
+
+    isSaving = false;
+    notifyListeners();
+    return []; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+    return []; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return []; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+    return []; 
+  }
+  }
+  // messageError(context,'Error desconocido.');
+    return []; 
+  } 
+
+  Future<List<Map<String,dynamic>>> getExamHeredityFam(int idExam, BuildContext context ) async {
+  AccessMap result = AccessMap();
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
+    return [];
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    isSaving = true;
+    notifyListeners();
+    final url = Uri.parse('$link/medical_exam.php?getExamHeredityFam=true');
+    var response = (await http.post(url, body: json.encode([idExam]),headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+    final result = AccessMap.fromJson(jsonDecode(response));
+    // var response = await http.post(url, body: {'pass': pass, 'departament': departament});
+    if (result.status == 200){
+      isSaving = false;
+      notifyListeners();
+      return result.container!;
+    }else{
+     // messageError(context,'Contraseña incorrecta.');
+    }
+
+    isSaving = false;
+    notifyListeners();
+    return []; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+    return []; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return []; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+    return []; 
+  }
+  }
+  // messageError(context,'Error desconocido.');
+    return []; 
+  } 
+
+  Future<List<Map<String,dynamic>>> getExamHistory(int idExam, BuildContext context ) async {
+  AccessMap result = AccessMap();
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
+    return [];
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    isSaving = true;
+    notifyListeners();
+    final url = Uri.parse('$link/medical_exam.php?getExamHistory=true');
+    var response = (await http.post(url, body: json.encode([idExam]),headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+    final result = AccessMap.fromJson(jsonDecode(response));
+    // var response = await http.post(url, body: {'pass': pass, 'departament': departament});
+    if (result.status == 200){
+      isSaving = false;
+      notifyListeners();
+      return result.container!;
+    }else{
+     // messageError(context,'Contraseña incorrecta.');
+    }
+
+    isSaving = false;
+    notifyListeners();
+    return []; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+    return []; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return []; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+    return []; 
+  }
+  }
+  // messageError(context,'Error desconocido.');
+    return []; 
+  } 
+
+Future<List<Map<String,dynamic>>> getAllExamList( BuildContext context ) async {
+  AccessMap result = AccessMap();
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
+    return [];
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    isSaving = true;
+    notifyListeners();
+    final url = Uri.parse('$link/medical_exam.php?ExamList=true');
+    var response = (await http.get(url)).body;
+      final result = AccessMap.fromJson(jsonDecode(response));
+    // var response = await http.post(url, body: {'pass': pass, 'departament': departament});
+    if (result.status == 200){
+      isSaving = false;
+      notifyListeners();
+      return result.container!;
+    }else{
+     // messageError(context,'Contraseña incorrecta.');
+    }
+
+    isSaving = false;
+    notifyListeners();
+    return []; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+    return []; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return []; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+    return []; 
+  }
+  }
+  // messageError(context,'Error desconocido.');
+    return []; 
+  } 
+
 
 Future<AccessMap> post_examMa( ExamMaModel obj,BuildContext context ) async {
   AccessMap result = AccessMap();
@@ -115,6 +340,7 @@ try {
     final url = Uri.parse('$link/medical_exam.php?post_examDe=true');
     var response = (await http.post(url, body: json.encode(obj.toJson()),headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
     final result = AccessMap.fromJson(jsonDecode(response));
+    print(result);
     if (result.status == 200) {
       return result;
     }
@@ -302,6 +528,7 @@ try {
     final url = Uri.parse('$link/medical_exam.php?post_examHeP=true');
     var response = (await http.post(url, body: json.encode(obj.toJson()),headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
     final result = AccessMap.fromJson(jsonDecode(response));
+    print(result.toJson());
     if (result.status == 200) {
       return result;
     }
@@ -486,6 +713,7 @@ try {
   } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
 
 try {
+  
     final url = Uri.parse('$link/medical_exam.php?post_examPa=true');
     var response = (await http.post(url, body: json.encode(obj.toJson()),headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
     final result = AccessMap.fromJson(jsonDecode(response));

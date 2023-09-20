@@ -101,6 +101,20 @@ class _RadioInputState extends State<RadioInput> {
                 },
               ),
             ),
+            ListTile(
+              title: const Text('Ninguno'),
+              leading: Radio<Cause>(
+                activeColor: AppTheme.primary,
+                fillColor: MaterialStateProperty.resolveWith(getColor),
+                value: Cause.none,
+                groupValue: widget.causeEnum![widget.index],
+                onChanged: (Cause? value) {
+                  setState(() {
+                    widget.causeEnum![widget.index] = value!;
+                  });
+                },
+              ),
+            ),
           ],
         );
         case 3:
@@ -122,8 +136,8 @@ class _RadioInputState extends State<RadioInput> {
                     });
                   },
                 ),
-                          ),
               ),
+            ),
             SizedBox(
               width: 180,
               child: ListTile(
@@ -363,11 +377,13 @@ class _RadioInputState extends State<RadioInput> {
           ],
         );
       default :
+      
       return Column(
           children: [
               ListTile(
               title: const Text('Inicial'),
               leading: Radio<YesNot>(
+                
                 activeColor: AppTheme.primary,
                 fillColor: MaterialStateProperty.resolveWith(getColor),
                 value: YesNot.si,

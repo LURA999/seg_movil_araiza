@@ -22,17 +22,17 @@ class ExamPaModel {
   int? colitis;
   int? depression;
   String? other_disease;
-  String? hospitalization;
+  int? hospitalization;
   String? reason_hospitalization;
-  String? surgery;
+  int? surgery;
   String? reason_surgery;
-  String? transfusion;
+  int? transfusion;
   String? reason_transfusion;
-  String? trauma_fracture;
+  int? trauma_fracture;
   String? what_trauma_fracture;
-  String? complication;
+  int? complication;
   String? what_complication;
-  String? chronic_disease;
+  int? chronic_disease;
   String? what_chronic;
   String? current_treatment;
 
@@ -77,6 +77,7 @@ class ExamPaModel {
     ExamPaModel.fromJson(Map<String, dynamic> json){ 
       idPatalogicalPersBack = json['idPatalogicalPersBack'];
       arthritis = json['arthritis'];
+      covid = json['covid'];
       asthma = json['asthma'];
       bronchitis = json['bronchitis'];
       hepatitis = json['hepatitis'];
@@ -118,6 +119,7 @@ class ExamPaModel {
       data['arthritis'] = arthritis ?? '';
       data['asthma'] = asthma ?? '';
       data['bronchitis'] = bronchitis ?? '';
+      data['covid'] = covid ?? '';
       data['hepatitis'] = hepatitis ?? '';
       data['kidney_disease'] = kidney_disease ?? '';
       data['skin_disease'] = skin_disease ?? '';

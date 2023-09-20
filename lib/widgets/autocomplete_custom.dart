@@ -1,3 +1,4 @@
+import 'package:app_seguimiento_movil/widgets/popUp_widget.dart';
 import 'package:flutter/material.dart';
 
 import '../models/models.dart';
@@ -33,26 +34,45 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
   List<String>? tempOptions; // Variable temporal para almacenar los resultados de la base de datos
   VehicleService vService = VehicleService();
   AssistanceService aService = AssistanceService();
+  
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) => 
       Autocomplete<String>(
-        optionsBuilder: (TextEditingValue textEditingValue) {
-          if (widget.autocompleteAsync) {
+        optionsBuilder: (TextEditingValue textEditingValue) async{
+          
+          if (widget.autocompleteAsync) {              
+            // messageError(context, "dentro del if, autocomplete: ${textEditingValue.text}");
             if (textEditingValue.text == '') {
+              // messageError(context, "dentro del if, textEditingValue: ${textEditingValue.text}");
               return const Iterable<String>.empty();
             } 
           }
-          return (tempOptions ?? widget.goptions ?? []).where((String option) {
+          if (widget.autocompleteAsync) {
+            setState(() {
+              tempOptions = [];
+            });
+            await llenarMatAutoComplete(textEditingValue.text);
+            setState(() { 
+              widget.goptions = tempOptions;
+              tempOptions = null; // Reiniciar la variable temporal
+            });
+
+            switch (widget.formProperty) {
+              case 'course_name':
+                widget.formValue[widget.formProperty]!.contenido = textEditingValue.text;
+              break;
+              default:
+            }
+          }
+          return (widget.goptions!).where((String option) {
             return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
           });
         },
         onSelected: (String selection) async {
-
         widget.formValue[widget.formProperty]!.contenido = selection;
-
         if (widget.autocompleteAsync) {
           switch (widget.formProperty) {
           case 'guard':
@@ -92,7 +112,6 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
               });
             },
           )).toList() ;
-
             return Align(
               alignment: Alignment.topLeft,
               child: SizedBox( 
@@ -101,7 +120,6 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
                 child:  Material(  
                   elevation: 3.0,
                   child: SingleChildScrollView(
-                    
                     child: Column(
                       key: widget.key,
                       children: list,
@@ -116,40 +134,12 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
             return TextFormField(
               controller: fieldController,
               focusNode: fieldFocusNode,
-              onFieldSubmitted: ( value2) async {
-                fieldFocusNode.requestFocus();
-                final String value =  fieldController.text;
-                if (widget.autocompleteAsync) {
-                  setState(() { 
-                  tempOptions = [];
-                  });
-                  await llenarMatAutoComplete(value);  
-                  setState(() {
-                    widget.goptions = tempOptions;
-                    tempOptions = null; // Reiniciar la variable temporal
-                  });
-                switch (widget.formProperty) {
-                  case 'course_name':
-                    widget.formValue[widget.formProperty]!.contenido = value;
-                  break;
-                  default:
-                }
-                }
-              },
               style: getTextStyleText(context,null,null),
               decoration: InputDecoration(
                 hintText: widget.labelText
               ),
               key: widget.key,
-              onTap: ()   {
-               /* switch (widget.formProperty) {
-                  case 'course_name':
-                    widget.formValue[widget.formProperty]!.contenido = value;
-                  break;
-                  default:
-                } */
-              },
-             validator: widget.formValue[widget.formProperty]!.obligatorio == true ? (value) {
+              validator: widget.formValue[widget.formProperty]!.obligatorio == true ? (value) {
                 if(value == null || value.isEmpty == true || value == ''){
                   return 'Este campo es requerido';
                 }
@@ -176,20 +166,20 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
         if (!widget.autocompleteAsync) {
           await llenarOpcionesGuard();
         }else{
-          await buscaAutomaticaGuard(value ??'');
+          await buscaAutomaticaGuard(value ??'*?');
         }
         
         break;
       case 'platesSearch':
         if (widget.autocompleteAsync) {
-          await buscaAutomaticaPlatesSearch(value ??'');
+          await buscaAutomaticaPlatesSearch(value ??'*?');
         }
         break;
       case 'nameSearch':
-          await buscaAutomaticaEmployeesSearch(value ??'');
+          await buscaAutomaticaEmployeesSearch(value ??'*?');
         break;
       case 'course_name':
-        await buscarAutomaticaCoursesSearch(value ?? '');
+        await buscarAutomaticaCoursesSearch(value ?? '*?');
       break;
       default:
     }
@@ -214,7 +204,6 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
           tempOptions!.add(arr[i]['name']);
       }
     }
-
     setState(() { });
     return arr;  
   }

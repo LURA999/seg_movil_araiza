@@ -41,7 +41,7 @@ class MultiInputsForm implements BaseInputsForm {
   bool? autocompleteAsync;
   int? screen;
   bool? activeClock;
-  List<String>? listselect;
+  List<Map<String,dynamic>>? listselect;
   TextInputType? keyboardType;
   
 

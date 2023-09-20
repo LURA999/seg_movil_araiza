@@ -37,7 +37,7 @@ class MultiInputs extends StatefulWidget {
   final TextInputType? keyboardType;
   final bool obscureText;
   final List<List<String>>? listSelectButton;
-  final List<String>? listSelectForm;
+  final List<Map<String,dynamic>>? listSelectForm;
   final bool? autocompleteAsync;
   final int? screen; 
   final String formProperty;
@@ -118,29 +118,30 @@ final ImagePicker _picker = ImagePicker();
     /** Si entra aqui, entra para crear un select */
     if (widget.formValue[widget.formProperty]!.select ?? false) {
       int indice = 0;
-      if (widget.formValue is MultiInputsForm) {
+      
       widget.formValue.forEach((key, value) {
-        print(widget.formValue[key]!.select);
-       
-          if(widget.formValue[key]!.select ?? false == true){
-            indice++; 
-            return;
+          if((widget.formValue[key] is RadioInput) == false ){
+            if (widget.formValue[key]!.select ?? false == true) {
+              indice++; 
+              return;
+            }
           } 
         });
-      }
-      
+
       if (widget.listSelectButton == null) {   
-        return DropdownButtonWidget(list: widget.listSelectForm,formValue: widget.formValue,formProperty: widget.formProperty);
+        //En este puede cambiar el id de cada item de cada opcion
+        return DropdownButtonWidget(arrSelect: widget.listSelectForm,formValue: widget.formValue,formProperty: widget.formProperty, type: 1,);
       }else{
-        return DropdownButtonWidget(list: widget.listSelectButton![indice-1],formValue: widget.formValue,formProperty: widget.formProperty);
+        //En este ya viene una lista predefinida desde el mismo sistema
+        return DropdownButtonWidget(list: widget.listSelectButton![indice-1],formValue: widget.formValue,formProperty: widget.formProperty, type: 2);
       }
     }
 
-    if (widget.keyboardType.toString().contains('datetime')) {
+    if (widget.keyboardType.toString().contains('datetime') || widget.keyboardType == TextInputType.datetime) {
       MaterialTapTargetSize tapTargetSize = MaterialTapTargetSize.padded;
-
         final format = DateFormat("yyyy-MM-dd ${widget.formValue[widget.formProperty]!.activeClock == true?'HH:mm':''}");
         return DateTimeField(
+       initialValue: widget.formValue[widget.formProperty]!.contenido.toString()!= '' ?DateFormat("yyyy-MM-dd").parse(widget.formValue[widget.formProperty]!.contenido.toString()): null,
         controller: widget.controller,
         style: getTextStyleText(context,null,null),
         format: format,
@@ -198,7 +199,6 @@ final ImagePicker _picker = ImagePicker();
         },
       );
     }
-
     /** Si entra aqui, entra a los 2 diferentes textformfield, 
      * como lo es el del calendario, y un input normal con diferentes personalizaciones (como subfijos,prefijos,hint etc)  */
     return TextFormField(
@@ -259,8 +259,6 @@ final ImagePicker _picker = ImagePicker();
 
 
   Future observation() async {
-
-
      switch (widget.formProperty) {
       //es para trafico
       case 'descriptionVehicle':

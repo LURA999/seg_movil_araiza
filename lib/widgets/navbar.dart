@@ -133,7 +133,6 @@ class _ButtonNavSvgState extends State<ButtonNavSvg> {
             .whereType<HistoryNavigator>()
             .first.history;
             try {
-              // print(routes.length);
               if (routes.length > 1) {
                 final previousRouteSettings = routes[routes.indexOf(routes.firstWhere((e) => e.settings.name == widget.contexto2)) - 1].settings;
                 final previousRouteName = previousRouteSettings.name;
@@ -151,9 +150,7 @@ class _ButtonNavSvgState extends State<ButtonNavSvg> {
             List<Set<String>> namesRoute = Routers.namesRouter;
             try {
               int indice = namesRoute.indexWhere((conjunto) => conjunto.contains(widget.contexto2));
-              /* for (var el in routes) {
-                print(el.settings.name);
-              } */
+             
     
               // print("Donde se encuentra la pantalla actual : ${routes.indexOf(routes.firstWhere((e) => e.settings.name == widget.contexto2))}: ${widget.contexto2} = el numero de pantalla que son en total : ${Routers.namesRouter.length}");
               // print('El historial a crecido hasta ${routes.length} widgets');

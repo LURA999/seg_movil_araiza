@@ -342,7 +342,6 @@ try {
 try {
     isSaving = true;
     notifyListeners();
-    print(reg.toJson());
     final url = Uri.parse('$link/qr_food.php');
       var response = (await http.post(
       url, 
