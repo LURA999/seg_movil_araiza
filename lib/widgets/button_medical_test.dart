@@ -14,7 +14,7 @@ import '../theme/app_theme.dart';
 Future<String?> newMethod(BuildContext context, List<Map<String,dynamic>> arrDepartaments, List<String>? multiInputArr ,
 List<String>? multiInputHArr, List<String>? multiInputAEArr, List<List<bool>>? checkBoxArr, List<YesNot>? yestNotEnumArr, 
 List<List<bool>>? checkboxDLNArr, List<Cause>? causeDiseaseArr, List<YesNot>? yestNotEnumArrDisease,List<ManoDominante>? manoArr,
-List<MetodoAnti>? methodArr ) {
+List<MetodoAnti>? methodArr, int idExam, bool edit ) {
 int _currentPageIndex = 0;
 int multiInputC = 0; 
 int multiInputCH = 0; 
@@ -22,6 +22,9 @@ int multiInputCAE = 0;
 int radioButtonC = 0; 
 int radioButtonCDisease = 0; 
 int radioButtonCDiseaseYN = 0; 
+bool btnSave = true;
+bool btnNext = true;
+                     
 
 List<GlobalKey<SignatureState>> sign0 = [GlobalKey<SignatureState>(),GlobalKey<SignatureState>()];
 List<ByteData> img = [ByteData(0), ByteData(0)];
@@ -114,22 +117,22 @@ final List<GlobalKey<FormState>> myFormKey = [
 List<Map<String, dynamic>> formpart1 = [
 {//Primeras preguntas (0)
 'Numero de Empleado' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-'Departamento' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true, select: true, listselect: arrDepartaments ),
+'Departamento' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true, select: true, listselect: arrDepartaments, maxLength: 10 ),
 'Puesto' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
 'pre_o_ini' : RadioInput(tipoEnum: 7, yesNotEnum: yestNotEnumArr ?? yesNotEnum, index: yestNotEnumArr!=null ? radioButtonC++ : countYesNotEnum++,), //0
 },
 {//ficha personal (1)
   'Nombre' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
   'Sexo' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true, select: true, listselect: [{'idSex': '1', 'sex': 'Hombre'},{'idSex': '2', 'sex': 'Mujer'}] ),
-  'Edad' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
+  'Edad' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true, keyboardType: TextInputType.number),
   'Edo. Civil' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
   'Domicilio' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  'Tel. fijo y/o cel' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
+  'Tel. fijo y/o cel' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true, keyboardType: TextInputType.number),
   'Lugar y fecha de nacimiento' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
   'Actividad extra a su trabajo' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
   'Escolaridad' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
   'Carrera universitaria' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  'Núm. de hijos' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
+  'Núm. de hijos' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true, keyboardType: TextInputType.number),
 },
 {//historial laboral (2)
   '1.- Sized' : const SizedBox(height: 20,),
@@ -137,21 +140,57 @@ List<Map<String, dynamic>> formpart1 = [
   '1.- Empresa' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true),
   '1.- Puestos' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true),
   '1.- Tiempo' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true),
+  '1.- Cuando Salió' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, keyboardType: TextInputType.datetime),
+  '1.- Rotación de puesto' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, maxLength: 10),
+  '1.- Quimicos solventes' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, maxLength: 10),
+  '1.- Humos' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, maxLength: 10),
+  '1.- Vapores' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, maxLength: 10),
+  '1.- Polvos' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, maxLength: 10),
+  '1.- Ruido' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, maxLength: 10),
+  '1.- Carga de material' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, maxLength: 10),
+
   '2.- Sized' : const SizedBox(height: 20,),
   '2.- Titulo' : const Align(alignment: Alignment.centerLeft, child: Text('Segunda empresa',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))),
   '2.- Empresa' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true),
   '2.- Puestos' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true),
   '2.- Tiempo' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true),
+  '2.- Cuando Salió' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, keyboardType: TextInputType.datetime),
+  '2.- Rotación de puesto' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, maxLength: 10),
+  '2.- Quimicos solventes' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, maxLength: 10),
+  '2.- Humos' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, maxLength: 10),
+  '2.- Vapores' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, maxLength: 10),
+  '2.- Polvos' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, maxLength: 10),
+  '2.- Ruido' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, maxLength: 10),
+  '2.- Carga de material' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, maxLength: 10),
+
   '3.- Sized' : const SizedBox(height: 20,),
   '3.- Titulo' : const Align(alignment: Alignment.centerLeft, child: Text('Tercera empresa',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))),
   '3.- Empresa' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true),
   '3.- Puestos' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true),
   '3.- Tiempo' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true),
+  '3.- Cuando Salió' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true,keyboardType: TextInputType.datetime),
+  '3.- Rotación de puesto' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, maxLength: 10),
+  '3.- Quimicos solventes' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, maxLength: 10),
+  '3.- Humos' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, maxLength: 10),
+  '3.- Vapores' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, maxLength: 10),
+  '3.- Polvos' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, maxLength: 10),
+  '3.- Ruido' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, maxLength: 10),
+  '3.- Carga de material' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, maxLength: 10),
+
   '4.- Sized' : const SizedBox(height: 20,),
   '4.- Titulo' : const Align(alignment: Alignment.centerLeft, child: Text('Cuarta empresa',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))),
   '4.- Empresa' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true),
   '4.- Puestos' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true),
-  '4.- Tiempo' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true),
+  '4.- Tiempo' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, maxLength: 10),
+  '4.- Cuando Salió' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, keyboardType: TextInputType.datetime),
+  '4.- Rotación de puesto' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, maxLength: 10),
+  '4.- Quimicos solventes' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, maxLength: 10),
+  '4.- Humos' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, maxLength: 10),
+  '4.- Vapores' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, maxLength: 10),
+  '4.- Polvos' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, maxLength: 10),
+  '4.- Ruido' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, maxLength: 10),
+  '4.- Carga de material' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, maxLength: 10),
+
 } ,
 {//ACCIDENTES Y ENFERMEDADES DE TRABAJO (3)
   '1.- Sized' : const SizedBox(height: 20,),
@@ -164,7 +203,7 @@ List<Map<String, dynamic>> formpart1 = [
   '1.- Nombre de la lesión o enfermedad' : MultiInputsForm(contenido: multiInputAEArr != null ? multiInputAEArr[multiInputCAE++] :  '', obligatorio: true,  enabled: true),
   '1.- Incapacidad' : const Align(alignment: Alignment.centerLeft, child: Text('Incapacidad',style: TextStyle(fontSize: 20))),
   '1.- YesNot' : RadioInput(tipoEnum: 1, yesNotEnum: yestNotEnumArrDisease ?? yesNotEnum, index: yestNotEnumArrDisease !=null ? radioButtonCDiseaseYN++ : countYesNotEnum++,),
-  '1.- Número de dias de incapacidad' : MultiInputsForm(contenido: multiInputAEArr != null ? multiInputAEArr[multiInputCAE++] :  '', obligatorio: true,  enabled: true),
+  '1.- Número de dias de incapacidad' : MultiInputsForm(contenido: multiInputAEArr != null ? multiInputAEArr[multiInputCAE++] :  '', obligatorio: true,  enabled: true, keyboardType: TextInputType.number),
   '2.- Sized' : const SizedBox(height: 20,),
   '2.- Titulo' : const Align(alignment: Alignment.centerLeft, child: Text('Segunda empresa',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))),
   '2.- Nombre de empresa' : MultiInputsForm(contenido: multiInputAEArr != null ? multiInputAEArr[multiInputCAE++] :  '', obligatorio: true,  enabled: true),
@@ -175,7 +214,7 @@ List<Map<String, dynamic>> formpart1 = [
   '2.- Nombre de la lesión o enfermedad' : MultiInputsForm(contenido: multiInputAEArr != null ? multiInputAEArr[multiInputCAE++] :  '', obligatorio: true,  enabled: true),
   '2.- Incapacidad' : const Align(alignment: Alignment.centerLeft, child: Text('Incapacidad',style: TextStyle(fontSize: 20))),
   '2.- YesNot' : RadioInput(tipoEnum: 1, yesNotEnum: yestNotEnumArrDisease ?? yesNotEnum, index: yestNotEnumArrDisease !=null ? radioButtonCDiseaseYN++ : countYesNotEnum++,),
-  '2.- Número de dias de incapacidad' : MultiInputsForm(contenido: multiInputAEArr != null ? multiInputAEArr[multiInputCAE++] :  '', obligatorio: true,  enabled: true),
+  '2.- Número de dias de incapacidad' : MultiInputsForm(contenido: multiInputAEArr != null ? multiInputAEArr[multiInputCAE++] :  '', obligatorio: true,  enabled: true, keyboardType: TextInputType.number),
   '3.- Sized' : const SizedBox(height: 20,),
   '3.- Titulo' : const Align(alignment: Alignment.centerLeft, child: Text('Tercera empresa',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))),
   '3.- Nombre de empresa' : MultiInputsForm(contenido: multiInputAEArr != null ? multiInputAEArr[multiInputCAE++] :  '', obligatorio: true,  enabled: true),
@@ -186,7 +225,7 @@ List<Map<String, dynamic>> formpart1 = [
   '3.- Nombre de la lesión o enfermedad' : MultiInputsForm(contenido: multiInputAEArr != null ? multiInputAEArr[multiInputCAE++] :  '', obligatorio: true,  enabled: true),
   '3.- Incapacidad' : const Align(alignment: Alignment.centerLeft, child: Text('Incapacidad',style: TextStyle(fontSize: 20))),
   '3.- YesNot' : RadioInput(tipoEnum: 1, yesNotEnum: yestNotEnumArrDisease ?? yesNotEnum, index: yestNotEnumArrDisease !=null ? radioButtonCDiseaseYN++ : countYesNotEnum++,),
-  '3.- Número de dias de incapacidad' : MultiInputsForm(contenido: multiInputAEArr != null ? multiInputAEArr[multiInputCAE++] :  '', obligatorio: true,  enabled: true),
+  '3.- Número de dias de incapacidad' : MultiInputsForm(contenido: multiInputAEArr != null ? multiInputAEArr[multiInputCAE++] :  '', obligatorio: true,  enabled: true, keyboardType: TextInputType.number),
 },
 { //4.- ANTECEDENTES HEREDITARIOS Y FAMILIARES DE SALUD (4)
   // (Con una X anote los datos positivos según sea el caso)
@@ -278,7 +317,7 @@ List<Map<String, dynamic>> formpart1 = [
       
     ],
   ),
-  '1.- Edad de inicio' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
+  '1.- Edad de inicio' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true, keyboardType: TextInputType.number),
   'Cantidad de cigarrillos al día' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
   'Alcohol' : Column(
     mainAxisAlignment: MainAxisAlignment.start,
@@ -288,7 +327,7 @@ List<Map<String, dynamic>> formpart1 = [
       RadioInput(tipoEnum: 4, yesNotEnum: yestNotEnumArr ?? yesNotEnum, index: yestNotEnumArr!=null ? radioButtonC++ : countYesNotEnum++,), //1
     ],
   ),
-  '2.- Edad de inicio' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
+  '2.- Edad de inicio' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true, keyboardType: TextInputType.number),
   'Frecuencia' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true), 
   'Taxicomanías' : Column(
     mainAxisAlignment: MainAxisAlignment.start,
@@ -298,7 +337,7 @@ List<Map<String, dynamic>> formpart1 = [
       RadioInput(tipoEnum: 4, yesNotEnum: yestNotEnumArr ?? yesNotEnum, index: yestNotEnumArr!=null ? radioButtonC++ : countYesNotEnum++,),//2
     ],
   ),
-  '3.- Edad de inicio' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
+  '3.- Edad de inicio' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true, keyboardType: TextInputType.number),
   'Tipo y frecuencia' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
   'Alergías a med' : Column(
     mainAxisAlignment: MainAxisAlignment.start,
@@ -373,12 +412,12 @@ List<Map<String, dynamic>> formpart1 = [
       ],
     )
   ),
-  'Edad de su primera menstruación' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: false,  enabled: true),
-  'Edad de inicio de vida sexual' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: false,  enabled: true),
-  'Número de Embarazos' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: false,  enabled: true),
-  'Partos' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: false,  enabled: true),
-  'Cesáreas' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: false,  enabled: true),
-  'Abortos' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: false,  enabled: true),
+  'Edad de su primera menstruación' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: false,  enabled: true, keyboardType: TextInputType.number),
+  'Edad de inicio de vida sexual' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: false,  enabled: true, keyboardType: TextInputType.number),
+  'Número de Embarazos' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: false,  enabled: true, keyboardType: TextInputType.number),
+  'Partos' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: false,  enabled: true, keyboardType: TextInputType.number),
+  'Cesáreas' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: false,  enabled: true, keyboardType: TextInputType.number),
+  'Abortos' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: false,  enabled: true, keyboardType: TextInputType.number),
   'Fecha de Ultima Regla' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: false,  enabled: true, keyboardType: TextInputType.datetime),
   'Ritmo' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: false,  enabled: true),
   'anticonceptivo actual' : const Align(alignment: Alignment.bottomLeft, child: Text('Método anticonceptivo actual:',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))),
@@ -436,6 +475,8 @@ List<Map<String, dynamic>> formpart1 = [
       RadioInput(tipoEnum: 4, yesNotEnum: yestNotEnumArr ?? yesNotEnum, index: yestNotEnumArr!=null ? radioButtonC++ : countYesNotEnum++,),
       const Text('Várices',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold)),
       RadioInput(tipoEnum: 4, yesNotEnum: yestNotEnumArr ?? yesNotEnum, index: yestNotEnumArr!=null ? radioButtonC++ : countYesNotEnum++,),
+      const Text('Hipertensión',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold)),
+      RadioInput(tipoEnum: 4, yesNotEnum: yestNotEnumArr ?? yesNotEnum, index: yestNotEnumArr!=null ? radioButtonC++ : countYesNotEnum++,),
       const Text('Neumonía',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold)),
       RadioInput(tipoEnum: 4, yesNotEnum: yestNotEnumArr ?? yesNotEnum, index: yestNotEnumArr!=null ? radioButtonC++ : countYesNotEnum++,),
       const Text('Tuberculosis',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold)),
@@ -465,7 +506,7 @@ List<Map<String, dynamic>> formpart1 = [
       RadioInput(tipoEnum: 4, yesNotEnum: yestNotEnumArr ?? yesNotEnum, index: yestNotEnumArr!=null ? radioButtonC++ : countYesNotEnum++,),
     ]
   ),
-  '2.- Motivo' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
+  '1.- ¿Cuál?' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
   '4siONo' : Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     mainAxisAlignment: MainAxisAlignment.start,
@@ -474,7 +515,7 @@ List<Map<String, dynamic>> formpart1 = [
       RadioInput(tipoEnum: 4, yesNotEnum: yestNotEnumArr ?? yesNotEnum, index: yestNotEnumArr!=null ? radioButtonC++ : countYesNotEnum++,),
     ]
   ),
-  '3.- Motivo' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
+  '2.- Motivo' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
   '5siONo' : Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     mainAxisAlignment: MainAxisAlignment.start,
@@ -492,7 +533,7 @@ List<Map<String, dynamic>> formpart1 = [
       RadioInput(tipoEnum: 4, yesNotEnum: yestNotEnumArr ?? yesNotEnum, index: yestNotEnumArr!=null ? radioButtonC++ : countYesNotEnum++,),
     ]
   ),
-  '1.- ¿Cuál?' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
+  '2.- ¿Cuál?' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
   '7siONo' : Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     mainAxisAlignment: MainAxisAlignment.start,
@@ -501,7 +542,7 @@ List<Map<String, dynamic>> formpart1 = [
       RadioInput(tipoEnum: 4, yesNotEnum: yestNotEnumArr ?? yesNotEnum, index: yestNotEnumArr!=null ? radioButtonC++ : countYesNotEnum++,),
     ]
   ),
-  '2.- ¿Cuál?' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
+  '3.- ¿Cuál?' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
   'Tratamiento actual' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
 },
 { //6.- INTERROGATORIO POR APARATOS Y SISTEMAS. (7)
@@ -516,8 +557,8 @@ List<Map<String, dynamic>> formpart1 = [
 { //EXPLORACIÓN FÍSICA (8)
   'T/A - mmgh' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
   'F/C' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  'Peso - Kg' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  'Talla - cm' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
+  'Peso - Kg' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true, keyboardType: TextInputType.number),
+  'Talla - cm' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true, keyboardType: TextInputType.number),
   'P.abd' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
   'F/R' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
   'Temp.' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
@@ -529,10 +570,10 @@ List<Map<String, dynamic>> formpart1 = [
       CheckInput(contenido: '\t\t\tDLN',listChecked: listChecked_sec7,indexPrincipal:0,indexSecundario: 0, style: TextStyle(fontSize:MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.020),fontWeight: FontWeight.normal)),
     ]
   ),
-  'Actitud' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  'Marcha' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  'Apariencia' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  'Edo. ánimo' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
+  'Actitud' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
+  'Marcha' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
+  'Apariencia' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
+  'Edo. ánimo' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
   'dln2' : Row(
     mainAxisAlignment: MainAxisAlignment.start,
     children: [
@@ -541,14 +582,14 @@ List<Map<String, dynamic>> formpart1 = [
     ]
   ),
   'OREJA':Align(alignment: Alignment.bottomLeft, child:Text('Oreja', style: TextStyle(fontSize:MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.020),fontWeight: FontWeight.normal))),
-  '1.- D':MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  '1.- I' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
+  '1.- D':MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 5),
+  '1.- I' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 5),
   'C A E':Align(alignment: Alignment.bottomLeft, child:Text('C A E', style: TextStyle(fontSize:MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.020),fontWeight: FontWeight.normal))),
-  '2.- D':MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  '2.- I' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
+  '2.- D':MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 5),
+  '2.- I' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 5),
   'TIMPANO':Align(alignment: Alignment.bottomLeft, child:Text('Tímpano', style: TextStyle(fontSize:MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.020),fontWeight: FontWeight.normal))),
-  '3.- D':MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  '3.- I' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
+  '3.- D':MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 5),
+  '3.- I' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 5),
   'dln3' : Row(
     mainAxisAlignment: MainAxisAlignment.start,
     children: [
@@ -556,10 +597,10 @@ List<Map<String, dynamic>> formpart1 = [
       CheckInput(contenido: '\t\t\tDLN',listChecked: listChecked_sec7,indexPrincipal:0,indexSecundario: 2,style: TextStyle(fontSize:MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.020),fontWeight: FontWeight.normal)),
     ]
   ),
-  'Cabello' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  'Superficie' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  'Forma' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  'Senos PN' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
+  'Cabello' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
+  'Superficie' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
+  'Forma' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
+  'Senos PN' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
   'dln4' : Row(
     mainAxisAlignment: MainAxisAlignment.start,
     children: [
@@ -567,12 +608,12 @@ List<Map<String, dynamic>> formpart1 = [
       CheckInput(contenido: '\t\t\tDLN',listChecked: listChecked_sec7,indexPrincipal:0,indexSecundario: 3,style: TextStyle(fontSize:MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.020),fontWeight: FontWeight.normal)),
     ]
   ),
-  'Reflejos' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  'Pupilares' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  'Fondo de Ojo' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
+  'Reflejos' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
+  'Pupilares' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
+  'Fondo de Ojo' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
   'Pterigion':Align(alignment: Alignment.bottomLeft, child:Text('Pterigion', style: TextStyle(fontSize:MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.020),fontWeight: FontWeight.normal))),
-  '4.- D':MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  '4.- I' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
+  '4.- D':MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 5),
+  '4.- I' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 5),
   'dln5' : Row(
     mainAxisAlignment: MainAxisAlignment.start,
     children: [
@@ -580,9 +621,9 @@ List<Map<String, dynamic>> formpart1 = [
       CheckInput(contenido: '\t\t\tDLN',listChecked: listChecked_sec7,indexPrincipal:0,indexSecundario: 4,style: TextStyle(fontSize:MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.020),fontWeight: FontWeight.normal)),
     ]
   ),
-  'Reflejos OT' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  'Romberg' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  'Talón Rodilla' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
+  'Reflejos OT' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
+  'Romberg' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
+  'Talón Rodilla' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
   'dln6' : Row(
     mainAxisAlignment: MainAxisAlignment.start,
     children: [
@@ -590,13 +631,13 @@ List<Map<String, dynamic>> formpart1 = [
       CheckInput(contenido: '\t\t\tDLN',listChecked: listChecked_sec7,indexPrincipal:0,indexSecundario: 5,style: TextStyle(fontSize:MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.020),fontWeight: FontWeight.normal)),
     ]
   ),
-  'Labios' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  'Aliento' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  'Lengua' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  'Faringe' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  'Amígdalas' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  'Dientes' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  '1.- Mucosa' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
+  'Labios' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
+  'Aliento' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
+  'Lengua' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
+  'Faringe' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
+  'Amígdalas' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
+  'Dientes' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
+  '1.- Mucosa' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
   'dln7' : Row(
     mainAxisAlignment: MainAxisAlignment.start,
     children: [
@@ -604,11 +645,11 @@ List<Map<String, dynamic>> formpart1 = [
       CheckInput(contenido: '\t\t\tDLN',listChecked: listChecked_sec7,indexPrincipal:0,indexSecundario: 6,style: TextStyle(fontSize:MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.020),fontWeight: FontWeight.normal)),
     ]
   ),
-  '1.- Forma' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  'Diafragma' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  '1.- Frotes' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  '1.- Ventilación' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  'Estertores' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
+  '1.- Forma' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
+  'Diafragma' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
+  '1.- Frotes' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
+  '1.- Ventilación' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
+  'Estertores' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
   'dln8' : Row(
     mainAxisAlignment: MainAxisAlignment.start,
     children: [
@@ -616,12 +657,12 @@ List<Map<String, dynamic>> formpart1 = [
       CheckInput(contenido: '\t\t\tDLN',listChecked: listChecked_sec7,indexPrincipal:0,indexSecundario: 7,style: TextStyle(fontSize:MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.020),fontWeight: FontWeight.normal)),
     ]
   ),
-  '2.- Forma' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  'Dolor' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  'Masas' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
+  '2.- Forma' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
+  'Dolor' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
+  'Masas' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
   'Hernia':Align(alignment: Alignment.bottomLeft, child:Text('Hernia', style: TextStyle(fontSize:MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.020),fontWeight: FontWeight.normal))),
-  '5.- D':MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  '5.- I' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
+  '5.- D':MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 5),
+  '5.- I' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 5),
   'dln9' : Row(
     mainAxisAlignment: MainAxisAlignment.start,
     children: [
@@ -629,11 +670,11 @@ List<Map<String, dynamic>> formpart1 = [
       CheckInput(contenido: '\t\t\tDLN',listChecked: listChecked_sec7,indexPrincipal:0,indexSecundario: 8,style: TextStyle(fontSize:MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.020),fontWeight: FontWeight.normal)),
     ]
   ),
-  'Septum' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
+  'Septum' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
   '2.- Mucosa':Align(alignment: Alignment.bottomLeft, child:Text('Mucosa', style: TextStyle(fontSize:MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.020),fontWeight: FontWeight.normal))),
-  '6.- D':MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  '6.- I' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  '2.- Ventilación' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
+  '6.- D':MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
+  '6.- I' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
+  '2.- Ventilación' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
   'dln10' : Row(
     mainAxisAlignment: MainAxisAlignment.start,
     children: [
@@ -641,11 +682,11 @@ List<Map<String, dynamic>> formpart1 = [
       CheckInput(contenido: '\t\t\tDLN',listChecked: listChecked_sec7,indexPrincipal:0,indexSecundario: 9,style: TextStyle(fontSize:MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.020),fontWeight: FontWeight.normal)),
     ]
   ),
-  'Frecuencia' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  'Ritmo' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  'Tonos' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  '2.- Frotes' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  'Soplos' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
+  'Frecuencia' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
+  'Ritmo' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
+  'Tonos' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
+  '2.- Frotes' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
+  'Soplos' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
   'dln11' : Row(
     mainAxisAlignment: MainAxisAlignment.start,
     children: [
@@ -653,10 +694,10 @@ List<Map<String, dynamic>> formpart1 = [
       CheckInput(contenido: '\t\t\tDLN',listChecked: listChecked_sec7,indexPrincipal:0,indexSecundario: 10,style: TextStyle(fontSize:MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.020),fontWeight: FontWeight.normal)),
     ]
   ),
-  'Cicatrices' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  'Textura' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  'Diaforesis' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  'Otras Lesiones' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
+  'Cicatrices' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
+  'Textura' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
+  'Diaforesis' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
+  'Otras Lesiones' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
   'dln12' : Row(
     mainAxisAlignment: MainAxisAlignment.start,
     children: [
@@ -665,24 +706,24 @@ List<Map<String, dynamic>> formpart1 = [
     ]
   ),
   '1.- Articular':Align(alignment: Alignment.bottomLeft, child:Text('Articular', style: TextStyle(fontSize:MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.020),fontWeight: FontWeight.normal))),
-  '7.- D':MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  '7.- I' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
+  '7.- D':MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
+  '7.- I' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
   '1.- Muscular':Align(alignment: Alignment.bottomLeft, child:Text('Muscular', style: TextStyle(fontSize:MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.020),fontWeight: FontWeight.normal))),
-  '8.- D':MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  '8.- I' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
+  '8.- D':MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
+  '8.- I' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
   '1.- Nervioso':Align(alignment: Alignment.bottomLeft, child:Text('Nervioso', style: TextStyle(fontSize:MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.020),fontWeight: FontWeight.normal))),
-  '9.- D':MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  '9.- I' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
+  '9.- D':MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
+  '9.- I' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
   'M.I.':Align(alignment: Alignment.bottomLeft, child:Text('Nervioso', style: TextStyle(fontSize:MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.020),fontWeight: FontWeight.normal))),
   '2.-Articular':Align(alignment: Alignment.bottomLeft, child:Text('Articular', style: TextStyle(fontSize:MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.020),fontWeight: FontWeight.normal))),
-  '10.- D':MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  '10.- I' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
+  '10.- D':MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
+  '10.- I' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
   '2.-Muscular':Align(alignment: Alignment.bottomLeft, child:Text('Muscular', style: TextStyle(fontSize:MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.020),fontWeight: FontWeight.normal))),
-  '11.- D':MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  '11.- I' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
+  '11.- D':MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
+  '11.- I' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
   '2.-Nervioso':Align(alignment: Alignment.bottomLeft, child:Text('Nervioso', style: TextStyle(fontSize:MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.020),fontWeight: FontWeight.normal))),
-  '12.- D':MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  '12.- I' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
+  '12.- D':MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
+  '12.- I' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true,maxLength: 10),
   'COLUMNA' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
   'DE CERCA A 30CM LENTES':Align(alignment: Alignment.bottomLeft, child:Text('DE CERCA A 30CM LENTES', style: TextStyle(fontSize:MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.020),fontWeight: FontWeight.normal))),
   'lentes cerca': RadioInput(tipoEnum: 4, yesNotEnum: yestNotEnumArr ?? yesNotEnum, index: yestNotEnumArr!=null ? radioButtonC++ : countYesNotEnum++,),
@@ -795,14 +836,14 @@ _pages[i].add(Title(
           img[int.parse(key)].buffer.lengthInBytes == 0 ? Container() : LimitedBox(maxHeight: 200.0, child: Image.memory(img[int.parse(key)].buffer.asUint8List())),
           ElevatedButton.icon(
             icon: const Icon(Icons.delete),
-            onPressed: () async {
+            onPressed: btnSave == true ? () async {
               if (sign[int.parse(key)] != null) {
                 sign[int.parse(key)] = sign0[int.parse(key)].currentState!;
                 sign[int.parse(key)]!.clear();
                 sign[int.parse(key)] = null;
                 img[int.parse(key)] = ByteData(0);
               }
-            },
+            } : null,
             label: Text('Borrar',style: getTextStyleButtonField(context)),
           ),
           ],
@@ -817,6 +858,7 @@ _pages[i].add(Title(
         controller: null,
         autofocus: false,
         formProperty: key,
+        maxLength: value.maxLength,
         listSelectForm: value.listselect,
         formValue: formpart1[i],
         keyboardType: value.keyboardType ?? TextInputType.text));
@@ -860,16 +902,14 @@ _pages[i].add(Title(
 return  showDialog<String>(
 context: context,
 builder: (BuildContext context ) { 
-
 return Stack(
 children: [
-  ModalBarrier(
+  const ModalBarrier(
     dismissible: false,
     color:  Color.fromARGB(80, 0, 0, 0),
   ),
 StatefulBuilder(
   builder: (BuildContext context, StateSetter setState) {
-    
   return GestureDetector(
   onTap: () => SystemChannels.textInput.invokeMethod('TextInput.hide'),
   child: Dialog(
@@ -895,7 +935,7 @@ StatefulBuilder(
             children: [
               Align(
                 alignment: Alignment.bottomRight,
-                child: IconButton(onPressed: () => Navigator.of(context).pop()
+                child: IconButton(onPressed: btnSave == true ? () => Navigator.of(context).pop() : null
                 , icon: const Icon(Icons.close, size: 35,)),
               ),
               Expanded(
@@ -925,36 +965,47 @@ StatefulBuilder(
                 children: [
                   if( _currentPageIndex > 0)
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: btnSave == true ? () {
+                      /* if (_currentPageIndex == _pages.length - 2) {
+                          setState((){
+                            btnNext = true;
+                          });
+                        } */
                         _pageController.previousPage(
                           duration: const Duration(milliseconds: 300),
                           curve: Curves.easeInOut,
                         );
                       setState(() { _currentPageIndex--; });
-                    },
+                    } : null,
                     child: const Text('Anterior'),
                   ),
                   ElevatedButton.icon(
                     icon: const Icon(Icons.save),
-                    onPressed: () async {
+                    onPressed: btnSave ==true? () async {
 
                       if (causeDiseaseArr !=null) {
                         causeEnum = causeDiseaseArr;
                       }
 
                       if (int.tryParse((formpart1[0]['Numero de Empleado'] as MultiInputsForm).contenido!) is int) {
+                      setState((){
+                        btnSave = false;
+                      });
                       ExamInModel eim = ExamInModel();
                       eim.departament = int.parse((formpart1[0]['Departamento'] as MultiInputsForm).contenido!);
                       eim.place = (formpart1[0]['Puesto'] as MultiInputsForm).contenido!;
                       eim.type = (yestNotEnumArr != null ? yestNotEnumArr[0] : yesNotEnum[0])  == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[0] : yesNotEnum[0]) == YesNot.si ? 1 : 2;
-                      if (eim.toJson().isNotEmpty) {
-                        eim.idDetExamInPr =  int.parse((await eips.post_examIn(eim, context)).container![0]["ultimoId"]);                        
+                      if (edit == false) {
+                        if (eim.toJson().isNotEmpty) {
+                          eim.idDetExamInPr =  int.parse((await eips.post_examIn(eim, context)).container![0]["ultimoId"]);                        
+                        }
+                      } else {
+                        await eips.patch_examIn(eim, idExam, context);
                       }
-                      
                       
                       ExamPeModel epm = ExamPeModel();
                       epm.name = (formpart1[1]['Nombre'] as MultiInputsForm).contenido!;
-                      epm.sex = int.parse((formpart1[1]['Sexo'] as MultiInputsForm).contenido!);
+                      epm.sex = int.parse((formpart1[1]['Sexo'] as MultiInputsForm).contenido!.toString() == '' ? '1' : (formpart1[1]['Sexo'] as MultiInputsForm).contenido!);
                       epm.age = (formpart1[1]['Edad'] as MultiInputsForm).contenido!;
                       epm.marital_status = (formpart1[1]['Edo. Civil'] as MultiInputsForm).contenido!;
                       epm.address = (formpart1[1]['Domicilio'] as MultiInputsForm).contenido!;
@@ -964,9 +1015,12 @@ StatefulBuilder(
                       epm.schooling = (formpart1[1]['Escolaridad'] as MultiInputsForm).contenido!;
                       epm.college_career = (formpart1[1]['Carrera universitaria'] as MultiInputsForm).contenido!;
                       epm.number_children = (formpart1[1]['Núm. de hijos'] as MultiInputsForm).contenido!;
-                      
-                      if (epm.toJson().isNotEmpty) {
-                        epm.idPersonal = int.parse((await eips.post_examPe(epm, context)).container![0]["ultimoId"]);
+                      if (edit == false) {
+                        if (epm.toJson().isNotEmpty) {
+                          epm.idPersonal = int.parse((await eips.post_examPe(epm, context)).container![0]["ultimoId"]);
+                        }
+                      } else {
+                        await eips.patch_examPe(epm, idExam, context);
                       }
                       
                       ExamHePModel hpm = ExamHePModel();
@@ -998,13 +1052,12 @@ StatefulBuilder(
                       hpm.practice_exercise = (yestNotEnumArr != null ? yestNotEnumArr[10] : yesNotEnum[13]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[10] : yesNotEnum[13]) == YesNot.si ? 1 : 2;
                       hpm.what_exercise = (formpart1[5]['3.- ¿A cuál?'] as MultiInputsForm).contenido!;
                       hpm.often_exercise = (formpart1[5]['¿Con qué frecuencia?'] as MultiInputsForm).contenido!;
-                     
- 
+                      
                       ExamGyModel gypm = ExamGyModel();
                       gypm.age_fmenstruation = (formpart1[5]['Edad de su primera menstruación'] as MultiInputsForm).contenido!;
                       gypm.age_stSex_life = (formpart1[5]['Edad de inicio de vida sexual'] as MultiInputsForm).contenido!;
-                      gypm.amount_childbirth = int.parse((formpart1[5]['Número de Embarazos'] as MultiInputsForm).contenido!);
-                      gypm.amount_pregnancy = (formpart1[5]['Partos'] as MultiInputsForm).contenido!;
+                      gypm.amount_childbirth = int.parse((formpart1[5]['Partos'] as MultiInputsForm).contenido!.toString() == '' ? '0' : (formpart1[5]['Partos'] as MultiInputsForm).contenido!);
+                      gypm.amount_pregnancy = (formpart1[5]['Número de Embarazos'] as MultiInputsForm).contenido!;
                       gypm.cesarean = (formpart1[5]['Cesáreas'] as MultiInputsForm).contenido!;
                       gypm.abort = (formpart1[5]['Abortos'] as MultiInputsForm).contenido!;
                       gypm.last_rule_date = (formpart1[5]['Fecha de Ultima Regla'] as MultiInputsForm).contenido!;
@@ -1026,12 +1079,17 @@ StatefulBuilder(
                       gypm.result_mammography= (formpart1[5]['2.- Resultado'] as MultiInputsForm).contenido!;
                       gypm.lactation= (formpart1[5]['Lactancia'] as MultiInputsForm).contenido!;
 
-                      if (gypm.toJson().isNotEmpty) {
-                        hpm.idHeredityPers = int.parse((await eips.post_examHeP(hpm,context)).container![0]["ultimoId"]);
-                        gypm.fk_idHeredityPers = hpm.idHeredityPers; 
-                        await eips.post_examGy(gypm, context);
-                      }else if(hpm.toJson().isNotEmpty){
-                        hpm.idHeredityPers = int.parse((await eips.post_examHeP(hpm,context)).container![0]["ultimoId"]);
+                      if (edit == false) {
+                        if (gypm.toJson().isNotEmpty) {
+                          hpm.idHeredityPers = int.parse((await eips.post_examHeP(hpm,context)).container![0]["ultimoId"]);
+                          gypm.fk_idHeredityPers = hpm.idHeredityPers; 
+                          await eips.post_examGy(gypm, context);
+                        }else if(hpm.toJson().isNotEmpty){
+                          hpm.idHeredityPers = int.parse((await eips.post_examHeP(hpm,context)).container![0]["ultimoId"]);
+                        }
+                      } else {
+                        await eips.patch_examHeP(hpm, idExam,context);
+                        await eips.patch_examGy(gypm, idExam, context);
                       }
 
                       ExamPaModel pm = ExamPaModel();
@@ -1051,26 +1109,31 @@ StatefulBuilder(
                       pm.hemorrhoid = (yestNotEnumArr != null ? yestNotEnumArr[24] : yesNotEnum[27]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[24] : yesNotEnum[27]) == YesNot.si ? 1 : 2;
                       pm.ulcer = (yestNotEnumArr != null ? yestNotEnumArr[25] : yesNotEnum[28]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[25] : yesNotEnum[28]) == YesNot.si ? 1 : 2;
                       pm.varices = (yestNotEnumArr != null ? yestNotEnumArr[26] : yesNotEnum[29]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[26] : yesNotEnum[29]) == YesNot.si ? 1 : 2;
-                      pm.pneumonia = (yestNotEnumArr != null ? yestNotEnumArr[27] : yesNotEnum[30]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[27] : yesNotEnum[30]) == YesNot.si ? 1 : 2;
-                      pm.tuberculosis = (yestNotEnumArr != null ? yestNotEnumArr[28] : yesNotEnum[31]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[28] : yesNotEnum[31]) == YesNot.si ? 1 : 2;
-                      pm.colitis = (yestNotEnumArr != null ? yestNotEnumArr[29] : yesNotEnum[32]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[29] : yesNotEnum[32]) == YesNot.si ? 1 : 2;
-                      pm.depression = (yestNotEnumArr != null ? yestNotEnumArr[30] : yesNotEnum[33]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[30] : yesNotEnum[33]) == YesNot.si ? 1 : 2;
-                      pm.hospitalization = (yestNotEnumArr != null ? yestNotEnumArr[31] : yesNotEnum[34]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[31] : yesNotEnum[34]) == YesNot.si ? 1 : 2;
-                      pm.surgery = (yestNotEnumArr != null ? yestNotEnumArr[32] : yesNotEnum[35]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[32] : yesNotEnum[35]) == YesNot.si ? 1 : 2;
-                      pm.transfusion = (yestNotEnumArr != null ? yestNotEnumArr[33] : yesNotEnum[36]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[33] : yesNotEnum[36]) == YesNot.si ? 1 : 2;
-                      pm.trauma_fracture = (yestNotEnumArr != null ? yestNotEnumArr[34] : yesNotEnum[37]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[34] : yesNotEnum[37]) == YesNot.si ? 1 : 2;
-                      pm.complication = (yestNotEnumArr != null ? yestNotEnumArr[35] : yesNotEnum[38]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[35] : yesNotEnum[38]) == YesNot.si ? 1 : 2;
-                      pm.chronic_disease = (yestNotEnumArr != null ? yestNotEnumArr[36] : yesNotEnum[49]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[36] : yesNotEnum[39]) == YesNot.si ? 1 : 2;
+                      pm.hypertension = (yestNotEnumArr != null ? yestNotEnumArr[27] : yesNotEnum[30]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[27] : yesNotEnum[30]) == YesNot.si ? 1 : 2;
+                      pm.pneumonia = (yestNotEnumArr != null ? yestNotEnumArr[28] : yesNotEnum[31]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[28] : yesNotEnum[31]) == YesNot.si ? 1 : 2;
+                      pm.tuberculosis = (yestNotEnumArr != null ? yestNotEnumArr[29] : yesNotEnum[32]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[29] : yesNotEnum[32]) == YesNot.si ? 1 : 2;
+                      pm.colitis = (yestNotEnumArr != null ? yestNotEnumArr[30] : yesNotEnum[33]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[30] : yesNotEnum[33]) == YesNot.si ? 1 : 2;
+                      pm.depression = (yestNotEnumArr != null ? yestNotEnumArr[31] : yesNotEnum[34]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[31] : yesNotEnum[34]) == YesNot.si ? 1 : 2;
+                      pm.hospitalization = (yestNotEnumArr != null ? yestNotEnumArr[32] : yesNotEnum[35]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[32] : yesNotEnum[35]) == YesNot.si ? 1 : 2;
+                      pm.surgery = (yestNotEnumArr != null ? yestNotEnumArr[33] : yesNotEnum[36]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[33] : yesNotEnum[36]) == YesNot.si ? 1 : 2;
+                      pm.transfusion = (yestNotEnumArr != null ? yestNotEnumArr[34] : yesNotEnum[37]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[34] : yesNotEnum[37]) == YesNot.si ? 1 : 2;
+                      pm.trauma_fracture = (yestNotEnumArr != null ? yestNotEnumArr[35] : yesNotEnum[38]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[35] : yesNotEnum[38]) == YesNot.si ? 1 : 2;
+                      pm.complication = (yestNotEnumArr != null ? yestNotEnumArr[36] : yesNotEnum[39]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[36] : yesNotEnum[39]) == YesNot.si ? 1 : 2;
+                      pm.chronic_disease = (yestNotEnumArr != null ? yestNotEnumArr[37] : yesNotEnum[40]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[37] : yesNotEnum[40]) == YesNot.si ? 1 : 2;
                       pm.other_disease = (formpart1[6]['OTRAS'] as MultiInputsForm).contenido!;
                       pm.reason_hospitalization = (formpart1[6]['1.- Motivo'] as MultiInputsForm).contenido!;
-                      pm.reason_surgery = (formpart1[6]['2.- Motivo'] as MultiInputsForm).contenido!;
-                      pm.reason_transfusion = (formpart1[6]['3.- Motivo'] as MultiInputsForm).contenido!;
+                      pm.reason_surgery = (formpart1[6]['1.- ¿Cuál?'] as MultiInputsForm).contenido!;
+                      pm.reason_transfusion = (formpart1[6]['2.- Motivo'] as MultiInputsForm).contenido!;
                       pm.what_trauma_fracture = (formpart1[6]['Parte del cuerpo'] as MultiInputsForm).contenido!;
-                      pm.what_complication = (formpart1[6]['1.- ¿Cuál?'] as MultiInputsForm).contenido!;
-                      pm.what_chronic = (formpart1[6]['2.- ¿Cuál?'] as MultiInputsForm).contenido!;
+                      pm.what_complication = (formpart1[6]['2.- ¿Cuál?'] as MultiInputsForm).contenido!;
+                      pm.what_chronic = (formpart1[6]['3.- ¿Cuál?'] as MultiInputsForm).contenido!;
                       pm.current_treatment = (formpart1[6]['Tratamiento actual'] as MultiInputsForm).contenido!;
-                      if (pm.toJson().isNotEmpty) {
-                        pm.idPatalogicalPersBack = int.parse((await eips.post_examPa(pm, context)).container![0]["ultimoId"]);
+                      if (edit == false) {
+                        if (pm.toJson().isNotEmpty) {
+                          pm.idPatalogicalPersBack = int.parse((await eips.post_examPa(pm, context)).container![0]["ultimoId"]);
+                        }
+                      } else {
+                        await eips.patch_examPa(pm, idExam, context);
                       }
  
                       ExamApModel eam = ExamApModel();
@@ -1081,9 +1144,14 @@ StatefulBuilder(
                       eam.genitourinary = (formpart1[7]['Genitourinario'] as MultiInputsForm).contenido!;
                       eam.muscle_skeletal = (formpart1[7]['Músculo/Esquéletico'] as MultiInputsForm).contenido!;
                       eam.nervous = (formpart1[7]['Nervioso'] as MultiInputsForm).contenido!;
-                      if (eam.toJson().isNotEmpty) {
-                        eam.idAparattusSystem = int.parse((await eips.post_examAp(eam, context)).container![0]['ultimoId']);
+                      if (edit==false) {
+                        if (eam.toJson().isNotEmpty) {
+                          eam.idAparattusSystem = int.parse((await eips.post_examAp(eam, context)).container![0]['ultimoId']);
+                        }
+                      } else {
+                        await eips.patch_examAp(eam, idExam, context);
                       }
+                      
  
                       ExamPhXModel epxm = ExamPhXModel();
                       epxm.t_a = (formpart1[8]['T/A - mmgh'] as MultiInputsForm).contenido!;
@@ -1130,12 +1198,12 @@ StatefulBuilder(
                       epxm.tooth = (formpart1[8]['Dientes'] as MultiInputsForm).contenido!;
                       epxm.mucosa = (formpart1[8]['1.- Mucosa'] as MultiInputsForm).contenido!;
                       epxm.thorax_dln = listChecked_sec7[0][6] == false ? 1 : 2;
-                      epxm.shape_thorax = (formpart1[8]['1.- Mucosa'] as MultiInputsForm).contenido!;
-                      epxm.diaphragm = (formpart1[8]['1.- Forma'] as MultiInputsForm).contenido!;
-                      epxm.rub_thorax = (formpart1[8]['Diafragma'] as MultiInputsForm).contenido!;
-                      epxm.puff_thorax = (formpart1[8]['1.- Frotes'] as MultiInputsForm).contenido!;
+                      epxm.shape_thorax = (formpart1[8]['1.- Forma'] as MultiInputsForm).contenido!;
+                      epxm.diaphragm = (formpart1[8]['Diafragma'] as MultiInputsForm).contenido!;
+                      epxm.rub_thorax = (formpart1[8]['1.- Frotes'] as MultiInputsForm).contenido!;
                       epxm.ventilation_thorax = (formpart1[8]['1.- Ventilación'] as MultiInputsForm).contenido!;
                       epxm.rales = (formpart1[8]['Estertores'] as MultiInputsForm).contenido!;
+                      //epxm.puff_thorax = (formpart1[8][''] as MultiInputsForm).contenido!;
                       epxm.abdomen_dln = listChecked_sec7[0][7] == false ? 1 : 2;
                       epxm.shape_abdomen = (formpart1[8]['2.- Forma'] as MultiInputsForm).contenido!;
                       epxm.pain = (formpart1[8]['Dolor'] as MultiInputsForm).contenido!;
@@ -1175,62 +1243,83 @@ StatefulBuilder(
  
  
                       ExamPhYModel epym = ExamPhYModel();
-                      epym.fk_idExploration =epxm.idExploration;
-                      epym.near_30cm  = (yestNotEnumArr != null ? yestNotEnumArr[37] : yesNotEnum[50]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[37] : yesNotEnum[50]) == YesNot.si ? 1 : 2;
+                      epym.near_30cm  = (yestNotEnumArr != null ? yestNotEnumArr[38] : yesNotEnum[41]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[38] : yesNotEnum[51]) == YesNot.si ? 1 : 2;
                       epym.od_rosenbaun = (formpart1[8]['OD ROSENBAUN 20/']as MultiInputsForm).contenido!;
                       epym.oi_rosenbaun = (formpart1[8]['OI ROSENBAUN 20/']as MultiInputsForm).contenido!;
                       epym.od_jaeguer = (formpart1[8]['OD JAEGUER J']as MultiInputsForm).contenido!;
                       epym.oi_jaeguer = (formpart1[8]['OI JAEGUER J']as MultiInputsForm).contenido!;
-                      epym.far_glasses = (yestNotEnumArr != null ? yestNotEnumArr[38] : yesNotEnum[51]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[38] : yesNotEnum[51]) == YesNot.si ? 1 : 2;
+                      epym.far_glasses = (yestNotEnumArr != null ? yestNotEnumArr[39] : yesNotEnum[42]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[39] : yesNotEnum[52]) == YesNot.si ? 1 : 2;
                       epym.od_snellen = (formpart1[8]['OD 20/']as MultiInputsForm).contenido!;
                       epym.oi_snellen = (formpart1[8]['OI 20/']as MultiInputsForm).contenido!;
                       epym.od_campimetry = (formpart1[8]['OD']as MultiInputsForm).contenido!;
                       epym.oi_campimetry = (formpart1[8]['OI']as MultiInputsForm).contenido!;
                       epym.color_campimetry = (formpart1[8]['COLOR']as MultiInputsForm).contenido!;
-                      epym.amsler_normal = (yestNotEnumArr != null ? yestNotEnumArr[39] : yesNotEnum[52]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[39] : yesNotEnum[52]) == YesNot.si ? 1 : 2;
-                      if (epym.toJson().isNotEmpty) {
-                        epxm.idExploration = int.parse((await eips.post_examPhX(epxm, context)).container![0]["ultimoId"]);
-                        await eips.post_examPhY(epym, context);    
-                      }else if(epxm.toJson().isNotEmpty){
-                        epxm.idExploration = int.parse((await eips.post_examPhX(epxm, context)).container![0]["ultimoId"]);
+                      epym.amsler_normal = (yestNotEnumArr != null ? yestNotEnumArr[40] : yesNotEnum[43]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[40] : yesNotEnum[53]) == YesNot.si ? 1 : 2;
+                      
+                      if (edit == false) {
+                        if (epym.toJson().isNotEmpty) {
+                          epxm.idExploration = int.parse((await eips.post_examPhX(epxm, context)).container![0]["ultimoId"]);
+                          epym.fk_idExploration =epxm.idExploration;
+                          await eips.post_examPhY(epym, context);    
+                        }else if(epxm.toJson().isNotEmpty){
+                          epxm.idExploration = int.parse((await eips.post_examPhX(epxm, context)).container![0]["ultimoId"]);
+                        }
+                      } else {
+                        await eips.patch_examPhX(epxm, idExam, context);
+                        await eips.patch_examPhY(epym, idExam, context);    
                       }
+                     
 
                       ExamLaModel elm = ExamLaModel();
                       elm.result = (formpart1[9]['Resultados'] as MultiInputsForm).contenido!;
                       elm.drug = (formpart1[9]['Drogas'] as MultiInputsForm).contenido!;
-                      if (elm.toJson().isNotEmpty) {
-                        elm.idLaboratoryTest = int.parse((await eips.post_examLa(elm, context)).container![0]["ultimoId"]);
+                      if (edit == false) {
+                        if (elm.toJson().isNotEmpty) {
+                          elm.idLaboratoryTest = int.parse((await eips.post_examLa(elm, context)).container![0]["ultimoId"]);
+                        }
+                      } else {
+                        await eips.patch_examLa(elm, idExam, context);
                       }
+                     
  
                       ExamImModel eimm = ExamImModel();
                       eimm.thorax_radiograph = (formpart1[10]['Telerradiografía de Tórax'] as MultiInputsForm).contenido!;
                       eimm.rx_lumbar_spine = (formpart1[10]['RX Columna Lumbar'] as MultiInputsForm).contenido!;
-                      eimm.spirometry = (yestNotEnumArr != null ? yestNotEnumArr[40] : yesNotEnum[53]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[39] : yesNotEnum[53]) == YesNot.si ? 1 : 2;
-                      eimm.audiometry = (yestNotEnumArr != null ? yestNotEnumArr[41] : yesNotEnum[54]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[40] : yesNotEnum[54]) == YesNot.si ? 1 : 2;
-                      eimm.covid_test = (yestNotEnumArr != null ? yestNotEnumArr[42] : yesNotEnum[55]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[41] : yesNotEnum[55]) == YesNot.si ? 1 : 2;
-                      eimm.antidoping = (yestNotEnumArr != null ? yestNotEnumArr[43] : yesNotEnum[57]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[43] : yesNotEnum[57]) == YesNot.si ? 1 : 2;
-                      eimm.pregnancy = (yestNotEnumArr != null ? yestNotEnumArr[44] : yesNotEnum[56]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[42] : yesNotEnum[56]) == YesNot.si ? 1 : 2;
-                      
-                      if (eimm.toJson().isNotEmpty) {
-                        eimm.idImagingStudy = int.parse((await eips.post_examIm(eimm, context)).container![0]["ultimoId"]);
+                      eimm.spirometry = (yestNotEnumArr != null ? yestNotEnumArr[41] : yesNotEnum[44]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[41] : yesNotEnum[44]) == YesNot.si ? 1 : 2;
+                      eimm.audiometry = (yestNotEnumArr != null ? yestNotEnumArr[42] : yesNotEnum[45]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[42] : yesNotEnum[45]) == YesNot.si ? 1 : 2;
+                      eimm.covid_test = (yestNotEnumArr != null ? yestNotEnumArr[43] : yesNotEnum[46]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[43] : yesNotEnum[46]) == YesNot.si ? 1 : 2;
+                      eimm.antidoping = (yestNotEnumArr != null ? yestNotEnumArr[44] : yesNotEnum[47]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[44] : yesNotEnum[47]) == YesNot.si ? 1 : 2;
+                      eimm.pregnancy = (yestNotEnumArr != null ? yestNotEnumArr[45] : yesNotEnum[48]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[45] : yesNotEnum[48]) == YesNot.si ? 1 : 2;
+                      if (edit == false) {
+                        if (eimm.toJson().isNotEmpty) {
+                          eimm.idImagingStudy = int.parse((await eips.post_examIm(eimm, context)).container![0]["ultimoId"]);
+                        }
+                      } else {
+                        await eips.patch_examIm(eimm, idExam, context);
                       }
+                      
 
                       ExamDeModel edm = ExamDeModel();
                       edm.suitable = (formpart1[11]['Apto'] as MultiInputsForm).contenido!;
                       edm.not_suitable = (formpart1[11]['No apto'] as MultiInputsForm).contenido!;
                       edm.suitable_more = (formpart1[11]['Apto con conserva'] as MultiInputsForm).contenido!;
                       edm.condition_observation = (formpart1[11]['CONDICIONES Y OBSERVACIONES'] as MultiInputsForm).contenido!;
-                      if (sign[0] != null && sign[1] !=null ) {
-                        final image = await sign[0]!.getData() ;
+                      if (sign[0] != null) {
+                         final image = await sign[0]!.getData() ;
                         var data = await image.toByteData(format: ui.ImageByteFormat.png);
                         edm.applicant_signature = base64.encode(data!.buffer.asUint8List());
+                      } else{
+                        edm.applicant_signature = multiInputArr != null ? multiInputArr[143] :'';
+                      }
+
+                      if ( sign[1] !=null ) {
                         final image2 = await sign[1]!.getData();
                         var data2 = await image2.toByteData(format: ui.ImageByteFormat.png);
                         edm.doctor_signature = base64.encode(data2!.buffer.asUint8List());
                       } else {
-                        edm.applicant_signature = multiInputArr![143];
-                        edm.doctor_signature = multiInputArr[144];
+                        edm.doctor_signature =multiInputArr != null ? multiInputArr[144] : '';
                       }
+                      
                       if (eim.toJson().isNotEmpty) {
                         edm.fk_InitOrPre =  eim.idDetExamInPr;
                       }
@@ -1256,41 +1345,38 @@ StatefulBuilder(
                         edm.fk_imagingStudy = eimm.idImagingStudy;
                       }
 
-                      edm.idDetExamInPr = int.parse((await eips.post_examDe(edm, context)).container![0]["ultimoId"]);
+                      if (edit == false) {
+                        edm.idDetExamInPr = int.parse((await eips.post_examDe(edm, context)).container![0]["ultimoId"]);
+                      } else {
+                        await eips.patch_examDe(edm, idExam, context);
+                      }
                       
                       //En este caso no se ocupara un model 
                        
                       List<List<int>> ehfm = [
-                      /*padre*/ [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, edm.idDetExamInPr!],
-                      /*madre*/ [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, edm.idDetExamInPr!],
-                      /*herma*/ [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, edm.idDetExamInPr!],
-                      /*parej*/ [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, edm.idDetExamInPr!],
-                      /*hijos*/ [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, edm.idDetExamInPr!]
+                      /*padre*/ [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, edm.idDetExamInPr ?? 0],
+                      /*madre*/ [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, edm.idDetExamInPr ?? 0],
+                      /*herma*/ [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, edm.idDetExamInPr ?? 0],
+                      /*parej*/ [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, edm.idDetExamInPr ?? 0],
+                      /*hijos*/ [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, edm.idDetExamInPr ?? 0]
                       ];    
-                      
                       for (var i = 0; i < 5; i++) {
                         for (var x = 0; x < 10    ; x++) {
                           if(checkBoxArr !=null ? checkBoxArr[i][x] : listChecked_sec4[i][x] == true){
-                            switch (i) {
-                              case 0: ehfm[i][x] = 1;
-                                break;
-                              case 1: ehfm[i][x] = 1;
-                                break;
-                              case 2: ehfm[i][x] = 1;
-                                break;
-                              case 3: ehfm[i][x] = 1;
-                                break;
-                              case 4: ehfm[i][x] = 1;
-                                break;  
-                              default:
-                            }
-                            
+                            ehfm[i][x] = 1;
                           }
                         }
                       }
-                      for (var i = 0; i < ehfm.length; i++) {
-                        await eips.post_examHeF(ehfm[i],context);
+                      if (edit == false) {
+                        for (var i = 0; i < ehfm.length; i++) {
+                          await eips.post_examHeF(ehfm[i],context);
+                        }
+                      }else{
+                        for (var i = 0; i < ehfm.length; i++) {
+                          await eips.patch_examHeF(ehfm[i], idExam,context);
+                        }
                       }
+                      
                       
                       
                       ExamHiModel ehm = ExamHiModel();
@@ -1298,9 +1384,21 @@ StatefulBuilder(
                         ehm.company = (formpart1[2]['${1 + i}.- Empresa'] as MultiInputsForm).contenido!;
                         ehm.position =  (formpart1[2]['${1 + i}.- Puestos'] as MultiInputsForm).contenido!;
                         ehm.time = (formpart1[2]['${1 + i}.- Tiempo'] as MultiInputsForm).contenido!;
-                        ehm.fk_idExam = edm.idDetExamInPr;
+                        ehm.when_left = (formpart1[2]['${1 + i}.- Cuando Salió'] as MultiInputsForm).contenido!;
+                        ehm.job_rotation = (formpart1[2]['${1 + i}.- Rotación de puesto'] as MultiInputsForm).contenido!;
+                        ehm.solvent_chemical = (formpart1[2]['${1 + i}.- Quimicos solventes'] as MultiInputsForm).contenido!;
+                        ehm.fume = (formpart1[2]['${1 + i}.- Humos'] as MultiInputsForm).contenido!;
+                        ehm.vapor = (formpart1[2]['${1 + i}.- Vapores'] as MultiInputsForm).contenido!;
+                        ehm.dust = (formpart1[2]['${1 + i}.- Polvos'] as MultiInputsForm).contenido!;
+                        ehm.noisy = (formpart1[2]['${1 + i}.- Ruido'] as MultiInputsForm).contenido!;
+                        ehm.material_load = (formpart1[2]['${1 + i}.- Carga de material'] as MultiInputsForm).contenido!;
+                      if (edit == false) {
                         if (ehm.toJson().isNotEmpty) {
-                          await eips.post_examHi(ehm, context);
+                          ehm.fk_idExam = edm.idDetExamInPr;
+                          await eips.post_examHi(ehm, 1+i, context);
+                        }
+                        }else{
+                          await eips.patch_examHi(ehm, idExam, 1+i, context);
                         }
                       }
 
@@ -1311,29 +1409,52 @@ StatefulBuilder(
                         eacm.position = (formpart1[3]['${1 + i}.- Puesto']  as MultiInputsForm).contenido!;
                         eacm.causa = causeEnum[0+i] == Cause.none ? 0 : causeEnum[0+i] == Cause.accidente ? 1 : 2;
                         eacm.disease_name = (formpart1[3]['${1 + i}.- Nombre de la lesión o enfermedad']  as MultiInputsForm).contenido!;
-                        eacm.incapacity = (multiInputAEArr != null ? multiInputAEArr[i] : yesNotEnum[1+i]) == YesNot.none ? 0 : (multiInputAEArr != null ? multiInputAEArr[i] : yesNotEnum[1+i]) == YesNot.si ? 1 : 2;
-                        eacm.number_d_incapacity = int.parse((formpart1[3]['${1 + i}.- Número de dias de incapacidad']  as MultiInputsForm).contenido!);
+                        eacm.incapacity = (yestNotEnumArrDisease != null ? yestNotEnumArrDisease[i] : yesNotEnum[1+i]) == YesNot.none ? 0 : (yestNotEnumArrDisease != null ? yestNotEnumArrDisease[i] : yesNotEnum[1+i]) == YesNot.si ? 1 : 2;
+                        eacm.number_d_incapacity = int.parse((formpart1[3]['${1 + i}.- Número de dias de incapacidad'] as MultiInputsForm).contenido!.toString() == '' ? '0' : (formpart1[3]['${1 + i}.- Número de dias de incapacidad'] as MultiInputsForm).contenido!);
                         eacm.fk_idExam = edm.idDetExamInPr;
-                        if (eacm.toJson().isNotEmpty) {
-                          await eips.post_examAc(eacm, context);
+                        if (edit == false) {
+                          if (eacm.toJson().isNotEmpty) {
+                            await eips.post_examAc(eacm, 1+i, context);
+                          }
+                        }else{
+                          await eips.patch_examAc(eacm, idExam, 1+i, context);
                         }
                       }
                       
                       ExamMaModel emm = ExamMaModel();
                       emm.numEmployee = int.parse((formpart1[0]['Numero de Empleado'] as MultiInputsForm).contenido!);
                       emm.fk_initial_pre_entry = edm.idDetExamInPr;
-                      await eips.post_examMa(emm,context);  
 
+                        if (edit == false) {
+                          await eips.post_examMa(emm,context);  
+                        }else{
+                          emm.idExam = idExam;
+                          await eips.patch_examMa(emm, idExam,context);
+                        }
+
+                      Navigator.of(context).pop();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                          duration: const Duration(seconds: 5),
+                          backgroundColor: Colors.green,
+                          content: Text('¡Se guardo exitosamente!',style: const TextStyle(color: Colors.white)),
+                        ));
                       }else{
                         messageError(context, 'Por favor, para guardar ingrese el número de empleado');
                       }
 
-                    },
+                    } : null,
                     label: const Text('Guardar'),
                   ),
+                  if (_currentPageIndex < _pages.length - 2)
                   ElevatedButton(
-                    onPressed: () async {
+                    onPressed: btnSave == true /* && btnNext == true */ ? () async {
                       if (_currentPageIndex < _pages.length - 2) {
+                       /*  if (_currentPageIndex == _pages.length - 3) {
+                          setState((){
+                            btnNext = false;
+                          });
+                        } */
                         _pageController.nextPage(
                           duration: const Duration(milliseconds: 300),
                           curve: Curves.easeInOut,
@@ -1342,8 +1463,8 @@ StatefulBuilder(
                           _currentPageIndex++;
                         });    
                       } else {
-
-                        if (sign[0] != null || sign[1] != null) {
+                        
+                        /*if (sign[0] != null || sign[1] != null) {
                           if (_currentPageIndex == _pages.length - 2) {
                             
                           }else{
@@ -1356,12 +1477,10 @@ StatefulBuilder(
                           }
                         } else{
                           print('Faltan las firmas');
-                        }
+                        }*/
                       }
-                    },
-                    child: Text(_currentPageIndex == _pages.length - 2
-                        ? 'Terminar'
-                        : 'Siguiente'),
+                    } : null,
+                    child: const Text('Siguiente'),
                   ),
                 ],
               ),
@@ -1369,9 +1488,8 @@ StatefulBuilder(
           ),
         )
   ));
-})
+  })
 ]);
-}
-);
+});
 }
 

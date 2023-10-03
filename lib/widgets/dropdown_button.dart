@@ -33,6 +33,7 @@ class _DropdownButtonWidgetState extends State<DropdownButtonWidget> {
       final claves = widget.arrSelect![0].keys.toList();
       //widget.formValue[widget.formProperty]!.contenido = widget.arrSelect![0][claves[0]];
     }else{
+
         widget.formValue[widget.formProperty]!.contenido = (list!.indexOf(dropdownValue!)+1).toString();
     }
 
@@ -94,7 +95,7 @@ class _DropdownButtonWidgetState extends State<DropdownButtonWidget> {
       dropdownValue = widget.arrSelect![
       widget.formValue[widget.formProperty]!.contenido.toString() != '' ? 
       arrSelect!.indexWhere((el) => int.parse(el[claves[0]]) == int.parse(widget.formValue[widget.formProperty]!.contenido)) : 0 ][claves[0]];
-      
+      widget.formValue[widget.formProperty]!.contenido = dropdownValue;
     }else{
       list = [...widget.list!];
       dropdownValue = widget.list!.first;

@@ -43,12 +43,14 @@ class MultiInputs extends StatefulWidget {
   final String formProperty;
   late Map<String, dynamic> formValue;
   final bool? autofocus;
+  final int? maxLength;
   late  TextEditingController? controller;
   Function(dynamic,List<String>)? onFormValueChange;
   
   MultiInputs({
     Key? key, 
     this.hintText, 
+    this.maxLength,
     this.labelText, 
     this.helperText, 
     this.counterText,
@@ -132,7 +134,7 @@ final ImagePicker _picker = ImagePicker();
         //En este puede cambiar el id de cada item de cada opcion
         return DropdownButtonWidget(arrSelect: widget.listSelectForm,formValue: widget.formValue,formProperty: widget.formProperty, type: 1,);
       }else{
-        //En este ya viene una lista predefinida desde el mismo sistema
+        //En este ya viene una lista predefinida desde el mismo sistema, no hay un json predefinido, es solo un array
         return DropdownButtonWidget(list: widget.listSelectButton![indice-1],formValue: widget.formValue,formProperty: widget.formProperty, type: 2);
       }
     }
@@ -140,8 +142,9 @@ final ImagePicker _picker = ImagePicker();
     if (widget.keyboardType.toString().contains('datetime') || widget.keyboardType == TextInputType.datetime) {
       MaterialTapTargetSize tapTargetSize = MaterialTapTargetSize.padded;
         final format = DateFormat("yyyy-MM-dd ${widget.formValue[widget.formProperty]!.activeClock == true?'HH:mm':''}");
+
         return DateTimeField(
-       initialValue: widget.formValue[widget.formProperty]!.contenido.toString()!= '' ?DateFormat("yyyy-MM-dd").parse(widget.formValue[widget.formProperty]!.contenido.toString()): null,
+       initialValue: widget.formValue[widget.formProperty]!.contenido.toString()!= '0000-00-00' && widget.formValue[widget.formProperty]!.contenido.toString()!= '' ?DateFormat("yyyy-MM-dd").parse(widget.formValue[widget.formProperty]!.contenido.toString()): null,
         controller: widget.controller,
         style: getTextStyleText(context,null,null),
         format: format,
@@ -209,6 +212,7 @@ final ImagePicker _picker = ImagePicker();
           initialValue: widget.controller == null ? widget.formValue[widget.formProperty]!.contenido : null,
           keyboardType: widget.keyboardType,
           obscureText: widget.obscureText,
+          maxLength: widget.maxLength,
           style: getTextStyleText(context,null,null),
           onChanged: (value) {
             setState(() {

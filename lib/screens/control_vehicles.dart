@@ -231,9 +231,10 @@ class _ControlVehiclesState extends State<ControlVehicles> {
             ),
           ),
         ),
-        const SizedBox(child: Navbar(contexto2: 'control_vehicles',))
+       
       ],
-    ));
+      )
+    );
   }
   
   @override

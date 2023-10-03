@@ -76,7 +76,6 @@ try {
     final url = Uri.parse('$link/medical_exam.php?getOneExamPart1=true');
     var response = (await http.post(url, body: json.encode([idExam]),headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
     final result = AccessMap.fromJson(jsonDecode(response));
-    // var response = await http.post(url, body: {'pass': pass, 'departament': departament});
     if (result.status == 200){
       isSaving = false;
       notifyListeners();
@@ -242,7 +241,6 @@ try {
   } 
 
 Future<List<Map<String,dynamic>>> getAllExamList( BuildContext context ) async {
-  AccessMap result = AccessMap();
   var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
@@ -254,6 +252,50 @@ try {
     isSaving = true;
     notifyListeners();
     final url = Uri.parse('$link/medical_exam.php?ExamList=true');
+    var response = (await http.get(url)).body;
+      final result = AccessMap.fromJson(jsonDecode(response));
+    // var response = await http.post(url, body: {'pass': pass, 'departament': departament});
+    if (result.status == 200){
+      isSaving = false;
+      notifyListeners();
+      return result.container!;
+    }else{
+     // messageError(context,'Contraseña incorrecta.');
+    }
+
+    isSaving = false;
+    notifyListeners();
+    return []; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+    return []; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return []; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+    return []; 
+  }
+  }
+  // messageError(context,'Error desconocido.');
+    return []; 
+  } 
+
+  Future<List<Map<String,dynamic>>> getAllExamListSearch( BuildContext context, String word ) async {
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
+    return [];
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    isSaving = true;
+    notifyListeners();
+    final url = Uri.parse('$link/medical_exam.php?search=$word');
     var response = (await http.get(url)).body;
       final result = AccessMap.fromJson(jsonDecode(response));
     // var response = await http.post(url, body: {'pass': pass, 'departament': departament});
@@ -340,7 +382,6 @@ try {
     final url = Uri.parse('$link/medical_exam.php?post_examDe=true');
     var response = (await http.post(url, body: json.encode(obj.toJson()),headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
     final result = AccessMap.fromJson(jsonDecode(response));
-    print(result);
     if (result.status == 200) {
       return result;
     }
@@ -365,7 +406,7 @@ try {
     return result; 
   } 
 
-  Future<AccessMap> post_examAc(ExamAcModel obj,BuildContext context ) async {
+  Future<AccessMap> post_examAc(ExamAcModel obj, int idFake,BuildContext context ) async {
   AccessMap result = AccessMap();
   var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
@@ -376,7 +417,14 @@ try {
 
 try {
     final url = Uri.parse('$link/medical_exam.php?post_examAc=true');
-    var response = (await http.post(url, body: json.encode(obj.toJson()),headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+    final f = json.encode(obj.toJson());
+    // Decodifica el JSON a un objeto Dart
+    Map<String, dynamic> decodedJson = json.decode(f);
+    // Agrega la nueva variable
+    decodedJson['idFake'] = idFake;
+    // Codifica nuevamente el objeto Dart en JSON
+    final nuevoJson = json.encode(decodedJson);
+    var response = (await http.post(url, body: nuevoJson,headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
     final result = AccessMap.fromJson(jsonDecode(response));
     if (result.status == 200) {
  
@@ -528,7 +576,6 @@ try {
     final url = Uri.parse('$link/medical_exam.php?post_examHeP=true');
     var response = (await http.post(url, body: json.encode(obj.toJson()),headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
     final result = AccessMap.fromJson(jsonDecode(response));
-    print(result.toJson());
     if (result.status == 200) {
       return result;
     }
@@ -553,7 +600,7 @@ try {
     return result; 
   } 
 
-  Future<AccessMap> post_examHi(ExamHiModel obj,BuildContext context ) async {
+  Future<AccessMap> post_examHi(ExamHiModel obj, int idFake,BuildContext context ) async {
   AccessMap result = AccessMap();
   var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
@@ -565,7 +612,14 @@ try {
 try {
   
     final url = Uri.parse('$link/medical_exam.php?post_examHi=true');
-    var response = (await http.post(url, body: json.encode(obj.toJson()),headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+    final f = json.encode(obj.toJson());
+    // Decodifica el JSON a un objeto Dart
+    Map<String, dynamic> decodedJson = json.decode(f);
+    // Agrega la nueva variable
+    decodedJson['idFake'] = idFake;
+    // Codifica nuevamente el objeto Dart en JSON
+    final nuevoJson = json.encode(decodedJson);
+    var response = (await http.post(url, body: nuevoJson,headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
     final result = AccessMap.fromJson(jsonDecode(response));
     if (result.status == 200) {
       notifyListeners();
@@ -852,7 +906,668 @@ try {
     return result; 
   } 
 
+///ACTUALIZACION
+
+  patch_examIn( ExamInModel obj,int idExam ,BuildContext context ) async {
+  AccessMap result = AccessMap();
+
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
+    return result;
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+try {
+    final url = Uri.parse('$link/medical_exam.php?patch_examIn=true');
+    final f = json.encode(obj.toJson());
+    // Decodifica el JSON a un objeto Dart
+    Map<String, dynamic> decodedJson = json.decode(f);
+    // Agrega la nueva variable
+    decodedJson['idExam'] = idExam;
+    // Codifica nuevamente el objeto Dart en JSON
+    final nuevoJson = json.encode(decodedJson);
+    var response = (await http.patch(url, body: nuevoJson,headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+    
+    final result = AccessMap.fromJson(jsonDecode(response));
+    if (result.status == 200) {
+      return result;
+    }
+     
+    isSaving = false;
+    notifyListeners();
+    return result; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+    return result; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return result; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+    return result; 
+  }
+  }
+    return result;     
+  }
+
+  patch_examPe(ExamPeModel obj ,int idExam, BuildContext context ) async {
+    AccessMap result = AccessMap();
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
+    return result;
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    final url = Uri.parse('$link/medical_exam.php?patch_examPe=true');
+    final f = json.encode(obj.toJson());
+    // Decodifica el JSON a un objeto Dart
+    Map<String, dynamic> decodedJson = json.decode(f);
+    // Agrega la nueva variable
+    decodedJson['idExam'] = idExam;
+    // Codifica nuevamente el objeto Dart en JSON
+    final nuevoJson = json.encode(decodedJson);
+    var response = (await http.patch(url, body: nuevoJson,headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+    final result = AccessMap.fromJson(jsonDecode(response));
+    if (result.status == 200) {
+      return result;
+    }
+     
+    isSaving = false;
+    notifyListeners();
+    return result; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+    return result; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return result; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+    return result; 
+  }
+  }
+    return result; 
+  }
+
+  patch_examHeP(ExamHePModel obj,int idExam, BuildContext context ) async {
+    AccessMap result = AccessMap();
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
+    return result;
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    final url = Uri.parse('$link/medical_exam.php?patch_examHeP=true');
+    final f = json.encode(obj.toJson());
+    // Decodifica el JSON a un objeto Dart
+    Map<String, dynamic> decodedJson = json.decode(f);
+    // Agrega la nueva variable
+    decodedJson['idExam'] = idExam;
+    // Codifica nuevamente el objeto Dart en JSON
+    final nuevoJson = json.encode(decodedJson);
+    var response = (await http.patch(url, body: nuevoJson,headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+    final result = AccessMap.fromJson(jsonDecode(response));
+    if (result.status == 200) {
+      return result;
+    }
+     
+    isSaving = false;
+    notifyListeners();
+    return result; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+    return result; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return result; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+    return result; 
+  }
+  }
+    return result; 
+  }
+
+  patch_examGy(ExamGyModel obj,int idExam, BuildContext context ) async {
+    AccessMap result = AccessMap();
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
+    return result;
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    final url = Uri.parse('$link/medical_exam.php?patch_examGy=true');
+    final f = json.encode(obj.toJson());
+    // Decodifica el JSON a un objeto Dart
+    Map<String, dynamic> decodedJson = json.decode(f);
+    // Agrega la nueva variable
+    decodedJson['idExam'] = idExam;
+    // Codifica nuevamente el objeto Dart en JSON
+    final nuevoJson = json.encode(decodedJson);
+    var response = (await http.patch(url, body: nuevoJson,headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+    final result = AccessMap.fromJson(jsonDecode(response));
+    if (result.status == 200) {
+      return result;
+    }
+     
+    isSaving = false;
+    notifyListeners();
+    return result; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+    return result; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return result; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+    return result; 
+  }
+  }
+    return result; 
+  }
+
+  patch_examPa(ExamPaModel obj,int idExam, BuildContext context ) async {
+    AccessMap result = AccessMap();
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
+    return result;
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    final url = Uri.parse('$link/medical_exam.php?patch_examPa=true');
+    
+    final f = json.encode(obj.toJson());
+    // Decodifica el JSON a un objeto Dart
+    Map<String, dynamic> decodedJson = json.decode(f);
+    // Agrega la nueva variable
+    decodedJson['idExam'] = idExam;
+    // Codifica nuevamente el objeto Dart en JSON
+    final nuevoJson = json.encode(decodedJson);
+    var response = (await http.patch(url, body: nuevoJson,headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+    final result = AccessMap.fromJson(jsonDecode(response));
+    if (result.status == 200) {
+      return result;
+    }
+     
+    isSaving = false;
+    notifyListeners();
+    return result; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+    return result; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return result; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+    return result; 
+  }
+  }
+    return result; 
+  }
+
+  patch_examAp(ExamApModel obj,int idExam, BuildContext context  ) async {
+    AccessMap result = AccessMap();
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
+    return result;
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    final url = Uri.parse('$link/medical_exam.php?patch_examAp=true');
+    final f = json.encode(obj.toJson());
+    // Decodifica el JSON a un objeto Dart
+    Map<String, dynamic> decodedJson = json.decode(f);
+    // Agrega la nueva variable
+    decodedJson['idExam'] = idExam;
+    // Codifica nuevamente el objeto Dart en JSON
+    final nuevoJson = json.encode(decodedJson);
+    var response = (await http.patch(url, body: nuevoJson,headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+    final result = AccessMap.fromJson(jsonDecode(response));
+    if (result.status == 200) {
+      return result;
+    }
+     
+    isSaving = false;
+    notifyListeners();
+    return result; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+    return result; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return result; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+    return result; 
+  }
+  }
+    return result; 
+  }
+
+  patch_examPhX(ExamPhXModel obj,int idExam, BuildContext context ) async {
+    AccessMap result = AccessMap();
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
+    return result;
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    final url = Uri.parse('$link/medical_exam.php?patch_examPhX=true');
+    final f = json.encode(obj.toJson());
+    // Decodifica el JSON a un objeto Dart
+    Map<String, dynamic> decodedJson = json.decode(f);
+    // Agrega la nueva variable
+    decodedJson['idExam'] = idExam;
+    // Codifica nuevamente el objeto Dart en JSON
+    final nuevoJson = json.encode(decodedJson);
+    var response = (await http.patch(url, body: nuevoJson,headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+    final result = AccessMap.fromJson(jsonDecode(response));
+    if (result.status == 200) {
+      return result;
+    }
+     
+    isSaving = false;
+    notifyListeners();
+    return result; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+    return result; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return result; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+    return result; 
+  }
+  }
+    return result; 
+  }
+
+  patch_examPhY(ExamPhYModel obj,int idExam, BuildContext context ) async {
+    AccessMap result = AccessMap();
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
+    return result;
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    final url = Uri.parse('$link/medical_exam.php?patch_examPhY=true');
+    final f = json.encode(obj.toJson());
+    // Decodifica el JSON a un objeto Dart
+    Map<String, dynamic> decodedJson = json.decode(f);
+    // Agrega la nueva variable
+    decodedJson['idExam'] = idExam;
+    // Codifica nuevamente el objeto Dart en JSON
+    final nuevoJson = json.encode(decodedJson);
+    var response = (await http.patch(url, body: nuevoJson,headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+    final result = AccessMap.fromJson(jsonDecode(response));
+    if (result.status == 200) {
+      return result;
+    }
+     
+    isSaving = false;
+    notifyListeners();
+    return result; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+    return result; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return result; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+    return result; 
+  }
+  }
+    return result; 
+  }
+
+  patch_examLa( ExamLaModel obj,int idExam, BuildContext context ) async {
+    AccessMap result = AccessMap();
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
+    return result;
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    final url = Uri.parse('$link/medical_exam.php?patch_examLa=true');
+    final f = json.encode(obj.toJson());
+    // Decodifica el JSON a un objeto Dart
+    Map<String, dynamic> decodedJson = json.decode(f);
+    // Agrega la nueva variable
+    decodedJson['idExam'] = idExam;
+    // Codifica nuevamente el objeto Dart en JSON
+    final nuevoJson = json.encode(decodedJson);
+    var response = (await http.patch(url, body: nuevoJson,headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+    final result = AccessMap.fromJson(jsonDecode(response));
+    if (result.status == 200) {
+      return result;
+    }
+     
+    isSaving = false;
+    notifyListeners();
+    return result; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+    return result; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return result; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+    return result; 
+  }
+  }
+    return result; 
+  }
+
+  patch_examIm(ExamImModel obj,int idExam, BuildContext context ) async {
+    AccessMap result = AccessMap();
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
+    return result;
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    final url = Uri.parse('$link/medical_exam.php?patch_examIm=true');
+    final f = json.encode(obj.toJson());
+    // Decodifica el JSON a un objeto Dart
+    Map<String, dynamic> decodedJson = json.decode(f);
+    // Agrega la nueva variable
+    decodedJson['idExam'] = idExam;
+    // Codifica nuevamente el objeto Dart en JSON
+    final nuevoJson = json.encode(decodedJson);
+    var response = (await http.patch(url, body: nuevoJson,headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+    final result = AccessMap.fromJson(jsonDecode(response));
+    if (result.status == 200) {
+      return result;
+    }
+     
+    isSaving = false;
+    notifyListeners();
+    return result; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+    return result; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return result; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+    return result; 
+  }
+  }
+    return result; 
+  }
+
+  patch_examDe(ExamDeModel obj,int idExam, BuildContext context ) async {
+    AccessMap result = AccessMap();
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
+    return result;
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    final url = Uri.parse('$link/medical_exam.php?patch_examDe=true');
+    final f = json.encode(obj.toJson());
+    // Decodifica el JSON a un objeto Dart
+    Map<String, dynamic> decodedJson = json.decode(f);
+    // Agrega la nueva variable
+    decodedJson['idExam'] = idExam;
+    // Codifica nuevamente el objeto Dart en JSON
+    final nuevoJson = json.encode(decodedJson);
+    var response = (await http.patch(url, body: nuevoJson,headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+    final result = AccessMap.fromJson(jsonDecode(response));
+    if (result.status == 200) {
+      return result;
+    }
+     
+    isSaving = false;
+    notifyListeners();
+    return result; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+    return result; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return result; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+    return result; 
+  }
+  }
+    return result; 
+  }
+
+  patch_examHeF( List<int> obj ,int idExam, BuildContext context ) async {
+    AccessMap result = AccessMap();
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
+    return result;
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    obj.add(idExam);
+    final url = Uri.parse('$link/medical_exam.php?patch_examHeF=true');
+    var response = (await http.patch(url, body: json.encode(obj),headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+    final result = AccessMap.fromJson(jsonDecode(response));
+    if (result.status == 200) {
+      return result;
+    }
+     
+    isSaving = false;
+    notifyListeners();
+    return result; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+    return result; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return result; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+    return result; 
+  }
+  }
+    return result; 
+  }
+
+  patch_examHi( ExamHiModel obj,int idExam, int idFake, BuildContext context ) async {
+    AccessMap result = AccessMap();
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
+    return result;
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    final url = Uri.parse('$link/medical_exam.php?patch_examHi=true');
+    final f = json.encode(obj.toJson());
+    // Decodifica el JSON a un objeto Dart
+    Map<String, dynamic> decodedJson = json.decode(f);
+    // Agrega la nueva variable
+    decodedJson['idExam'] = idExam;
+    decodedJson['idFake'] = idFake;
+    // Codifica nuevamente el objeto Dart en JSON
+    final nuevoJson = json.encode(decodedJson);
+    var response = (await http.patch(url, body: nuevoJson,headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+    final result = AccessMap.fromJson(jsonDecode(response));
+    if (result.status == 200) {
+      return result;
+    }
+     
+    isSaving = false;
+    notifyListeners();
+    return result; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+    return result; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return result; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+    return result; 
+  }
+  }
+    return result; 
+  }
+
+  patch_examAc(ExamAcModel obj,int idExam, int idFake, BuildContext context ) async {
+    AccessMap result = AccessMap();
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
+    return result;
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    final url = Uri.parse('$link/medical_exam.php?patch_examAc=true');
+    final f = json.encode(obj.toJson());
+    // Decodifica el JSON a un objeto Dart
+    Map<String, dynamic> decodedJson = json.decode(f);
+    // Agrega la nueva variable
+    decodedJson['idExam'] = idExam;
+    decodedJson['idFake'] = idFake;
+    // Codifica nuevamente el objeto Dart en JSON
+    final nuevoJson = json.encode(decodedJson);
+    var response = (await http.patch(url, body: nuevoJson,headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+    final result = AccessMap.fromJson(jsonDecode(response));
+    if (result.status == 200) {
+      return result;
+    }
+     
+    isSaving = false;
+    notifyListeners();
+    return result; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+    return result; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return result; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+    return result; 
+  }
+  }
+    return result; 
+  }
+
+  patch_examMa( ExamMaModel obj,int idExam, BuildContext context ) async {
+    AccessMap result = AccessMap();
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
+    return result;
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    final url = Uri.parse('$link/medical_exam.php?patch_examMa=true');
+    final f = json.encode(obj.toJson());
+    // Decodifica el JSON a un objeto Dart
+    Map<String, dynamic> decodedJson = json.decode(f);
+    // Agrega la nueva variable
+    decodedJson['idExam'] = idExam;
+    // Codifica nuevamente el objeto Dart en JSON
+    final nuevoJson = json.encode(decodedJson);
+    var response = (await http.patch(url, body: nuevoJson,headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+    final result = AccessMap.fromJson(jsonDecode(response));
+    if (result.status == 200) {
+      return result;
+    }
+     
+    isSaving = false;
+    notifyListeners();
+    return result; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+    return result; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return result; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+    return result; 
+  }
+  }
+    return result; 
+  }
+
   
+
 
 
 }

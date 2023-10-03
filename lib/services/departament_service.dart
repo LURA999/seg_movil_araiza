@@ -18,7 +18,7 @@ class DepartamentService extends ChangeNotifier{
  Future<Access> checkPassWord( String pass, int departament,BuildContext context ) async {
   Access result = Access();
   var connectivityResult = await (Connectivity().checkConnectivity());
-  if (connectivityResult == ConnectivityResult.none) {
+  if (connectivityResult == ConnectivityResult.none ) {
     // No hay conexión a Internet
     messageError(context,'No hay conexión a Internet.');
     return result;

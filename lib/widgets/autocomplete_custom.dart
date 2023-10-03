@@ -1,4 +1,3 @@
-import 'package:app_seguimiento_movil/widgets/popUp_widget.dart';
 import 'package:flutter/material.dart';
 
 import '../models/models.dart';

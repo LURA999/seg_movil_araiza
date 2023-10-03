@@ -17,6 +17,7 @@ class ExamPaModel {
   int? hemorrhoid;
   int? ulcer;
   int? varices;
+  int? hypertension;
   int? pneumonia;
   int? tuberculosis;
   int? colitis;
@@ -53,6 +54,7 @@ class ExamPaModel {
       this.hemorrhoid,
       this.ulcer,
       this.varices,
+      this.hypertension,
       this.pneumonia,
       this.tuberculosis,
       this.colitis,
@@ -92,6 +94,7 @@ class ExamPaModel {
       hemorrhoid = json['hemorrhoid'];
       ulcer = json['ulcer'];
       varices = json['varices'];
+      varices = json['hypertension'];
       pneumonia = json['pneumonia'];
       tuberculosis = json['tuberculosis'];
       colitis = json['colitis'];
@@ -132,6 +135,7 @@ class ExamPaModel {
       data['hemorrhoid'] = hemorrhoid ?? '';
       data['ulcer'] = ulcer ?? '';
       data['varices'] = varices ?? '';
+      data['hypertension'] = hypertension ?? '';
       data['pneumonia'] = pneumonia ?? '';
       data['tuberculosis'] = tuberculosis ?? '';
       data['colitis'] = colitis ?? '';

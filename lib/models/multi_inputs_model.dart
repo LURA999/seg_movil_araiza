@@ -40,12 +40,14 @@ class MultiInputsForm implements BaseInputsForm {
   bool? autocomplete;
   bool? autocompleteAsync;
   int? screen;
+  int? maxLength;
   bool? activeClock;
   List<Map<String,dynamic>>? listselect;
   TextInputType? keyboardType;
   
 
   MultiInputsForm({
+    this.maxLength,
     this.suffixIcon,
     this.autocomplete,
     this.autocompleteAsync,
