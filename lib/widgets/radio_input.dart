@@ -343,7 +343,7 @@ class _RadioInputState extends State<RadioInput> {
             SizedBox(
               width: 150,
                 child: ListTile(
-                title: const Text('( - )'),
+                title: const Text('Normal'),
                 leading: Radio<YesNot>(
                   activeColor: AppTheme.primary,
                   fillColor: MaterialStateProperty.resolveWith(getColor),
@@ -358,9 +358,9 @@ class _RadioInputState extends State<RadioInput> {
                           ),
               ),
             SizedBox(
-              width: 150,
+              width: 180,
               child: ListTile(
-                title: const Text('( + )'),
+                title: const Text('Fuera de rango'),
                 leading: Radio<YesNot>(
                   activeColor: AppTheme.primary,
                   fillColor: MaterialStateProperty.resolveWith(getColor),

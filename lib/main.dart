@@ -1,4 +1,3 @@
-import 'package:app_seguimiento_movil/models/models.dart';
 import 'package:app_seguimiento_movil/services/services.dart';
 import 'package:app_seguimiento_movil/screens/screens.dart';
 import 'package:flutter/material.dart';
@@ -9,13 +8,22 @@ import 'package:app_seguimiento_movil/routers/router.dart';
 
 
 void main() => runApp(const AppState());
-  
 
-class AppState extends StatelessWidget {
+
+
+class AppState extends StatefulWidget {
   const AppState({super.key});
 
   @override
+  State<AppState> createState() => _AppStateState();
+}
+
+class _AppStateState extends State<AppState> {
+  get http => null;
+
+  @override
   Widget build(BuildContext context) {
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: ( _ ) =>  VarProvider(), lazy: false,),
@@ -25,9 +33,16 @@ class AppState extends StatelessWidget {
   }
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   
+
   @override
   Widget build(BuildContext context) {
   final HistoryNavigator navigatorObserver = HistoryNavigator();
@@ -37,13 +52,19 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       navigatorKey: navigatorKey,
       navigatorObservers: [navigatorObserver],
-      home:  const CustomBackBvuttonInterceptor(child: MedicalRecords(),),
+      home: CustomBackBvuttonInterceptor(child: SplashScreen(),),
       routes: Routers.routerMain,
       theme: AppTheme.lightTeheme,
       
     );
   }
+
+    @override
+  void initState() { 
+    super.initState();
+  }
 }
+
 
 
 

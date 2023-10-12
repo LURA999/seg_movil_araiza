@@ -1,4 +1,6 @@
 
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +14,7 @@ class ExamIniPreService extends ChangeNotifier{
 
   bool modoApk = kDebugMode?true:false; 
   bool isSaving = true;
-  late String link = modoApk?'https://www.comunicadosaraiza.com/movil_scan_api/API':'https://www.comunicadosaraiza.com/movil_scan_api/API';
+  late String link = modoApk?'https://www.comunicadosaraiza.com/movil_scan_api_prueba/API':'https://www.comunicadosaraiza.com/movil_scan_api_prueba/API';
 
 
 
@@ -284,6 +286,50 @@ try {
     return []; 
   } 
 
+  Future<List<Map<String,dynamic>>> getAllExamListSearch_paginator( BuildContext context, int search,int amount,String word) async {
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
+    return [];
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    isSaving = true;
+    notifyListeners();
+    final url = Uri.parse('$link/medical_exam.php?get_paginator=$search');
+    var response = (await http.post(url, body: json.encode({'amount': amount, 'word': word}))).body;
+    final result = AccessMap.fromJson(jsonDecode(response));
+    if (result.status == 200){
+      isSaving = false;
+      notifyListeners();
+      return result.container!;
+    }else{
+     // messageError(context,'Contraseña incorrecta.');
+    }
+
+    isSaving = false;
+    notifyListeners();
+    return []; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+    return []; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return []; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+    return []; 
+  }
+  }
+  // messageError(context,'Error desconocido.');
+    return []; 
+  } 
+
+
   Future<List<Map<String,dynamic>>> getAllExamListSearch( BuildContext context, String word ) async {
   var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
@@ -299,6 +345,49 @@ try {
     var response = (await http.get(url)).body;
       final result = AccessMap.fromJson(jsonDecode(response));
     // var response = await http.post(url, body: {'pass': pass, 'departament': departament});
+    if (result.status == 200){
+      isSaving = false;
+      notifyListeners();
+      return result.container!;
+    }else{
+     // messageError(context,'Contraseña incorrecta.');
+    }
+
+    isSaving = false;
+    notifyListeners();
+    return []; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e');
+    return []; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e');
+    return []; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e');
+    return []; 
+  }
+  }
+  // messageError(context,'Error desconocido.');
+    return []; 
+  } 
+
+Future<List<Map<String,dynamic>>> getAllPagesPaginator( BuildContext context, int search,int amount,String word ) async {
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.');
+    return [];
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    isSaving = true;
+    notifyListeners();
+    final url = Uri.parse('$link/medical_exam.php?allPagesPaginator=$search');
+    var response = (await http.post(url, body: json.encode({'amount': amount, 'word': word}))).body;    
+    final result = AccessMap.fromJson(jsonDecode(response));
     if (result.status == 200){
       isSaving = false;
       notifyListeners();

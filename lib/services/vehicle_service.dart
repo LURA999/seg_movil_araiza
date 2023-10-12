@@ -20,7 +20,7 @@ class VehicleService extends ChangeNotifier {
   final dio = Dio();
   //Esta en modo desarrollo?
   bool modoApk = kDebugMode?true:false; 
-  late String link = modoApk?'https://www.comunicadosaraiza.com/movil_scan_api/API':'https://www.comunicadosaraiza.com/movil_scan_api/API';
+  late String link = modoApk?'https://www.comunicadosaraiza.com/movil_scan_api_prueba/API':'https://www.comunicadosaraiza.com/movil_scan_api_prueba/API';
 
  Future<List<Map<String, dynamic>>> nameGuard( String name,BuildContext context ) async { 
   var connectivityResult = await (Connectivity().checkConnectivity());

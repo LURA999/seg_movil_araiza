@@ -26,9 +26,9 @@ bool btnSave = true;
 bool btnNext = true;
                      
 
-List<GlobalKey<SignatureState>> sign0 = [GlobalKey<SignatureState>(),GlobalKey<SignatureState>()];
-List<ByteData> img = [ByteData(0), ByteData(0)];
-List<SignatureState?> sign = [null,null];
+List<GlobalKey<SignatureState>> sign0 = [GlobalKey<SignatureState>(),GlobalKey<SignatureState>(),GlobalKey<SignatureState>()];
+List<ByteData> img = [ByteData(0), ByteData(0), ByteData(0)];
+List<SignatureState?> sign = [null,null,null];
 ExamIniPreService eips = ExamIniPreService();
 
 //El primero es para controlar los inputs cuando abre y cierra el form
@@ -69,7 +69,8 @@ List<YesNot> yesNotEnum =
   YesNot.none,YesNot.none,YesNot.none,YesNot.none,YesNot.none,YesNot.none,
   YesNot.none,YesNot.none,YesNot.none,YesNot.none,YesNot.none,YesNot.none,
   YesNot.none,YesNot.none,YesNot.none,YesNot.none,YesNot.none,YesNot.none,
-  YesNot.none,YesNot.none,YesNot.none,YesNot.none,YesNot.none,YesNot.none
+  YesNot.none,YesNot.none,YesNot.none,YesNot.none,YesNot.none,YesNot.none,
+  YesNot.none
 ];
 
 List<ManoDominante> manoDomEnum = [ManoDominante.none];
@@ -140,6 +141,8 @@ List<Map<String, dynamic>> formpart1 = [
   '1.- Empresa' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true),
   '1.- Puestos' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true),
   '1.- Tiempo' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true),
+  '1.- subSized' : const SizedBox(height: 5,),
+  '1.- subTitulo' : const Align(alignment: Alignment.centerLeft, child: Text('Para ser llenado solo por el médico',style: TextStyle(fontSize: 20))),
   '1.- Cuando Salió' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, keyboardType: TextInputType.datetime),
   '1.- Rotación de puesto' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, maxLength: 10),
   '1.- Quimicos solventes' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, maxLength: 10),
@@ -154,6 +157,8 @@ List<Map<String, dynamic>> formpart1 = [
   '2.- Empresa' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true),
   '2.- Puestos' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true),
   '2.- Tiempo' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true),
+  '2.- subSized' : const SizedBox(height: 5,),
+  '2.- subTitulo' : const Align(alignment: Alignment.centerLeft, child: Text('Para ser llenado solo por el médico',style: TextStyle(fontSize: 20))),
   '2.- Cuando Salió' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, keyboardType: TextInputType.datetime),
   '2.- Rotación de puesto' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, maxLength: 10),
   '2.- Quimicos solventes' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, maxLength: 10),
@@ -168,6 +173,8 @@ List<Map<String, dynamic>> formpart1 = [
   '3.- Empresa' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true),
   '3.- Puestos' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true),
   '3.- Tiempo' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true),
+  '3.- subSized' : const SizedBox(height: 5,),
+  '3.- subTitulo' : const Align(alignment: Alignment.centerLeft, child: Text('Para ser llenado solo por el médico',style: TextStyle(fontSize: 20))),
   '3.- Cuando Salió' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true,keyboardType: TextInputType.datetime),
   '3.- Rotación de puesto' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, maxLength: 10),
   '3.- Quimicos solventes' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, maxLength: 10),
@@ -182,6 +189,8 @@ List<Map<String, dynamic>> formpart1 = [
   '4.- Empresa' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true),
   '4.- Puestos' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true),
   '4.- Tiempo' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, maxLength: 10),
+  '4.- subSized' : const SizedBox(height: 5,),
+  '4.- subTitulo' : const Align(alignment: Alignment.centerLeft, child: Text('Para ser llenado solo por el médico',style: TextStyle(fontSize: 20))),
   '4.- Cuando Salió' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, keyboardType: TextInputType.datetime),
   '4.- Rotación de puesto' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, maxLength: 10),
   '4.- Quimicos solventes' : MultiInputsForm(contenido: multiInputHArr != null ? multiInputHArr[multiInputCH++] :  '', obligatorio: true,  enabled: true, maxLength: 10),
@@ -544,6 +553,13 @@ List<Map<String, dynamic>> formpart1 = [
   ),
   '3.- ¿Cuál?' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
   'Tratamiento actual' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
+  'firma paciente': 
+    Container(
+      alignment: Alignment.center,
+      child: const Text('Firma del paciente',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))
+    ),
+    //multiInputC = 46
+    '0': MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] : '', obligatorio: true,paintSignature: true)
 },
 { //6.- INTERROGATORIO POR APARATOS Y SISTEMAS. (7)
   'Sentidos' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
@@ -754,7 +770,7 @@ List<Map<String, dynamic>> formpart1 = [
   'Otros':Align(alignment: Alignment.bottomLeft, child:Text('Otros', style: TextStyle(fontSize:MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.020),fontWeight: FontWeight.normal))),
   'Espirometria':Align(alignment: Alignment.bottomLeft, child:Text('Espirometria', style: TextStyle(fontSize:MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.020),fontWeight: FontWeight.normal))),
   'espi': RadioInput(tipoEnum: 6, yesNotEnum: yestNotEnumArr ?? yesNotEnum, index: yestNotEnumArr!=null ? radioButtonC++ : countYesNotEnum++,),
-  'Audiometria':Align(alignment: Alignment.bottomLeft, child:Text('Audiometria', style: TextStyle(fontSize:MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.020),fontWeight: FontWeight.normal))),
+  'Audiometria':Align(alignment: Alignment.bottomLeft, child:Text('Audiometria', style: TextStyle(fontSize:MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.020),fontWeight: FontWeight.normal, ))),
   'audi': RadioInput(tipoEnum: 6, yesNotEnum: yestNotEnumArr ?? yesNotEnum, index: yestNotEnumArr!=null ? radioButtonC++ : countYesNotEnum++,),
   'Prueba covid-19':Align(alignment: Alignment.bottomLeft, child:Text('Prueba covid-19', style: TextStyle(fontSize:MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.020),fontWeight: FontWeight.normal))),
   'prueba': RadioInput(tipoEnum: 6, yesNotEnum: yestNotEnumArr ?? yesNotEnum, index: yestNotEnumArr!=null ? radioButtonC++ : countYesNotEnum++,),
@@ -771,18 +787,18 @@ List<Map<String, dynamic>> formpart1 = [
   'CONDICIONES Y OBSERVACIONES' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
 },
 { // FIRMAS (12)
-  'firma asp': 
+  /* 'firma asp': 
   Container(
     alignment: Alignment.center,
-    child:const Text('Firma de Aspirante')
+    child:const Text('Firma de Aspirante',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))
   ),
-  '0': MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,paintSignature: true),
+  '1': MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,paintSignature: true), */
   'firma dr': 
   Container(
     alignment: Alignment.center,
-    child:const Text('Nombre, Firma y Ced. Prof. del Médico\n Dr. Alfredo Gruel Culebro')
+    child:const Text('Nombre, Firma y Ced. Prof. del Médico\n Dr. Alfredo Gruel Culebro',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))
   ),
-  '1': MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,paintSignature: true)
+  '1': MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC+1] :  '', obligatorio: true,paintSignature: true)
 } 
 
 
@@ -977,7 +993,7 @@ StatefulBuilder(
                         );
                       setState(() { _currentPageIndex--; });
                     } : null,
-                    child: const Text('Anterior'),
+                    child: Text('Anterior', style: getTextStyleButtonFieldRow(context)),
                   ),
                   ElevatedButton.icon(
                     icon: const Icon(Icons.save),
@@ -1128,6 +1144,14 @@ StatefulBuilder(
                       pm.what_complication = (formpart1[6]['2.- ¿Cuál?'] as MultiInputsForm).contenido!;
                       pm.what_chronic = (formpart1[6]['3.- ¿Cuál?'] as MultiInputsForm).contenido!;
                       pm.current_treatment = (formpart1[6]['Tratamiento actual'] as MultiInputsForm).contenido!;
+                      if (sign[0] != null) {
+                         final image = await sign[0]!.getData() ;
+                        var data = await image.toByteData(format: ui.ImageByteFormat.png);
+                        pm.signature_patient = base64.encode(data!.buffer.asUint8List());
+                      } else{
+                        pm.signature_patient = multiInputArr != null ? multiInputArr[46] :'';
+                      }
+
                       if (edit == false) {
                         if (pm.toJson().isNotEmpty) {
                           pm.idPatalogicalPersBack = int.parse((await eips.post_examPa(pm, context)).container![0]["ultimoId"]);
@@ -1304,20 +1328,20 @@ StatefulBuilder(
                       edm.not_suitable = (formpart1[11]['No apto'] as MultiInputsForm).contenido!;
                       edm.suitable_more = (formpart1[11]['Apto con conserva'] as MultiInputsForm).contenido!;
                       edm.condition_observation = (formpart1[11]['CONDICIONES Y OBSERVACIONES'] as MultiInputsForm).contenido!;
-                      if (sign[0] != null) {
-                         final image = await sign[0]!.getData() ;
+                      if (sign[1] != null) {
+                         final image = await sign[1]!.getData() ;
                         var data = await image.toByteData(format: ui.ImageByteFormat.png);
                         edm.applicant_signature = base64.encode(data!.buffer.asUint8List());
                       } else{
-                        edm.applicant_signature = multiInputArr != null ? multiInputArr[143] :'';
+                        edm.applicant_signature = multiInputArr != null ? multiInputArr[144] :'';
                       }
 
-                      if ( sign[1] !=null ) {
-                        final image2 = await sign[1]!.getData();
+                      if ( sign[2] !=null ) {
+                        final image2 = await sign[2]!.getData();
                         var data2 = await image2.toByteData(format: ui.ImageByteFormat.png);
                         edm.doctor_signature = base64.encode(data2!.buffer.asUint8List());
                       } else {
-                        edm.doctor_signature =multiInputArr != null ? multiInputArr[144] : '';
+                        edm.doctor_signature =multiInputArr != null ? multiInputArr[145] : '';
                       }
                       
                       if (eim.toJson().isNotEmpty) {
@@ -1444,7 +1468,7 @@ StatefulBuilder(
                       }
 
                     } : null,
-                    label: const Text('Guardar'),
+                    label: Text('Guardar', style: getTextStyleButtonFieldRow(context)),
                   ),
                   if (_currentPageIndex < _pages.length - 2)
                   ElevatedButton(
@@ -1480,7 +1504,7 @@ StatefulBuilder(
                         }*/
                       }
                     } : null,
-                    child: const Text('Siguiente'),
+                    child: Text('Siguiente', style: getTextStyleButtonFieldRow(context)),
                   ),
                 ],
               ),

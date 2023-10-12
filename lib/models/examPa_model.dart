@@ -36,6 +36,7 @@ class ExamPaModel {
   int? chronic_disease;
   String? what_chronic;
   String? current_treatment;
+  String? signature_patient;
 
     ExamPaModel({ 
       this.idPatalogicalPersBack,
@@ -72,7 +73,8 @@ class ExamPaModel {
       this.what_complication,
       this.chronic_disease,
       this.what_chronic,
-      this.current_treatment
+      this.current_treatment,
+      this.signature_patient
     });
 
 
@@ -113,6 +115,7 @@ class ExamPaModel {
       chronic_disease = json['chronic_disease'];
       what_chronic = json['what_chronic'];
       current_treatment = json['current_treatment'];
+      signature_patient = json['signature_patient'];
     }
 
 
@@ -154,6 +157,7 @@ class ExamPaModel {
       data['chronic_disease'] = chronic_disease ?? '';
       data['what_chronic'] = what_chronic ?? '';
       data['current_treatment'] = current_treatment ?? '';
+      data['signature_patient'] = signature_patient ?? '';
       return data;
     }
 }

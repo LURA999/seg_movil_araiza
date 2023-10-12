@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:app_seguimiento_movil/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -92,12 +93,12 @@ List months =
   pw.Container buildTableHereditaryBackground() {
     allFirstWidthTabHead = PdfPageFormat.letter.width * .085;
     List<Map<String,String>> family =[
-        {'rowName': 'Padre:', 'Buena_saluD ': BackHeredity(0,0,checkBoxArr),'Mala_SaluD ': BackHeredity(0,1,checkBoxArr), 'Finado': BackHeredity(0,2,checkBoxArr),'Alergia': BackHeredity(0,3,checkBoxArr), 'Diabetes': BackHeredity(0,4,checkBoxArr), 'Presion_alta':BackHeredity(0,5,checkBoxArr),'Colesterol':BackHeredity(0,6,checkBoxArr),'Enf_Corazon':BackHeredity(0,7,checkBoxArr),'Cancer':BackHeredity(0,8,checkBoxArr),'Anemia':BackHeredity(0,9,checkBoxArr)},
-        {'rowName': 'Madre:', 'Buena_saluD ': BackHeredity(1,0,checkBoxArr),'Mala_SaluD ': BackHeredity(1,1,checkBoxArr), 'Finado': BackHeredity(1,2,checkBoxArr),'Alergia': BackHeredity(1,3,checkBoxArr), 'Diabetes': BackHeredity(1,4,checkBoxArr), 'Presion_alta':BackHeredity(1,5,checkBoxArr),'Colesterol':BackHeredity(1,6,checkBoxArr),'Enf_Corazon':BackHeredity(1,7,checkBoxArr),'Cancer':BackHeredity(1,8,checkBoxArr),'Anemia':BackHeredity(1,9,checkBoxArr)},
-        {'rowName': 'Hermanos:', 'Buena_saluD ': BackHeredity(2,0,checkBoxArr),'Mala_SaluD ': BackHeredity(2,1,checkBoxArr), 'Finado': BackHeredity(2,2,checkBoxArr),'Alergia': BackHeredity(2,3,checkBoxArr), 'Diabetes': BackHeredity(2,4,checkBoxArr), 'Presion_alta':BackHeredity(2,5,checkBoxArr),'Colesterol':BackHeredity(2,6,checkBoxArr),'Enf_Corazon':BackHeredity(2,7,checkBoxArr),'Cancer':BackHeredity(2,8,checkBoxArr),'Anemia':BackHeredity(2,9,checkBoxArr)},
-        {'rowName': '', 'Buena_saluD ': '','Mala_SaluD ': '', 'Finado': '','Alergia': '', 'Diabetes': '', 'Presion_alta':'','Colesterol':'','Enf_Corazon':'','Cancer':'','Anemia':''},
-        {'rowName': 'Pareja:', 'Buena_saluD ': BackHeredity(3,0,checkBoxArr),'Mala_SaluD ': BackHeredity(3,1,checkBoxArr), 'Finado': BackHeredity(3,2,checkBoxArr),'Alergia': BackHeredity(3,3,checkBoxArr), 'Diabetes': BackHeredity(3,4,checkBoxArr), 'Presion_alta':BackHeredity(3,5,checkBoxArr),'Colesterol':BackHeredity(3,6,checkBoxArr),'Enf_Corazon':BackHeredity(3,7,checkBoxArr),'Cancer':BackHeredity(3,8,checkBoxArr),'Anemia':BackHeredity(3,9,checkBoxArr)},
-        {'rowName': 'Hijos:', 'Buena_saluD ': BackHeredity(4,0,checkBoxArr),'Mala_SaluD ': BackHeredity(4,1,checkBoxArr), 'Finado': BackHeredity(4,2,checkBoxArr),'Alergia': BackHeredity(4,3,checkBoxArr), 'Diabetes': BackHeredity(4,4,checkBoxArr), 'Presion_alta':BackHeredity(4,5,checkBoxArr),'Colesterol':BackHeredity(4,6,checkBoxArr),'Enf_Corazon':BackHeredity(4,7,checkBoxArr),'Cancer':BackHeredity(4,8,checkBoxArr),'Anemia':BackHeredity(4,9,checkBoxArr)},
+        {'rowName': 'Padre:', 'Buena_salud ': BackHeredity(0,0,checkBoxArr),'Mala_Salud ': BackHeredity(0,1,checkBoxArr), 'Finado': BackHeredity(0,2,checkBoxArr),'Alergia': BackHeredity(0,3,checkBoxArr), 'Diabetes': BackHeredity(0,4,checkBoxArr), 'Presion_alta':BackHeredity(0,5,checkBoxArr),'Colesterol':BackHeredity(0,6,checkBoxArr),'Enf_Corazon':BackHeredity(0,7,checkBoxArr),'Cancer':BackHeredity(0,8,checkBoxArr),'Anemia':BackHeredity(0,9,checkBoxArr)},
+        {'rowName': 'Madre:', 'Buena_salud ': BackHeredity(1,0,checkBoxArr),'Mala_Salud ': BackHeredity(1,1,checkBoxArr), 'Finado': BackHeredity(1,2,checkBoxArr),'Alergia': BackHeredity(1,3,checkBoxArr), 'Diabetes': BackHeredity(1,4,checkBoxArr), 'Presion_alta':BackHeredity(1,5,checkBoxArr),'Colesterol':BackHeredity(1,6,checkBoxArr),'Enf_Corazon':BackHeredity(1,7,checkBoxArr),'Cancer':BackHeredity(1,8,checkBoxArr),'Anemia':BackHeredity(1,9,checkBoxArr)},
+        {'rowName': 'Hermanos:', 'Buena_salud ': BackHeredity(2,0,checkBoxArr),'Mala_Salud ': BackHeredity(2,1,checkBoxArr), 'Finado': BackHeredity(2,2,checkBoxArr),'Alergia': BackHeredity(2,3,checkBoxArr), 'Diabetes': BackHeredity(2,4,checkBoxArr), 'Presion_alta':BackHeredity(2,5,checkBoxArr),'Colesterol':BackHeredity(2,6,checkBoxArr),'Enf_Corazon':BackHeredity(2,7,checkBoxArr),'Cancer':BackHeredity(2,8,checkBoxArr),'Anemia':BackHeredity(2,9,checkBoxArr)},
+        {'rowName': '', 'Buena_salud ': '','Mala_Salud ': '', 'Finado': '','Alergia': '', 'Diabetes': '', 'Presion_alta':'','Colesterol':'','Enf_Corazon':'','Cancer':'','Anemia':''},
+        {'rowName': 'Pareja:', 'Buena_salud ': BackHeredity(3,0,checkBoxArr),'Mala_Salud ': BackHeredity(3,1,checkBoxArr), 'Finado': BackHeredity(3,2,checkBoxArr),'Alergia': BackHeredity(3,3,checkBoxArr), 'Diabetes': BackHeredity(3,4,checkBoxArr), 'Presion_alta':BackHeredity(3,5,checkBoxArr),'Colesterol':BackHeredity(3,6,checkBoxArr),'Enf_Corazon':BackHeredity(3,7,checkBoxArr),'Cancer':BackHeredity(3,8,checkBoxArr),'Anemia':BackHeredity(3,9,checkBoxArr)},
+        {'rowName': 'Hijos:', 'Buena_salud ': BackHeredity(4,0,checkBoxArr),'Mala_Salud ': BackHeredity(4,1,checkBoxArr), 'Finado': BackHeredity(4,2,checkBoxArr),'Alergia': BackHeredity(4,3,checkBoxArr), 'Diabetes': BackHeredity(4,4,checkBoxArr), 'Presion_alta':BackHeredity(4,5,checkBoxArr),'Colesterol':BackHeredity(4,6,checkBoxArr),'Enf_Corazon':BackHeredity(4,7,checkBoxArr),'Cancer':BackHeredity(4,8,checkBoxArr),'Anemia':BackHeredity(4,9,checkBoxArr)},
     ];
 
     return pw.Container(
@@ -268,7 +269,7 @@ List months =
               child: pw.Container(
                 alignment: pw.Alignment.center,
                 height: heightReng,
-                child: pw.Text(e['Buena_saluD '].toString(),
+                child: pw.Text(e['Buena_salud '].toString(),
                 style: capLetterStyle),
                 decoration: pw.BoxDecoration(
                   border: pw.Border.all(color: PdfColors.black, width: widthLineTable)
@@ -280,7 +281,7 @@ List months =
               child: pw.Container(
                 alignment: pw.Alignment.center,
                 height: heightReng,
-                child: pw.Text(e['Mala_SaluD '].toString(),
+                child: pw.Text(e['Mala_Salud '].toString(),
                 style: capLetterStyle),
                 decoration: pw.BoxDecoration(
                   border: pw.Border.all(color: PdfColors.black, width: widthLineTable)
@@ -618,7 +619,7 @@ List months =
             child: pw.Container(
               alignment: pw.Alignment.center,
               child: pw.Text(
-                multiInputHArr != null ? multiInputHArr[index * 12] : '',
+                multiInputHArr != null ? multiInputHArr[index * 11] : '',
                 style: littleLetterStyle,
                 textAlign: pw.TextAlign.center,
               ),
@@ -636,7 +637,7 @@ List months =
             child: pw.Container(
               alignment: pw.Alignment.center,
               child: pw.Text(
-                multiInputHArr != null ? multiInputHArr[1 + (index * 12)] : '', 
+                multiInputHArr != null ? multiInputHArr[1 + (index * 11)] : '', 
                 style: littleLetterStyle,
                 textAlign: pw.TextAlign.center,
               ),
@@ -654,7 +655,7 @@ List months =
             child: pw.Container(
               alignment: pw.Alignment.center,
               child: pw.Text(
-                multiInputHArr != null ? multiInputHArr[2 + (index * 12)] : '',
+                multiInputHArr != null ? multiInputHArr[2 + (index * 11)] : '',
                 style: littleLetterStyle,
                 textAlign: pw.TextAlign.center,
               ),
@@ -671,7 +672,7 @@ List months =
             child: pw.Container(
               alignment: pw.Alignment.center,
               child: pw.Text(
-                multiInputHArr != null ? multiInputHArr[3 + (index * 12)] : '',
+                multiInputHArr != null ? multiInputHArr[3 + (index * 11)] : '',
                 style: littleLetterStyle,
                 textAlign: pw.TextAlign.center,
               ),
@@ -688,7 +689,7 @@ List months =
             child: pw.Container(
               alignment: pw.Alignment.center,
               child: pw.Text(
-                multiInputHArr != null ? multiInputHArr[4 + (index * 12)] : '',
+                multiInputHArr != null ? multiInputHArr[4 + (index * 11)] : '',
                 style: littleLetterStyle,
                 textAlign: pw.TextAlign.center,
               ),
@@ -705,7 +706,7 @@ List months =
             child: pw.Container(
               alignment: pw.Alignment.center,
               child: pw.Text(
-                multiInputHArr != null ? multiInputHArr[5 + (index * 12)] : '',
+                multiInputHArr != null ? multiInputHArr[5 + (index * 11)] : '',
                 style: littleLetterStyle,
                 textAlign: pw.TextAlign.center,
               ),
@@ -722,7 +723,7 @@ List months =
             child: pw.Container(
               alignment: pw.Alignment.center,
               child: pw.Text(
-                multiInputHArr != null ? multiInputHArr[6 + (index * 12)] : '',
+                multiInputHArr != null ? multiInputHArr[6 + (index * 11)] : '',
                 style: littleLetterStyle,
                 textAlign: pw.TextAlign.center,
               ),
@@ -739,7 +740,7 @@ List months =
             child: pw.Container(
               alignment: pw.Alignment.center,
               child: pw.Text(
-                multiInputHArr != null ? multiInputHArr[7 + (index * 12)] : '',
+                multiInputHArr != null ? multiInputHArr[7 + (index * 11)] : '',
                 style: littleLetterStyle,
                 textAlign: pw.TextAlign.center,
               ),
@@ -756,7 +757,7 @@ List months =
             child: pw.Container(
               alignment: pw.Alignment.center,
               child: pw.Text(
-                multiInputHArr != null ? multiInputHArr[8 + (index * 12)] : '',
+                multiInputHArr != null ? multiInputHArr[8 + (index * 11)] : '',
                 style: littleLetterStyle,
                 textAlign: pw.TextAlign.center,
               ),
@@ -773,7 +774,7 @@ List months =
             child: pw.Container(
               alignment: pw.Alignment.center,
               child: pw.Text(
-                multiInputHArr != null ? multiInputHArr[9 + (index * 12)] : '',
+                multiInputHArr != null ? multiInputHArr[9 + (index * 11)] : '',
                 style: littleLetterStyle,
                 textAlign: pw.TextAlign.center,
               ),
@@ -790,7 +791,7 @@ List months =
             child: pw.Container(
               alignment: pw.Alignment.center,
               child: pw.Text(
-                multiInputHArr != null ? multiInputHArr[10 + (index * 12)] : '',
+                multiInputHArr != null ? multiInputHArr[10 + (index * 11)] : '',
                 style: littleLetterStyle,
                 textAlign: pw.TextAlign.center,
               ),
@@ -809,7 +810,6 @@ List months =
     ),
   );
 }
-
 pw.Container buildTableAccident_Illness() {
   double secondallFirstWidthTabHead = PdfPageFormat.letter.width * .06;
   double firstCellWidthTabHead = PdfPageFormat.letter.width * .20;
@@ -2579,6 +2579,15 @@ pdf.addPage(
     default: methodAnti = 0; break;
   }
   
+  Uint8List transformationImage(String sign) {
+    if (multiInputArr != null && sign != 'null' && sign != '') {
+      return Uint8List.fromList(base64.decode(sign));
+    }else{
+      return Uint8List.fromList(base64.decode('iVBORw0KGgoAAAANSUhEUgAAABUAAAATCAIAAADwLNHcAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAAdSURBVDhPY/hPGRjVTxkY1U8ZGNVPGRja+v//BwBv0KiQRff68wAAAABJRU5ErkJggg=='));
+    }
+
+  }
+
   String paddingMarginSquare = ''; 
   /**PAGINA 2 */
   pdf.addPage(
@@ -3813,18 +3822,28 @@ pdf.addPage(
         child: pw.Column(
           children: [
             pw.Row(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            crossAxisAlignment: pw.CrossAxisAlignment.center,
             mainAxisAlignment: pw.MainAxisAlignment.start, 
               children: [
-              pw.Text('Nombre y firma del paciente: ',style: pw.TextStyle(fontSize: 11)),
+              pw.Text('Nombre y firma del paciente: ',style:const pw.TextStyle(fontSize: 11)),
               pw.Container(
+              width: 350,
               padding: const pw.EdgeInsets.all(2),
-              child:pw.Text('sdfsdfsfsdfsdfdsf',style: letterText),
+              child:
+              pw.Row(children: [
+                pw.Text(multiInputArr != null ? '${multiInputArr[3]}        ' : '',style: letterText),
+                pw.Container(
+                  width: 150.0,
+                  height: 50.0,
+                  child : pw.Image( pw.MemoryImage(transformationImage(multiInputArr != null? multiInputArr[++multiInputC] : ''))),
+                ),
+              ],),
                 decoration: pw.BoxDecoration(
                   border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                 )
               ) 
             ),
+            
             ]
           ),
           pw.RichText(
@@ -3874,7 +3893,7 @@ pdf.addPage(
           ),
           pw.Container(
             margin: const pw.EdgeInsets.only(top: 20),
-            child: pw.Text('6.- INTERROGATORIO POR APARATOS Y SISTEMAS.',style: letterBold12),
+            child: pw.Text('6.- INTERROGATORIO POR APARATOS Y SISTEMAS. ',style: letterBold12),
           ),
           pw.Container(
             padding: const pw.EdgeInsets.all(10),
@@ -4100,16 +4119,6 @@ pdf.addPage(
   )
   );
 
-  
-  Uint8List transformationImage(String sign) {
-    if (multiInputArr != null && sign != 'null' && sign != '') {
-      return Uint8List.fromList(base64.decode(sign));
-    }else{
-      return Uint8List.fromList(base64.decode('iVBORw0KGgoAAAANSUhEUgAAABUAAAATCAIAAADwLNHcAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAAdSURBVDhPY/hPGRjVTxkY1U8ZGNVPGRja+v//BwBv0KiQRff68wAAAABJRU5ErkJggg=='));
-    }
-
-  }
-
   /**PAGINA 4 */
   pdf.addPage(
   pw.Page(
@@ -4134,7 +4143,7 @@ pdf.addPage(
                     pw.Text('OD JAEGUER J', style: letterText12),
                     pw.Container(
                       padding: const pw.EdgeInsets.all(2),
-                      child: pw.Text(multiInputArr != null ? multiInputArr[128] : ' ',style: letterText10),
+                      child: pw.Text(multiInputArr != null ? multiInputArr[129] : ' ',style: letterText10),
                         decoration: pw.BoxDecoration(
                           border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
@@ -4144,7 +4153,7 @@ pdf.addPage(
                     pw.Text('OD ROSENBAUN 20/', style: letterText12),
                     pw.Container(
                       padding: const pw.EdgeInsets.all(2),
-                      child: pw.Text(multiInputArr != null ? multiInputArr[126] : ' ',style: letterText10),
+                      child: pw.Text(multiInputArr != null ? multiInputArr[127] : ' ',style: letterText10),
                         decoration: pw.BoxDecoration(
                           border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
@@ -4174,10 +4183,10 @@ pdf.addPage(
                     ) 
                     ),
                     pw.Spacer(),
-                    pw.Text('OI JAEGUER J', style: letterText12),
+                    pw.Text('OI JAEGUER J', style: letterText12),   
                     pw.Container(
                       padding: const pw.EdgeInsets.all(2),
-                      child: pw.Text(multiInputArr != null ? multiInputArr[129] : ' ',style: letterText10),
+                      child: pw.Text(multiInputArr != null ? multiInputArr[130] : ' ',style: letterText10),
                         decoration: pw.BoxDecoration(
                           border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
@@ -4187,7 +4196,7 @@ pdf.addPage(
                     pw.Text('OI ROSENBAUN 20/', style: letterText12),
                     pw.Container(
                       padding: const pw.EdgeInsets.all(2),
-                      child: pw.Text(multiInputArr != null ? multiInputArr[127] : ' ',style: letterText10),
+                      child: pw.Text(multiInputArr != null ? multiInputArr[128] : ' ',style: letterText10),
                         decoration: pw.BoxDecoration(
                           border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
@@ -4201,7 +4210,7 @@ pdf.addPage(
                     pw.Text('DE LEJOS SNELLEN OD 20/', style: letterText12),
                     pw.Container(
                       padding: const pw.EdgeInsets.all(2),
-                      child: pw.Text(multiInputArr != null ? multiInputArr[130] : ' ',style: letterText10),
+                      child: pw.Text(multiInputArr != null ? multiInputArr[131] : ' ',style: letterText10),
                         decoration: pw.BoxDecoration(
                           border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
@@ -4210,7 +4219,7 @@ pdf.addPage(
                     pw.Text('OI 20/', style: letterText12),
                     pw.Container(
                       padding: const pw.EdgeInsets.all(2),
-                      child: pw.Text(multiInputArr != null ? multiInputArr[ 131] : ' ',style: letterText10),
+                      child: pw.Text(multiInputArr != null ? multiInputArr[132] : ' ',style: letterText10),
                         decoration: pw.BoxDecoration(
                           border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
@@ -4247,7 +4256,7 @@ pdf.addPage(
                     pw.Text(' OD ', style: letterText12),
                     pw.Container(
                       padding: const pw.EdgeInsets.all(2),
-                      child: pw.Text(multiInputArr != null ? multiInputArr[ 132 ] : ' ',style: letterText10),
+                      child: pw.Text(multiInputArr != null ? multiInputArr[ 133 ] : ' ',style: letterText10),
                         decoration: pw.BoxDecoration(
                           border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
@@ -4256,7 +4265,7 @@ pdf.addPage(
                     pw.Text(' OI ', style: letterText12),
                     pw.Container(
                       padding: const pw.EdgeInsets.all(2),
-                      child: pw.Text(multiInputArr != null ? multiInputArr[133] : ' ',style: letterText10),
+                      child: pw.Text(multiInputArr != null ? multiInputArr[134] : ' ',style: letterText10),
                         decoration: pw.BoxDecoration(
                           border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
@@ -4265,7 +4274,7 @@ pdf.addPage(
                     pw.Text(' COLOR ', style: letterText12),
                     pw.Container(
                       padding: const pw.EdgeInsets.all(2),
-                      child: pw.Text(multiInputArr != null ? multiInputArr[multiInputC = 134] : ' ',style: letterText10),
+                      child: pw.Text(multiInputArr != null ? multiInputArr[multiInputC = 135] : ' ',style: letterText10),
                         decoration: pw.BoxDecoration(
                           border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
@@ -4390,25 +4399,24 @@ pdf.addPage(
                 pw.Row(
                   children: [
                     pw.Text('Espirometria: ', style: letterText12),
-                    pw.Text(' ( - ) ', style: YesNotFunction(++radioButtonC, yestNotEnumArr, 1) == 'X'? pw.TextStyle(color: PdfColors.red, fontWeight: pw.FontWeight.bold) : null),
-                    pw.Text(' ( + ) ', style: YesNotFunction(radioButtonC, yestNotEnumArr, 2) == 'X'? pw.TextStyle(color: PdfColors.red, fontWeight: pw.FontWeight.bold) : null),
+                    pw.Text(' Normal ', style: YesNotFunction(++radioButtonC, yestNotEnumArr, 1) == 'X'? pw.TextStyle(color: PdfColors.red, fontWeight: pw.FontWeight.bold, fontSize: 11,font: pw.Font.times()) : pw.TextStyle(fontSize: 11,font: pw.Font.times())),
+                    pw.Text(' Fuera de rango ', style: YesNotFunction(radioButtonC, yestNotEnumArr, 2) == 'X'? pw.TextStyle(color: PdfColors.red, fontWeight: pw.FontWeight.bold, fontSize: 11,font: pw.Font.times()) : pw.TextStyle(fontSize: 11,font: pw.Font.times())),
                     pw.Text('Audiometria: ', style: letterText12),
-                    pw.Text(' ( - ) ', style: YesNotFunction(++radioButtonC, yestNotEnumArr, 1) == 'X'? pw.TextStyle(color: PdfColors.red, fontWeight: pw.FontWeight.bold) : null),
-                    pw.Text(' ( + ) ', style: YesNotFunction(radioButtonC, yestNotEnumArr, 2) == 'X'? pw.TextStyle(color: PdfColors.red, fontWeight: pw.FontWeight.bold) : null),
+                    pw.Text(' Normal ', style: YesNotFunction(++radioButtonC, yestNotEnumArr, 1) == 'X'? pw.TextStyle(color: PdfColors.red, fontWeight: pw.FontWeight.bold, fontSize: 11,font: pw.Font.times()) : pw.TextStyle(fontSize: 11,font: pw.Font.times())),
+                    pw.Text(' Fuera de rango ', style: YesNotFunction(radioButtonC, yestNotEnumArr, 2) == 'X'? pw.TextStyle(color: PdfColors.red, fontWeight: pw.FontWeight.bold, fontSize: 11,font: pw.Font.times()) : pw.TextStyle(fontSize: 11,font: pw.Font.times())),
                     pw.Text('Prueba covid-19 ', style: letterText12),
-                    pw.Text(' ( - ) ', style: YesNotFunction(++radioButtonC, yestNotEnumArr, 1) == 'X'? pw.TextStyle(color: PdfColors.red, fontWeight: pw.FontWeight.bold) : null),
-                    pw.Text(' ( + ) ', style: YesNotFunction(radioButtonC, yestNotEnumArr, 2) == 'X'? pw.TextStyle(color: PdfColors.red, fontWeight: pw.FontWeight.bold) : null),
-                    pw.Text('Embarazo: ', style: letterText12),
-                    pw.Text(' ( - ) ', style: YesNotFunction(++radioButtonC, yestNotEnumArr, 1) == 'X'? pw.TextStyle(color: PdfColors.red, fontWeight: pw.FontWeight.bold) : null),
-                    pw.Text(' ( + ) ', style: YesNotFunction(radioButtonC, yestNotEnumArr, 2) == 'X'? pw.TextStyle(color: PdfColors.red, fontWeight: pw.FontWeight.bold) : null),
-                  ],
+                    pw.Text(' Normal ', style: YesNotFunction(++radioButtonC, yestNotEnumArr, 1) == 'X'? pw.TextStyle(color: PdfColors.red, fontWeight: pw.FontWeight.bold, fontSize: 11,font: pw.Font.times()) : pw.TextStyle(fontSize: 11,font: pw.Font.times())),
+                    pw.Text(' Fuera de rango ', style: YesNotFunction(radioButtonC, yestNotEnumArr, 2) == 'X'? pw.TextStyle(color: PdfColors.red, fontWeight: pw.FontWeight.bold, fontSize: 11,font: pw.Font.times()) : pw.TextStyle(fontSize: 11,font: pw.Font.times())),
+                 ],
                   
                 ),
                 pw.Row(
                   children: [
-                    pw.Text('Antidoping: ', style: letterText12),
-                    pw.Text(' ( - ) ', style: YesNotFunction(++radioButtonC, yestNotEnumArr, 1) == 'X'? pw.TextStyle(color: PdfColors.red, fontWeight: pw.FontWeight.bold) : null),
-                    pw.Text(' ( + ) ', style: YesNotFunction(radioButtonC, yestNotEnumArr, 2) == 'X'? pw.TextStyle(color: PdfColors.red, fontWeight: pw.FontWeight.bold) : null),
+                    pw.Text('Embarazo: ', style: letterText12),
+                    pw.Text(' Normal ', style: YesNotFunction(++radioButtonC, yestNotEnumArr, 1) == 'X'? pw.TextStyle(color: PdfColors.red, fontWeight: pw.FontWeight.bold, fontSize: 11,font: pw.Font.times()) : pw.TextStyle(fontSize: 11,font: pw.Font.times())),
+                    pw.Text(' Fuera de rango ', style: YesNotFunction(radioButtonC, yestNotEnumArr, 2) == 'X'? pw.TextStyle(color: PdfColors.red, fontWeight: pw.FontWeight.bold, fontSize: 11,font: pw.Font.times()) : pw.TextStyle(fontSize: 11,font: pw.Font.times())),                    pw.Text('Antidoping: ', style: letterText12),
+                    pw.Text(' Normal ', style: YesNotFunction(++radioButtonC, yestNotEnumArr, 1) == 'X'? pw.TextStyle(color: PdfColors.red, fontWeight: pw.FontWeight.bold, fontSize: 11,font: pw.Font.times()) : pw.TextStyle(fontSize: 11,font: pw.Font.times())),
+                    pw.Text(' Fuera de rango ', style: YesNotFunction(radioButtonC, yestNotEnumArr, 2) == 'X'? pw.TextStyle(color: PdfColors.red, fontWeight: pw.FontWeight.bold, fontSize: 11,font: pw.Font.times()) : pw.TextStyle(fontSize: 11,font: pw.Font.times())),
                   ],
                 )
               ]
@@ -4487,26 +4495,27 @@ pdf.addPage(
           ),
           pw.SizedBox(height: 45),
           pw.Container(
+            alignment: pw.Alignment.center,
             child: pw.Row(
               crossAxisAlignment: pw.CrossAxisAlignment.center,
               mainAxisAlignment: pw.MainAxisAlignment.center,
               children: [
-                pw.Spacer(),
-                pw.Container(
+                // pw.Spacer(),
+                /* pw.Container(
                   alignment: pw.Alignment.center,
                   child: pw.Column(
                     children: [
                       pw.Container(
                         width: 150.0,
                         height: 50.0,
-                        child : pw.Image( pw.MemoryImage(transformationImage(multiInputArr != null? multiInputArr[143] : ''))),
+                        child : pw.Image( pw.MemoryImage(transformationImage(multiInputArr != null? multiInputArr[144] : ''))),
                       ),
                       pw.Text('_______________________________',style:letterText10),
                       pw.Text('Firma de Aspirante',style:letterText10)
                     ]
                   )
-                ),
-                pw.Spacer(),
+                ), 
+                pw.Spacer(),*/
                 pw.Container(
                   alignment: pw.Alignment.center,
                   child: pw.Column(
@@ -4521,7 +4530,6 @@ pdf.addPage(
                     ]
                   )
                 ),
-                pw.Spacer(),
               ]
             ),
           )
@@ -4537,7 +4545,10 @@ pdf.addPage(
 
 
 final Uint8List bytes = await pdf.save();
-  var fileName = "tabla_medico";
+  String fecha = "${now.day}${now.month}${now.year}";
+  String hora = "${now.hour}${now.minute}${now.second}${now.millisecond}";
+  String resultado = fecha + hora;
+  var fileName = "tabla_medico_$resultado";
 
   if(save) {
     String? path =  await pickDownloadDirectory(context);
@@ -4562,15 +4573,16 @@ final Uint8List bytes = await pdf.save();
         }
     }else{
       String path = "";
-      if (Platform.isAndroid) {
+       if (Platform.isAndroid) {
         path = await getDownloadDirectoryPath();
       } else if (Platform.isIOS) {
         path = (await getApplicationDocumentsDirectory()).path;
       } else {
         throw UnsupportedError('Plataforma no compatible');
       }
-        final file = File('$path/$fileName.pdf');  
-        await file.writeAsBytes(bytes);
+      final file = File('$path/tabla_medico_$resultado.pdf');  
+      await file.writeAsBytes(bytes); 
+      await OpenFile.open('$path/tabla_medico_$resultado.pdf');
     }
 }
 }

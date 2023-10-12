@@ -73,6 +73,21 @@ import 'package:flutter/material.dart';
 
   }
 
+  TextStyle getTextStyleButtonFieldRow(BuildContext context) {
+    double fontSize = MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <500  ?
+    //para celulares
+      MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .03: 0.015):
+    //para tablets
+    MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015);
+
+    return TextStyle(
+    fontFamily: 'GothamBold',
+    fontWeight: MediaQuery.of(context).orientation == Orientation.portrait ? FontWeight.w700 : FontWeight.w600,
+    fontSize: fontSize
+    );
+
+  }
+
 
   TextStyle getTextStyleText(BuildContext context, FontWeight? ft, Color? color) {
     double fontSize = MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <500  ?

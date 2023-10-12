@@ -59,6 +59,13 @@ dependencies:
   datetime_picker_formfield: ^2.0.1
   connectivity_plus: ^4.0.1
   docx_template: ^0.3.4
+  flutter_secure_storage: ^5.0.0
+  flutter_pagination: ^0.0.8
+  #flutter_launch: ^0.3.0
+  url_launcher: ^6.1.14
+  #device_apps: ^2.2.0
+  #flutter_file_dialog: ^3.0.2
+  #url_launcher: ^6.1.14
   #easy_autocomplete: ^1.6.0
   #flutter_async_autocomplete: ^0.1.1
   #flutter_datetime_picker: 1.5.1

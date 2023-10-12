@@ -46,6 +46,7 @@ class MultiInputs extends StatefulWidget {
   final int? maxLength;
   late  TextEditingController? controller;
   Function(dynamic,List<String>)? onFormValueChange;
+  Future<void> Function(dynamic)? onFieldSubmitted;
   
   MultiInputs({
     Key? key, 
@@ -61,6 +62,7 @@ class MultiInputs extends StatefulWidget {
     this.listSelectForm,
     this.keyboardType,
     this.autocompleteAsync,
+    this.onFieldSubmitted,
     this.obscureText = false,
     required this.formProperty,
     required this.formValue, 
@@ -120,7 +122,6 @@ final ImagePicker _picker = ImagePicker();
     /** Si entra aqui, entra para crear un select */
     if (widget.formValue[widget.formProperty]!.select ?? false) {
       int indice = 0;
-      
       widget.formValue.forEach((key, value) {
           if((widget.formValue[key] is RadioInput) == false ){
             if (widget.formValue[key]!.select ?? false == true) {
@@ -131,7 +132,7 @@ final ImagePicker _picker = ImagePicker();
         });
 
       if (widget.listSelectButton == null) {   
-        //En este puede cambiar el id de cada item de cada opcion
+        //En este puede cambiar el id de cada item de cada opcion, se hace por medio de
         return DropdownButtonWidget(arrSelect: widget.listSelectForm,formValue: widget.formValue,formProperty: widget.formProperty, type: 1,);
       }else{
         //En este ya viene una lista predefinida desde el mismo sistema, no hay un json predefinido, es solo un array
@@ -142,7 +143,6 @@ final ImagePicker _picker = ImagePicker();
     if (widget.keyboardType.toString().contains('datetime') || widget.keyboardType == TextInputType.datetime) {
       MaterialTapTargetSize tapTargetSize = MaterialTapTargetSize.padded;
         final format = DateFormat("yyyy-MM-dd ${widget.formValue[widget.formProperty]!.activeClock == true?'HH:mm':''}");
-
         return DateTimeField(
        initialValue: widget.formValue[widget.formProperty]!.contenido.toString()!= '0000-00-00' && widget.formValue[widget.formProperty]!.contenido.toString()!= '' ?DateFormat("yyyy-MM-dd").parse(widget.formValue[widget.formProperty]!.contenido.toString()): null,
         controller: widget.controller,
@@ -155,6 +155,7 @@ final ImagePicker _picker = ImagePicker();
             return null;
           }:null,
         decoration:  InputDecoration(
+          labelText: widget.labelText,
           suffixIcon: const Icon(Icons.date_range), 
           hintText: "yyyy/mm/dd ${widget.formValue[widget.formProperty]!.activeClock == true?'HH:mm':''}"
         ),
@@ -209,6 +210,7 @@ final ImagePicker _picker = ImagePicker();
           enabled: widget.formValue[widget.formProperty]!.enabled,
           controller: widget.controller,
           autofocus: widget.autofocus!,
+          onFieldSubmitted: widget.onFieldSubmitted,
           initialValue: widget.controller == null ? widget.formValue[widget.formProperty]!.contenido : null,
           keyboardType: widget.keyboardType,
           obscureText: widget.obscureText,

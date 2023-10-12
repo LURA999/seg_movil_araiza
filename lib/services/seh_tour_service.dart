@@ -12,7 +12,7 @@ class SehTourService extends ChangeNotifier{
 
   bool modoApk = kDebugMode?true:false; 
   bool isSaving = true;
-  late String link = modoApk?'https://www.comunicadosaraiza.com/movil_scan_api/API':'https://www.comunicadosaraiza.com/movil_scan_api/API';
+  late String link = modoApk?'https://www.comunicadosaraiza.com/movil_scan_api_prueba/API':'https://www.comunicadosaraiza.com/movil_scan_api_prueba/API';
 
 
  Future<bool> postForm(List<int> answer,int formAB, BuildContext context) async {
@@ -26,7 +26,6 @@ class SehTourService extends ChangeNotifier{
 try {
       isSaving = true;
       notifyListeners();
-      print('$link/tour_seh.php?formAB=$formAB');
       final url = Uri.parse('$link/tour_seh.php?formAB=$formAB');
       var response = (await http.patch(url, body: json.encode({'data':answer}))).body;
       if (response.contains('200')){  

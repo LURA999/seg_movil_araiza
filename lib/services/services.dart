@@ -11,6 +11,8 @@ export 'package:app_seguimiento_movil/services/letter_mediaquery.dart';
 export 'package:app_seguimiento_movil/services/custom_back_button_interceptor.dart';
 export 'package:app_seguimiento_movil/services/seh_tour_service.dart';
 export 'package:app_seguimiento_movil/services/exam_ini_pre_service.dart';
+export 'package:app_seguimiento_movil/services/local_service.dart';
+export 'package:app_seguimiento_movil/services/version_service.dart';
 
 
 
