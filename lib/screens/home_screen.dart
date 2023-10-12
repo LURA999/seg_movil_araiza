@@ -66,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Actualizar la aplicación'),
-          content: Text('¿Deseas instalar la actualización descargada?'),
+          content: Text('¿Deseas instalar la actualización $versionLast, usted tiene la version $version?'),
           actions: <Widget>[
             ElevatedButton(
               child: Text('Cancelar'),
