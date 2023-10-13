@@ -88,7 +88,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 // print(file.path);
                 //  await OpenFile.open(file.path);
                 if (await canLaunchUrlString('https://www.comunicadosaraiza.com/apps_release/app-movilDepartaments-$versionLast.apk')) {
-                   await launchUrlString('https://www.comunicadosaraiza.com/apps_release/app-movilDepartaments-$versionLast.apk',mode: LaunchMode.externalNonBrowserApplication);
+                   await launchUrlString('https://www.comunicadosaraiza.com/apps_release/app-movilDepartaments-$versionLast.apk',
+                  mode: LaunchMode.inAppWebView);
                 } 
               },
             ),
