@@ -7,6 +7,7 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
+import 'package:encrypt/encrypt.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
@@ -243,8 +244,10 @@ try {
       notifyListeners();
       VarProvider vh = VarProvider();
       final t2 = await vh.arrSharedPreferences();
+      print('$link/turn_vehicle.php?idTurn=true');
       final url = Uri.parse('$link/turn_vehicle.php?idTurn=true');
       var response = (await http.post(url, body: json.encode({'idTurn': t2["idTurn"] }))).body;
+      print(response);
       
       if (response.contains('200')){  
         isSaving = false;
@@ -379,9 +382,9 @@ try {
     isSaving = false;
     notifyListeners();
     final sm = SessionManager();
-    final key = encrypt.Key.fromLength(32);
-    final iv = encrypt.IV.fromLength(16);
-    final encrypter = encrypt.Encrypter(encrypt.AES(key));
+      final key = encrypt.Key.fromUtf8('Amxlaraizaoteles');
+      final iv = encrypt.IV.fromUtf8('Amxlaraizaoteles');
+      final encrypter = encrypt.Encrypter(encrypt.AES(key, mode: AESMode.ecb));
     session.idTurn = result.container![0]["ultimoId"];
     final encrypted = encrypter.encrypt(session.toJson().toString(), iv: iv);
     await sm.initialize();

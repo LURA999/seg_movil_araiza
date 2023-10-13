@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:encrypt/encrypt.dart';
 import 'package:flutter/material.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:app_seguimiento_movil/models/models.dart';
@@ -8,10 +9,7 @@ import 'package:app_seguimiento_movil/services/services.dart';
 
 
 class VarProvider with ChangeNotifier {
- final key = encrypt.Key.fromLength(32);
- final iv = encrypt.IV.fromLength(16);
  TurnVehicle tn = TurnVehicle();
- final sm = SessionManager();
  bool varControl = false;
  bool varSalir = false;
  int auxPrevDirectory = 1;
@@ -34,9 +32,14 @@ class VarProvider with ChangeNotifier {
   }
 
   Future<Map<String, dynamic>> arrSharedPreferences() async {
-    final encrypter = encrypt.Encrypter(encrypt.AES(key));
+    final sm = SessionManager();
+    final key = encrypt.Key.fromUtf8('Amxlaraizaoteles');
+    final iv = encrypt.IV.fromUtf8('Amxlaraizaoteles');
+    final encrypter = encrypt.Encrypter(encrypt.AES(key, mode: AESMode.ecb));
     await sm.initialize();
-    String decrypted = encrypter.decrypt(encrypt.Encrypted(base64.decode(sm.getSession()!)), iv: iv);
+    print(sm.getSession()!.toString());
+
+    String decrypted = encrypter.decrypt(encrypt.Encrypted.fromBase64(sm.getSession()!.toString()), iv: iv);
     return tn.fromJsonReverse(decrypted);
   }
 

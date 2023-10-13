@@ -29,8 +29,6 @@ try {
     notifyListeners();
     final url = Uri.parse('$link/version_app.php');
     var response = (await http.get(url)).body;
-      print(response);
-
       final result = AccessMap.fromJson(jsonDecode(response));
     // var response = await http.post(url, body: {'pass': pass, 'departament': departament});
     if (result.status == 200){

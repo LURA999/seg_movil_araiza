@@ -52,7 +52,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       navigatorKey: navigatorKey,
       navigatorObservers: [navigatorObserver],
-      home: CustomBackBvuttonInterceptor(child: SplashScreen(),),
+      home: CustomBackBvuttonInterceptor(child: ControlAssistance(),),
       routes: Routers.routerMain,
       theme: AppTheme.lightTeheme,
       

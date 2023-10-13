@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 class TurnVehicle {
   String? guard;
   String? turn;
@@ -38,6 +40,7 @@ class TurnVehicle {
   }
 
   Map<String, dynamic> fromJsonReverse(String jsonString) {
+    print(jsonString);
     jsonString = jsonString.replaceAll('{', '').replaceAll('}', '');
     
  Map<String, dynamic> objetoJson = { 

@@ -1,6 +1,7 @@
 
 import 'dart:io';
 import 'package:app_seguimiento_movil/services/services.dart';
+import 'package:encrypt/encrypt.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -30,7 +31,6 @@ try {
       notifyListeners();
       final url = Uri.parse('$link/turn_food.php');
       var response = (await http.post(url, body: json.encode({}))).body;
-      
       if (response.contains('200')){  
         isSaving = false;
         notifyListeners();
@@ -97,9 +97,9 @@ try {
 
   Future<Access> postTurnFood( TurnFood session,BuildContext context ) async {
   final sm = SessionManager();
-  final key = encrypt.Key.fromLength(32);
-  final iv = encrypt.IV.fromLength(16);
-  final encrypter = encrypt.Encrypter(encrypt.AES(key));
+  final key = encrypt.Key.fromUtf8('Amxlaraizaoteles');
+  final iv = encrypt.IV.fromUtf8('Amxlaraizaoteles');
+      final encrypter = encrypt.Encrypter(encrypt.AES(key, mode: AESMode.ecb));
   final encrypted = encrypter.encrypt(session.toJson().toString(), iv: iv);
   await sm.initialize();
   await sm.saveSession(encrypted.base64.toString());

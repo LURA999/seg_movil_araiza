@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:app_seguimiento_movil/models/date_excel_assistance.dart';
 import 'package:app_seguimiento_movil/models/qr_assistance.dart';
 import 'package:app_seguimiento_movil/services/services.dart';
+import 'package:encrypt/encrypt.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -32,7 +33,6 @@ class AssistanceService extends ChangeNotifier{
         notifyListeners();
         VarProvider vh = VarProvider();
         final t2 = await vh.arrSharedPreferences();
-        
         final url = Uri.parse('$link/turn_assistance.php?idTurn=true');
         var response = (await http.post(url, body: json.encode({'idTurn': t2["idTurn"] }))).body;
         if (response.contains('200')){  
@@ -117,13 +117,19 @@ try {
     final result = AccessMap.fromJson(jsonDecode(response));
     if (result.status == 200) {
       final sm = SessionManager();
-      final key = encrypt.Key.fromLength(32);
-      final iv = encrypt.IV.fromLength(16);
-      final encrypter = encrypt.Encrypter(encrypt.AES(key));
+      final key = encrypt.Key.fromUtf8('Amxlaraizaoteles');
+      final iv = encrypt.IV.fromUtf8('Amxlaraizaoteles');
+      final encrypter = encrypt.Encrypter(encrypt.AES(key, mode: AESMode.ecb));
       session.idTurn = result.container![0]["ultimoId"];
+      print(session.toJson());
       final encrypted = encrypter.encrypt(session.toJson().toString(), iv: iv);
       await sm.initialize();
+      print(encrypted.base64.toString());
       await sm.saveSession(encrypted.base64.toString());
+
+      print('desencriptado');
+      String decrypted = encrypter.decrypt(encrypt.Encrypted.fromBase64(sm.getSession()!.toString()), iv: iv);
+      print(  decrypted);
       isSaving = true;
       notifyListeners();
       return result;
