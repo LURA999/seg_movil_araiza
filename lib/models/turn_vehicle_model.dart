@@ -12,7 +12,9 @@ class TurnVehicle {
     this.guard,
     this.turn,
     this.sign,
-    this.description
+    this.description,
+    this.idTurn,
+
   });
 
   TurnVehicle.fromJson(Map<String, dynamic> json){
@@ -40,12 +42,12 @@ class TurnVehicle {
   }
 
   Map<String, dynamic> fromJsonReverse(String jsonString) {
-    print(jsonString);
     jsonString = jsonString.replaceAll('{', '').replaceAll('}', '');
     
- Map<String, dynamic> objetoJson = { 
+  Map<String, dynamic> objetoJson = { 
   for (var e in jsonString.split(',').map((e) => e.trim())) 
   e.split(':')[0].trim() : e.split(':')[1].trim()};
+
     return objetoJson;
   }
 }

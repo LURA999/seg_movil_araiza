@@ -244,10 +244,9 @@ try {
       notifyListeners();
       VarProvider vh = VarProvider();
       final t2 = await vh.arrSharedPreferences();
-      print('$link/turn_vehicle.php?idTurn=true');
+      print(t2);
       final url = Uri.parse('$link/turn_vehicle.php?idTurn=true');
       var response = (await http.post(url, body: json.encode({'idTurn': t2["idTurn"] }))).body;
-      print(response);
       
       if (response.contains('200')){  
         isSaving = false;
@@ -372,12 +371,18 @@ try {
 try {
     isSaving = true;
     notifyListeners();
+    print('INICIANDO SESION');
+    print(session.guard);
+    print(session.turn);
+    print(session.sign);
+    print(session.description);
+    print(session.idTurn);
+    
     final url = Uri.parse('$link/turn_vehicle.php');
-      var response = (await http.post(
-      url, 
-      body: json.encode(session.toJson()))).body;
-      result =AccessMap.fromJson(jsonDecode(response));
-
+    var response = (await http.post(
+    url, 
+    body: json.encode(session.toJson()))).body;
+    result =AccessMap.fromJson(jsonDecode(response));
     if (result.status == 200) {
     isSaving = false;
     notifyListeners();

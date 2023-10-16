@@ -66,7 +66,7 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
               default:
             }
           }
-          return (widget.goptions!).where((String option) {
+          return widget.goptions!.where((String option) {
             return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
           });
         },

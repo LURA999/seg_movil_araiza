@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:app_seguimiento_movil/widgets/widgets.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../models/multi_inputs_model.dart';
 import '../services/services.dart';
+import 'package:http/http.dart' as http;
 
 
 class ControlAssistance extends StatefulWidget {
@@ -198,12 +201,21 @@ class _ControlAssistanceState extends State<ControlAssistance> {
     if (sharedPrefsData['course_name'] == null) {
       SessionManager sm = SessionManager()
         ..clearSession().then((value) {
-          VehicleService dpser = VehicleService()
-            ..postCloseTurnVehicle(context).then((value) {
-              //cerrar turno anterior
-              Provider.of<VarProvider>(context,listen: false).updateVariable(false);
-              setState(() { });
+          if (sharedPrefsData['dish'] == null) {
+            final url = Uri.parse('https://www.comunicadosaraiza.com/movil_scan_api_prueba/API/turn_vehicle.php?idTurn=true');
+           (http.post(url, body: json.encode({'idTurn': sharedPrefsData["idTurn"] }))).then((value) {
+            Provider.of<VarProvider>(context,listen: false).updateVariable(false);
+            setState(() { });
+          });
+          } else {
+            //food
+            final url = Uri.parse('https://www.comunicadosaraiza.com/movil_scan_api_prueba/API/turn_food.php');
+            (http.post(url, body: json.encode({}))).then((value) {
+            Provider.of<VarProvider>(context,listen: false).updateVariable(false);
+            setState(() { });
             });
+          }
+          
         });
     }
   }).catchError((error) {

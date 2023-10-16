@@ -18,7 +18,7 @@ class HomeScreen extends StatefulWidget {
 final storage = FlutterSecureStorage();
 
 class _HomeScreenState extends State<HomeScreen> {
-  String version = '1.0.1';
+  String version = '1.0.2';
 
   final List<Map<String, dynamic>> arrList = [];
 
@@ -89,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 //  await OpenFile.open(file.path);
                 if (await canLaunchUrlString('https://www.comunicadosaraiza.com/apps_release/app-movilDepartaments-$versionLast.apk')) {
                    await launchUrlString('https://www.comunicadosaraiza.com/apps_release/app-movilDepartaments-$versionLast.apk',
-                  mode: LaunchMode.inAppWebView);
+                  mode: LaunchMode.externalApplication);
                 } 
               },
             ),

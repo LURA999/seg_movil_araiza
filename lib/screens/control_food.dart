@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:app_seguimiento_movil/widgets/widgets.dart';
 import 'package:flutter/services.dart';
@@ -207,12 +209,20 @@ class _DiningRoomState extends State<DiningRoom> {
     if (sharedPrefsData['dish'] == null) {
       SessionManager sm = SessionManager()
         ..clearSession().then((value) {
-          VehicleService dpser = VehicleService()
-            ..postCloseTurnVehicle(context).then((value) {
-              //cerrar turno anterior
-              Provider.of<VarProvider>(context,listen: false).updateVariable(false);
-              setState(() { });
-            });
+          if (sharedPrefsData['turn'] == null) {
+            final url = Uri.parse('https://www.comunicadosaraiza.com/movil_scan_api_prueba/API/turn_assistance.php?idTurn=true');
+            (http.post(url, body: json.encode({'idTurn': sharedPrefsData["idTurn"] }))).then((value) {
+            print(value);
+            Provider.of<VarProvider>(context,listen: false).updateVariable(false);
+            setState(() { });
+          });
+          }else{
+           final url = Uri.parse('https://www.comunicadosaraiza.com/movil_scan_api_prueba/API/turn_vehicle.php?idTurn=true');
+           (http.post(url, body: json.encode({'idTurn': sharedPrefsData["idTurn"] }))).then((value) {
+            Provider.of<VarProvider>(context,listen: false).updateVariable(false);
+            setState(() { });
+          });
+          }
         });
     }
   }).catchError((error) {

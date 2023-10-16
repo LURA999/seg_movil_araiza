@@ -37,8 +37,6 @@ class VarProvider with ChangeNotifier {
     final iv = encrypt.IV.fromUtf8('Amxlaraizaoteles');
     final encrypter = encrypt.Encrypter(encrypt.AES(key, mode: AESMode.ecb));
     await sm.initialize();
-    print(sm.getSession()!.toString());
-
     String decrypted = encrypter.decrypt(encrypt.Encrypted.fromBase64(sm.getSession()!.toString()), iv: iv);
     return tn.fromJsonReverse(decrypted);
   }
