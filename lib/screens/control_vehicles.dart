@@ -251,6 +251,7 @@ class _ControlVehiclesState extends State<ControlVehicles> {
             ..postCloseTurnFood(context).then((value) {
               //cerrar turno anterior
               Provider.of<VarProvider>(context,listen: false).updateVariable(false);
+              setState(() { });
             });
         });
     }

@@ -13,9 +13,8 @@ import '../models/models.dart';
 
 String departamentName(List<Map<String,dynamic>> arrDepartaments, List<String>? multiInputArr) {
 final List<String> claves = arrDepartaments[0].keys.toList();
-
   if (multiInputArr != null){
-    return arrDepartaments[arrDepartaments.indexWhere((el) => int.parse(el[claves[0]]) == int.parse(multiInputArr[1]))][claves[1]];
+    return arrDepartaments[arrDepartaments.indexWhere((el) => int.parse(el[claves[0]]) == int.parse(multiInputArr[2]))][claves[1]].toString();
   }else{
     return ' N/A';
   }
@@ -53,7 +52,7 @@ List<String>? multiInputHArr, List<String>? multiInputAEArr, List<List<bool>>? c
 List<List<bool>>? checkboxDLNArr, List<Cause>? causeDiseaseArr, List<YesNot>? yestNotEnumArrDisease,List<ManoDominante>? manoArr,
 List<MetodoAnti>? methodArr) async {
   
-int multiInputC = 1; 
+int multiInputC = 0; 
 int multiInputCH = 0; 
 int multiInputCAE = 0; 
 int radioButtonC = 0; 
@@ -124,7 +123,7 @@ List months =
                 alignment: pw.Alignment.center,
                 height: heightReng,
                 padding: const pw.EdgeInsets.only(top: 5,bottom: 5),
-                child: pw.Text('Buena\nsaluD ',
+                child: pw.Text('Buena\nsalud ',
                 style: capLetterStyle),
                 decoration: pw.BoxDecoration(
                   border: pw.Border.all(color: PdfColors.black, width: widthLineTable)
@@ -137,7 +136,7 @@ List months =
                 alignment: pw.Alignment.center,
                 height: heightReng,
                 padding: const pw.EdgeInsets.only(top: 5,bottom: 5),
-                child: pw.Text('Mala\nsaluD ',
+                child: pw.Text('Mala\nsalud ',
                 style: capLetterStyle),
                 decoration: pw.BoxDecoration(
                   border: pw.Border.all(color: PdfColors.black, width: widthLineTable)
@@ -1274,7 +1273,7 @@ pdf.addPage(
       children: [
         pw.Text('FECHA: ',style: letterBold12), 
         pw.Container(
-          child: pw.Text('${now.day} DE ${months[now.month-1]} DEL ${now.year}'),
+          child: pw.Text(multiInputArr != null ? multiInputArr[0] :  ''),
             decoration: pw.BoxDecoration(
               border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
             )

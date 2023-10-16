@@ -18,7 +18,7 @@ class HomeScreen extends StatefulWidget {
 final storage = FlutterSecureStorage();
 
 class _HomeScreenState extends State<HomeScreen> {
-  String version = '1.0.0';
+  String version = '1.0.1';
 
   final List<Map<String, dynamic>> arrList = [];
 

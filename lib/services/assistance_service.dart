@@ -121,15 +121,9 @@ try {
       final iv = encrypt.IV.fromUtf8('Amxlaraizaoteles');
       final encrypter = encrypt.Encrypter(encrypt.AES(key, mode: AESMode.ecb));
       session.idTurn = result.container![0]["ultimoId"];
-      print(session.toJson());
       final encrypted = encrypter.encrypt(session.toJson().toString(), iv: iv);
       await sm.initialize();
-      print(encrypted.base64.toString());
       await sm.saveSession(encrypted.base64.toString());
-
-      print('desencriptado');
-      String decrypted = encrypter.decrypt(encrypt.Encrypted.fromBase64(sm.getSession()!.toString()), iv: iv);
-      print(  decrypted);
       isSaving = true;
       notifyListeners();
       return result;

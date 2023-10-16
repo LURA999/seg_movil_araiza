@@ -630,16 +630,16 @@ Future<void> fetchDataTable() async {
       final  info = await eips.getOneExamPart1(snapshot.data![index].exam,context);
       resString = [];
       info[0].forEach((key, value) {
-        if(cExamPart1 < 146){
+        if(cExamPart1 < 147){
           resString.add(value.toString() == 'null'? '' : value.toString());
-        } else if (cExamPart1 > 145 && cExamPart1 < 192) {
+        } else if (cExamPart1 > 146 && cExamPart1 < 193) {
             switch (int.parse(value)) {
               case 1:  yesNotEnum.add(YesNot.si); break;
               case 2:  yesNotEnum.add(YesNot.no); break; 
               default:
                 yesNotEnum.add(YesNot.none); 
             }
-        }else if(cExamPart1 > 191&& cExamPart1 < 204) {
+        }else if(cExamPart1 > 192&& cExamPart1 < 205) {
           checkboxDLN[0].add(int.parse(value) == 2 ? true : false);
         }else{
           switch (key) {

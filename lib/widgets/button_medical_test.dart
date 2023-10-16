@@ -16,7 +16,7 @@ List<String>? multiInputHArr, List<String>? multiInputAEArr, List<List<bool>>? c
 List<List<bool>>? checkboxDLNArr, List<Cause>? causeDiseaseArr, List<YesNot>? yestNotEnumArrDisease,List<ManoDominante>? manoArr,
 List<MetodoAnti>? methodArr, int idExam, bool edit ) {
 int _currentPageIndex = 0;
-int multiInputC = 0; 
+int multiInputC = 1; 
 int multiInputCH = 0; 
 int multiInputCAE = 0; 
 int radioButtonC = 0; 
@@ -861,7 +861,7 @@ _pages[i].add(Title(
               }
             } : null,
             label: Text('Borrar',style: getTextStyleButtonField(context)),
-          ),
+          )
           ],
           )
           );
@@ -998,7 +998,7 @@ StatefulBuilder(
                   ElevatedButton.icon(
                     icon: const Icon(Icons.save),
                     onPressed: btnSave ==true? () async {
-
+                      try {
                       if (causeDiseaseArr !=null) {
                         causeEnum = causeDiseaseArr;
                       }
@@ -1025,7 +1025,7 @@ StatefulBuilder(
                       epm.age = (formpart1[1]['Edad'] as MultiInputsForm).contenido!;
                       epm.marital_status = (formpart1[1]['Edo. Civil'] as MultiInputsForm).contenido!;
                       epm.address = (formpart1[1]['Domicilio'] as MultiInputsForm).contenido!;
-                      epm.tel_cel = (formpart1[1]['Tel. fijo y/o cel'] as MultiInputsForm).contenido!;
+                      epm.tel_cel = int.parse((formpart1[1]['Tel. fijo y/o cel'] as MultiInputsForm).contenido!);
                       epm.place_and_birthday = (formpart1[1]['Lugar y fecha de nacimiento'] as MultiInputsForm).contenido!;
                       epm.extra_activity = (formpart1[1]['Actividad extra a su trabajo'] as MultiInputsForm).contenido!;
                       epm.schooling = (formpart1[1]['Escolaridad'] as MultiInputsForm).contenido!;
@@ -1402,20 +1402,20 @@ StatefulBuilder(
                       }
                       
                       
-                      
+                      //         
                       ExamHiModel ehm = ExamHiModel();
                       for (var i = 0; i < 4; i++) {
-                        ehm.company = (formpart1[2]['${1 + i}.- Empresa'] as MultiInputsForm).contenido!;
-                        ehm.position =  (formpart1[2]['${1 + i}.- Puestos'] as MultiInputsForm).contenido!;
-                        ehm.time = (formpart1[2]['${1 + i}.- Tiempo'] as MultiInputsForm).contenido!;
-                        ehm.when_left = (formpart1[2]['${1 + i}.- Cuando Salió'] as MultiInputsForm).contenido!;
-                        ehm.job_rotation = (formpart1[2]['${1 + i}.- Rotación de puesto'] as MultiInputsForm).contenido!;
-                        ehm.solvent_chemical = (formpart1[2]['${1 + i}.- Quimicos solventes'] as MultiInputsForm).contenido!;
-                        ehm.fume = (formpart1[2]['${1 + i}.- Humos'] as MultiInputsForm).contenido!;
-                        ehm.vapor = (formpart1[2]['${1 + i}.- Vapores'] as MultiInputsForm).contenido!;
-                        ehm.dust = (formpart1[2]['${1 + i}.- Polvos'] as MultiInputsForm).contenido!;
-                        ehm.noisy = (formpart1[2]['${1 + i}.- Ruido'] as MultiInputsForm).contenido!;
-                        ehm.material_load = (formpart1[2]['${1 + i}.- Carga de material'] as MultiInputsForm).contenido!;
+                        ehm.company = (formpart1[2]['${1 + i}.- Empresa'] as MultiInputsForm).contenido!.toString();
+                        ehm.position =  (formpart1[2]['${1 + i}.- Puestos'] as MultiInputsForm).contenido!.toString();
+                        ehm.time = (formpart1[2]['${1 + i}.- Tiempo'] as MultiInputsForm).contenido!.toString();
+                        ehm.when_left = (formpart1[2]['${1 + i}.- Cuando Salió'] as MultiInputsForm).contenido!.toString();
+                        ehm.job_rotation = (formpart1[2]['${1 + i}.- Rotación de puesto'] as MultiInputsForm).contenido!.toString();
+                        ehm.solvent_chemical = (formpart1[2]['${1 + i}.- Quimicos solventes'] as MultiInputsForm).contenido!.toString();
+                        ehm.fume = (formpart1[2]['${1 + i}.- Humos'] as MultiInputsForm).contenido!.toString();
+                        ehm.vapor = (formpart1[2]['${1 + i}.- Vapores'] as MultiInputsForm).contenido!.toString();
+                        ehm.dust = (formpart1[2]['${1 + i}.- Polvos'] as MultiInputsForm).contenido!.toString();
+                        ehm.noisy = (formpart1[2]['${1 + i}.- Ruido'] as MultiInputsForm).contenido!.toString();
+                        ehm.material_load = (formpart1[2]['${1 + i}.- Carga de material'] as MultiInputsForm).contenido!.toString();
                       if (edit == false) {
                         if (ehm.toJson().isNotEmpty) {
                           ehm.fk_idExam = edm.idDetExamInPr;
@@ -1425,16 +1425,16 @@ StatefulBuilder(
                           await eips.patch_examHi(ehm, idExam, 1+i, context);
                         }
                       }
-
+                      //         
                       ExamAcModel eacm = ExamAcModel();
                       for (var i = 0; i < 3; i++) {
-                        eacm.company = (formpart1[3]['${1 + i}.- Nombre de empresa']  as MultiInputsForm).contenido!;
-                        eacm.date = (formpart1[3]['${1 + i}.- Fecha']  as MultiInputsForm).contenido!;
-                        eacm.position = (formpart1[3]['${1 + i}.- Puesto']  as MultiInputsForm).contenido!;
+                        eacm.company = (formpart1[3]['${1 + i}.- Nombre de empresa']  as MultiInputsForm).contenido!.toString();
+                        eacm.date = (formpart1[3]['${1 + i}.- Fecha']  as MultiInputsForm).contenido!.toString();
+                        eacm.position = (formpart1[3]['${1 + i}.- Puesto']  as MultiInputsForm).contenido!.toString();
                         eacm.causa = causeEnum[0+i] == Cause.none ? 0 : causeEnum[0+i] == Cause.accidente ? 1 : 2;
-                        eacm.disease_name = (formpart1[3]['${1 + i}.- Nombre de la lesión o enfermedad']  as MultiInputsForm).contenido!;
+                        eacm.disease_name = (formpart1[3]['${1 + i}.- Nombre de la lesión o enfermedad']  as MultiInputsForm).contenido!.toString();
                         eacm.incapacity = (yestNotEnumArrDisease != null ? yestNotEnumArrDisease[i] : yesNotEnum[1+i]) == YesNot.none ? 0 : (yestNotEnumArrDisease != null ? yestNotEnumArrDisease[i] : yesNotEnum[1+i]) == YesNot.si ? 1 : 2;
-                        eacm.number_d_incapacity = int.parse((formpart1[3]['${1 + i}.- Número de dias de incapacidad'] as MultiInputsForm).contenido!.toString() == '' ? '0' : (formpart1[3]['${1 + i}.- Número de dias de incapacidad'] as MultiInputsForm).contenido!);
+                        eacm.number_d_incapacity = int.parse((formpart1[3]['${1 + i}.- Número de dias de incapacidad'] as MultiInputsForm).contenido!.toString() == '' ? '0' : (formpart1[3]['${1 + i}.- Número de dias de incapacidad'] as MultiInputsForm).contenido!.toString());
                         eacm.fk_idExam = edm.idDetExamInPr;
                         if (edit == false) {
                           if (eacm.toJson().isNotEmpty) {
@@ -1446,7 +1446,7 @@ StatefulBuilder(
                       }
                       
                       ExamMaModel emm = ExamMaModel();
-                      emm.numEmployee = int.parse((formpart1[0]['Numero de Empleado'] as MultiInputsForm).contenido!);
+                      emm.numEmployee = int.parse((formpart1[0]['Numero de Empleado'] as MultiInputsForm).contenido!.toString());
                       emm.fk_initial_pre_entry = edm.idDetExamInPr;
 
                         if (edit == false) {
@@ -1463,8 +1463,15 @@ StatefulBuilder(
                           backgroundColor: Colors.green,
                           content: Text('¡Se guardo exitosamente!',style: const TextStyle(color: Colors.white)),
                         ));
+                      
+                      
                       }else{
                         messageError(context, 'Por favor, para guardar ingrese el número de empleado');
+                      }
+
+                      }catch(e){
+                        Navigator.of(context).pop();
+                        messageError(context, 'Ha ocurrido un error a la hora de subir el formulario. ($e)');
                       }
 
                     } : null,
