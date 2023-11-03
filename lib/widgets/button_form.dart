@@ -7,12 +7,14 @@ import 'package:app_seguimiento_movil/widgets/widgets.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_signature_pad/flutter_signature_pad.dart';
 import 'package:provider/provider.dart';
 import 'package:app_seguimiento_movil/services/services.dart';
 import 'package:intl/intl.dart';
 import 'dart:ui' as ui;
 import 'dart:convert';
+import '../screens/home_screen.dart';
 import '../theme/app_theme.dart';
 
 class ButtonForm extends StatefulWidget {
@@ -24,7 +26,7 @@ final List<List<String>>? listSelect;
 final int btnPosition;
 final int control;
 final TextEditingController? controller;
-
+final List<Map<String,dynamic>>? listSelectForm;
 const ButtonForm({
 super.key,
 required this.textButton,
@@ -34,8 +36,8 @@ required this.field,
 required this.formValue,
 required this.enabled, 
 required this.control, 
-
-this.controller,     
+this.controller, 
+this.listSelectForm,    
 });
 
 @override
@@ -44,6 +46,7 @@ State<ButtonForm> createState() => _ButtonFormState();
 
 class _ButtonFormState extends State<ButtonForm> {
 final List<TextEditingController> controllerArr = []; 
+final storage = FlutterSecureStorage();
 
 @override
 Widget build(BuildContext context) {
@@ -92,19 +95,16 @@ List<Widget> inputFields = [];
 int i = 2;
 
 onFormValueChange(dynamic value,List<String> keyValue) {
-int ivalue = 0;
-//se llena los inputs  y su respectivo formvalue, llenarlo solo en el formvalue no es suficiente
+  int ivalue = 0;
+  //se llena los inputs  y su respectivo formvalue, llenarlo solo en el formvalue no es suficiente
   for (var i = 0; i < inputFields.length; i++) {
     if (inputFields[i].runtimeType.toString() == 'MultiInputs') {
-      setState(() {
-        (inputFields[i] as MultiInputs).controller!.text = value[0][keyValue[ivalue]] ?? '';
-        formValue[(inputFields[i] as MultiInputs).formProperty]!.contenido = value[0][keyValue[ivalue]];
-        ivalue++;
-      });
+      (inputFields[i] as MultiInputs).controller!.text = value[0][keyValue[ivalue]] ?? '';
+      formValue[(inputFields[i] as MultiInputs).formProperty]!.contenido = value[0][keyValue[ivalue]];
+      ivalue++;
     }
   } 
-  
-    
+  setState(() { });
   }
 
 inputFields.add(const SizedBox(height: 15));
@@ -174,6 +174,8 @@ formValue.forEach((key, value) {
         formProperty: key,
         suffixIcon: value.suffixIcon,
         listSelectButton: widget.listSelect,
+        listSelectForm: widget.listSelectForm,
+        activeListSelect : value.activeListSelect,
         autocompleteAsync: value.autocompleteAsync,
         formValue: formValue,
         screen: value.screen,
@@ -198,7 +200,7 @@ return showDialog<String>(
   context: context,
   builder: (BuildContext context ) => StatefulBuilder(
   builder: (BuildContext context, StateSetter setState) {
-  
+
   return Dialog(
     insetPadding: 
     MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <900  ?
@@ -261,7 +263,7 @@ return showDialog<String>(
                     var connectivityResult = await (Connectivity().checkConnectivity());
                     if (connectivityResult == ConnectivityResult.none) {
                       // No hay conexión a Internet
-                      messageError(context,'No hay conexión a Internet.');
+                      messageError(context,'No hay conexión a Internet.', 'Error');
                       
                     } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
                     
@@ -273,7 +275,7 @@ return showDialog<String>(
                     VehicleService vService = VehicleService();
                     switch (widget.control) {
                       case 1:
-                          //TRAFICO
+                        //TRAFICO
                         //Inicio turno
                         if (btnPosition == 1) {
                           if (sign == null || formValue['guard']!.contenido == '' || formValue['guard']!.contenido == null || formValue['sign']!.contenido == '' || formValue['sign']!.contenido == null) {
@@ -298,7 +300,7 @@ return showDialog<String>(
                             var connectivityResult = await (Connectivity().checkConnectivity());
                             if (connectivityResult == ConnectivityResult.none) {
                               // No hay conexión a Internet
-                              messageError(context,'No hay conexión a Internet.');
+                              messageError(context,'No hay conexión a Internet.', 'Error');
                               
                             } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
                             
@@ -388,8 +390,9 @@ return showDialog<String>(
                           RegisterVehicle r= RegisterVehicle();
                           VarProvider vh = VarProvider();
                           final json = await vh.arrSharedPreferences();
+                          json['sign'] = [];
                           r.turn = json['turn'].toString();
-                          r.fkTurn = json['fkTurn'].toString();
+                          r.fkTurn = json['idTurn'].toString();
                           r.color = formValue['color']!.contenido ;
                           r.employeeName = formValue['employeeName']!.contenido;
                           r.platesSearch = formValue['platesSearch']!.contenido;
@@ -603,7 +606,7 @@ return showDialog<String>(
                                                 var connectivityResult = await (Connectivity().checkConnectivity());
                                                 if (connectivityResult == ConnectivityResult.none) {
                                                   // No hay conexión a Internet
-                                                  messageError(context,'No hay conexión a Internet.');
+                                                  messageError(context,'No hay conexión a Internet.', 'Error');
                                                   
                                                 } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
                                                 setState((){
@@ -664,9 +667,9 @@ return showDialog<String>(
                           });
                           RegisterFood r= RegisterFood();
                           r.numEmployee = formValue['employee_number']!.contenido;
-                          r.name = formValue['name']!.contenido;
-                          r.contract = formValue['type_contract']!.contenido;
-
+                          r.name = '';
+                          r.contract = '3';
+                          r.local = formValue['hotel']!.contenido;
                         if(await fService.postRegisterFood(r,context)){
                           Navigator.pop(context);
                           }else{
@@ -683,6 +686,7 @@ return showDialog<String>(
                           });
                           TurnFood t= TurnFood();
                           t.description = formValue['descriptionFood']!.contenido;
+                          t.local = await storage.read(key: 'idHotelRegister');
                           if(await fService.postObvFood(t,context)){
                           Navigator.pop(context);
                           }else{
@@ -702,6 +706,7 @@ return showDialog<String>(
                           de.dateStart = formValue['date_start_hour']!.contenido!; 
                           de.dateFinal = formValue['date_final_hour']!.contenido!;
                           de.dish = formValue['dish']!.contenido!.toString();
+                          de.local = (await storage.read(key: 'idHotelRegister')) ;
                           List<Map<String, dynamic>> jsonStr = await fService.selectDateFood(de, context);
                           List<Map<String, dynamic>> jsonStrObs = await fService.selectObsFood(de, context);
                           List<Map<String, dynamic>> jsonStrMenu = await fService.selectFoodMenu(de, context);
@@ -821,7 +826,7 @@ return showDialog<String>(
                                               var connectivityResult = await (Connectivity().checkConnectivity());
                                                 if (connectivityResult == ConnectivityResult.none) {
                                                   // No hay conexión a Internet
-                                                  messageError(context,'No hay conexión a Internet.');
+                                                  messageError(context,'No hay conexión a Internet.', 'Error');
                                                 } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
                                                 setState((){
                                                     desactivarButton = false;
@@ -869,7 +874,9 @@ return showDialog<String>(
                           VarProvider vh = VarProvider();
                           final json = await vh.arrSharedPreferences();
                           r.idTurn = json['idTurn'].toString();
-                          r.employee_num = formValue['employee_number']!.contenido ;
+                          r.employee_num = formValue['employee_number']!.contenido;
+                          r.local = formValue['hotel']!.contenido;
+                          // r.local = formValue[]
                           setState((){
                               desactivarButton = true;
                           });
@@ -885,14 +892,16 @@ return showDialog<String>(
 
                         //descargar excel
                         if(btnPosition == 4) {
-                          if ((formValue['date_start_hour']!.contenido! != '') || formValue['date_final_hour']!.contenido! !=''){
+                          if (/* (formValue['date_start_hour']!.contenido! != '') || formValue['date_final_hour']!.contenido! !='' */ myFormKey.currentState!.validate()){
                           setState((){
                             desactivarButton = true;
                           });
                           DateExcelAssistance de = DateExcelAssistance();
                           de.dateStart = formValue['date_start_hour']!.contenido!; 
                           de.dateFinal = formValue['date_final_hour']!.contenido!;
-                          de.course_name = formValue['course_name']!.contenido!.toString();
+                          de.course_name = formValue['course_name']!.contenido!.toString().split('-')[0].trim();
+                          de.local = (await storage.read(key: 'idHotelRegister')).toString();
+                          
                           List<Map<String, dynamic>> jsonStr = await aService.selectDateAssistance(de, context);
                             if (jsonStr.isNotEmpty) {
                               DateTime now = DateTime.now();

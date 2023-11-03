@@ -1,5 +1,4 @@
 import 'dart:ui';
-import 'package:app_seguimiento_movil/widgets/multi_inputs.dart';
 import 'package:app_seguimiento_movil/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:app_seguimiento_movil/services/services.dart';
@@ -19,7 +18,7 @@ final storage = FlutterSecureStorage();
 
 class _HomeScreenState extends State<HomeScreen> {
   String version = '1.0.2';
-
+  
   final List<Map<String, dynamic>> arrList = [];
 
   Future<void> chargeHotel() async {
@@ -33,9 +32,10 @@ class _HomeScreenState extends State<HomeScreen> {
           arrList.add(el);
         }
       }
+      
       final Map<String, MultiInputsForm> selectHotel = {
-        'selectHotel': MultiInputsForm(
-            contenido: '', obligatorio: true, select: true, listselect: arrList),
+      'selectHotel': MultiInputsForm(
+        contenido: '', obligatorio: true, select: true, listSelectForm: arrList),
       };
       obtenerIdentificadorApp(selectHotel);
     }
@@ -43,19 +43,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   DateTime now = DateTime.now();
-  bool downloading = false;
-  double downloadProgress = 0;
-
- String _twoDigits(int n) {
-  if (n >= 10) {
-    return "$n";
-  } else {
-    return "0$n";
-  }
-}
-
-
-
   Future<void> downloadAndInstallUpdate(BuildContext context) async {
     VersionService versServ = VersionService();
 
@@ -66,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Actualizar la aplicación'),
-          content: Text('¿Deseas instalar la actualización $versionLast, usted tiene la version $version?'),
+          content: Text('¿Deseas instalar la actualización "$versionLast", usted tiene la version $version?'),
           actions: <Widget>[
             ElevatedButton(
               child: Text('Cancelar'),
@@ -98,20 +85,6 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
     }
-  // String formattedDate = "${now.year}-${_twoDigits(now.month)}-${_twoDigits(now.day)} ${_twoDigits(now.hour)}:${_twoDigits(now.minute)}";
-  // final String updateUrl = 'https://www.comunicadosaraiza.com/apps_release/app-movilDepartaments.apk';
-
-  // Descargar el archivo
-  // final response = await http.get(Uri.parse(updateUrl));
-  // if (response.statusCode == 200) {
-    // Guardar el archivo descargado en el sistema de archivos
-    // final documentsDirectory = await getDownloadDirectoryPath();
-    // final file = File('$documentsDirectory/app-movilDepartaments.apk');
-    // await file.writeAsBytes(response.bodyBytes);
-  
-    // Mostrar un diálogo de confirmación
-   
-  // }
 }
 
 
@@ -122,7 +95,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Future obtenerIdentificadorApp(
       Map<String, MultiInputsForm> selectHotel) async {
     String? identifier = await storage.read(key: 'idHotelRegister');
-
     final TextEditingController controller = TextEditingController();
     if (identifier == null) {
       // print(selectHotel['selectHotel']!.listselect);
@@ -156,9 +128,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           formValue: selectHotel,
                           labelText: 'Selecciona un hotel',
                           listSelectForm:
-                              selectHotel['selectHotel']!.listselect,
+                              selectHotel['selectHotel']!.listSelectForm,
                           autofocus: false,
                           controller: controller,
+                          activeListSelect: true,
                           maxLines: 1,
                         ),
                         ElevatedButton(
@@ -168,6 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               storage.write(
                                   key: 'idHotelRegister',
                                   value: identifier);
+                            
                               Navigator.of(context).pop();
                             },
                             child: Text('Aceptar',
@@ -186,6 +160,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
+
     super.initState();
     SystemChannels.textInput.invokeMethod('TextInput.hide');
     chargeHotel().then((value) => 
@@ -345,6 +320,7 @@ class _ContainerOptionState extends State<ContainerOption> {
                       StatefulBuilder(builder:
                           (BuildContext context, StateSetter setState) {
                         handleButtonPressed() async {
+                          
                           setState(() {
                             desactivar = true;
                           });

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:app_seguimiento_movil/widgets/widgets.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import '../models/multi_inputs_model.dart';
 import '../services/services.dart';
@@ -10,20 +11,21 @@ import 'package:http/http.dart' as http;
 
 
 class ControlAssistance extends StatefulWidget {
-  const ControlAssistance({Key? key}) : super(key: key);
+  const ControlAssistance({Key? key}) : super(key: key) ;
+
+
 
   @override
   State<ControlAssistance> createState() => _ControlAssistanceState();
 }
 
 
-class _ControlAssistanceState extends State<ControlAssistance> {
- @override
-  Widget build(BuildContext context) {
-    double responsiveHeight = MediaQuery.of(context).size.height * 0.02;
-    double responsivePadding = MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.width * 0.02 : MediaQuery.of(context).size.height * 0.02;
+class _ControlAssistanceState extends State<ControlAssistance> {    
+  
+  final List<Map<String, dynamic>> arrList = [];
+  final storage = FlutterSecureStorage();
 
-    //Nombre del campo :  contenido, ¿obligatorio?, ¿select?, ¿enabled?
+  //Nombre del campo :  contenido, ¿obligatorio?, ¿select?, ¿enabled?
     
     //Fecha se inserta automaticamente
     final Map<String, MultiInputsForm> formValuesInicioTur = {
@@ -33,8 +35,9 @@ class _ControlAssistanceState extends State<ControlAssistance> {
 
     //fecha se inserta manualmente
     final Map<String, MultiInputsForm> formValuesRegistroMan = {
-      'employee_number' : MultiInputsForm(contenido: '', obligatorio: true), 
+      'employee_number' : MultiInputsForm(contenido: '', obligatorio: true),   
       'nameSearch' : MultiInputsForm(contenido: '', obligatorio: false, autocomplete: true, autocompleteAsync: true),   
+      'hotel' : MultiInputsForm(contenido: '', obligatorio: false, select: true, activeListSelect: true),
     };
 
     final Map<String, MultiInputsForm> formValuesObservacion = {
@@ -43,11 +46,18 @@ class _ControlAssistanceState extends State<ControlAssistance> {
 
     final Map<String, MultiInputsForm> formValuesDescRepor = {
       'course_name': MultiInputsForm(contenido: '', obligatorio: false, autocomplete: true, autocompleteAsync: true),
-      'date_start_hour': MultiInputsForm(contenido: '', obligatorio: true, activeClock: true), 
-      'date_final_hour': MultiInputsForm(contenido: '', obligatorio: true, activeClock: true), 
+      'date_start_hour': MultiInputsForm(contenido: '', obligatorio: false, activeClock: true, keyboardType: TextInputType.datetime, enabled: true), 
+      'date_final_hour': MultiInputsForm(contenido: '', obligatorio: false, activeClock: true, keyboardType: TextInputType.datetime, enabled: true), 
     };
 
     final TextEditingController controller = TextEditingController();
+
+ @override
+  Widget build(BuildContext context) {
+    double responsiveHeight = MediaQuery.of(context).size.height * 0.02;
+    double responsivePadding = MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.width * 0.02 : MediaQuery.of(context).size.height * 0.02;
+
+    
 
     return Scaffold(
       body: Column(
@@ -82,7 +92,7 @@ class _ControlAssistanceState extends State<ControlAssistance> {
                           'Nombre del curso',
                           'Horario',
                           'Fecha'
-                        ],
+                        ], 
                         formValue: formValuesInicioTur,
                         enabled: true),
                     SizedBox(height: responsiveHeight),
@@ -95,14 +105,15 @@ class _ControlAssistanceState extends State<ControlAssistance> {
                         controller: controller,
                         control: 3,
                         textButton: 'Registro Manual',
+                        listSelectForm: arrList,
                         btnPosition: 2,
                         field: const [
                           'Registro Manual',
                           'Registrar',
                           'Número de empleado',
-                          'Nombre de empleado'
+                          'Nombre de empleado',
+                          'Hotel'
                         ],
-                        listSelect: const [['Proveedor','Externo','Empleado']],
                         formValue: formValuesRegistroMan,
                         enabled: false),
                     SizedBox(height: responsiveHeight),
@@ -192,25 +203,44 @@ class _ControlAssistanceState extends State<ControlAssistance> {
     ));
   }
 
+
+  Future<void> chargeHotel() async {
+      LocalService lc = LocalService();
+      final locals = await lc.getLocal(context);
+      for (var el in locals.container) {
+        if (int.parse(el['idLocal']) > 0) {
+          arrList.add(el);
+        }
+      }
+
+      formValuesRegistroMan['hotel']!.contenido =  await storage.read(key: 'idHotelRegister');
+     /*  formValuesRegistroMan.addAll(
+        {
+          'hotel' : MultiInputsForm(contenido: await storage.read(key: 'idHotelRegister'), obligatorio: false, select: true,listSelectForm: arrList),
+        }
+      );  */
+  }
+  
+
   @override
   initState() { 
-    super.initState();
     SystemChannels.textInput.invokeMethod('TextInput.hide');
    VarProvider vh = VarProvider()
-  ..arrSharedPreferences().then((Map<String, dynamic> sharedPrefsData) {
+  ..arrSharedPreferences().then((Map<String, dynamic> sharedPrefsData) { 
+          chargeHotel();
     if (sharedPrefsData['course_name'] == null) {
       SessionManager sm = SessionManager()
         ..clearSession().then((value) {
           if (sharedPrefsData['dish'] == null) {
-            final url = Uri.parse('https://www.comunicadosaraiza.com/movil_scan_api_prueba/API/turn_vehicle.php?idTurn=true');
+            final url = Uri.parse('https://www.comunicadosaraiza.com/movil_scan_api_prueba2/API/turn_vehicle.php?idTurn=true');
            (http.post(url, body: json.encode({'idTurn': sharedPrefsData["idTurn"] }))).then((value) {
             Provider.of<VarProvider>(context,listen: false).updateVariable(false);
             setState(() { });
           });
           } else {
             //food
-            final url = Uri.parse('https://www.comunicadosaraiza.com/movil_scan_api_prueba/API/turn_food.php');
-            (http.post(url, body: json.encode({}))).then((value) {
+            final url = Uri.parse('https://www.comunicadosaraiza.com/movil_scan_api_prueba2/API/turn_food.php?cerrarSess=true');
+            http.post(url, body: json.encode({'local': (storage.read(key: 'idHotelRegister')) })).then((value) {
             Provider.of<VarProvider>(context,listen: false).updateVariable(false);
             setState(() { });
             });
@@ -220,6 +250,8 @@ class _ControlAssistanceState extends State<ControlAssistance> {
     }
   }).catchError((error) {
     //
+  }).then((value) {
   });
+    super.initState();
   }
 }

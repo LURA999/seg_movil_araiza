@@ -5,7 +5,7 @@ class ExamAcModel {
   int? causa;
   String? disease_name;
   int? incapacity;
-  int? number_d_incapacity;
+  String? number_d_incapacity;
   int? fk_idExam;
   int? idAccidentDisease;
   

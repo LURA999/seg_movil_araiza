@@ -4,12 +4,14 @@ class DateExcelVehicle {
    String? dateFinal;
    String? guard;
    String? turn;
+   String? local;
 
     DateExcelVehicle({ 
       this.dateStart, 
       this.dateFinal, 
       this.guard, 
-      this.turn 
+      this.turn,
+      this.local
     });
 
 
@@ -18,6 +20,7 @@ class DateExcelVehicle {
       dateFinal = json['dateFinal'];
       turn = json['turn'];
       guard = json['guard'];
+      local = json['local'];
     }
 
 
@@ -27,6 +30,7 @@ class DateExcelVehicle {
        data['dateFinal'] = dateFinal ?? '';
        data['turn'] = turn ?? '';
        data['guard'] = guard ?? '';
+       data['local'] = local ?? '';
       return data;
     }
 }

@@ -12,7 +12,7 @@ class VersionService extends ChangeNotifier{
 
   bool modoApk = kDebugMode?true:false; 
   bool isSaving = true;
-  late String link = modoApk?'https://www.comunicadosaraiza.com/movil_scan_api_prueba/API':'https://www.comunicadosaraiza.com/movil_scan_api_prueba/API';
+  late String link = modoApk?'https://www.comunicadosaraiza.com/movil_scan_api_prueba2/API':'https://www.comunicadosaraiza.com/movil_scan_api_prueba2/API';
 
 
  Future<List<Map<String,dynamic>>> getLastVersion(BuildContext context ) async {
@@ -20,7 +20,7 @@ class VersionService extends ChangeNotifier{
   var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none ) {
     // No hay conexión a Internet
-    messageError(context,'No hay conexión a Internet.');
+    messageError(context,'No hay conexión a Internet.', 'Error');
     return [];
   } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
 
@@ -42,15 +42,15 @@ try {
     return []; 
   } on SocketException catch (e) {
     // Error de conexión de red (sin conexión a Internet)
-    messageError(context,'Error de conexión de red: $e');
+    messageError(context,'Error de conexión de red: $e','Error');
     return []; 
   } on HttpException catch (e) {
     // Error de la solicitud HTTP
-    messageError(context,'Error de la solicitud HTTP: $e');
+    messageError(context,'Error de la solicitud HTTP: $e','Error');
     return []; 
   } catch (e) {
     // Otro tipo de error
-    messageError(context,'Error inesperado: $e');
+    messageError(context,'Error inesperado: $e','Error');
     return []; 
   }
   }

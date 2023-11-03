@@ -238,7 +238,7 @@ class _RoutesSehState extends State<RoutesSeh> {
                               var connectivityResult = await (Connectivity().checkConnectivity());  
                                 if (connectivityResult == ConnectivityResult.none) {
                                   // No hay conexión a Internet
-                                  messageError(context,'No hay conexión a Internet.');
+                                  messageError(context,'No hay conexión a Internet.', 'Error');
                                 } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
                                   if(e.monthInitial <= month && month <= e.monthFinal){
                                     selectedArea(context,e.navigator);

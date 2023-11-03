@@ -3,12 +3,13 @@ class TurnAssistance {
   String? schedule;
   String? idTurn;
 	String? description;
-
+  String? local;
   TurnAssistance({
     this.course_name,
     this.schedule,
     this.idTurn,
-    this.description
+    this.description,
+    this.local
   });
 
   TurnAssistance.fromJson(Map<String, dynamic> json){
@@ -16,6 +17,7 @@ class TurnAssistance {
     schedule = json['schedule'];
     idTurn = json['idTurn'] ?? '';
     description = json['description'] ?? '';
+    local = json['local'] ?? '';
   }
 
   Map<String, dynamic> toJson() {
@@ -24,6 +26,7 @@ class TurnAssistance {
     data['schedule'] = schedule;
     data['idTurn'] = idTurn ?? '';
     data['description'] = description ?? '';
+    data['local'] = local ?? '';
     return data;
   }
 

@@ -39,28 +39,27 @@ class SehControl extends StatelessWidget {
           builder: (BuildContext context) {
             return 
             Stack(
-                  children: [
-                    const ModalBarrier(
-                      dismissible: false,
-                      color:  Color.fromARGB(80, 0, 0, 0),
-                    ),
-                    StatefulBuilder(
-                      builder: (BuildContext context, StateSetter setState) { 
-                        handleButtonPressed() async {
-                        setState(() {
-                          desactivar = true;
-                        }); 
-                        var pass = await depService.checkPassWord(password, 4,context);
-                        if (pass.status == 200) {
-                          autofucus = false;
-                          Navigator.of(context).pushNamed('medical_records');
-                        }else{
-                        setState(() {
-                            desactivar = false;
-                          });
-                        }
-                        
-                        }
+              children: [
+                const ModalBarrier(
+                  dismissible: false,
+                  color:  Color.fromARGB(80, 0, 0, 0),
+                ),
+                StatefulBuilder(
+                  builder: (BuildContext context, StateSetter setState) { 
+                    handleButtonPressed() async {
+                    setState(() {
+                      desactivar = true;
+                    }); 
+                    var pass = await depService.checkPassWord(password, 4,context);
+                    if (pass.status == 200) {
+                      autofucus = false;
+                      Navigator.of(context).pushNamed('medical_records');
+                    }else{
+                    setState(() {
+                        desactivar = false;
+                      });
+                    }
+                    }
                       return Dialog(
                         insetPadding: 
                         MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <500  ?

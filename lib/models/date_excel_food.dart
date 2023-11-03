@@ -3,11 +3,13 @@ class DateExcelFood {
    String? dateStart;
    String? dateFinal;
    String? dish;
+   String? local;
 
     DateExcelFood({ 
       this.dateStart, 
       this.dateFinal, 
       this.dish, 
+      this.local
     });
 
 
@@ -15,6 +17,7 @@ class DateExcelFood {
       dateStart = json['dateStart'];
       dateFinal = json['dateFinal'];
       dish = json['dish'];
+      local = json['local'];
     }
 
 
@@ -23,6 +26,7 @@ class DateExcelFood {
        data['dateStart'] = dateStart ?? '';
        data['dateFinal'] = dateFinal ?? '';
        data['dish'] = dish ?? '';
+       data['local'] = local ?? '';
       return data;
     }
 }

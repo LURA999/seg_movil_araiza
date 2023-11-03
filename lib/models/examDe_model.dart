@@ -17,6 +17,7 @@ class ExamDeModel {
   String? applicant_signature;
   String? doctor_signature;
   int? idDetExamInPr;
+  String? local;
 
     ExamDeModel({ 
       this.idDetExamInPr,
@@ -36,6 +37,7 @@ class ExamDeModel {
       this.condition_observation,
       this.applicant_signature,
       this.doctor_signature,
+      this.local
     });
 
 
@@ -57,6 +59,7 @@ class ExamDeModel {
       condition_observation = json['condition_observation'];
       applicant_signature = json['applicant_signature'];
       doctor_signature = json['doctor_signature'];
+      local = json['local'];
     }
 
 
@@ -79,6 +82,7 @@ class ExamDeModel {
       data['condition_observation'] = condition_observation ?? '';
       data['applicant_signature'] = applicant_signature ?? '';
       data['doctor_signature'] = doctor_signature ?? '';
+      data['local'] = local ?? '';
       return data;
     }
 }

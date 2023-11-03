@@ -42,6 +42,7 @@ class MultiInputs extends StatefulWidget {
   final int? screen; 
   final String formProperty;
   late Map<String, dynamic> formValue;
+  final bool? activeListSelect;
   final bool? autofocus;
   final int? maxLength;
   late  TextEditingController? controller;
@@ -70,8 +71,8 @@ class MultiInputs extends StatefulWidget {
     required this.autofocus,
     this.onFormValueChange, 
     this.controller, 
-    this.screen
-    
+    this.screen,
+    this.activeListSelect
   }) : super(key: key);
 
   @override
@@ -95,6 +96,8 @@ final ImagePicker _picker = ImagePicker();
     final RegExp regex = RegExp(
         r'^\d{2}\/(0[1-9]|1[0-2])\/\d{4}$',
     );
+
+
     //automcompletador
     if(widget.formValue[widget.formProperty]!.autocomplete ?? false){
       return AutocompleteCustom(
@@ -118,23 +121,21 @@ final ImagePicker _picker = ImagePicker();
       }
       } , icon: const Icon(Icons.camera_alt_rounded), label: Text('Abrir camara',style: getTextStyleButtonField(context),));
     }
-    
     /** Si entra aqui, entra para crear un select */
-    if (widget.formValue[widget.formProperty]!.select ?? false) {
+    if (widget.formValue[widget.formProperty]!.select ?? false ) {
       int indice = 0;
       widget.formValue.forEach((key, value) {
           if((widget.formValue[key] is RadioInput) == false ){
-            if (widget.formValue[key]!.select ?? false == true) {
+            if (((widget.formValue[key] as MultiInputsForm).select ?? false) == true /* && ((widget.formValue[key] as MultiInputsForm).activeListSelect ?? false) == true */) {
               indice++; 
               return;
             }
           } 
         });
-
-      if (widget.listSelectButton == null) {   
+      if (widget.activeListSelect == true || ((widget.formValue[widget.formProperty] as MultiInputsForm).activeListSelect ?? false) == true) {
         //En este puede cambiar el id de cada item de cada opcion, se hace por medio de
         return DropdownButtonWidget(arrSelect: widget.listSelectForm,formValue: widget.formValue,formProperty: widget.formProperty, type: 1,);
-      }else{
+      } else {
         //En este ya viene una lista predefinida desde el mismo sistema, no hay un json predefinido, es solo un array
         return DropdownButtonWidget(list: widget.listSelectButton![indice-1],formValue: widget.formValue,formProperty: widget.formProperty, type: 2);
       }
@@ -143,8 +144,11 @@ final ImagePicker _picker = ImagePicker();
     if (widget.keyboardType.toString().contains('datetime') || widget.keyboardType == TextInputType.datetime) {
       MaterialTapTargetSize tapTargetSize = MaterialTapTargetSize.padded;
         final format = DateFormat("yyyy-MM-dd ${widget.formValue[widget.formProperty]!.activeClock == true?'HH:mm':''}");
+
+
         return DateTimeField(
-       initialValue: widget.formValue[widget.formProperty]!.contenido.toString()!= '0000-00-00' && widget.formValue[widget.formProperty]!.contenido.toString()!= '' ?DateFormat("yyyy-MM-dd").parse(widget.formValue[widget.formProperty]!.contenido.toString()): null,
+        enabled: widget.formValue[widget.formProperty].enabled ?? true,
+        initialValue: widget.formValue[widget.formProperty]!.contenido.toString()!= '0000-00-00' && widget.formValue[widget.formProperty]!.contenido.toString()!= '' ?DateFormat("yyyy-MM-dd").parse(widget.formValue[widget.formProperty]!.contenido.toString()): null,
         controller: widget.controller,
         style: getTextStyleText(context,null,null),
         format: format,
@@ -155,6 +159,7 @@ final ImagePicker _picker = ImagePicker();
             return null;
           }:null,
         decoration:  InputDecoration(
+          enabled: widget.formValue[widget.formProperty].enabled ?? true,
           labelText: widget.labelText,
           suffixIcon: const Icon(Icons.date_range), 
           hintText: "yyyy/mm/dd ${widget.formValue[widget.formProperty]!.activeClock == true?'HH:mm':''}"
@@ -165,12 +170,15 @@ final ImagePicker _picker = ImagePicker();
             firstDate: DateTime(1900),
             initialDate: currentValue ?? DateTime.now(),
             lastDate: DateTime(2100),
+            cancelText: 'Cancelar'
           ).then((DateTime? date) async {
-            if (date != null && widget.formValue[widget.formProperty]!.activeClock == true) {
+            try {
+              if (date != null && widget.formValue[widget.formProperty]!.activeClock == true) {
+              final sendFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
               final time = await showTimePicker(
               context: context,
               initialTime:
-                  TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
+              TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
               builder: (BuildContext context, Widget? child) {
                 return Theme(
                   data: Theme.of(context).copyWith(
@@ -186,11 +194,13 @@ final ImagePicker _picker = ImagePicker();
                 );
                 }
               );
-              final sendFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
+
+              
               widget.formValue[widget.formProperty]!.contenido = sendFormat.format(DateTimeField.combine(date, time)); 
               return DateTimeField.combine(date, time);
             } else {
-              if (date != null) {
+
+              if (date != null  && widget.formValue[widget.formProperty]!.activeClock == false) {
                 final sendFormat = DateFormat("yyyy-MM-dd");
                 sendFormat.format(date);
                 widget.formValue[widget.formProperty]!.contenido = sendFormat.format(date);
@@ -198,10 +208,14 @@ final ImagePicker _picker = ImagePicker();
               }
               widget.formValue[widget.formProperty]!.contenido = currentValue;
               return currentValue;
+            } 
+            } catch (e) {
+              print(e); 
             }
+            
           });
         },
-      );
+      ); 
     }
     /** Si entra aqui, entra a los 2 diferentes textformfield, 
      * como lo es el del calendario, y un input normal con diferentes personalizaciones (como subfijos,prefijos,hint etc)  */

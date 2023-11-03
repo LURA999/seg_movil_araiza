@@ -5,18 +5,33 @@ import 'package:app_seguimiento_movil/services/services.dart';
 import 'package:app_seguimiento_movil/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_signature_pad/flutter_signature_pad.dart';
 import '../models/models.dart';
 import '../theme/app_theme.dart';
+import 'package:collection/collection.dart';
 
 
+final storage = FlutterSecureStorage();
+class ButtonMedicalTest {
 
-Future<String?> newMethod(BuildContext context, List<Map<String,dynamic>> arrDepartaments, List<String>? multiInputArr ,
+ final Function() setStateCallback;
+
+  ButtonMedicalTest(this.setStateCallback);
+
+  void actualizarEstado() {
+    // Aquí se llama a la función setStateCallback para actualizar el estado del widget
+    setStateCallback();
+  }
+
+Future<String?> newMethod(StateSetter setState,BuildContext context, List<Map<String,dynamic>> arrDepartaments, List<String>? multiInputArr ,
 List<String>? multiInputHArr, List<String>? multiInputAEArr, List<List<bool>>? checkBoxArr, List<YesNot>? yestNotEnumArr, 
 List<List<bool>>? checkboxDLNArr, List<Cause>? causeDiseaseArr, List<YesNot>? yestNotEnumArrDisease,List<ManoDominante>? manoArr,
 List<MetodoAnti>? methodArr, int idExam, bool edit ) {
 int _currentPageIndex = 0;
+List<bool> _activarSignature = [true,true];
 int multiInputC = 1; 
+int multiInputCUpdate = 1; 
 int multiInputCH = 0; 
 int multiInputCAE = 0; 
 int radioButtonC = 0; 
@@ -24,15 +39,22 @@ int radioButtonCDisease = 0;
 int radioButtonCDiseaseYN = 0; 
 bool btnSave = true;
 bool btnNext = true;
-                     
+bool activarSignature1 = true;
+  List<GlobalKey<State>> specificWidgetKey = [GlobalKey(),GlobalKey(),GlobalKey(),GlobalKey(),GlobalKey(),GlobalKey(),GlobalKey(),GlobalKey(),GlobalKey(),GlobalKey(),GlobalKey(),GlobalKey()];
 
 List<GlobalKey<SignatureState>> sign0 = [GlobalKey<SignatureState>(),GlobalKey<SignatureState>(),GlobalKey<SignatureState>()];
 List<ByteData> img = [ByteData(0), ByteData(0), ByteData(0)];
 List<SignatureState?> sign = [null,null,null];
 ExamIniPreService eips = ExamIniPreService();
-
+List<YesNot> yestNotEnumArrDiseaseFake = [];
+List<YesNot> yestNotEnumArrFake = [];
+List<ManoDominante> manoArrFake = [];
+List<MetodoAnti> methodArrFake = [];
+List<List<bool>> listChecked_sec7Fake = [];
 //El primero es para controlar los inputs cuando abre y cierra el form
 late bool _inputsAdd = false;
+String firmaAspirante = '';
+List<String> clavesAComparar = [];
 
 /*
 1 = MultiInputsForm
@@ -115,16 +137,17 @@ final List<GlobalKey<FormState>> myFormKey = [
   GlobalKey<FormState>(),
 ];
 // final List<TextEditingController> controller = [TextEditingController(),TextEditingController(),TextEditingController()];
+List<Map<String, dynamic>> formpartBackUp;
 List<Map<String, dynamic>> formpart1 = [
 {//Primeras preguntas (0)
-'Numero de Empleado' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-'Departamento' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true, select: true, listselect: arrDepartaments, maxLength: 10 ),
+'Numero de Empleado' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '',keyboardType: TextInputType.number, obligatorio: true,  enabled: true),
+'Departamento' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true, select: true, listSelectForm: arrDepartaments, maxLength: 10, activeListSelect: true ),
 'Puesto' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
 'pre_o_ini' : RadioInput(tipoEnum: 7, yesNotEnum: yestNotEnumArr ?? yesNotEnum, index: yestNotEnumArr!=null ? radioButtonC++ : countYesNotEnum++,), //0
 },
 {//ficha personal (1)
   'Nombre' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  'Sexo' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true, select: true, listselect: [{'idSex': '1', 'sex': 'Hombre'},{'idSex': '2', 'sex': 'Mujer'}] ),
+  'Sexo' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true, select: true, activeListSelect: true, listSelectForm: [{'idSex': '1', 'sex': 'Hombre'},{'idSex': '2', 'sex': 'Mujer'}] ),
   'Edad' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true, keyboardType: TextInputType.number),
   'Edo. Civil' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
   'Domicilio' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
@@ -553,16 +576,24 @@ List<Map<String, dynamic>> formpart1 = [
   ),
   '3.- ¿Cuál?' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
   'Tratamiento actual' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
-  'firma paciente': 
-    Container(
-      alignment: Alignment.center,
-      child: const Text('Firma del paciente',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))
+  /*  'firma paciente': 
+    Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      // alignment: Alignment.center,
+      children: [
+        const Text('Firma del paciente',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold)),
+        Spacer(),
+        FilledButton.icon(onPressed: (){                   
+          _activarSignature = false; 
+          
+        }, icon: const Icon(Icons.edit), label: const Text('Editar'))
+      ]
     ),
     //multiInputC = 46
-    '0': MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] : '', obligatorio: true,paintSignature: true)
-},
+   '0': MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] : '', obligatorio: true,paintSignature: true)
+ */},
 { //6.- INTERROGATORIO POR APARATOS Y SISTEMAS. (7)
-  'Sentidos' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
+  'Sentidos' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC +=1 ] :  '', obligatorio: true,  enabled: true),
   'Digestivo' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
   'Respiratorio' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
   'Circulatorio' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
@@ -793,13 +824,13 @@ List<Map<String, dynamic>> formpart1 = [
     child:const Text('Firma de Aspirante',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))
   ),
   '1': MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,paintSignature: true), */
-  'firma dr': 
+  /* 'firma dr': 
   Container(
     alignment: Alignment.center,
     child:const Text('Nombre, Firma y Ced. Prof. del Médico\n Dr. Alfredo Gruel Culebro',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))
   ),
   '1': MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC+1] :  '', obligatorio: true,paintSignature: true)
-} 
+ */} 
 
 
 ];
@@ -829,6 +860,7 @@ _pages[i].add(Title(
     switch (value.runtimeType) {
       case MultiInputsForm:
       if( (value as MultiInputsForm).paintSignature?? false == true){
+        if (edit == false) {
           _pages[i].add(
           Column(
             children: [
@@ -865,6 +897,47 @@ _pages[i].add(Title(
           ],
           )
           );
+        } else {
+          _pages[i].add(
+          IgnorePointer(
+            ignoring:_activarSignature[int.parse(key)],
+            key: specificWidgetKey[int.parse(key)],
+            child: Column(
+              children: [
+              SizedBox(
+              height: MediaQuery.of(context).size.height *.3,
+              width: MediaQuery.of(context).size.width,
+              child: Container( 
+                decoration: BoxDecoration(
+                border: Border.all(color: AppTheme.primary)
+              ),
+                child: Signature(
+                  key: sign0[int.parse(key)],
+                  onSign: () async {
+                    sign[int.parse(key)] = sign0[int.parse(key)].currentState!;
+                  },
+                  color: Colors.black,
+                  strokeWidth: 3,
+                ),
+              ),
+            ),
+            img[int.parse(key)].buffer.lengthInBytes == 0 ? Container() : LimitedBox(maxHeight: 200.0, child: Image.memory(img[int.parse(key)].buffer.asUint8List())),
+            FilledButton.icon(
+              icon: const Icon(Icons.delete),
+              onPressed: btnSave == true ? () async {
+                if (sign[int.parse(key)] != null) {
+                  sign[int.parse(key)] = sign0[int.parse(key)].currentState!;
+                  sign[int.parse(key)]!.clear();
+                  sign[int.parse(key)] = null;
+                  img[int.parse(key)] = ByteData(0);
+                }
+              } : null,
+              label: Text('Borrar',style: getTextStyleButtonField(context)),
+            )
+            ],
+            ),
+          ));
+        }
       } else{
         _pages[i].add(const SizedBox(height: 10,));
         _pages[i].add (
@@ -875,7 +948,7 @@ _pages[i].add(Title(
         autofocus: false,
         formProperty: key,
         maxLength: value.maxLength,
-        listSelectForm: value.listselect,
+        listSelectForm: value.listSelectForm,
         formValue: formpart1[i],
         keyboardType: value.keyboardType ?? TextInputType.text));
         _pages[i].add(const SizedBox(height: 10,));
@@ -912,8 +985,40 @@ _pages[i].add(Title(
   ++i; 
   }
 }
+setState((){});
+
+/**
+ * 47
+145
+ */
 
 
+
+  //  print(multiInputArr!.length);
+  //  print(yestNotEnumArr!.length);
+  //  print(multiInputHArr!.length);
+  //  print(multiInputAEArr!.length);
+  /*  print(((checkBoxArr![0].length ) + (checkBoxArr[1].length ) + (checkBoxArr[2].length ) + (checkBoxArr[3].length ) + (checkBoxArr[4].length)) + 
+   (multiInputArr!.length - 1) +
+    yesNotEnum.length+
+    multiInputHArr!.length+
+    multiInputAEArr!.length + 
+    checkboxDLNArr![0].length + 
+    causeDiseaseArr!.length + 
+    manoDomEnum.length+
+    metodoAntiEnum.length); */
+
+formpartBackUp = formpart1;
+
+if (edit) {
+  causeDiseaseArr = causeEnum; 
+  yestNotEnumArrDiseaseFake = yestNotEnumArrDisease!;
+  yestNotEnumArrFake = yestNotEnumArr!; 
+  manoArrFake = manoArr!;
+  methodArrFake = methodArr!;
+  firmaAspirante = multiInputArr![47];
+  listChecked_sec7Fake = listChecked_sec7;
+}
 
 return  showDialog<String>(
 context: context,
@@ -926,6 +1031,9 @@ children: [
   ),
 StatefulBuilder(
   builder: (BuildContext context, StateSetter setState) {
+    // setState((){
+    //   _activarSignature = false;
+    // });
   return GestureDetector(
   onTap: () => SystemChannels.textInput.invokeMethod('TextInput.hide'),
   child: Dialog(
@@ -960,11 +1068,151 @@ StatefulBuilder(
                   controller: _pageController,
                   itemCount: myFormKey.length - 1,
                   itemBuilder: (context, index) {
+                    if (index == 6) {
+                    } 
                     return SingleChildScrollView(
                       child: Form(
                         key: myFormKey[index],
                         child: Column(
-                          children: _pages[index],
+                          children: [
+                            Column(
+                              children: _pages[index],
+                            ),
+                            if(index == 6)
+                            Column(
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  // alignment: Alignment.center,
+                                  children: [
+                                    const Text('Firma del paciente',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold)),
+                                    const Spacer(),
+                                    if(edit)
+                                    FilledButton.icon(onPressed: (){                   
+                                      _activarSignature[0] = !_activarSignature[0]; 
+                                      setState((){});
+                                    }, icon: const Icon(Icons.edit),
+                                    style: _activarSignature[0] ? TextButton.styleFrom(
+                                      backgroundColor: const ui.Color.fromARGB(255, 187, 187, 187), // Cambia el color del texto del botón a azul
+                                      // Puedes ajustar otros estilos como textStyle, padding, shape, etc.
+                                    ) :
+                                    TextButton.styleFrom(
+                                      backgroundColor: AppTheme.primary, // Cambia el color del texto del botón a azul
+                                      // Puedes ajustar otros estilos como textStyle, padding, shape, etc.
+                                    ),
+                                    label: const Text('Editar'))
+                                  ]
+                                ),
+                                IgnorePointer(
+                                ignoring: edit == false ? false : _activarSignature[0] ,
+                                key: specificWidgetKey[0],
+                                child: Column(
+                                  children: [
+                                  SizedBox(
+                                  height: MediaQuery.of(context).size.height *.3,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Container( 
+                                    decoration: BoxDecoration(
+                                    border: Border.all(color: AppTheme.primary)
+                                  ),
+                                    child: Signature(
+                                      key: sign0[0],
+                                      onSign: () async {
+                                        sign[0] = sign0[0].currentState!;
+                                      },
+                                      color: Colors.black,
+                                      strokeWidth: 3,
+                                    ),
+                                  ),
+                                ),
+                                img[0].buffer.lengthInBytes == 0 ? Container() : LimitedBox(maxHeight: 200.0, child: Image.memory(img[0].buffer.asUint8List())),
+                                FilledButton.icon(
+                                  icon: const Icon(Icons.delete),
+                                  onPressed: btnSave == true ? () async {
+                                    if (sign[0] != null) {
+                                      sign[0] = sign0[0].currentState!;
+                                      sign[0]!.clear();
+                                      sign[0] = null;
+                                      img[0] = ByteData(0);
+                                    }
+                                  } : null,
+                                  label: Text('Borrar',style: getTextStyleButtonField(context)),
+                                )
+                                ],
+                                ),
+                              
+                              
+                                )
+                              ],
+                            ),
+                            if(index == 12)
+                            Column(
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  // alignment: Alignment.center,
+                                  children: [
+                                    const Text('Firma del paciente',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold)),
+                                    const Spacer(),
+                                    if(edit)
+                                    FilledButton.icon(onPressed: (){                   
+                                      _activarSignature[1] = !_activarSignature[1]; 
+                                      setState((){});
+                                    }, icon: const Icon(Icons.edit),
+                                    style: _activarSignature[1] ? TextButton.styleFrom(
+                                      backgroundColor: const ui.Color.fromARGB(255, 187, 187, 187), // Cambia el color del texto del botón a azul
+                                      // Puedes ajustar otros estilos como textStyle, padding, shape, etc.
+                                    ) :
+                                    TextButton.styleFrom(
+                                      backgroundColor: AppTheme.primary, // Cambia el color del texto del botón a azul
+                                      // Puedes ajustar otros estilos como textStyle, padding, shape, etc.
+                                    ),
+                                    label: const Text('Editar'))
+                                  ]
+                                ),
+                                IgnorePointer(
+                                ignoring:edit == false ? false : _activarSignature[1],
+                                key: specificWidgetKey[1],
+                                child: Column(
+                                  children: [
+                                  SizedBox(
+                                  height: MediaQuery.of(context).size.height *.3,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Container( 
+                                    decoration: BoxDecoration(
+                                    border: Border.all(color: AppTheme.primary)
+                                  ),
+                                    child: Signature(
+                                      key: sign0[1],
+                                      onSign: () async {
+                                        sign[1] = sign0[1].currentState!;
+                                      },
+                                      color: Colors.black,
+                                      strokeWidth: 3,
+                                    ),
+                                  ),
+                                ),
+                                img[1].buffer.lengthInBytes == 0 ? Container() : LimitedBox(maxHeight: 200.0, child: Image.memory(img[1].buffer.asUint8List())),
+                                FilledButton.icon(
+                                  icon: const Icon(Icons.delete),
+                                  onPressed: btnSave == true ? () async {
+                                    if (sign[1] != null) {
+                                      sign[1] = sign0[1].currentState!;
+                                      sign[1]!.clear();
+                                      sign[1] = null;
+                                      img[1] = ByteData(0);
+                                    }
+                                  } : null,
+                                  label: Text('Borrar',style: getTextStyleButtonField(context)),
+                                )
+                                ],
+                                ),
+                              
+                              
+                                )
+                              ],
+                            ),
+                          ],
                         ),
                       ),
                     );
@@ -1003,40 +1251,92 @@ StatefulBuilder(
                         causeEnum = causeDiseaseArr;
                       }
 
+                      bool activado = false;
                       if (int.tryParse((formpart1[0]['Numero de Empleado'] as MultiInputsForm).contenido!) is int) {
                       setState((){
                         btnSave = false;
                       });
                       ExamInModel eim = ExamInModel();
-                      eim.departament = int.parse((formpart1[0]['Departamento'] as MultiInputsForm).contenido!);
+                      eim.departament = int.parse((formpart1[0]['Departamento'] as MultiInputsForm).contenido!); 
                       eim.place = (formpart1[0]['Puesto'] as MultiInputsForm).contenido!;
                       eim.type = (yestNotEnumArr != null ? yestNotEnumArr[0] : yesNotEnum[0])  == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[0] : yesNotEnum[0]) == YesNot.si ? 1 : 2;
+                      //3
                       if (edit == false) {
                         if (eim.toJson().isNotEmpty) {
                           eim.idDetExamInPr =  int.parse((await eips.post_examIn(eim, context)).container![0]["ultimoId"]);                        
                         }
                       } else {
-                        await eips.patch_examIn(eim, idExam, context);
+                        if ((formpartBackUp[0]['Departamento'] as MultiInputsForm).contenido! != (formpart1[0]['Departamento'] as MultiInputsForm).contenido!) {
+                          activado = true;
+                        }
+                        if ((formpartBackUp[0]['Puesto'] as MultiInputsForm).contenido! != (formpart1[0]['Puesto'] as MultiInputsForm).contenido!) {
+                          activado = true;
+                        } 
+                        if (yestNotEnumArrFake[0] != yestNotEnumArr![0]) {
+                          activado = true;
+                        }
+                      
+                        if (activado) {
+                          await eips.patch_examIn(eim, idExam, context);
+                        }
                       }
                       
+                      activado = false;
                       ExamPeModel epm = ExamPeModel();
                       epm.name = (formpart1[1]['Nombre'] as MultiInputsForm).contenido!;
                       epm.sex = int.parse((formpart1[1]['Sexo'] as MultiInputsForm).contenido!.toString() == '' ? '1' : (formpart1[1]['Sexo'] as MultiInputsForm).contenido!);
                       epm.age = (formpart1[1]['Edad'] as MultiInputsForm).contenido!;
                       epm.marital_status = (formpart1[1]['Edo. Civil'] as MultiInputsForm).contenido!;
                       epm.address = (formpart1[1]['Domicilio'] as MultiInputsForm).contenido!;
-                      epm.tel_cel = int.parse((formpart1[1]['Tel. fijo y/o cel'] as MultiInputsForm).contenido!);
+                      epm.tel_cel = (formpart1[1]['Tel. fijo y/o cel'] as MultiInputsForm).contenido!;
                       epm.place_and_birthday = (formpart1[1]['Lugar y fecha de nacimiento'] as MultiInputsForm).contenido!;
                       epm.extra_activity = (formpart1[1]['Actividad extra a su trabajo'] as MultiInputsForm).contenido!;
                       epm.schooling = (formpart1[1]['Escolaridad'] as MultiInputsForm).contenido!;
                       epm.college_career = (formpart1[1]['Carrera universitaria'] as MultiInputsForm).contenido!;
                       epm.number_children = (formpart1[1]['Núm. de hijos'] as MultiInputsForm).contenido!;
+                      //11 , 11 + 3 = 14 
                       if (edit == false) {
                         if (epm.toJson().isNotEmpty) {
                           epm.idPersonal = int.parse((await eips.post_examPe(epm, context)).container![0]["ultimoId"]);
                         }
                       } else {
-                        await eips.patch_examPe(epm, idExam, context);
+                        if((formpartBackUp[1]['Nombre'] as MultiInputsForm).contenido != (formpart1[1]['Nombre'] as MultiInputsForm).contenido){
+                          activado = true;                          
+                        }
+                        if(int.parse((formpartBackUp[1]['Sexo'] as MultiInputsForm).contenido!.toString()) != int.parse((formpart1[1]['Sexo'] as MultiInputsForm).contenido!.toString())){
+                          activado = true;
+                        }
+                        if((formpartBackUp[1]['Edad'] as MultiInputsForm).contenido != (formpart1[1]['Edad'] as MultiInputsForm).contenido){
+                          activado = true;
+                        }
+                        if((formpartBackUp[1]['Edo. Civil'] as MultiInputsForm).contenido != (formpart1[1]['Edo. Civil'] as MultiInputsForm).contenido){
+                          activado = true;
+                        }
+                        if((formpartBackUp[1]['Domicilio'] as MultiInputsForm).contenido != (formpart1[1]['Domicilio'] as MultiInputsForm).contenido){
+                          activado = true;
+                        }
+                        if((formpartBackUp[1]['Tel. fijo y/o cel'] as MultiInputsForm).contenido != (formpart1[1]['Tel. fijo y/o cel'] as MultiInputsForm).contenido){
+                          activado = true;
+                        }
+                        if((formpartBackUp[1]['Lugar y fecha de nacimiento'] as MultiInputsForm).contenido != (formpart1[1]['Lugar y fecha de nacimiento'] as MultiInputsForm).contenido){
+                          activado = true;
+                        }
+                        if((formpartBackUp[1]['Actividad extra a su trabajo'] as MultiInputsForm).contenido != (formpart1[1]['Actividad extra a su trabajo'] as MultiInputsForm).contenido){
+                          activado = true;
+                        }
+                        if((formpartBackUp[1]['Escolaridad'] as MultiInputsForm).contenido != (formpart1[1]['Escolaridad'] as MultiInputsForm).contenido){
+                          activado = true;
+                        }
+                        if((formpartBackUp[1]['Carrera universitaria'] as MultiInputsForm).contenido != (formpart1[1]['Carrera universitaria'] as MultiInputsForm).contenido){
+                          activado = true;
+                        }
+                        if((formpartBackUp[1]['Núm. de hijos'] as MultiInputsForm).contenido != (formpart1[1]['Núm. de hijos'] as MultiInputsForm).contenido){
+                          activado = true;
+                        }
+
+                        if (activado) {
+                          await eips.patch_examPe(epm, idExam, context);
+                        }
                       }
                       
                       ExamHePModel hpm = ExamHePModel();
@@ -1068,11 +1368,12 @@ StatefulBuilder(
                       hpm.practice_exercise = (yestNotEnumArr != null ? yestNotEnumArr[10] : yesNotEnum[13]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[10] : yesNotEnum[13]) == YesNot.si ? 1 : 2;
                       hpm.what_exercise = (formpart1[5]['3.- ¿A cuál?'] as MultiInputsForm).contenido!;
                       hpm.often_exercise = (formpart1[5]['¿Con qué frecuencia?'] as MultiInputsForm).contenido!;
-                      
+                      //22, 14 + 22 = 36
+
                       ExamGyModel gypm = ExamGyModel();
                       gypm.age_fmenstruation = (formpart1[5]['Edad de su primera menstruación'] as MultiInputsForm).contenido!;
                       gypm.age_stSex_life = (formpart1[5]['Edad de inicio de vida sexual'] as MultiInputsForm).contenido!;
-                      gypm.amount_childbirth = int.parse((formpart1[5]['Partos'] as MultiInputsForm).contenido!.toString() == '' ? '0' : (formpart1[5]['Partos'] as MultiInputsForm).contenido!);
+                      gypm.amount_childbirth = (formpart1[5]['Partos'] as MultiInputsForm).contenido!.toString() == '' ? '0' : (formpart1[5]['Partos'] as MultiInputsForm).contenido!;
                       gypm.amount_pregnancy = (formpart1[5]['Número de Embarazos'] as MultiInputsForm).contenido!;
                       gypm.cesarean = (formpart1[5]['Cesáreas'] as MultiInputsForm).contenido!;
                       gypm.abort = (formpart1[5]['Abortos'] as MultiInputsForm).contenido!;
@@ -1094,7 +1395,7 @@ StatefulBuilder(
                       gypm.mammography_date= (formpart1[5]['Fecha de Mamografía'] as MultiInputsForm).contenido!;
                       gypm.result_mammography= (formpart1[5]['2.- Resultado'] as MultiInputsForm).contenido!;
                       gypm.lactation= (formpart1[5]['Lactancia'] as MultiInputsForm).contenido!;
-
+                      //14, 36 + 14 = 50
                       if (edit == false) {
                         if (gypm.toJson().isNotEmpty) {
                           hpm.idHeredityPers = int.parse((await eips.post_examHeP(hpm,context)).container![0]["ultimoId"]);
@@ -1104,8 +1405,123 @@ StatefulBuilder(
                           hpm.idHeredityPers = int.parse((await eips.post_examHeP(hpm,context)).container![0]["ultimoId"]);
                         }
                       } else {
-                        await eips.patch_examHeP(hpm, idExam,context);
-                        await eips.patch_examGy(gypm, idExam, context);
+                        activado = false;
+                        if(manoArrFake[0] !=  manoArr![0]){
+                          activado = true;
+                        }
+                        if(yestNotEnumArr![1] != yestNotEnumArrFake[1]){
+                          activado = true;
+                        }
+                        if((formpart1[5]['1.- Edad de inicio'] as MultiInputsForm).contenido! !=  (formpartBackUp[5]['1.- Edad de inicio'] as MultiInputsForm).contenido!){
+                          activado = true;
+                        }
+                        if((formpart1[5]['Cantidad de cigarrillos al día'] as MultiInputsForm).contenido! !=  (formpartBackUp[5]['Cantidad de cigarrillos al día'] as MultiInputsForm).contenido!){
+                          activado = true;
+                        }
+                        if(yestNotEnumArr[2] !=  yestNotEnumArrFake[2]){
+                          activado = true;
+                        }
+                        if((formpart1[5]['2.- Edad de inicio'] as MultiInputsForm).contenido! !=  (formpartBackUp[5]['2.- Edad de inicio'] as MultiInputsForm).contenido!){
+                          activado = true;
+                        }
+                        if((formpart1[5]['Frecuencia'] as MultiInputsForm).contenido! !=  (formpartBackUp[5]['Frecuencia'] as MultiInputsForm).contenido!){
+                          activado = true;
+                        }
+                        if(yestNotEnumArr[3] !=  yestNotEnumArrFake[3]){
+                          activado = true;
+                        }
+                        if((formpart1[5]['3.- Edad de inicio'] as MultiInputsForm).contenido! !=  (formpartBackUp[5]['3.- Edad de inicio'] as MultiInputsForm).contenido!){
+                          activado = true;
+                        }
+                        if((formpart1[5]['Tipo y frecuencia'] as MultiInputsForm).contenido! !=  (formpartBackUp[5]['Tipo y frecuencia'] as MultiInputsForm).contenido!){
+                          activado = true;
+                        }
+                        if(yestNotEnumArr[4]  != yestNotEnumArrFake[4] ){
+                          activado = true;
+                        }
+                        if((formpart1[5]['1.- ¿A cuál?'] as MultiInputsForm).contenido! !=  (formpartBackUp[5]['1.- ¿A cuál?'] as MultiInputsForm).contenido!){
+                          activado = true;
+                        }
+                        if(yestNotEnumArr[5] !=  yestNotEnumArrFake[5]){
+                          activado = true;
+                        }
+                        if((formpart1[5]['2.- ¿A cuál?'] as MultiInputsForm).contenido! !=  (formpartBackUp[5]['2.- ¿A cuál?'] as MultiInputsForm).contenido!){
+                          activado = true;
+                        }
+                        if(yestNotEnumArr[6]  != yestNotEnumArrFake[6] ){
+                          activado = true;
+                        }
+                        if(yestNotEnumArr[7] !=  yestNotEnumArrFake[7]){
+                          activado = true;
+                        }
+                        if(yestNotEnumArr[8]  != yestNotEnumArrFake[8] ){
+                          activado = true;
+                        }
+                        if(yestNotEnumArr[9] !=  yestNotEnumArrFake[9]){
+                          activado = true;
+                        }
+                        if((formpart1[5]['Otras'] as MultiInputsForm).contenido! !=  (formpartBackUp[5]['Otras'] as MultiInputsForm).contenido!){
+                          activado = true;
+                        }
+                        if(yestNotEnumArr[10] !=  yestNotEnumArrFake[10]){
+                          activado = true;
+                        }
+                        if((formpart1[5]['3.- ¿A cuál?'] as MultiInputsForm).contenido! !=  (formpartBackUp[5]['3.- ¿A cuál?'] as MultiInputsForm).contenido!){
+                          activado = true;
+                        }
+                        if((formpart1[5]['¿Con qué frecuencia?'] as MultiInputsForm).contenido! !=  (formpartBackUp[5]['¿Con qué frecuencia?'] as MultiInputsForm).contenido!){
+                          activado = true;
+                        }
+                        if (activado) {
+                          await eips.patch_examHeP(hpm, idExam,context);
+                        }
+
+                        activado = false;
+                        if((formpart1[5]['Edad de su primera menstruación'] as MultiInputsForm).contenido! != (formpartBackUp[5]['Edad de su primera menstruación'] as MultiInputsForm).contenido!){
+                          activado = true;
+                        }
+                        if((formpart1[5]['Edad de inicio de vida sexual'] as MultiInputsForm).contenido! != (formpartBackUp[5]['Edad de inicio de vida sexual'] as MultiInputsForm).contenido!){
+                          activado = true;
+                        }
+                        if((formpart1[5]['Partos'] as MultiInputsForm).contenido!.toString() != (formpartBackUp[5]['Partos'] as MultiInputsForm).contenido!.toString()){
+                          activado = true;
+                        }
+                        if((formpart1[5]['Número de Embarazos'] as MultiInputsForm).contenido != (formpartBackUp[5]['Número de Embarazos'] as MultiInputsForm).contenido){
+                          activado = true;
+                        }
+                        if((formpart1[5]['Cesáreas'] as MultiInputsForm).contenido != (formpartBackUp[5]['Cesáreas'] as MultiInputsForm).contenido){
+                          activado = true;
+                        }
+                        if((formpart1[5]['Abortos'] as MultiInputsForm).contenido != (formpartBackUp[5]['Abortos'] as MultiInputsForm).contenido){
+                          activado = true;
+                        }
+                        if((formpart1[5]['Fecha de Ultima Regla'] as MultiInputsForm).contenido != (formpartBackUp[5]['Fecha de Ultima Regla'] as MultiInputsForm).contenido){
+                          activado = true;
+                        }
+                        if((formpart1[5]['Ritmo'] as MultiInputsForm).contenido != (formpartBackUp[5]['Ritmo'] as MultiInputsForm).contenido){
+                          activado = true;
+                        }
+                        if(methodArr![0] != methodArrFake[0]){
+                          activado = true;
+                        }
+                        if((formpart1[5]['Fecha de Último Papanicolaou'] as MultiInputsForm).contenido != (formpartBackUp[5]['Fecha de Último Papanicolaou'] as MultiInputsForm).contenido){
+                          activado = true;
+                        }
+                        if((formpart1[5]['1.- Resultado'] as MultiInputsForm).contenido != (formpartBackUp[5]['1.- Resultado'] as MultiInputsForm).contenido){
+                          activado = true;
+                        }
+                        if((formpart1[5]['Fecha de Mamografía'] as MultiInputsForm).contenido != (formpartBackUp[5]['Fecha de Mamografía'] as MultiInputsForm).contenido){
+                          activado = true;
+                        }
+                        if((formpart1[5]['2.- Resultado'] as MultiInputsForm).contenido != (formpartBackUp[5]['2.- Resultado'] as MultiInputsForm).contenido){
+                          activado = true;
+                        }
+                        if((formpart1[5]['Lactancia'] as MultiInputsForm).contenido != (formpartBackUp[5]['Lactancia'] as MultiInputsForm).contenido){
+                          activado = true;
+                        }
+                        if (activado) {
+                          await eips.patch_examGy(gypm, idExam, context);
+                        }
                       }
 
                       ExamPaModel pm = ExamPaModel();
@@ -1144,20 +1560,133 @@ StatefulBuilder(
                       pm.what_complication = (formpart1[6]['2.- ¿Cuál?'] as MultiInputsForm).contenido!;
                       pm.what_chronic = (formpart1[6]['3.- ¿Cuál?'] as MultiInputsForm).contenido!;
                       pm.current_treatment = (formpart1[6]['Tratamiento actual'] as MultiInputsForm).contenido!;
+                      
                       if (sign[0] != null) {
                          final image = await sign[0]!.getData() ;
                         var data = await image.toByteData(format: ui.ImageByteFormat.png);
                         pm.signature_patient = base64.encode(data!.buffer.asUint8List());
                       } else{
-                        pm.signature_patient = multiInputArr != null ? multiInputArr[46] :'';
+                        pm.signature_patient = multiInputArr != null ? multiInputArr[47] : '';
                       }
-
+                      //36, 50 + 36 = 86
+                      
                       if (edit == false) {
                         if (pm.toJson().isNotEmpty) {
                           pm.idPatalogicalPersBack = int.parse((await eips.post_examPa(pm, context)).container![0]["ultimoId"]);
                         }
                       } else {
-                        await eips.patch_examPa(pm, idExam, context);
+                        activado = false;
+                        if(yestNotEnumArr![11] != yestNotEnumArrFake[11]){
+                          activado = true;
+                        }
+                        if(yestNotEnumArr[12] != yestNotEnumArrFake[12]){
+                          activado = true;
+                        }
+                        if(yestNotEnumArr[13] != yestNotEnumArrFake[13]){
+                          activado = true;
+                        }
+                        if(yestNotEnumArr[14] != yestNotEnumArrFake[14]){
+                          activado = true;
+                        }
+                        if(yestNotEnumArr[15] != yestNotEnumArrFake[15]){
+                          activado = true;
+                        }
+                        if(yestNotEnumArr[16] != yestNotEnumArrFake[16]){
+                          activado = true;
+                        }
+                        if(yestNotEnumArr[17] != yestNotEnumArrFake[17]){
+                          activado = true;
+                        }
+                        if(yestNotEnumArr[18] != yestNotEnumArrFake[18]){
+                          activado = true;
+                        }
+                        if(yestNotEnumArr[19] != yestNotEnumArrFake[19]){
+                          activado = true;
+                        }
+                        if(yestNotEnumArr[20] != yestNotEnumArrFake[20]){
+                          activado = true;
+                        }
+                        if(yestNotEnumArr[21] != yestNotEnumArrFake[21]){
+                          activado = true;
+                        }
+                        if(yestNotEnumArr[22] != yestNotEnumArrFake[22]){
+                          activado = true;
+                        }
+                        if(yestNotEnumArr[23] != yestNotEnumArrFake[23]){
+                          activado = true;
+                        }
+                        if(yestNotEnumArr[24] != yestNotEnumArrFake[24]){
+                          activado = true;
+                        }
+                        if(yestNotEnumArr[25] != yestNotEnumArrFake[25]){
+                          activado = true;
+                        }
+                        if(yestNotEnumArr[26] != yestNotEnumArrFake[26]){
+                          activado = true;
+                        }
+                        if(yestNotEnumArr[27] != yestNotEnumArrFake[27]){
+                          activado = true;
+                        }
+                        if(yestNotEnumArr[28] != yestNotEnumArrFake[28]){
+                          activado = true;
+                        }
+                        if(yestNotEnumArr[29] != yestNotEnumArrFake[29]){
+                          activado = true;
+                        }
+                        if(yestNotEnumArr[30] != yestNotEnumArrFake[30]){
+                          activado = true;
+                        }
+                        if(yestNotEnumArr[31] != yestNotEnumArrFake[31]){
+                          activado = true;
+                        }
+                        if(yestNotEnumArr[32] != yestNotEnumArrFake[32]){
+                          activado = true;
+                        }
+                        if(yestNotEnumArr[33] != yestNotEnumArrFake[33]){
+                          activado = true;
+                        }
+                        if(yestNotEnumArr[34] != yestNotEnumArrFake[34]){
+                          activado = true;
+                        }
+                        if(yestNotEnumArr[35] != yestNotEnumArrFake[35]){
+                          activado = true;
+                        }
+                        if(yestNotEnumArr[36] != yestNotEnumArrFake[36]){
+                          activado = true;
+                        }
+                        if(yestNotEnumArr[37] != yestNotEnumArrFake[37]){
+                          activado = true;
+                        }
+                        if((formpart1[6]['OTRAS'] as MultiInputsForm).contenido != (formpartBackUp[6]['OTRAS'] as MultiInputsForm).contenido){
+                          activado = true;
+                        }
+                        if((formpart1[6]['1.- Motivo'] as MultiInputsForm).contenido  != (formpartBackUp[6]['1.- Motivo'] as MultiInputsForm).contenido){
+                          activado = true;
+                        }
+                        if((formpart1[6]['1.- ¿Cuál?'] as MultiInputsForm).contenido != (formpartBackUp[6]['1.- ¿Cuál?'] as MultiInputsForm).contenido){
+                          activado = true;
+                        }
+                        if((formpart1[6]['2.- Motivo'] as MultiInputsForm).contenido != (formpartBackUp[6]['2.- Motivo'] as MultiInputsForm).contenido){
+                          activado = true;
+                        }
+                        if((formpart1[6]['Parte del cuerpo'] as MultiInputsForm).contenido != (formpartBackUp[6]['Parte del cuerpo'] as MultiInputsForm).contenido){
+                          activado = true;
+                        }
+                        if((formpart1[6]['2.- ¿Cuál?'] as MultiInputsForm).contenido != (formpartBackUp[6]['2.- ¿Cuál?'] as MultiInputsForm).contenido){
+                          activado = true;
+                        }
+                        if((formpart1[6]['3.- ¿Cuál?'] as MultiInputsForm).contenido != (formpartBackUp[6]['3.- ¿Cuál?'] as MultiInputsForm).contenido){
+                          activado = true;
+                        }
+                        if((formpart1[6]['Tratamiento actual'] as MultiInputsForm).contenido != (formpartBackUp[6]['Tratamiento actual'] as MultiInputsForm).contenido){
+                          activado = true;
+                        }
+                        if(pm.signature_patient != multiInputArr![47]){
+                          activado = true;
+                        }
+                        if (activado) {
+                          await eips.patch_examPa(pm, idExam, context);
+                        }
                       }
  
                       ExamApModel eam = ExamApModel();
@@ -1168,15 +1697,41 @@ StatefulBuilder(
                       eam.genitourinary = (formpart1[7]['Genitourinario'] as MultiInputsForm).contenido!;
                       eam.muscle_skeletal = (formpart1[7]['Músculo/Esquéletico'] as MultiInputsForm).contenido!;
                       eam.nervous = (formpart1[7]['Nervioso'] as MultiInputsForm).contenido!;
+                      //7, 86 + 7 = 93 
                       if (edit==false) {
                         if (eam.toJson().isNotEmpty) {
                           eam.idAparattusSystem = int.parse((await eips.post_examAp(eam, context)).container![0]['ultimoId']);
                         }
                       } else {
-                        await eips.patch_examAp(eam, idExam, context);
+                       activado = false;
+                        if((formpart1[7]['Sentidos'] as MultiInputsForm).contenido! != (formpartBackUp[7]['Sentidos'] as MultiInputsForm).contenido!){
+                          activado = true;
+                        }
+                        if((formpart1[7]['Digestivo'] as MultiInputsForm).contenido! != (formpartBackUp[7]['Digestivo'] as MultiInputsForm).contenido!){
+                          activado = true;
+                        }
+                        if((formpart1[7]['Respiratorio'] as MultiInputsForm).contenido! != (formpartBackUp[7]['Respiratorio'] as MultiInputsForm).contenido!){
+                          activado = true;
+                        }
+                        if((formpart1[7]['Circulatorio'] as MultiInputsForm).contenido! != (formpartBackUp[7]['Circulatorio'] as MultiInputsForm).contenido!){
+                          activado = true;
+                        }
+                        if((formpart1[7]['Genitourinario'] as MultiInputsForm).contenido! != (formpartBackUp[7]['Genitourinario'] as MultiInputsForm).contenido!){
+                          activado = true;
+                        }
+                        if((formpart1[7]['Músculo/Esquéletico'] as MultiInputsForm).contenido! != (formpartBackUp[7]['Músculo/Esquéletico'] as MultiInputsForm).contenido!){
+                          activado = true;
+                        }
+                        if((formpart1[7]['Nervioso'] as MultiInputsForm).contenido! != (formpartBackUp[7]['Nervioso'] as MultiInputsForm).contenido){
+                          activado = true;
+                        }
+                        if (activado) {
+                          await eips.patch_examAp(eam, idExam, context);
+                        }
                       }
                       
  
+                       
                       ExamPhXModel epxm = ExamPhXModel();
                       epxm.t_a = (formpart1[8]['T/A - mmgh'] as MultiInputsForm).contenido!;
                       epxm.f_c = (formpart1[8]['F/C'] as MultiInputsForm).contenido!;
@@ -1227,7 +1782,6 @@ StatefulBuilder(
                       epxm.rub_thorax = (formpart1[8]['1.- Frotes'] as MultiInputsForm).contenido!;
                       epxm.ventilation_thorax = (formpart1[8]['1.- Ventilación'] as MultiInputsForm).contenido!;
                       epxm.rales = (formpart1[8]['Estertores'] as MultiInputsForm).contenido!;
-                      //epxm.puff_thorax = (formpart1[8][''] as MultiInputsForm).contenido!;
                       epxm.abdomen_dln = listChecked_sec7[0][7] == false ? 1 : 2;
                       epxm.shape_abdomen = (formpart1[8]['2.- Forma'] as MultiInputsForm).contenido!;
                       epxm.pain = (formpart1[8]['Dolor'] as MultiInputsForm).contenido!;
@@ -1263,8 +1817,8 @@ StatefulBuilder(
                       epxm.mucular_mi_i = (formpart1[8]['11.- I'] as MultiInputsForm).contenido!;
                       epxm.nervous_mi_d = (formpart1[8]['12.- D'] as MultiInputsForm).contenido!;
                       epxm.nervous_mi_i = (formpart1[8]['12.- I'] as MultiInputsForm).contenido!;
-                      epxm.str_column = (formpart1[8]['COLUMNA'] as MultiInputsForm).contenido!; 
- 
+                      epxm.str_column = (formpart1[8]['COLUMNA'] as MultiInputsForm).contenido!;
+                      //85, 93 + 85 = 178 
  
                       ExamPhYModel epym = ExamPhYModel();
                       epym.near_30cm  = (yestNotEnumArr != null ? yestNotEnumArr[38] : yesNotEnum[41]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[38] : yesNotEnum[51]) == YesNot.si ? 1 : 2;
@@ -1279,6 +1833,7 @@ StatefulBuilder(
                       epym.oi_campimetry = (formpart1[8]['OI']as MultiInputsForm).contenido!;
                       epym.color_campimetry = (formpart1[8]['COLOR']as MultiInputsForm).contenido!;
                       epym.amsler_normal = (yestNotEnumArr != null ? yestNotEnumArr[40] : yesNotEnum[43]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[40] : yesNotEnum[53]) == YesNot.si ? 1 : 2;
+                      //12, 178 + 12 = 190
                       
                       if (edit == false) {
                         if (epym.toJson().isNotEmpty) {
@@ -1289,20 +1844,173 @@ StatefulBuilder(
                           epxm.idExploration = int.parse((await eips.post_examPhX(epxm, context)).container![0]["ultimoId"]);
                         }
                       } else {
-                        await eips.patch_examPhX(epxm, idExam, context);
+                         activado = false;
+                        if(listChecked_sec7[0][0] != listChecked_sec7Fake[0][0]){
+                          activado = true;
+                        }
+                        if(listChecked_sec7[0][1] != listChecked_sec7Fake[0][1]){
+                          activado = true;
+                        }
+                        if(listChecked_sec7[0][2] != listChecked_sec7Fake[0][2]){
+                          activado = true;
+                        }
+                        if(listChecked_sec7[0][3] != listChecked_sec7Fake[0][3]){
+                          activado = true;
+                        }
+                        if(listChecked_sec7[0][4] != listChecked_sec7Fake[0][4]){
+                          activado = true;
+                        }
+                        if(listChecked_sec7[0][5] != listChecked_sec7Fake[0][5]){
+                          activado = true;
+                        }
+                        if( listChecked_sec7[0][6] !=  listChecked_sec7Fake[0][6]){
+                          activado = true;
+                        }
+                        if(listChecked_sec7[0][7] != listChecked_sec7Fake[0][7]){
+                          activado = true;
+                        }
+                        if(listChecked_sec7[0][8] != listChecked_sec7Fake[0][8]){
+                          activado = true;
+                        }
+                        if(listChecked_sec7[0][9] != listChecked_sec7Fake[0][9]){
+                          activado = true;
+                        }
+                        if(listChecked_sec7[0][10]  != listChecked_sec7Fake[0][10] ){
+                          activado = true;
+                        }
+                        if(listChecked_sec7[0][11] != listChecked_sec7Fake[0][11]){
+                          activado = true;
+                        }
+                        clavesAComparar = [
+                          'T/A - mmgh',
+                          'F/C',
+                          'Peso - Kg',
+                          'Talla - cm',
+                          'P.abd',
+                          'F/R',
+                          'Temp.',
+                          'I.M.C.',
+                          'Actitud',
+                          'Marcha',
+                          'Apariencia',
+                          'Edo. ánimo',
+                          '1.- D',
+                          '1.- I',
+                          '2.- D',
+                          '2.- I',
+                          '3.- D',
+                          '3.- I',
+                          'Cabello',
+                          'Superficie',
+                          'Forma',
+                          'Senos PN',
+                          'Reflejos',
+                          'Pupilares',
+                          'Fondo de Ojo',
+                          '4.- D',
+                          '4.- I',
+                          'Reflejos OT',
+                          'Romberg',
+                          'Talón Rodilla',
+                          'Labios',
+                          'Aliento',
+                          'Lengua',
+                          'Faringe',
+                          'Amígdalas',
+                          'Dientes',
+                          '1.- Mucosa',
+                          '1.- Forma',
+                          'Diafragma',
+                          '1.- Frotes',
+                          '1.- Ventilación',
+                          'Estertores',
+                          '2.- Forma',
+                          'Dolor',
+                          'Masas',
+                          '5.- D',
+                          '5.- I',
+                          'Septum',
+                          '6.- D',
+                          '6.- I',
+                          '2.- Ventilación',
+                          'Frecuencia',
+                          'Ritmo',
+                          'Tonos',
+                          '2.- Frotes',
+                          'Soplos',
+                          'Cicatrices',
+                          'Textura',
+                          'Diaforesis',
+                          'Otras Lesiones',
+                          '7.- D',
+                          '7.- I',
+                          '8.- D',
+                          '8.- I',
+                          '9.- D',
+                          '9.- I',
+                          '10.- D',
+                          '10.- I',
+                          '11.- D',
+                          '11.- I',
+                          '12.- D',
+                          '12.- I',
+                          'COLUMNA'
+                        ];
+
+                        activado = clavesAComparar.any((clave) {
+                          return (formpart1[8][clave] as MultiInputsForm).contenido! !=
+                              (formpartBackUp[8][clave] as MultiInputsForm).contenido!;
+                        });
+
+                        if (activado) {
+                          await eips.patch_examPhX(epxm, idExam, context);
+                        }
+
+                        activado = false;
+                        clavesAComparar =[
+                        'OD ROSENBAUN 20/',
+                        'OI ROSENBAUN 20/',
+                        'OD JAEGUER J',
+                        'OI JAEGUER J',
+                        'OD 20/',
+                        'OI 20/',
+                        'OD',
+                        'OI',
+                        'COLOR'
+                        ];
+                        if(yestNotEnumArr![38] != yestNotEnumArrFake[38]){
+                          activado = true;
+                        }
+                        if(yestNotEnumArr[39] != yestNotEnumArrFake[39]){
+                          activado = true;
+                        }
+                        if(yestNotEnumArr[40] != yestNotEnumArrFake[40]){
+                          activado = true;
+                        }
+                        activado = clavesAComparar.any((clave) {
+                          return (formpart1[8][clave] as MultiInputsForm).contenido! !=
+                              (formpartBackUp[8][clave] as MultiInputsForm).contenido!;
+                        });
+
+                        if (activado) {
                         await eips.patch_examPhY(epym, idExam, context);    
+                        }
                       }
-                     
 
                       ExamLaModel elm = ExamLaModel();
                       elm.result = (formpart1[9]['Resultados'] as MultiInputsForm).contenido!;
                       elm.drug = (formpart1[9]['Drogas'] as MultiInputsForm).contenido!;
+                      //2, 190 + 2 = 192
                       if (edit == false) {
                         if (elm.toJson().isNotEmpty) {
                           elm.idLaboratoryTest = int.parse((await eips.post_examLa(elm, context)).container![0]["ultimoId"]);
                         }
                       } else {
-                        await eips.patch_examLa(elm, idExam, context);
+                        activado = false;
+                        
+                        if (activado) {
+                          await eips.patch_examLa(elm, idExam, context);
+                        }
                       }
                      
  
@@ -1314,12 +2022,24 @@ StatefulBuilder(
                       eimm.covid_test = (yestNotEnumArr != null ? yestNotEnumArr[43] : yesNotEnum[46]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[43] : yesNotEnum[46]) == YesNot.si ? 1 : 2;
                       eimm.antidoping = (yestNotEnumArr != null ? yestNotEnumArr[44] : yesNotEnum[47]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[44] : yesNotEnum[47]) == YesNot.si ? 1 : 2;
                       eimm.pregnancy = (yestNotEnumArr != null ? yestNotEnumArr[45] : yesNotEnum[48]) == YesNot.none ? 0 : (yestNotEnumArr != null ? yestNotEnumArr[45] : yesNotEnum[48]) == YesNot.si ? 1 : 2;
+                      //7, 192 + 7 = 199
                       if (edit == false) {
                         if (eimm.toJson().isNotEmpty) {
                           eimm.idImagingStudy = int.parse((await eips.post_examIm(eimm, context)).container![0]["ultimoId"]);
                         }
                       } else {
-                        await eips.patch_examIm(eimm, idExam, context);
+                        bool cambiar = false;
+                        for (var i = 192; i < 199; i++) {
+                          print("si entro");
+                          print('${formpartBackUp[i]} != ${formpart1[i]}');
+
+                          if(formpartBackUp[i] != formpart1[i]){
+                            cambiar = true;
+                          }
+                        }
+                        if (cambiar) {
+                          await eips.patch_examIm(eimm, idExam, context);
+                        }
                       }
                       
 
@@ -1328,20 +2048,21 @@ StatefulBuilder(
                       edm.not_suitable = (formpart1[11]['No apto'] as MultiInputsForm).contenido!;
                       edm.suitable_more = (formpart1[11]['Apto con conserva'] as MultiInputsForm).contenido!;
                       edm.condition_observation = (formpart1[11]['CONDICIONES Y OBSERVACIONES'] as MultiInputsForm).contenido!;
+                      
                       if (sign[1] != null) {
                          final image = await sign[1]!.getData() ;
                         var data = await image.toByteData(format: ui.ImageByteFormat.png);
                         edm.applicant_signature = base64.encode(data!.buffer.asUint8List());
                       } else{
-                        edm.applicant_signature = multiInputArr != null ? multiInputArr[144] :'';
+                        edm.applicant_signature = multiInputArr != null ? multiInputArr[145] : '';
                       }
 
-                      if ( sign[2] !=null ) {
+                      if (sign[2] !=null ) {
                         final image2 = await sign[2]!.getData();
                         var data2 = await image2.toByteData(format: ui.ImageByteFormat.png);
                         edm.doctor_signature = base64.encode(data2!.buffer.asUint8List());
                       } else {
-                        edm.doctor_signature =multiInputArr != null ? multiInputArr[145] : '';
+                        edm.doctor_signature = multiInputArr != null ? multiInputArr[145] : '';
                       }
                       
                       if (eim.toJson().isNotEmpty) {
@@ -1369,10 +2090,21 @@ StatefulBuilder(
                         edm.fk_imagingStudy = eimm.idImagingStudy;
                       }
 
+                      edm.local = await storage.read(key: 'idHotelRegister');
+
+                      //6, 199 + 6 = 205
                       if (edit == false) {
                         edm.idDetExamInPr = int.parse((await eips.post_examDe(edm, context)).container![0]["ultimoId"]);
                       } else {
-                        await eips.patch_examDe(edm, idExam, context);
+                        bool cambiar = false;
+                        for (var i = 199; i < 205; i++) {
+                          if(formpartBackUp[i] != formpart1[i]){
+                            cambiar = true;
+                          }
+                        }
+                        if (cambiar) {
+                          await eips.patch_examDe(edm, idExam, context);
+                        }
                       }
                       
                       //En este caso no se ocupara un model 
@@ -1384,6 +2116,8 @@ StatefulBuilder(
                       /*parej*/ [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, edm.idDetExamInPr ?? 0],
                       /*hijos*/ [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, edm.idDetExamInPr ?? 0]
                       ];    
+                      // 205 + (10 * 5 = 50) = 255  
+                      bool activarBoxArr = false;
                       for (var i = 0; i < 5; i++) {
                         for (var x = 0; x < 10    ; x++) {
                           if(checkBoxArr !=null ? checkBoxArr[i][x] : listChecked_sec4[i][x] == true){
@@ -1391,13 +2125,16 @@ StatefulBuilder(
                           }
                         }
                       }
+                      
                       if (edit == false) {
                         for (var i = 0; i < ehfm.length; i++) {
                           await eips.post_examHeF(ehfm[i],context);
                         }
                       }else{
-                        for (var i = 0; i < ehfm.length; i++) {
-                          await eips.patch_examHeF(ehfm[i], idExam,context);
+                        if (!const DeepCollectionEquality().equals(ehfm, checkBoxArr)) {
+                          for (var i = 0; i < ehfm.length; i++) {
+                            await eips.patch_examHeF(ehfm[i], idExam,context);
+                          }
                         }
                       }
                       
@@ -1405,49 +2142,123 @@ StatefulBuilder(
                       //         
                       ExamHiModel ehm = ExamHiModel();
                       for (var i = 0; i < 4; i++) {
+                        bool activado = false;
                         ehm.company = (formpart1[2]['${1 + i}.- Empresa'] as MultiInputsForm).contenido!.toString();
+                        if (formpartBackUp[2]['${1 + i}.- Empresa'] != formpart1[2]['${1 + i}.- Empresa']) {
+                          activado = true;
+                        } 
                         ehm.position =  (formpart1[2]['${1 + i}.- Puestos'] as MultiInputsForm).contenido!.toString();
+                        if (formpartBackUp[2]['${1 + i}.- Puestos'] != formpart1[2]['${1 + i}.- Puestos']) {
+                          activado = true;
+                        } 
                         ehm.time = (formpart1[2]['${1 + i}.- Tiempo'] as MultiInputsForm).contenido!.toString();
+                        if (formpartBackUp[2]['${1 + i}.- Tiempo'] != formpart1[2]['${1 + i}.- Tiempo']) {
+                          activado = true;
+                        } 
                         ehm.when_left = (formpart1[2]['${1 + i}.- Cuando Salió'] as MultiInputsForm).contenido!.toString();
+                        if (formpartBackUp[2]['${1 + i}.- Cuando Salió'] != formpart1[2]['${1 + i}.- Cuando Salió']) {
+                          activado = true;
+                        } 
                         ehm.job_rotation = (formpart1[2]['${1 + i}.- Rotación de puesto'] as MultiInputsForm).contenido!.toString();
+                        if (formpartBackUp[2]['${1 + i}.- Rotación de puesto'] != formpart1[2]['${1 + i}.- Rotación de puesto']) {
+                          activado = true;
+                        } 
                         ehm.solvent_chemical = (formpart1[2]['${1 + i}.- Quimicos solventes'] as MultiInputsForm).contenido!.toString();
+                        if (formpartBackUp[2]['${1 + i}.- Quimicos solventes'] != formpart1[2]['${1 + i}.- Quimicos solventes']) {
+                          activado = true;
+                        } 
                         ehm.fume = (formpart1[2]['${1 + i}.- Humos'] as MultiInputsForm).contenido!.toString();
+                        if (formpartBackUp[2]['${1 + i}.- Humos'] != formpart1[2]['${1 + i}.- Humos']) {
+                          activado = true;
+                        } 
                         ehm.vapor = (formpart1[2]['${1 + i}.- Vapores'] as MultiInputsForm).contenido!.toString();
+                        if (formpartBackUp[2]['${1 + i}.- Vapores'] != formpart1[2]['${1 + i}.- Vapores']) {
+                          activado = true;
+                        } 
                         ehm.dust = (formpart1[2]['${1 + i}.- Polvos'] as MultiInputsForm).contenido!.toString();
+                        if (formpartBackUp[2]['${1 + i}.- Polvos'] != formpart1[2]['${1 + i}.- Polvos']) {
+                          activado = true;
+                        } 
                         ehm.noisy = (formpart1[2]['${1 + i}.- Ruido'] as MultiInputsForm).contenido!.toString();
+                        if (formpartBackUp[2]['${1 + i}.- Ruido'] != formpart1[2]['${1 + i}.- Ruido']) {
+                          activado = true;
+                        } 
                         ehm.material_load = (formpart1[2]['${1 + i}.- Carga de material'] as MultiInputsForm).contenido!.toString();
+                        if (formpartBackUp[2]['${1 + i}.- Carga de material'] != formpart1[2]['${1 + i}.- Carga de material']) {
+                          activado = true;
+                        } 
+
+                        
+                      //255 + ( 11 * 4 = 44) = 299
                       if (edit == false) {
                         if (ehm.toJson().isNotEmpty) {
                           ehm.fk_idExam = edm.idDetExamInPr;
                           await eips.post_examHi(ehm, 1+i, context);
                         }
                         }else{
-                          await eips.patch_examHi(ehm, idExam, 1+i, context);
+                          if (activado) {
+                            await eips.patch_examHi(ehm, idExam, 1+i, context);
+                          }
                         }
                       }
                       //         
                       ExamAcModel eacm = ExamAcModel();
+                      
                       for (var i = 0; i < 3; i++) {
+                        bool activado = false;
                         eacm.company = (formpart1[3]['${1 + i}.- Nombre de empresa']  as MultiInputsForm).contenido!.toString();
+                        if (formpartBackUp[3]['${1 + i}.- Nombre de empresa'] != formpart1[3]['${1 + i}.- Nombre de empresa']) {
+                          activado = true;
+                        } 
                         eacm.date = (formpart1[3]['${1 + i}.- Fecha']  as MultiInputsForm).contenido!.toString();
+                        if (formpartBackUp[3]['${1 + i}.- Fecha'] != formpart1[3]['${1 + i}.- Fecha']) {
+                          activado = true;
+                        } 
                         eacm.position = (formpart1[3]['${1 + i}.- Puesto']  as MultiInputsForm).contenido!.toString();
+                        if (formpartBackUp[3]['${1 + i}.- Puesto'] != formpart1[3]['${1 + i}.- Puesto']) {
+                          activado = true;
+                        } 
                         eacm.causa = causeEnum[0+i] == Cause.none ? 0 : causeEnum[0+i] == Cause.accidente ? 1 : 2;
+                        if (causeDiseaseArr != null) {
+                          if (causeDiseaseArr[0+i] != causeEnum[0+i]) {
+                          activado = true;
+                          } 
+                        }
+                        
                         eacm.disease_name = (formpart1[3]['${1 + i}.- Nombre de la lesión o enfermedad']  as MultiInputsForm).contenido!.toString();
+                        if (formpartBackUp[3]['${1 + i}.- Nombre de la lesión o enfermedad'] != formpart1[3]['${1 + i}.- Nombre de la lesión o enfermedad']) {
+                          activado = true;
+                        } 
                         eacm.incapacity = (yestNotEnumArrDisease != null ? yestNotEnumArrDisease[i] : yesNotEnum[1+i]) == YesNot.none ? 0 : (yestNotEnumArrDisease != null ? yestNotEnumArrDisease[i] : yesNotEnum[1+i]) == YesNot.si ? 1 : 2;
-                        eacm.number_d_incapacity = int.parse((formpart1[3]['${1 + i}.- Número de dias de incapacidad'] as MultiInputsForm).contenido!.toString() == '' ? '0' : (formpart1[3]['${1 + i}.- Número de dias de incapacidad'] as MultiInputsForm).contenido!.toString());
+                        if (yestNotEnumArrDisease !=null) {
+                          if (yestNotEnumArrDiseaseFake[i] != yestNotEnumArrDisease[i] ) {
+                          activado = true;
+                        } 
+                        }
+                        
+                       
+                        eacm.number_d_incapacity = (formpart1[3]['${1 + i}.- Número de dias de incapacidad'] as MultiInputsForm).contenido!.toString() == '' ? '0' : (formpart1[3]['${1 + i}.- Número de dias de incapacidad'] as MultiInputsForm).contenido!.toString();
+                        if (formpartBackUp[3]['${1 + i}.- Número de dias de incapacidad'] != formpart1[3]['${1 + i}.- Número de dias de incapacidad']) {
+                          activado = true;
+                        } 
                         eacm.fk_idExam = edm.idDetExamInPr;
+                        //299+ ( 7 *3 = 21) = 320
                         if (edit == false) {
                           if (eacm.toJson().isNotEmpty) {
                             await eips.post_examAc(eacm, 1+i, context);
                           }
                         }else{
-                          await eips.patch_examAc(eacm, idExam, 1+i, context);
+                          if (activado) {
+                            await eips.patch_examAc(eacm, idExam, 1+i, context);
+                          }
                         }
                       }
                       
                       ExamMaModel emm = ExamMaModel();
                       emm.numEmployee = int.parse((formpart1[0]['Numero de Empleado'] as MultiInputsForm).contenido!.toString());
                       emm.fk_initial_pre_entry = edm.idDetExamInPr;
+
+                      //1+ 320 = 321
 
                         if (edit == false) {
                           await eips.post_examMa(emm,context);  
@@ -1466,12 +2277,12 @@ StatefulBuilder(
                       
                       
                       }else{
-                        messageError(context, 'Por favor, para guardar ingrese el número de empleado');
+                        messageError(context, 'Por favor, para guardar ingrese el número de empleado', 'Error');
                       }
 
                       }catch(e){
                         Navigator.of(context).pop();
-                        messageError(context, 'Ha ocurrido un error a la hora de subir el formulario. ($e)');
+                        messageError(context, 'Ha ocurrido un error al subir el formulario. ($e)', 'Error');
                       }
 
                     } : null,
@@ -1486,6 +2297,7 @@ StatefulBuilder(
                             btnNext = false;
                           });
                         } */
+
                         _pageController.nextPage(
                           duration: const Duration(milliseconds: 300),
                           curve: Curves.easeInOut,
@@ -1523,4 +2335,4 @@ StatefulBuilder(
 ]);
 });
 }
-
+}

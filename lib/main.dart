@@ -5,11 +5,7 @@ import 'package:app_seguimiento_movil/theme/app_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:app_seguimiento_movil/routers/router.dart';
 
-
-
 void main() => runApp(const AppState());
-
-
 
 class AppState extends StatefulWidget {
   const AppState({super.key});
@@ -52,7 +48,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       navigatorKey: navigatorKey,
       navigatorObservers: [navigatorObserver],
-      home: CustomBackBvuttonInterceptor(child: SplashScreen(),),
+      home: CustomBackBvuttonInterceptor(child: MedicalRecords(),),
       routes: Routers.routerMain,
       theme: AppTheme.lightTeheme,
       

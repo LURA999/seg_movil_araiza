@@ -51,7 +51,6 @@ void generatePDF( BuildContext context, bool save,List<Map<String,dynamic>> arrD
 List<String>? multiInputHArr, List<String>? multiInputAEArr, List<List<bool>>? checkBoxArr, List<YesNot>? yestNotEnumArr, 
 List<List<bool>>? checkboxDLNArr, List<Cause>? causeDiseaseArr, List<YesNot>? yestNotEnumArrDisease,List<ManoDominante>? manoArr,
 List<MetodoAnti>? methodArr) async {
-  print(multiInputArr!.length);
 int multiInputC = 2; 
 int multiInputCH = 0; 
 int multiInputCAE = 0; 
@@ -3815,7 +3814,6 @@ pdf.addPage(
           ],
         )
       ),
-
       pw.Container(
         margin: const pw.EdgeInsets.only(top: 15),
         child: pw.Column(
@@ -4522,7 +4520,7 @@ pdf.addPage(
                       pw.Container(
                         width: 150.0,
                         height: 50.0,
-                        child : pw.Image( pw.MemoryImage(transformationImage(multiInputArr != null? multiInputArr[144] : ''))),
+                        child : pw.Image( pw.MemoryImage(transformationImage(multiInputArr != null? multiInputArr[145] : ''))),
                       ),
                       pw.Text('_______________________________',style:letterText10),
                       pw.Text('Nombre, Firma y Ced. Prof. del Médico\nDr. Alfredo Gruel Culebro',style:letterText10)

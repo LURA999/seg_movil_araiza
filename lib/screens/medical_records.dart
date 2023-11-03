@@ -18,11 +18,11 @@ State<MedicalRecords> createState() => _MedicalRecordsState();
 }
 
 
-class _MedicalRecordsState extends State<MedicalRecords> {
+class _MedicalRecordsState extends State<MedicalRecords>{
 int itemShow = 10;
 bool arrLoadFiles = true;
 List<MedicalRecord> files = [ ];
-
+ChangeLocal changeLocal = ChangeLocal();
 List<String> resString = [ ];
 List<String> resString2 = [ ];
 List<String> resString3 = [ ];
@@ -47,6 +47,12 @@ final Map<String, MultiInputsForm> formValuesBuscar = {
   'search' : MultiInputsForm(contenido: '')
 };
 
+void actualizarWidget() {
+    setState(() {
+      // Aquí se realiza la actualización del estado del widget
+      // Puedes modificar las variables de estado aquí
+    });
+  }
 
  Future<List<MedicalRecord>> fetchData() async {
   if (arrLoadFiles) {
@@ -97,6 +103,8 @@ void initState() {
 
 @override
 Widget build(BuildContext context) {
+ButtonMedicalTest bMedical = ButtonMedicalTest(actualizarWidget); // Pasamos la función actualizarWidget
+
 Size size = MediaQuery.of(context).size ;
 EdgeInsets paddingCell = EdgeInsets.fromLTRB(
 MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .005: .01),
@@ -168,7 +176,36 @@ return Scaffold(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                            Text('Seguridad e Higiene',style: myTextStyleTitle.copyWith(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .08: 0.04) )),
+                            Row(
+                              children: [
+                                Text('Seguridad e Higiene',style: myTextStyleTitle.copyWith(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .07: 0.04) )),
+                                const Spacer(),
+                                IconButton(onPressed: () async {
+                                  await changeLocal.chargeHotel(context);
+
+                                  controller.clear();
+                                  ExamIniPreService eips = ExamIniPreService();
+                                  final list = await eips.getAllExamListSearch(context,'');
+                                  files.clear();
+                                  setState(() { }); 
+
+                                  for (var el in list) {
+                                    files.add(
+                                    MedicalRecord(
+                                      id: int.parse(el['numEmployee']), 
+                                      name: el['name'] == '' ? 'N/A' : el['name'], 
+                                      date: el['datetime_modification'], 
+                                      type: el['examName'] ?? 'N/A', 
+                                      lastModify: el['datetime_modification'],
+                                      exam: int.parse(el['idExam'])
+                                      )
+                                    );
+                                  }
+                                  currentPage = 1;
+                                  setState(() { }); 
+                                }, icon: Icon(Icons.settings))
+                              ],
+                            ),
                               SizedBox(height: MediaQuery.of(context).size.height *.02),
                               Row(
                                 children: [
@@ -209,7 +246,7 @@ return Scaffold(
                                       
                                       DepartamentService dp = DepartamentService();
                                       arrDepa =  await dp.getDepartament(context);                              
-                                      await newMethod(context, arrDepa, null, null, null, null, null, null, null, null, null, null, -1, false);
+                                      await bMedical.newMethod(setState,context, arrDepa, null, null, null, null, null, null, null, null, null, null, -1, false);
 
                                       searchTable(context);
                                     },
@@ -265,13 +302,13 @@ return Scaffold(
                           ),
                         ),
                         if(snapshot.data!.isNotEmpty)
-                        tablaBodySeH(context, paddingCell, snapshot, index, myTextSyleBody, paddingIcon),
+                        tablaBodySeH(context, paddingCell, snapshot, index, myTextSyleBody, paddingIcon, bMedical),
                         
                       ],
                     ); // El primer elemento es el encabezado
                   } 
                   // if (index < snapshot.data!.length-1) {
-                    return tablaBodySeH(context, paddingCell, snapshot, index, myTextSyleBody, paddingIcon);
+                    return tablaBodySeH(context, paddingCell, snapshot, index, myTextSyleBody, paddingIcon, bMedical);
                   }
                 ),
                  
@@ -336,11 +373,9 @@ return Scaffold(
 
 }
 
-Future<void> searchTable(dynamic context, ) async {
+Future<void> searchTable(dynamic context) async {
     saveSearchWord = controller.text;
     ExamIniPreService eips = ExamIniPreService();
-    files = [];
-    setState(() { }); 
     if (saveSearchWord != '') {
       amount = int.parse((await eips.getAllPagesPaginator(context,1,0,saveSearchWord))[0]['cantidad']);
     } else {
@@ -348,7 +383,8 @@ Future<void> searchTable(dynamic context, ) async {
     }
 
     final list = await eips.getAllExamListSearch(context,saveSearchWord);
-
+    files.clear();
+    setState(() { }); 
 
     for (var el in list) {
       files.add(
@@ -367,7 +403,7 @@ Future<void> searchTable(dynamic context, ) async {
 }
 
 refill(List<Map<String, dynamic>> list ){
-  files = [];
+  files.clear();
     setState(() { }); 
     for (var el in list) {
       files.add(
@@ -418,7 +454,7 @@ Future<void> fetchDataTable() async {
 
 
 
-  Column tablaBodySeH(BuildContext context, EdgeInsets paddingCell, AsyncSnapshot<List<MedicalRecord>> snapshot, int index, TextStyle myTextSyleBody, EdgeInsets paddingIcon) {
+  Column tablaBodySeH(BuildContext context, EdgeInsets paddingCell, AsyncSnapshot<List<MedicalRecord>> snapshot, int index, TextStyle myTextSyleBody, EdgeInsets paddingIcon, ButtonMedicalTest  bMedical) {
   return Column(
       children: [
         Container(
@@ -467,7 +503,7 @@ Future<void> fetchDataTable() async {
               Expanded(
                 child: 
                 PopupMenuButton(
-                icon: Icon(Icons.file_open_outlined),
+                icon: const Icon(Icons.file_open_outlined),
                 itemBuilder: (BuildContext context) {
                   return <PopupMenuEntry>[
                     PopupMenuItem(
@@ -544,13 +580,13 @@ Future<void> fetchDataTable() async {
                 onSelected: (value) async {
                   switch (value) {
                     case 'download':
-                        await onTapEdit(snapshot, index, context, 3);
+                        await onTapEdit(snapshot, index, context, 3, bMedical);
                       break;
                     case 'edit':
-                        await onTapEdit(snapshot, index, context, 1);
+                        await onTapEdit(snapshot, index, context, 1, bMedical);
                       break;
                     case 'prev':
-                        await onTapEdit(snapshot, index, context, 2);                        
+                        await onTapEdit(snapshot, index, context, 2, bMedical);                        
                       break;
                     // case 'borrar':
                     //     await onTapEdit(snapshot, index, context, 2);                        
@@ -597,7 +633,7 @@ Future<void> fetchDataTable() async {
     );
   }
 
-  onTapEdit(AsyncSnapshot<List<MedicalRecord>> snapshot, int index, BuildContext context, int type) async {
+  onTapEdit(AsyncSnapshot<List<MedicalRecord>> snapshot, int index, BuildContext context, int type, ButtonMedicalTest  bMedical) async {
     //type 1 = edit
     //type 2 = pdf
     BuildContext? contextshow;
@@ -729,7 +765,7 @@ Future<void> fetchDataTable() async {
 
       //Edit
       if (type == 1) {
-      await newMethod(context, arrDepa, resString, resString2, resString3, bolArr, 
+      await bMedical.newMethod(setState,context, arrDepa, resString, resString2, resString3, bolArr, 
       yesNotEnum, checkboxDLN, causeDisease, yesNotDisease, manoDomEnum, metodoAntiEnum,int.parse(snapshot.data![index].exam.toString()), true );
         searchTable(context);
       
@@ -744,7 +780,7 @@ Future<void> fetchDataTable() async {
         yesNotEnum, checkboxDLN, causeDisease, yesNotDisease, manoDomEnum, metodoAntiEnum);
       }                  
     }else{
-      messageError(context,'No hay conexión a Internet.');
+      messageError(context,'No hay conexión a Internet.', 'Error');
     }
   }
 }

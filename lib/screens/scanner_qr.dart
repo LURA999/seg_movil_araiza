@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'dart:developer';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class ScannerQR extends StatefulWidget {
   const ScannerQR({Key? key}) : super(key: key);
@@ -22,6 +23,7 @@ class _ScannerQR extends State<ScannerQR> {
   FoodService fs = FoodService();
   AssistanceService as = AssistanceService();
   bool isProccesing = false;
+  final storage = FlutterSecureStorage();
 
  
   // In order to get hot reload to work we need to pause the camera if the platform
@@ -158,14 +160,20 @@ class _ScannerQR extends State<ScannerQR> {
            e.split(':')[0].trim() : e.split(':')[1].trim() 
         }; 
         Map<String, dynamic> json = await vp.arrSharedPreferences();
-      
+
+        /**
+         * Solo es necesario estos datos para escanear los demas, se insertan manualmente en la base de datos los demas datos
+         * tambien puse como opcion, la opcion de actualizar los campos, cuando se escanea el codigo QR, pero lo desahbilite en el PHP igualmente
+         */
+        
         newQr.fkTurn = json['idTurn'];
-        newQr.color = objetoJson['color'];
-        newQr.departament = objetoJson['departament'];
-        newQr.employeeName = objetoJson['employeeName'];
-        newQr.typevh = objetoJson['typevh'];
-        newQr.platesSearch = objetoJson['plates'];
+        //newQr.color = objetoJson['color'];
+        //newQr.departament = objetoJson['departament'];
+        //newQr.employeeName = objetoJson['employeeName'];
+        //newQr.typevh = objetoJson['typevh'];
+        //newQr.platesSearch = objetoJson['plates'];
         newQr.employee_num = objetoJson['numEmployee'];
+        newQr.local = int.parse(objetoJson['local']);
     
         if(isProccesing == true){
             await vs.postQrVehicle(newQr,context).then((value) {
@@ -207,14 +215,16 @@ class _ScannerQR extends State<ScannerQR> {
         controller.stopCamera();
         QrFood newQr = QrFood();
         Map<String, dynamic> objetoJson = { 
-           for (var e in result!.code.toString().split(',').map((e) => e.trim())) 
-           e.split(':')[0].trim() : e.split(':')[1].trim() 
+          for (var e in result!.code.toString().split(',').map((e) => e.trim())) 
+          e.split(':')[0].trim() : e.split(':')[1].trim() 
         }; 
         // var jsonResult = json.decode(result!.code!);
         // Map<String, dynamic> json = await vp.arrSharedPreferences();
         newQr.numEmployee = objetoJson['numEmployee'];
         newQr.contract = objetoJson['contract'];
-        newQr.name = objetoJson['employeeName'];
+        newQr.name = objetoJson['employeeName'] ?? '';
+        newQr.local = objetoJson['local'];
+        newQr.localApp = await storage.read(key: 'idHotelRegister');
         if(isProccesing == true){
             await fs.postQrFood(newQr,context).then((value) {
             if(value.status == 200){
@@ -262,6 +272,7 @@ class _ScannerQR extends State<ScannerQR> {
         // Map<String, dynamic> json = await vp.arrSharedPreferences();
         newQr.employee_num = objetoJson['numEmployee'];
         newQr.idTurn = json['idTurn'];
+        newQr.local = objetoJson['local'];
         if(isProccesing == true){
             await as.postQrAssistance(newQr,context).then((value) {
             if(value.status == 200){

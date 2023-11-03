@@ -9,7 +9,7 @@ class ExamPeModel {
   int? sex;
   String? age;
   String? marital_status;
-  int? tel_cel;
+  String? tel_cel;
   String? extra_activity;
   String? number_children;
 

@@ -10,3 +10,4 @@ export 'package:app_seguimiento_movil/widgets/check_input.dart';
 export 'package:app_seguimiento_movil/widgets/autocomplete_custom.dart';
 export 'package:app_seguimiento_movil/widgets/popUp_widget.dart';
 export 'package:app_seguimiento_movil/widgets/radio_input_rate_route.dart';
+export 'package:app_seguimiento_movil/widgets/change_local.dart';

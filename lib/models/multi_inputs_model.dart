@@ -42,7 +42,8 @@ class MultiInputsForm implements BaseInputsForm {
   int? screen;
   int? maxLength;
   bool? activeClock;
-  List<Map<String,dynamic>>? listselect;
+  List<Map<String,dynamic>>? listSelectForm;
+  bool? activeListSelect;
   TextInputType? keyboardType;
   
 
@@ -59,8 +60,9 @@ class MultiInputsForm implements BaseInputsForm {
     this.paintSignature,
     this.activeClock,
     this.screen,
-    this.listselect,
-    this.keyboardType
+    this.listSelectForm,
+    this.keyboardType,
+    this.activeListSelect
   });
 
 }

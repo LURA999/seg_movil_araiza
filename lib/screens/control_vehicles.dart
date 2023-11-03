@@ -7,6 +7,7 @@ import 'package:app_seguimiento_movil/widgets/widgets.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 
 class ControlVehicles extends StatefulWidget {
@@ -19,20 +20,20 @@ class ControlVehicles extends StatefulWidget {
 
 class _ControlVehiclesState extends State<ControlVehicles> {
   
-  double keyboardHeightRatio = 0.0;
+  double keyboardHeightRatio = 0.0;    
+  final storage = FlutterSecureStorage();
+
 
   
   @override
   Widget build(BuildContext context) {
     
     //Nombre del campo :  contenido, ¿obligatorio?, ¿!select?, ¿!enabled?
-    /**
-     * 
-     */
+
     //Fecha se inserta automaticamente
     final Map<String, MultiInputsForm> formValuesInicioTur = {
       'guard': MultiInputsForm(contenido: '', obligatorio: true,autocomplete: true, autocompleteAsync: true,screen:0),
-      'turn': MultiInputsForm(contenido: '', obligatorio: true, select: true),
+      'turn': MultiInputsForm(contenido: '', obligatorio: true, select: true, activeListSelect: false),
       'sign': MultiInputsForm(contenido: '', obligatorio: true, paintSignature: true),
     };
     
@@ -51,7 +52,7 @@ class _ControlVehiclesState extends State<ControlVehicles> {
 
     final Map<String, MultiInputsForm> formValuesDescRepor = {
       'guard' : MultiInputsForm(contenido: '',obligatorio: false,autocomplete: true, autocompleteAsync: true, screen: 0),
-      'turn': MultiInputsForm(contenido: '', obligatorio: true, select: true),
+      'turn': MultiInputsForm(contenido: '', obligatorio: true, select: true, activeListSelect: false),
       'date_start_hour' : MultiInputsForm(contenido: '', obligatorio: true, activeClock: true),
       'date_final_hour' : MultiInputsForm(contenido: '', obligatorio: true, activeClock: true),
     };
@@ -251,15 +252,14 @@ class _ControlVehiclesState extends State<ControlVehicles> {
       SessionManager sm = SessionManager()
         ..clearSession().then((value) {
           if (sharedPrefsData['dish'] == null) {
-            final url = Uri.parse('https://www.comunicadosaraiza.com/movil_scan_api_prueba/API/turn_assistance.php?idTurn=true');
+            final url = Uri.parse('https://www.comunicadosaraiza.com/movil_scan_api_prueba2/API/turn_assistance.php?idTurn=true');
               (http.post(url, body: json.encode({'idTurn': sharedPrefsData["idTurn"] }))).then((value) {
-              print(value);
               Provider.of<VarProvider>(context,listen: false).updateVariable(false);
               setState(() { });
             });
           }else{
-            final url = Uri.parse('https://www.comunicadosaraiza.com/movil_scan_api_prueba/API/turn_food.php');
-            (http.post(url, body: json.encode({}))).then((value) {
+            final url = Uri.parse('https://www.comunicadosaraiza.com/movil_scan_api_prueba2/API/turn_food.php?cerrarSess=true');
+            http.post(url, body: json.encode({'local': (storage.read(key: 'idHotelRegister')) })).then((value) {
             Provider.of<VarProvider>(context,listen: false).updateVariable(false);
             setState(() { });
             });

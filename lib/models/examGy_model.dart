@@ -4,7 +4,7 @@ class ExamGyModel {
   String? age_fmenstruation;
   String? age_stSex_life;
   String? amount_pregnancy;
-  int? amount_childbirth;
+  String? amount_childbirth;
   String? cesarean;
   String? abort;
   String? last_rule_date;

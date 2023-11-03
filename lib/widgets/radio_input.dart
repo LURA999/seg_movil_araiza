@@ -338,44 +338,48 @@ class _RadioInputState extends State<RadioInput> {
           ],
         );
       case 6 :
-      return Row(
-          children: [
-            SizedBox(
-              width: 150,
+      return SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        scrollDirection: Axis.horizontal,
+        child: Row(
+            children: [
+              SizedBox(
+                width: 150,
+                  child: ListTile(
+                  title: const Text('Normal'),
+                  leading: Radio<YesNot>(
+                    activeColor: AppTheme.primary,
+                    fillColor: MaterialStateProperty.resolveWith(getColor),
+                    value: YesNot.si,
+                    groupValue: widget.yesNotEnum![widget.index],
+                    onChanged: (YesNot? value) {
+                      setState(() {
+                        widget.yesNotEnum![widget.index] = value!;
+                      });
+                    },
+                  ),
+                            ),
+                ),
+              SizedBox(
+                width: 240,
                 child: ListTile(
-                title: const Text('Normal'),
-                leading: Radio<YesNot>(
-                  activeColor: AppTheme.primary,
-                  fillColor: MaterialStateProperty.resolveWith(getColor),
-                  value: YesNot.si,
-                  groupValue: widget.yesNotEnum![widget.index],
-                  onChanged: (YesNot? value) {
-                    setState(() {
-                      widget.yesNotEnum![widget.index] = value!;
-                    });
-                  },
-                ),
-                          ),
-              ),
-            SizedBox(
-              width: 180,
-              child: ListTile(
-                title: const Text('Fuera de rango'),
-                leading: Radio<YesNot>(
-                  activeColor: AppTheme.primary,
-                  fillColor: MaterialStateProperty.resolveWith(getColor),
-                  value: YesNot.no,
-                  groupValue: widget.yesNotEnum![widget.index],
-                  onChanged: (YesNot? value) {
-                    setState(() {
-                      widget.yesNotEnum![widget.index] = value!;
-                    });
-                  },
+                  title: const Text('Fuera de rango'),
+                  leading: Radio<YesNot>(
+                    activeColor: AppTheme.primary,
+                    fillColor: MaterialStateProperty.resolveWith(getColor),
+                    value: YesNot.no,
+                    groupValue: widget.yesNotEnum![widget.index],
+                    onChanged: (YesNot? value) {
+                      setState(() {
+                        widget.yesNotEnum![widget.index] = value!;
+                      });
+                    },
+                  ),
                 ),
               ),
-            ),
-          ],
-        );
+            ],
+          ),
+      );
       default :
       
       return Column(

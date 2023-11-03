@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:app_seguimiento_movil/widgets/widgets.dart';
@@ -17,13 +18,10 @@ class DiningRoom extends StatefulWidget {
 
 
 class _DiningRoomState extends State<DiningRoom> {
- @override
-  Widget build(BuildContext context) {
-    double responsiveHeight = MediaQuery.of(context).size.height * 0.02;
-    double responsivePadding = MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.width * 0.02 : MediaQuery.of(context).size.height * 0.02;
-
-    //Nombre del campo :  contenido, ¿obligatorio?, ¿select?, ¿enabled?
-    
+  //Nombre del campo :  contenido, ¿obligatorio?, ¿select?, ¿enabled?
+    final List<Map<String, dynamic>> arrList = [];
+  final storage = FlutterSecureStorage();
+  
     //Fecha se inserta automaticamente
     final Map<String, MultiInputsForm> formValuesInicioTur = {
       'dish' : MultiInputsForm(contenido: '', obligatorio: true),
@@ -37,8 +35,9 @@ class _DiningRoomState extends State<DiningRoom> {
     //fecha se inserta manualmente
     final Map<String, MultiInputsForm> formValuesRegistroMan = {
       'employee_number' : MultiInputsForm(contenido: '', obligatorio: true), 
-      'name' : MultiInputsForm(contenido: '', obligatorio: true),   
-      'type_contract' : MultiInputsForm(contenido: '', obligatorio: true, select: true), 
+      'name' : MultiInputsForm(contenido: '', obligatorio: false, enabled: false),   
+      // 'type_contract' : MultiInputsForm(contenido: '', obligatorio: true, select: true, activeListSelect: false), 
+      'hotel' : MultiInputsForm(contenido: '', obligatorio: false, select: true, activeListSelect: true)
     };
 
     final Map<String, MultiInputsForm> formValuesObservacion = {
@@ -47,10 +46,15 @@ class _DiningRoomState extends State<DiningRoom> {
 
     final Map<String, MultiInputsForm> formValuesDescRepor = {
       'dish': MultiInputsForm(contenido: '', obligatorio: false),
-      'date_start_hour': MultiInputsForm(contenido: '', obligatorio: true, activeClock: false), 
-      'date_final_hour': MultiInputsForm(contenido: '', obligatorio: true, activeClock: false), 
+      'date_start_hour': MultiInputsForm(contenido: '', obligatorio: true, activeClock: true), 
+      'date_final_hour': MultiInputsForm(contenido: '', obligatorio: true, activeClock: true), 
     };
     final TextEditingController controller = TextEditingController();
+    
+ @override
+  Widget build(BuildContext context) {
+    double responsiveHeight = MediaQuery.of(context).size.height * 0.02;
+    double responsivePadding = MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.width * 0.02 : MediaQuery.of(context).size.height * 0.02;
 
     return Scaffold(
       body: Column(
@@ -101,15 +105,17 @@ class _DiningRoomState extends State<DiningRoom> {
                         controller: controller,
                         control: 2,
                         textButton: 'Registro Manual',
+                        listSelectForm: arrList,
                         btnPosition: 2,
                         field: const [
                           'Registro Manual',
                           'Registrar',
                           'Número de empleado',
                           'Nombre',
-                          'Tipo de contrato'
+                          //'Tipo de contrato',
+                          'Hotel'
                         ],
-                        listSelect: const [['Proveedor','Externo','Empleado']],
+                        listSelect: const [['Proveedor','Externo','Empleado'],],
                         formValue: formValuesRegistroMan,
                         enabled: false),
                     SizedBox(height: responsiveHeight),
@@ -198,26 +204,41 @@ class _DiningRoomState extends State<DiningRoom> {
       ],
     ));
   }
+Future<void> chargeHotel() async {
+      LocalService lc = LocalService();
+      final locals = await lc.getLocal(context);
+      for (var el in locals.container) {
+        if (int.parse(el['idLocal']) > 0) {
+          arrList.add(el);
+        }
+      }
+
+       formValuesRegistroMan['hotel']!.contenido =  await storage.read(key: 'idHotelRegister') ;
+     /*  formValuesRegistroMan.addAll(
+        {
+          'hotel' : MultiInputsForm(contenido: await storage.read(key: 'idHotelRegister'), obligatorio: false, select: true,listSelectForm: arrList),
+        }
+      );  */
+  }
+  
 
   @override
   initState() { 
-    super.initState();
     SystemChannels.textInput.invokeMethod('TextInput.hide');
-
    VarProvider vh = VarProvider()
   ..arrSharedPreferences().then((Map<String, dynamic> sharedPrefsData) {
+      chargeHotel();
     if (sharedPrefsData['dish'] == null) {
       SessionManager sm = SessionManager()
         ..clearSession().then((value) {
           if (sharedPrefsData['turn'] == null) {
-            final url = Uri.parse('https://www.comunicadosaraiza.com/movil_scan_api_prueba/API/turn_assistance.php?idTurn=true');
+            final url = Uri.parse('https://www.comunicadosaraiza.com/movil_scan_api_prueba2/API/turn_assistance.php?idTurn=true');
             (http.post(url, body: json.encode({'idTurn': sharedPrefsData["idTurn"] }))).then((value) {
-            print(value);
             Provider.of<VarProvider>(context,listen: false).updateVariable(false);
             setState(() { });
           });
           }else{
-           final url = Uri.parse('https://www.comunicadosaraiza.com/movil_scan_api_prueba/API/turn_vehicle.php?idTurn=true');
+           final url = Uri.parse('https://www.comunicadosaraiza.com/movil_scan_api_prueba2/API/turn_vehicle.php?idTurn=true');
            (http.post(url, body: json.encode({'idTurn': sharedPrefsData["idTurn"] }))).then((value) {
             Provider.of<VarProvider>(context,listen: false).updateVariable(false);
             setState(() { });
@@ -228,5 +249,6 @@ class _DiningRoomState extends State<DiningRoom> {
   }).catchError((error) {
     //
   });
+    super.initState();
   }
 }

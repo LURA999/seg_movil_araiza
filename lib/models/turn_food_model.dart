@@ -7,6 +7,7 @@ class TurnFood {
   String? description;
   String? picture;
   String? menu_portal;
+  String? local;
 
   TurnFood({
     this.dish,
@@ -16,7 +17,8 @@ class TurnFood {
     this.date_hour,
     this.picture,
     this.description,
-    this.menu_portal
+    this.menu_portal,
+    this.local
   });
 
   TurnFood.fromJson(Map<String, dynamic> json){
@@ -27,6 +29,7 @@ class TurnFood {
     description = json['description'];
     picture = json['picture'];
     picture = json['menu_portal'];
+    local = json['local'];
   }
 
   Map<String, dynamic> toJson() {
@@ -38,6 +41,7 @@ class TurnFood {
     data['description'] = description;
     data['picture'] = picture;
     data['menu_portal'] = menu_portal;
+    data['local'] = local;
     return data;
   }
 

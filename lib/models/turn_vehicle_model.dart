@@ -1,5 +1,4 @@
 
-import 'dart:convert';
 
 class TurnVehicle {
   String? guard;
@@ -7,6 +6,7 @@ class TurnVehicle {
   String? sign;
   String? description;
   String? idTurn;
+  String? local;
 
   TurnVehicle({
     this.guard,
@@ -14,7 +14,7 @@ class TurnVehicle {
     this.sign,
     this.description,
     this.idTurn,
-
+    this.local
   });
 
   TurnVehicle.fromJson(Map<String, dynamic> json){
@@ -23,6 +23,7 @@ class TurnVehicle {
     sign = json['sign'];
     description = json['description'];
     idTurn = json['idTurn'];
+    local = json['local'];
   }
 
   Map<String, String> toJson() {
@@ -38,6 +39,8 @@ class TurnVehicle {
     }
 
     data['idTurn'] = idTurn ?? '';
+    
+    data['local'] = local ?? '';
     return data;
   }
 

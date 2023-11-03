@@ -71,9 +71,11 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
           });
         },
         onSelected: (String selection) async {
-        widget.formValue[widget.formProperty]!.contenido = selection;
+          
+
         if (widget.autocompleteAsync) {
-          switch (widget.formProperty) {
+          setState(() { });
+          switch (widget.formProperty.toString()) {
           case 'guard':
               // await buscaAutomaticaGuard(value ??'');
             break;
@@ -82,15 +84,20 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
             case 1:
               Access r = await vService.findVehicle(selection,context,1);
               widget.onFormValueChange!(r.container,['plates','type_vh','color','employee_name','time_entry','time_exit']);
-            break;
+              widget.formValue[widget.formProperty]!.contenido = selection;
+           break;
             case 2:
               Access r = await vService.findVehicle(selection,context,2);
               widget.onFormValueChange!(r.container,['plates','type_vh','color','employee_name','department']);
+              widget.formValue[widget.formProperty]!.contenido = selection;
             break;
             }
             break;
-          case 'nameSearch': 
-              widget.onFormValueChange!([arr[widget.goptions!.indexOf(selection)]],['usuario']);
+          case 'nameSearch':
+              //[arr[ arr.indexWhere((element) => element["complete_name"] == selection)]] - arr.firstWhere((element) => element["complete_name"] == selection)
+              final arrNameSearch = arr.firstWhere((element) => element["complete_name"] == selection);
+              // widget.formValue['hotel']!.contenido = arrNameSearch['cveLocal'];
+             await widget.onFormValueChange!([arrNameSearch],['usuario']);
             break;
           case 'course_name':
           break;
@@ -106,9 +113,20 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
             List<ListTile> list = options.map((String option) => ListTile(
             title: Text(option,style: getTextStyleText(context,null,null)),
             onTap: () async {
+              switch (widget.formProperty.toString()) {
+                case 'course_name':
+                setState(() {
+                  final indiceGuion = option.indexOf(' ');
+                  widget.formValue[widget.formProperty]!.contenido = option;
+                  onSelected(option.substring(indiceGuion + 3));
+                });
+                break;
+              default:
               setState(() {
+                widget.formValue[widget.formProperty]!.contenido = option;
                 onSelected(option);
               });
+              }
             },
           )).toList() ;
             return Align(
@@ -135,7 +153,8 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
               focusNode: fieldFocusNode,
               style: getTextStyleText(context,null,null),
               decoration: InputDecoration(
-                hintText: widget.labelText
+               // hintText: widget.labelText,
+                labelText: widget.labelText
               ),
               key: widget.key,
               validator: widget.formValue[widget.formProperty]!.obligatorio == true ? (value) {
@@ -197,6 +216,7 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
 
   Future<List<Map<String,dynamic>>> buscaAutomaticaGuard(String value) async {
   VehicleService vs = VehicleService();
+  
   arr= await vs.nameGuard(value.toLowerCase(),context);
     for (var i = 0; i < arr.length; i++) {
       if (tempOptions !=null) {
