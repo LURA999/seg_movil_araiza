@@ -1384,6 +1384,7 @@ StatefulBuilder(
                                       key: sign0[0],
                                       onSign: () async {
                                         sign[0] = sign0[0].currentState!;
+                                        setState((){});
                                       },
                                       color: Colors.black,
                                       strokeWidth: 3,
@@ -1451,7 +1452,6 @@ StatefulBuilder(
                                       key: sign0[1],
                                       onSign: () async {
                                         sign[1] = sign0[1].currentState!;
-                                        print('hola');
                                       },
                                       color: Colors.black,
                                       strokeWidth: 3,
@@ -1546,14 +1546,12 @@ StatefulBuilder(
                         ];
                        
                         activadoArr.add(clavesAComparar.any((clave) {
-                        // print(' ${(formpart1[0][clave] as MultiInputsForm).contenido!}');
-                        // print(' ${formpartBackUp[0][clave].toString()}');
                           return (formpart1[0][clave] as MultiInputsForm).contenido!.toString() !=
                               formpartBackUp[0][clave].toString();
                         }));
                         activado = activadoArr.any((element) =>  element == true);
                         if (activado) {
-                          print('actualiazndo primera seccion');
+                          // print('actualiazndo primera seccion');
                           await eips.patch_examIn(eim, idExam, context);
                         }
                       }
@@ -1572,6 +1570,8 @@ StatefulBuilder(
                       epm.number_children = (formpart1[1]['Núm. de hijos'] as MultiInputsForm).contenido!;
                       //11 , 11 + 3 = 14 
                       if (edit == false) {
+                        //var json =  eam.toJson();
+                        //bool valid = json.keys.any((key) => json[key].toString() != '');
                         if (epm.toJson().isNotEmpty) {
                           epm.idPersonal = int.parse((await eips.post_examPe(epm, context)).container![0]["ultimoId"]);
                         }
@@ -1597,7 +1597,7 @@ StatefulBuilder(
                         });
                         
                         if (activado) {
-                          print('actualizando segunda seccion');
+                          // print('actualizando segunda seccion');
                           await eips.patch_examPe(epm, idExam, context);
                         }
                       }
@@ -1720,7 +1720,7 @@ StatefulBuilder(
                         activado = activadoArr.any((element) => element == true);
                       
                         if (activado) {
-                          print('actualizando tercera seccion');
+                          // print('actualizando tercera seccion');
                           await eips.patch_examHeP(hpm, idExam,context);
                         }
 
@@ -1751,7 +1751,7 @@ StatefulBuilder(
                         activado = activadoArr.any((element) => element == true);
                         
                         if (activado) {
-                          print('actualizando cuarta seccion');
+                          // print('actualizando cuarta seccion');
                           await eips.patch_examGy(gypm, idExam, context);
                         }
                       }
@@ -1794,7 +1794,7 @@ StatefulBuilder(
                       pm.current_treatment = (formpart1[6]['Tratamiento actual'] as MultiInputsForm).contenido!;
                       
                       if (sign[0] != null) {
-                         final image = await sign[0]!.getData() ;
+                        final image = await sign[0]!.getData() ;
                         var data = await image.toByteData(format: ui.ImageByteFormat.png);
                         pm.signature_patient = base64.encode(data!.buffer.asUint8List());
 
@@ -1908,17 +1908,15 @@ StatefulBuilder(
                               formpartBackUp[6][clave].toString();
                         }));
                         
-                        print(multiInputArr![47]);
-                        print(firmaAspirante);
                         
-                        if(firmaAspirante  != multiInputArr[47]){
+                        if(pm.signature_patient  != multiInputArr![47]){
                           activadoArr.add(true);
                         }
-                        print(activadoArr);
+
                         activado = activadoArr.any((element) => element == true);
 
                         if (activado) {
-                          print('actualizando quinta seccion');
+                          // print('actualizando quinta seccion');
                           await eips.patch_examPa(pm, idExam, context);
                         }
                       }
@@ -1953,7 +1951,7 @@ StatefulBuilder(
                         });
                        
                         if (activado) {
-                          print('actualizando sexta seccion');
+                          // print('actualizando sexta seccion');
                           await eips.patch_examAp(eam, idExam, context);
                         }
                       }
@@ -2193,7 +2191,7 @@ StatefulBuilder(
                         activado = activadoArr.any((element) => element == true);
 
                         if (activado) {
-                          print('actualizando septima seccion');
+                          // print('actualizando septima seccion');
                           await eips.patch_examPhX(epxm, idExam, context);
                         }
                         activadoArr.clear();
@@ -2225,7 +2223,7 @@ StatefulBuilder(
 
                         activado = activadoArr.any((element) => element == true);
                         if (activado) {
-                          print('actualizando octava seccion');
+                          // print('actualizando octava seccion');
                         await eips.patch_examPhY(epym, idExam, context);    
                         }
                       }
@@ -2248,7 +2246,7 @@ StatefulBuilder(
                               formpartBackUp[9][clave].toString();
                         });
                         if (activado) {
-                          print('actualizando novena seccion');
+                          // print('actualizando novena seccion');
                           await eips.patch_examLa(elm, idExam, context);
                         }
                       }
@@ -2295,7 +2293,7 @@ StatefulBuilder(
                         }));
                         activado = activadoArr.any((element) => element == true);
                         if (activado) {
-                          print('actualizando diecima seccion');
+                          // print('actualizando diecima seccion');
                           await eips.patch_examIm(eimm, idExam, context);
                         }
                       }
@@ -2310,18 +2308,18 @@ StatefulBuilder(
                       if (sign[1] != null) {
                          final image = await sign[1]!.getData() ;
                         var data = await image.toByteData(format: ui.ImageByteFormat.png);
-                        edm.applicant_signature = base64.encode(data!.buffer.asUint8List());
+                        edm.doctor_signature = base64.encode(data!.buffer.asUint8List());
                       } else{
-                        edm.applicant_signature = multiInputArr != null ? multiInputArr[145] : '';
-                      }
-
-                      if (sign[2] !=null ) {
-                        final image2 = await sign[2]!.getData();
-                        var data2 = await image2.toByteData(format: ui.ImageByteFormat.png);
-                        edm.doctor_signature = base64.encode(data2!.buffer.asUint8List());
-                      } else {
                         edm.doctor_signature = multiInputArr != null ? multiInputArr[145] : '';
                       }
+
+                      // if (sign[2] !=null ) {
+                      //   final image2 = await sign[2]!.getData();
+                      //   var data2 = await image2.toByteData(format: ui.ImageByteFormat.png);
+                      //   edm.doctor_signature = base64.encode(data2!.buffer.asUint8List());
+                      // } else {
+                      //   edm.doctor_signature = multiInputArr != null ? multiInputArr[145] : '';
+                      // }
                       
                       if (eim.toJson().isNotEmpty) {
                         edm.fk_InitOrPre =  eim.idDetExamInPr;
@@ -2354,33 +2352,9 @@ StatefulBuilder(
                       if (edit == false) {
                         edm.idDetExamInPr = int.parse((await eips.post_examDe(edm, context)).container![0]["ultimoId"]);
                       } else {
-                        // final image = await sign[1]!.getData() ;
-                        // var data = await image.toByteData(format: ui.ImageByteFormat.png);
-                        // edm.applicant_signature = base64.encode(data!.buffer.asUint8List());
-                    // 
-                        // final image2 = await sign[2]!.getData();
-                        // var data2 = await image2.toByteData(format: ui.ImageByteFormat.png);
-                        // edm.doctor_signature = base64.encode(data2!.buffer.asUint8List());
-                    
+                      
                         activado = false;
                         activadoArr.clear();
-
-                        if (sign[1] != null) {
-                         final image = await sign[1]!.getData() ;
-                        var data = await image.toByteData(format: ui.ImageByteFormat.png);
-                        edm.applicant_signature = base64.encode(data!.buffer.asUint8List());
-                      } else{
-                        edm.applicant_signature = multiInputArr != null ? multiInputArr[145] : '';
-                      }
-
-                      if (sign[2] !=null ) {
-                        final image2 = await sign[2]!.getData();
-                        var data2 = await image2.toByteData(format: ui.ImageByteFormat.png);
-                        edm.doctor_signature = base64.encode(data2!.buffer.asUint8List());
-                      } else {
-                        edm.doctor_signature = multiInputArr != null ? multiInputArr[145] : '';
-                      }
-
 
                         if(edm.doctor_signature != firmaDoctor){
                           activadoArr.add(true);
@@ -2396,8 +2370,9 @@ StatefulBuilder(
                               formpartBackUp[11][clave].toString();
                         }));
                         activado = activadoArr.any((element) => element == true);
+
                         if (activado) {
-                          print('actualizando onceava seccion');
+                          // print('actualizando onceava seccion');
                           await eips.patch_examDe(edm, idExam, context);
                         }
                       }
@@ -2430,7 +2405,7 @@ StatefulBuilder(
                       }else{
                         for (var i = 0; i < ehfm.length; i++) {
                           if (!const ListEquality().equals(checkBoxArrFake[i], checkBoxArr![i])) {
-                            print('cambio de antecedentes hereditarios row: $i');
+                            // print('cambio de antecedentes hereditarios row: $i');
                             await eips.patch_examHeF(ehfm[i], idExam,context);
                           }
                         }
@@ -2454,7 +2429,9 @@ StatefulBuilder(
 
                       //255 + ( 11 * 4 = 44) = 299
                       if (edit == false) {
-                        if (ehm.toJson().isNotEmpty) {
+                        var json =  ehm.toJson();
+                        bool valid = json.keys.any((key) => json[key].toString() != '');
+                        if (valid) {
                           ehm.fk_idExam = edm.idDetExamInPr;
                           await eips.post_examHi(ehm, 1+i, context);
                         }
@@ -2478,7 +2455,7 @@ StatefulBuilder(
                               formpartBackUp[2][clave].toString();
                         });
                           if (activado) {
-                          print('actualizando doceava seccion');
+                          // print('actualizando doceava seccion');
                             await eips.patch_examHi(ehm, idExam, 1+i, context);
                           }
                         }
@@ -2524,7 +2501,7 @@ StatefulBuilder(
                         activado = activadoArr.any((element) => element == true);
 
                           if (activado) {
-                          print('actualizando treceava seccion');
+                          // print('actualizando treceava seccion');
                             await eips.patch_examAc(eacm, idExam, 1+i, context);
                           }
                         }
@@ -2541,7 +2518,7 @@ StatefulBuilder(
                         }else{
                           emm.idExam = idExam;
                           if (numEmployee != emm.numEmployee) {
-                          print('actualizando numero de empleado');
+                          // print('actualizando numero de empleado');
                             await eips.patch_examMa(emm, idExam,context);
                           }
                         }

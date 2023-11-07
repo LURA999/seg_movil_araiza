@@ -1188,7 +1188,7 @@ try {
 
 try {
     final url = Uri.parse('$link/medical_exam.php?patch_examPa=true');
-    
+
     final f = json.encode(obj.toJson());
     // Decodifica el JSON a un objeto Dart
     Map<String, dynamic> decodedJson = json.decode(f);
