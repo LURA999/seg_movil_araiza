@@ -36,7 +36,6 @@ class _CheckInputState extends State<CheckInput> {
 
     return Row(
       children: [
-        Text(widget.contenido,style: widget.style,),
         Checkbox(
           checkColor: Colors.white,
           fillColor: MaterialStateProperty.resolveWith(getColor),
@@ -47,6 +46,7 @@ class _CheckInputState extends State<CheckInput> {
             });
           },
         ),
+        Text(widget.contenido,style: widget.style,),
       ],
     );
   }

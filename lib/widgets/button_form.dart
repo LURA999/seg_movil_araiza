@@ -124,7 +124,8 @@ formValue.forEach((key, value) {
         labelText: widget.field[i],
         formProperty: key,
         formValue: formValue,
-        keyboardType: TextInputType.datetime),
+        keyboardType: TextInputType.datetime
+        ),
     );
   } else {
     if (formValue[key]!.paintSignature == true) {
