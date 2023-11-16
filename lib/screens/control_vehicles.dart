@@ -271,7 +271,7 @@ class _ControlVehiclesState extends State<ControlVehicles> {
   ..arrSharedPreferences().then((Map<String, dynamic> sharedPrefsData) {
       if (sharedPrefsData['turn'] == null) {
       SessionManager sm = SessionManager()
-        ..clearSession().then((value) {
+        ..clearSession().then((value) async {
           if (sharedPrefsData['dish'] == null) {
             final url = Uri.parse('https://www.comunicadosaraiza.com/movil_scan_api_prueba2/API/turn_assistance.php?idTurn=true');
               (http.post(url, body: json.encode({'idTurn': sharedPrefsData["idTurn"] }))).then((value) {
@@ -280,7 +280,7 @@ class _ControlVehiclesState extends State<ControlVehicles> {
             });
           }else{
             final url = Uri.parse('https://www.comunicadosaraiza.com/movil_scan_api_prueba2/API/turn_food.php?cerrarSess=true');
-            http.post(url, body: json.encode({'local': (storage.read(key: 'idHotelRegister')) })).then((value) {
+            http.post(url, body: json.encode({'local': (await storage.read(key: 'idHotelRegister')) })).then((value) {
             Provider.of<VarProvider>(context,listen: false).updateVariable(false);
             setState(() { });
             });

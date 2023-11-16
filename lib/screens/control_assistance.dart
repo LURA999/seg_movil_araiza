@@ -231,17 +231,20 @@ class _ControlAssistanceState extends State<ControlAssistance> {
           chargeHotel();
     if (sharedPrefsData['course_name'] == null) {
       SessionManager sm = SessionManager()
-        ..clearSession().then((value) {
+        ..clearSession().then((value) async {
+          print(sharedPrefsData);
           if (sharedPrefsData['dish'] == null) {
+            print('ASISTENCIA');
             final url = Uri.parse('https://www.comunicadosaraiza.com/movil_scan_api_prueba2/API/turn_vehicle.php?idTurn=true');
            (http.post(url, body: json.encode({'idTurn': sharedPrefsData["idTurn"] }))).then((value) {
             Provider.of<VarProvider>(context,listen: false).updateVariable(false);
             setState(() { });
           });
-          } else {
+          } else { 
+            print('COMIDA');
             //food
             final url = Uri.parse('https://www.comunicadosaraiza.com/movil_scan_api_prueba2/API/turn_food.php?cerrarSess=true');
-            http.post(url, body: json.encode({'local': (storage.read(key: 'idHotelRegister')) })).then((value) {
+            http.post(url, body: json.encode({'local': ( await storage.read(key: 'idHotelRegister')) })).then((value) {
             Provider.of<VarProvider>(context,listen: false).updateVariable(false);
             setState(() { });
             });
