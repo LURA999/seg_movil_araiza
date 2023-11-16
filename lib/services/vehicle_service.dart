@@ -109,7 +109,7 @@ try {
   } 
 
 
-  Future<List<Map<String, dynamic>>> showPlateRegister(String value,BuildContext context) async {
+  Future<List<Map<String, dynamic>>> showPlateRegister(String value,int localSearch,BuildContext context) async {
   var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
@@ -119,7 +119,7 @@ try {
 try {
     isSaving = true;
     notifyListeners();
-    final url = Uri.parse('$link/qr_vehicle.php?platesSearch=$value&local=${(await storage.read(key: 'idHotelRegister')) }');
+    final url = Uri.parse('$link/qr_vehicle.php?platesSearch=$value&local=$localSearch');
     var response = (await http.get(url)).body;
     final result = AccessMap.fromJson(json.decode(response));
     // var response = await http.post(url, body: {'pass': pass, 'departament': departament});
@@ -318,7 +318,7 @@ try {
       return false; 
     }
 
-  Future<Access> findVehicle(String plate,BuildContext context,int condition) async {
+  Future<Access> findVehicle(String plate, int local,BuildContext context,int condition) async {
     Access result = Access();
     var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
@@ -329,7 +329,7 @@ try {
 
 try {
       notifyListeners();
-      final url = Uri.parse('$link/qr_vehicle.php?plate=$plate&condition=$condition');
+      final url = Uri.parse('$link/qr_vehicle.php?plate=$plate&condition=$condition&local=$local');
       var response = (await http.get(url)).body;
       final result = Access.fromJson(jsonDecode(response));
       if (result.status == 200){
@@ -546,7 +546,7 @@ try {
     
     List<Map<String, dynamic>> listContainer = [];
     AccessMap result = AccessMap();
-
+    
     var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
@@ -605,15 +605,15 @@ try {
     isSaving = true;
     notifyListeners();
     final url = Uri.parse('$link/qr_vehicle.php?qr2=true');
-      var response = (await http.post(
-      url, 
-      body: json.encode(reg.toJson()))).body;
-      result =AccessMap.fromJson(json.decode(response));
-      if (result.status == 200){ 
-        isSaving = false;
-        notifyListeners();
-        return result;
-      }
+    var response = (await http.post(
+    url, 
+    body: json.encode(reg.toJson()))).body;
+    result =AccessMap.fromJson(json.decode(response));
+    if (result.status == 200){ 
+      isSaving = false;
+      notifyListeners();
+      return result;
+    }
     isSaving = false;
     notifyListeners();
       return result;

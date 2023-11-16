@@ -98,7 +98,8 @@ class _DiningRoomState extends State<DiningRoom> {
                     SizedBox(height: responsiveHeight),
                     const ButtonScreen(
                         textButton: 'Escaner QR', 
-                        btnPosition: 1
+                        btnPosition: 1,
+                        screen: 'scanner_qr_food',
                       ),
                     SizedBox(height: responsiveHeight),
                     ButtonForm(
@@ -212,7 +213,6 @@ Future<void> chargeHotel() async {
           arrList.add(el);
         }
       }
-
        formValuesRegistroMan['hotel']!.contenido =  await storage.read(key: 'idHotelRegister') ;
      /*  formValuesRegistroMan.addAll(
         {

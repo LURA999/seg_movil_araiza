@@ -6,6 +6,7 @@ class QrVehicle {
   String? department;
   String? timeEntry;
   String? timeExit;
+  String? local;
 
 QrVehicle({
     this.typeVh,
@@ -15,6 +16,7 @@ QrVehicle({
     this.department,
     this.timeEntry,
     this.timeExit,
+    this.local,
   });
 
 
@@ -27,6 +29,7 @@ Map<String, String> toJson() {
       data['department'] = department.toString();
       data['time_entry'] = timeEntry.toString();
       data['time_exit'] = timeExit.toString();
+      data['local'] = timeExit.toString();
     return data;
   } 
   
@@ -38,6 +41,7 @@ Map<String, String> toJson() {
       employeeName: json['employee_name'] as String,
       department: json['department'] as String,
       timeEntry: json['time_entry'] as String,
+      local: json['local'] as String?,
       timeExit: json['time_exit'] as String?,
     );
   }

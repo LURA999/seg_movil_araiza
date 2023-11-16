@@ -1000,7 +1000,7 @@ try {
 
 ///ACTUALIZACION
 
-  patch_examIn( ExamInModel obj,int idExam ,BuildContext context ) async {
+patch_updateExam( int idExam ,BuildContext context ) async {
   AccessMap result = AccessMap();
 
   var connectivityResult = await (Connectivity().checkConnectivity());
@@ -1010,6 +1010,43 @@ try {
     return result;
   } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
 try {
+    final url = Uri.parse('$link/medical_exam.php?timeModification_exam=$idExam');
+    var response = (await http.patch(url, headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+    final result = AccessMap.fromJson(jsonDecode(response));
+    if (result.status == 200) {
+      return result;
+    }
+     
+    isSaving = false;
+    notifyListeners();
+    return result; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e','Error');
+    return result; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e','Error');
+    return result; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e','Error');
+    return result; 
+  }
+  }
+    return result;     
+  }
+
+  patch_examIn( ExamInModel obj,int idExam ,BuildContext context ) async {
+  AccessMap result = AccessMap();
+
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.', 'Error');
+    return result;
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+  try {
     final url = Uri.parse('$link/medical_exam.php?patch_examIn=true');
     final f = json.encode(obj.toJson());
     // Decodifica el JSON a un objeto Dart
@@ -1022,6 +1059,7 @@ try {
     
     final result = AccessMap.fromJson(jsonDecode(response));
     if (result.status == 200) {
+      await patch_updateExam(idExam, context); 
       return result;
     }
      
@@ -1066,6 +1104,7 @@ try {
     var response = (await http.patch(url, body: nuevoJson,headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
     final result = AccessMap.fromJson(jsonDecode(response));
     if (result.status == 200) {
+      await patch_updateExam(idExam, context); 
       return result;
     }
      
@@ -1110,6 +1149,7 @@ try {
     var response = (await http.patch(url, body: nuevoJson,headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
     final result = AccessMap.fromJson(jsonDecode(response));
     if (result.status == 200) {
+      await patch_updateExam(idExam, context); 
       return result;
     }
      
@@ -1154,6 +1194,7 @@ try {
     var response = (await http.patch(url, body: nuevoJson,headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
     final result = AccessMap.fromJson(jsonDecode(response));
     if (result.status == 200) {
+        patch_updateExam(idExam, context); 
       return result;
     }
      
@@ -1199,6 +1240,7 @@ try {
     var response = (await http.patch(url, body: nuevoJson,headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
     final result = AccessMap.fromJson(jsonDecode(response));
     if (result.status == 200) {
+      await patch_updateExam(idExam, context); 
       return result;
     }
      
@@ -1243,6 +1285,7 @@ try {
     var response = (await http.patch(url, body: nuevoJson,headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
     final result = AccessMap.fromJson(jsonDecode(response));
     if (result.status == 200) {
+      await patch_updateExam(idExam, context); 
       return result;
     }
      
@@ -1287,6 +1330,7 @@ try {
     var response = (await http.patch(url, body: nuevoJson,headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
     final result = AccessMap.fromJson(jsonDecode(response));
     if (result.status == 200) {
+      await patch_updateExam(idExam, context); 
       return result;
     }
      
@@ -1331,6 +1375,7 @@ try {
     var response = (await http.patch(url, body: nuevoJson,headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
     final result = AccessMap.fromJson(jsonDecode(response));
     if (result.status == 200) {
+      await patch_updateExam(idExam, context); 
       return result;
     }
      
@@ -1375,6 +1420,7 @@ try {
     var response = (await http.patch(url, body: nuevoJson,headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
     final result = AccessMap.fromJson(jsonDecode(response));
     if (result.status == 200) {
+      await patch_updateExam(idExam, context); 
       return result;
     }
      
@@ -1419,6 +1465,7 @@ try {
     var response = (await http.patch(url, body: nuevoJson,headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
     final result = AccessMap.fromJson(jsonDecode(response));
     if (result.status == 200) {
+      await patch_updateExam(idExam, context); 
       return result;
     }
      
@@ -1463,6 +1510,7 @@ try {
     var response = (await http.patch(url, body: nuevoJson,headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
     final result = AccessMap.fromJson(jsonDecode(response));
     if (result.status == 200) {
+      await patch_updateExam(idExam, context); 
       return result;
     }
      
@@ -1546,6 +1594,7 @@ try {
     var response = (await http.patch(url, body: nuevoJson,headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
     final result = AccessMap.fromJson(jsonDecode(response));
     if (result.status == 200) {
+        await patch_updateExam(idExam, context); 
       return result;
     }
      
@@ -1591,6 +1640,7 @@ try {
     var response = (await http.patch(url, body: nuevoJson,headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
     final result = AccessMap.fromJson(jsonDecode(response));
     if (result.status == 200) {
+      await patch_updateExam(idExam, context); 
       return result;
     }
      
@@ -1658,7 +1708,43 @@ try {
     return result; 
   }
 
-  
+  delete_examMa( int idExam, BuildContext context ) async {
+    AccessMap result = AccessMap();
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.', 'Error');
+    return result;
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    final url = Uri.parse('$link/medical_exam.php?id=$idExam');
+    print('$link/medical_exam.php?id=$idExam');
+    var response = (await http.delete(url,headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
+    final result = AccessMap.fromJson(jsonDecode(response));
+    if (result.status == 200) {
+      return result;
+    }
+     
+    isSaving = false;
+    notifyListeners();
+    return result; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e','Error');
+    return result; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e','Error');
+    return result; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e','Error');
+    return result; 
+  }
+  }
+    return result; 
+  }
 
 
 

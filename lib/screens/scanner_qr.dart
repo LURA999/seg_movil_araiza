@@ -40,7 +40,10 @@ class _ScannerQR extends State<ScannerQR> {
   @override
   Widget build(BuildContext context) {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  final Map<String, dynamic>? args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
 
+    // Accede a los datos usando la clave
+  final String data = args?['dataKey'] ?? 'Sin datos';
   
     return Scaffold(
       body: Column(
@@ -97,7 +100,7 @@ class _ScannerQR extends State<ScannerQR> {
                     
                   ],
                 ),
-                const SizedBox(child: Navbar(contexto2: 'scanner_qr'))
+                SizedBox(child: Navbar(contexto2: data))
               ],
             ),
           )
@@ -172,10 +175,12 @@ class _ScannerQR extends State<ScannerQR> {
         //newQr.employeeName = objetoJson['employeeName'];
         //newQr.typevh = objetoJson['typevh'];
         //newQr.platesSearch = objetoJson['plates'];
+
         newQr.employee_num = objetoJson['numEmployee'];
         newQr.local = int.parse(objetoJson['local']);
     
         if(isProccesing == true){
+          if (isNumeric(objetoJson['numEmployee']) && isNumeric(objetoJson['local'])) {
             await vs.postQrVehicle(newQr,context).then((value) {
             if(value.status == 200){
               setState(() {
@@ -188,7 +193,13 @@ class _ScannerQR extends State<ScannerQR> {
                 text = 'Error: ${value.container![0]["error"]}';
               });
             }
-          });
+            });
+          }else{
+            setState(() {
+              color = Colors.red;
+              text = 'Error: QR incorrecto';
+            });
+          }
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
             duration: const Duration(seconds: 5),
@@ -220,25 +231,40 @@ class _ScannerQR extends State<ScannerQR> {
         }; 
         // var jsonResult = json.decode(result!.code!);
         // Map<String, dynamic> json = await vp.arrSharedPreferences();
+
+        /**Explicare la logica de aqui, en este caso ya se podra diferenciar entre una persona
+         * que es empleado y otra persona que no lo es.
+         * El empleado no necesita poner el nombre propio,mientras que alguien que no es empleado, si,
+         * la razon por la cual no se puso como acceso manual, es por la razon de que la persona pueda manipular
+         * y comer más de 2 veces.
+         */
         newQr.numEmployee = objetoJson['numEmployee'];
         newQr.contract = objetoJson['contract'];
         newQr.name = objetoJson['employeeName'] ?? '';
         newQr.local = objetoJson['local'];
         newQr.localApp = await storage.read(key: 'idHotelRegister');
         if(isProccesing == true){
-            await fs.postQrFood(newQr,context).then((value) {
-            if(value.status == 200){
-              setState(() {
-                color = Colors.green;
-                text = 'Scanner completado.';
-              });
+            if (isNumeric(objetoJson['numEmployee']) && isNumeric(objetoJson['contract']) && isNumeric(objetoJson['local'])) {
+             await fs.postQrFood(newQr,context).then((value) {
+              if(value.status == 200){
+                setState(() {
+                  color = Colors.green;
+                  text = 'Scanner completado.';
+                });
+              }else{
+                setState(() {
+                  color = Colors.red;
+                  text = 'Error: ${value.container![0]["error"]}';
+                });
+              }
+            }); 
             }else{
               setState(() {
-                color = Colors.red;
-                text = 'Error: ${value.container![0]["error"]}';
-              });
+                  color = Colors.red;
+                  text = 'Error: QR incorrecto';
+                });
             }
-          });
+            
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
             duration: const Duration(seconds: 5),
@@ -274,6 +300,8 @@ class _ScannerQR extends State<ScannerQR> {
         newQr.idTurn = json['idTurn'];
         newQr.local = objetoJson['local'];
         if(isProccesing == true){
+          if (isNumeric(objetoJson['numEmployee'] ) 
+          && isNumeric(objetoJson['local'] )) {
             await as.postQrAssistance(newQr,context).then((value) {
             if(value.status == 200){
               setState(() {
@@ -287,6 +315,13 @@ class _ScannerQR extends State<ScannerQR> {
               });
             }
           });
+          }else{
+            setState(() {
+              color = Colors.red;
+              text = 'Error: QR incorrecto';
+            });
+          }
+            
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
             duration: const Duration(seconds: 5),
@@ -322,6 +357,13 @@ class _ScannerQR extends State<ScannerQR> {
     }
   }
   
+  bool isNumeric(String? s) {
+  if (s == null) {
+    return false;
+  }
+  return int.tryParse(s) != null;
+  }
+
   @override
   void dispose() {
     controller?.dispose();

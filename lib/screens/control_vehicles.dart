@@ -21,15 +21,10 @@ class ControlVehicles extends StatefulWidget {
 class _ControlVehiclesState extends State<ControlVehicles> {
   
   double keyboardHeightRatio = 0.0;    
+  final List<Map<String, dynamic>> arrList = [];
   final storage = FlutterSecureStorage();
-
-
-  
-  @override
-  Widget build(BuildContext context) {
-    
-    //Nombre del campo :  contenido, ¿obligatorio?, ¿!select?, ¿!enabled?
-
+  bool cargarLocales = true;
+  //Nombre del campo :  contenido, ¿obligatorio?, ¿!select?, ¿!enabled?
     //Fecha se inserta automaticamente
     final Map<String, MultiInputsForm> formValuesInicioTur = {
       'guard': MultiInputsForm(contenido: '', obligatorio: true,autocomplete: true, autocompleteAsync: true,screen:0),
@@ -40,6 +35,7 @@ class _ControlVehiclesState extends State<ControlVehicles> {
     //fecha se inserta manualmente
     final Map<String, MultiInputsForm> formValuesRegistroMan = {
       'platesSearch' : MultiInputsForm(contenido: '', obligatorio: true,autocomplete: true, autocompleteAsync: true,screen:  2),
+      'hotel': MultiInputsForm(contenido: '', obligatorio: false, select: true, activeListSelect: true),
       'typevh' : MultiInputsForm(contenido: '', obligatorio: true),
       'color' : MultiInputsForm(contenido: '', obligatorio: true),
       'employeeName' : MultiInputsForm(contenido: '', obligatorio: true, enabled:  false),
@@ -58,7 +54,7 @@ class _ControlVehiclesState extends State<ControlVehicles> {
     };
 
     final Map<String, MultiInputsForm> formValuesBuscarVh = {
-      'platesSearch' :MultiInputsForm(contenido: '', obligatorio: true,autocomplete: true, autocompleteAsync: true,
+      'platesSearch' :MultiInputsForm(contenido: '', obligatorio: true,autocomplete: true, autocompleteAsync: true, 
       suffixIcon: Icons.search_outlined, screen:  1),
       'typevh' :MultiInputsForm(contenido: '', enabled: false),
       'color' :MultiInputsForm(contenido: '', enabled: false),
@@ -67,12 +63,14 @@ class _ControlVehiclesState extends State<ControlVehicles> {
       'outt' :MultiInputsForm(contenido: '', enabled: false),
     };
 
+  @override
+  Widget build(BuildContext context) {
     final TextEditingController controller = TextEditingController();
     double responsiveHeight = MediaQuery.of(context).size.height * 0.02;
     double responsivePadding = MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.width * 0.02 : MediaQuery.of(context).size.height * 0.02;
 
-    return Scaffold(
-        body: Column(
+      return Scaffold(
+      body: Column(
       children: [
         Expanded(
           child: Container(
@@ -111,24 +109,27 @@ class _ControlVehiclesState extends State<ControlVehicles> {
                     SizedBox(height: responsiveHeight),
                     const ButtonScreen(
                         textButton: 'Escaner QR', 
-                        btnPosition: 1
+                        btnPosition: 1,
+                        screen: 'scanner_qr_vehicles',
                       ),
                     SizedBox(height: responsiveHeight),
                     ButtonForm(
+                        controller: controller,
                         control: 1,
                         textButton: 'Registro Manual',
                         btnPosition: 2,
-                        controller: controller,
                         field: const [
                           'Registro Manual',
                           'Registrar',
                           'placas',
+                          'Hotel',
                           'Tipo de vehículo',
                           'Color',
                           'Nombre',
                           'Departamento'
                         ],
                         formValue: formValuesRegistroMan,
+                        listSelectForm: arrList,
                         enabled: false),
                     SizedBox(height: responsiveHeight,),
                     SizedBox(
@@ -239,16 +240,36 @@ class _ControlVehiclesState extends State<ControlVehicles> {
       ],
       )
     );
+      
   }
   
+  Future<List<Map<String, dynamic>>> chargeHotel() async {
+    LocalService lc = LocalService();
+    final locals = await lc.getLocal(context);
+
+    for (var el in locals.container) {
+      if (int.parse(el['idLocal']) > 0) {
+        arrList.add(el);
+      }
+    }
+    formValuesRegistroMan['hotel']!.contenido =  await storage.read(key: 'idHotelRegister') ;
+     /*  formValuesRegistroMan.addAll(
+        {
+          'hotel' : MultiInputsForm(contenido: await storage.read(key: 'idHotelRegister'), obligatorio: false, select: true,listSelectForm: arrList),
+        }
+      );  */
+
+    return arrList;
+  }
+  
+
   @override
   initState() { 
-    super.initState();
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
-
-   VarProvider vh = VarProvider()
+  SystemChannels.textInput.invokeMethod('TextInput.hide');
+  chargeHotel();
+  VarProvider vh = VarProvider()
   ..arrSharedPreferences().then((Map<String, dynamic> sharedPrefsData) {
-    if (sharedPrefsData['turn'] == null) {
+      if (sharedPrefsData['turn'] == null) {
       SessionManager sm = SessionManager()
         ..clearSession().then((value) {
           if (sharedPrefsData['dish'] == null) {
@@ -264,11 +285,11 @@ class _ControlVehiclesState extends State<ControlVehicles> {
             setState(() { });
             });
           }
-          
         });
-    }
-  }).catchError((error) {
-    //
-  });
+      }
+    }).catchError((error) {
+      //
+    });
+     super.initState();
   }
 }

@@ -98,7 +98,8 @@ class _ControlAssistanceState extends State<ControlAssistance> {
                     SizedBox(height: responsiveHeight),
                     const ButtonScreen(
                         textButton: 'Escaner QR', 
-                        btnPosition: 1
+                        btnPosition: 1,
+                        screen:'scanner_qr_assistance'
                       ),
                     SizedBox(height: responsiveHeight),
                     ButtonForm(

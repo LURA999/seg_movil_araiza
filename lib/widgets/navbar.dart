@@ -1,4 +1,5 @@
 import 'package:app_seguimiento_movil/routers/router.dart';
+import 'package:app_seguimiento_movil/widgets/popUp_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -145,7 +146,6 @@ class _ButtonNavSvgState extends State<ButtonNavSvg> {
               if (routes.length > 1) {
                 final previousRouteSettings = routes[routes.indexOf(routes.firstWhere((e) => e.settings.name == widget.contexto2)) - 1].settings;
                 final previousRouteName = previousRouteSettings.name== '/' ? 'home' : previousRouteSettings.name;
-                
                 Navigator.of(context).pushNamed(previousRouteName!);
               } 
             } catch (e) {

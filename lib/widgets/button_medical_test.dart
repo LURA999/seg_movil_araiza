@@ -140,7 +140,6 @@ final List<GlobalKey<FormState>> myFormKey = [
   GlobalKey<FormState>(),
 ];
 // final List<TextEditingController> controller = [TextEditingController(),TextEditingController(),TextEditingController()];
-
 List<Map<String, dynamic>> formpart1 = [
 {//Primeras preguntas (0)
 'Numero de Empleado' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '',keyboardType: TextInputType.number, obligatorio: true,  enabled: true),
@@ -2224,7 +2223,7 @@ StatefulBuilder(
                         activado = activadoArr.any((element) => element == true);
                         if (activado) {
                           // print('actualizando octava seccion');
-                        await eips.patch_examPhY(epym, idExam, context);    
+                        await eips.patch_examPhY(epym, idExam, context);   
                         }
                       }
 
@@ -2429,9 +2428,9 @@ StatefulBuilder(
 
                       //255 + ( 11 * 4 = 44) = 299
                       if (edit == false) {
-                        var json =  ehm.toJson();
-                        bool valid = json.keys.any((key) => json[key].toString() != '');
-                        if (valid) {
+                        // var json =  ehm.toJson();
+                        // bool valid = json.keys.any((key) => json[key].toString() != '');
+                        if (ehm.toJson().isNotEmpty) {
                           ehm.fk_idExam = edm.idDetExamInPr;
                           await eips.post_examHi(ehm, 1+i, context);
                         }

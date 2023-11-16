@@ -41,6 +41,7 @@ String saveSearchWord = '';
 ScrollController scrollControl = ScrollController();
 bool isLoading = false;
 BouncingScrollPhysics? physCustom;
+ExamIniPreService eips = ExamIniPreService();
 
 final TextEditingController controller = TextEditingController();
 final Map<String, MultiInputsForm> formValuesBuscar = {
@@ -56,7 +57,7 @@ void actualizarWidget() {
 
  Future<List<MedicalRecord>> fetchData() async {
   if (arrLoadFiles) {
-    ExamIniPreService eips = ExamIniPreService();
+    
     final list = await eips.getAllExamList(context);
     amount = int.parse((await eips.getAllPagesPaginator(context,2,0,saveSearchWord))[0]['cantidad']);
 
@@ -184,7 +185,7 @@ return Scaffold(
                                   await changeLocal.chargeHotel(context);
 
                                   controller.clear();
-                                  ExamIniPreService eips = ExamIniPreService();
+                                  
                                   final list = await eips.getAllExamListSearch(context,'');
                                   files.clear();
                                   setState(() { }); 
@@ -248,7 +249,7 @@ return Scaffold(
                                       arrDepa =  await dp.getDepartament(context);                              
                                       await bMedical.newMethod(setState,context, arrDepa, null, null, null, null, null, null, null, null, null, null, -1, false);
 
-                                      searchTable(context);
+                                      await searchTable(context);
                                     },
                                     child: Text('Crear nuevo',style: getTextStyleButtonFieldRow(context)),
                                     )
@@ -340,7 +341,7 @@ return Scaffold(
 
           List<Map<String, dynamic>> tab ;
 
-          ExamIniPreService eips = ExamIniPreService();
+          
           if (saveSearchWord != '') {
             tab = await eips.getAllExamListSearch_paginator(context, 1, (number-1)*10, saveSearchWord);
           } else {
@@ -375,7 +376,7 @@ return Scaffold(
 
 Future<void> searchTable(dynamic context) async {
     saveSearchWord = controller.text;
-    ExamIniPreService eips = ExamIniPreService();
+    
     if (saveSearchWord != '') {
       amount = int.parse((await eips.getAllPagesPaginator(context,1,0,saveSearchWord))[0]['cantidad']);
     } else {
@@ -558,6 +559,23 @@ Future<void> fetchDataTable() async {
                         ],
                       ),
                     ),
+                    PopupMenuItem(
+                      value: 'delete',
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            alignment: Alignment.center,
+                            child:  SvgPicture.asset('assets/images/icons_seh/delete.svg',
+                            width: MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <500?
+                            MediaQuery.of(context).size.height * (MediaQuery.of(context).orientation == Orientation.landscape? 0.4 : 0.02)
+                            :
+                            MediaQuery.of(context).size.height * (MediaQuery.of(context).orientation == Orientation.landscape? 0.04 : 0.02)),),
+                            Text('  Eliminar', style: getTextStyleButtonFieldRow(context))
+                        ],
+                      ),
+                    ),
                     /* PopupMenuItem(
                       value: 'borrar',
                       child: Row(
@@ -588,6 +606,36 @@ Future<void> fetchDataTable() async {
                     case 'prev':
                         await onTapEdit(snapshot, index, context, 2, bMedical);                        
                       break;
+                    case 'delete':
+                    showDialog(
+                      context: context, // Accede al contexto del widget actual
+                      builder: (BuildContext context2) {
+                          return Stack(
+                            children: [
+                              const ModalBarrier(
+                                dismissible: false,
+                                color:  Color.fromARGB(80, 0, 0, 0),
+                              ),
+                              AlertDialog(
+                                title:  Text('¿Realmente desea eliminar este documento?',style: getTextStyleText(context,FontWeight.bold,null),),
+                                content: Text('Documento del empleado ${snapshot.data![index].id}'),
+                                actions: [
+                                  ElevatedButton(onPressed: (){
+                                      Navigator.of(context2).pop();
+                                    }
+                                  , child: Text('Cancelar')),
+                                  ElevatedButton(onPressed: () async {
+                                      await onTapEdit(snapshot, index, context, 4, bMedical); 
+                                      Navigator.of(context2).pop();
+                                  }
+                                  , child: Text('Aceptar'))
+                                  
+                                ],
+                              ),
+                            ],
+                          );
+                      });                       
+                      break;  
                     // case 'borrar':
                     //     await onTapEdit(snapshot, index, context, 2);                        
                     //   break;
@@ -658,11 +706,11 @@ Future<void> fetchDataTable() async {
           );
       });
       
-
+      if (type < 4) {
       int cExamPart1 = 0;
       yesNotEnum = [];
       checkboxDLN = [[]];
-      ExamIniPreService eips = ExamIniPreService();
+      
       final  info = await eips.getOneExamPart1(snapshot.data![index].exam,context);
       resString = [];
       info[0].forEach((key, value) {
@@ -763,11 +811,19 @@ Future<void> fetchDataTable() async {
       Navigator.of(contextshow!).pop();
       setState(() { });
 
+      }else{
+        await eips.delete_examMa((snapshot.data![index] as MedicalRecord).exam, context);
+        Navigator.of(contextshow!).pop();
+        await searchTable(context);
+        setState(() { });
+      }
+
+      
       //Edit
       if (type == 1) {
       await bMedical.newMethod(setState,context, arrDepa, resString, resString2, resString3, bolArr, 
       yesNotEnum, checkboxDLN, causeDisease, yesNotDisease, manoDomEnum, metodoAntiEnum,int.parse(snapshot.data![index].exam.toString()), true );
-        searchTable(context);
+       await searchTable(context);
       
       //Preview
       } else if(type == 2) {

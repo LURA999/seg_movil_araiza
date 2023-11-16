@@ -5,11 +5,13 @@ import '../services/services.dart';
 class ButtonScreen extends StatelessWidget {
   final String textButton;
   final int btnPosition;
+  final String screen; 
 
   const ButtonScreen({
     super.key,
     required this.textButton,
-    required this.btnPosition,
+    required this.btnPosition, 
+    required this.screen,
   });
 
   @override
@@ -22,7 +24,7 @@ class ButtonScreen extends StatelessWidget {
         onPressed: Provider.of<VarProvider>(context).varControl
             ? () {
                 if (btnPosition == 1) {
-                Navigator.of(context).pushNamed('scanner_qr');
+                Navigator.of(context).pushNamed(screen, arguments: {'dataKey': screen});
                 }
               }
             : null,

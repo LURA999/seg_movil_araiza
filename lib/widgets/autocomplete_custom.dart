@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/models.dart';
 import '../services/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class AutocompleteCustom extends StatefulWidget {
   List<String>? goptions;  
@@ -14,6 +15,7 @@ class AutocompleteCustom extends StatefulWidget {
   final bool onSelect = true;
   Function(dynamic,List<String>)? onFormValueChange;
   
+
    AutocompleteCustom({
     Key? key,
     required this.autocompleteAsync,
@@ -33,10 +35,12 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
   List<String>? tempOptions; // Variable temporal para almacenar los resultados de la base de datos
   VehicleService vService = VehicleService();
   AssistanceService aService = AssistanceService();
-  
+  final storage = const FlutterSecureStorage();
+
 
   @override
   Widget build(BuildContext context) {
+
     return LayoutBuilder(
       builder: (context, constraints) => 
       Autocomplete<String>(
@@ -82,13 +86,14 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
           case 'platesSearch':  
             switch (widget.screen){
             case 1:
-              Access r = await vService.findVehicle(selection,context,1);
+              Access r = await vService.findVehicle(selection,int.parse((await storage.read(key: 'idHotelRegister')).toString()),context,1);
               widget.onFormValueChange!(r.container,['plates','type_vh','color','employee_name','time_entry','time_exit']);
               widget.formValue[widget.formProperty]!.contenido = selection;
            break;
             case 2:
-              Access r = await vService.findVehicle(selection,context,2);
-              widget.onFormValueChange!(r.container,['plates','type_vh','color','employee_name','department']);
+              Access r = await vService.findVehicle(selection,int.parse(widget.formValue['hotel']!.contenido) ,context,2);
+              (r.container as List<dynamic>)[0]['hotel'] =  widget.formValue['hotel']!.contenido;
+              widget.onFormValueChange!(r.container,['plates','hotel','type_vh','color','employee_name','department']);
               widget.formValue[widget.formProperty]!.contenido = selection;
             break;
             }
@@ -98,6 +103,7 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
               final arrNameSearch = arr.firstWhere((element) => element["complete_name"] == selection);
               // widget.formValue['hotel']!.contenido = arrNameSearch['cveLocal'];
              await widget.onFormValueChange!([arrNameSearch],['usuario']);
+
             break;
           case 'course_name':
           break;
@@ -229,7 +235,17 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
 
   Future<List<Map<String,dynamic>>> buscaAutomaticaPlatesSearch(String value) async {
   VehicleService vs = VehicleService();
-  arr= await vs.showPlateRegister(value.toLowerCase(),context);
+  int hotel = 0;
+  switch (widget.screen) {
+    case 1:
+        hotel = int.parse((await storage.read(key: 'idHotelRegister')).toString());
+      break;
+    case 2:
+        hotel = int.parse(widget.formValue['hotel']!.contenido);
+      break;
+    default:
+  }
+  arr= await vs.showPlateRegister(value.toLowerCase(),hotel,context);
     for (var i = 0; i < arr.length; i++) {
       if (tempOptions !=null) {
         tempOptions!.add(arr[i]['plates']);

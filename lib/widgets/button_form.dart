@@ -14,7 +14,6 @@ import 'package:app_seguimiento_movil/services/services.dart';
 import 'package:intl/intl.dart';
 import 'dart:ui' as ui;
 import 'dart:convert';
-import '../screens/home_screen.dart';
 import '../theme/app_theme.dart';
 
 class ButtonForm extends StatefulWidget {
@@ -101,9 +100,12 @@ onFormValueChange(dynamic value,List<String> keyValue) {
     if (inputFields[i].runtimeType.toString() == 'MultiInputs') {
       (inputFields[i] as MultiInputs).controller!.text = value[0][keyValue[ivalue]] ?? '';
       formValue[(inputFields[i] as MultiInputs).formProperty]!.contenido = value[0][keyValue[ivalue]];
+      // print('${keyValue[ivalue]} : ${value[0][keyValue[ivalue]]} = ${formValue[(inputFields[i] as MultiInputs).formProperty]!.contenido}');
       ivalue++;
     }
   } 
+
+ 
   setState(() { });
   }
 
@@ -399,20 +401,19 @@ return showDialog<String>(
                           r.platesSearch = formValue['platesSearch']!.contenido;
                           r.typevh = formValue['typevh']!.contenido;
                           r.departament = formValue['departament']!.contenido;  
-
+                          r.local = formValue['hotel']!.contenido;
                           setState((){
                               desactivarButton = true;
                           });
-
-                          AccessMap res =  await vService.postRegisterVehicle(r,context);
-
-                          if(res.status == 200){
-                          Navigator.pop(context);
-                          }else{
+                        AccessMap res =  await vService.postRegisterVehicle(r,context);
+ 
+                        if(res.status == 200){
+                            Navigator.pop(context);
+                        }else{
                           setState((){
                             desactivarButton = false;
-                          });
-                          }
+                        });
+                        }
                         }
     
                         //Agregar observaciones
@@ -441,6 +442,7 @@ return showDialog<String>(
                               de.dateFinal = formValue['date_final_hour']!.contenido!;
                               de.turn = formValue['turn']!.contenido!;
                               de.guard = formValue['guard']!.contenido;
+                              
                               List<Map<String, dynamic>> jsonStr = await vService.selectDateVehicle(de,context);
                               List<Map<String, dynamic>> jsonStrObs = await vService.selectObsVehicle(de,context);
                               List<Map<String, dynamic>> dataGuard = await vService.dataGuard(de.guard!,context);
@@ -514,7 +516,7 @@ return showDialog<String>(
                             setState((){
                               desactivarButton = true;
                             });
-                            Access r = await vService.findVehicle(formValue['platesSearch']!.contenido!,context,1);
+                            Access r = await vService.findVehicle(formValue['platesSearch']!.contenido!, int.parse((await storage.read(key: 'idHotelRegister')).toString()) ,context,1);
                             if (r.container != null) {
                               for (var rc in r.container) {
                                 formValue['platesSearch']!.contenido = rc['plates'];

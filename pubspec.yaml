@@ -94,7 +94,6 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   
-  
   # permissions:
   #   - write_external_storage
 
@@ -116,6 +115,7 @@ flutter:
     - assets/images/icons_seh/download.svg
     - assets/images/icons_seh/edit.svg
     - assets/images/icons_seh/preview.svg
+    - assets/images/icons_seh/delete.svg
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

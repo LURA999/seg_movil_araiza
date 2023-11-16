@@ -13,7 +13,9 @@ class Routers {
         'control_seh',
       },
       {
-        'scanner_qr',
+        'scanner_qr_vehicles',
+        'scanner_qr_assistance',
+        'scanner_qr_food',
         'control_food',
         'medical_records',
         'routes_seh',
@@ -28,18 +30,20 @@ class Routers {
     //Seccion de vehiculos
     /*home*/ namesRouter[0].toList()[0] : ( _ ) => const CustomBackBvuttonInterceptor(child:HomeScreen()), 
     /*control_vehicles*/ namesRouter[1].toList()[0] : ( _ ) => const CustomBackBvuttonInterceptor(child:ControlVehicles()),
-    /*scanner_qr*/ namesRouter[2].toList()[0] : ( _ ) => const CustomBackBvuttonInterceptor(child:ScannerQR()),
+    /*scanner_qr_vehicles*/ namesRouter[2].toList()[0] : ( _ ) => const CustomBackBvuttonInterceptor(child:ScannerQR()),
+    /*scanner_qr_assistance*/ namesRouter[2].toList()[1] : ( _ ) => const CustomBackBvuttonInterceptor(child:ScannerQR()),
+    /*scanner_qr_food*/ namesRouter[2].toList()[2] : ( _ ) => const CustomBackBvuttonInterceptor(child:ScannerQR()),
 
     //Seccuion de RH
     /*control_rh*/ namesRouter[1].toList()[1] : ( _ ) => const CustomBackBvuttonInterceptor(child:RhControl()),
-    /*control_food*/ namesRouter[2].toList()[1] : ( _ ) => const CustomBackBvuttonInterceptor(child:DiningRoom()),
+    /*control_food*/ namesRouter[2].toList()[3] : ( _ ) => const CustomBackBvuttonInterceptor(child:DiningRoom()),
 
     //Seccion de SeH
     /*control_seh*/ namesRouter[1].toList()[2] : ( _ ) => const CustomBackBvuttonInterceptor(child:SehControl()),
-    /*medical_records*/ namesRouter[2].toList()[2] : ( _ ) => const CustomBackBvuttonInterceptor(child:MedicalRecords()),
-    /*routes_seh*/ namesRouter[2].toList()[3] : ( _ ) => const CustomBackBvuttonInterceptor(child:RoutesSeh()),
-    /*tour_seh*/ namesRouter[2].toList()[4] : ( _ ) => const CustomBackBvuttonInterceptor(child:QuestRoute()),
-    /*control_assistance*/ namesRouter[2].toList()[5] : ( _ ) => const CustomBackBvuttonInterceptor(child:ControlAssistance()),
+    /*medical_records*/ namesRouter[2].toList()[4] : ( _ ) => const CustomBackBvuttonInterceptor(child:MedicalRecords()),
+    /*routes_seh*/ namesRouter[2].toList()[5] : ( _ ) => const CustomBackBvuttonInterceptor(child:RoutesSeh()),
+    /*tour_seh*/ namesRouter[2].toList()[6] : ( _ ) => const CustomBackBvuttonInterceptor(child:QuestRoute()),
+    /*control_assistance*/ namesRouter[2].toList()[7] : ( _ ) => const CustomBackBvuttonInterceptor(child:ControlAssistance()),
 
 
   }; 
