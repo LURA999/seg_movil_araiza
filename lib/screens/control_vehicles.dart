@@ -62,6 +62,7 @@ class _ControlVehiclesState extends State<ControlVehicles> {
       'entry' :MultiInputsForm(contenido: '', enabled: false),
       'outt' :MultiInputsForm(contenido: '', enabled: false),
     };
+  bool cargarDatos = true;
 
   @override
   Widget build(BuildContext context) {
@@ -69,182 +70,199 @@ class _ControlVehiclesState extends State<ControlVehicles> {
     double responsiveHeight = MediaQuery.of(context).size.height * 0.02;
     double responsivePadding = MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.width * 0.02 : MediaQuery.of(context).size.height * 0.02;
 
-      return Scaffold(
-      body: Column(
-      children: [
-        Expanded(
-          child: Container(
-            color: const Color.fromRGBO(246, 247, 252, 1),
-            child: Align(
-              alignment: Alignment.center,
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding:  
-                  MediaQuery.of(context).orientation == Orientation.portrait ? 
-                  EdgeInsets.only(left: MediaQuery.of(context).size.width*0.08 ,right:  MediaQuery.of(context).size.width*0.08) :
-                  EdgeInsets.only(left: MediaQuery.of(context).size.width*0.08 ,right: MediaQuery.of(context).size.width*0.08, top: MediaQuery.of(context).size.height*0.1),
-                  child: Column(children: [
-                    SizedBox(
-                      child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text('Control de vehículos',style: getTextStyleTitle(context,null) ),          
-                      )
-                    ),
-                    SizedBox(height: responsiveHeight),
-                    ButtonForm(
-                        control: 1,
-                        textButton: 'Inicio turno',
-                        btnPosition: 1,
-                        controller: controller,
-                        field: const [
-                          'Iniciar Turno',
-                          'Iniciar',
-                          'Nombre del guardia',
-                          'Turno',
-                          'Firma'
-                        ],
-                        formValue: formValuesInicioTur,
-                        listSelect: const [['Primer Turno', 'Segundo Turno', 'Tercer turno'],[]],
-                        enabled: true),
-                    SizedBox(height: responsiveHeight),
-                    const ButtonScreen(
-                        textButton: 'Escaner QR', 
-                        btnPosition: 1,
-                        screen: 'scanner_qr_vehicles',
-                      ),
-                    SizedBox(height: responsiveHeight),
-                    ButtonForm(
-                        controller: controller,
-                        control: 1,
-                        textButton: 'Registro Manual',
-                        btnPosition: 2,
-                        field: const [
-                          'Registro Manual',
-                          'Registrar',
-                          'placas',
-                          'Hotel',
-                          'Tipo de vehículo',
-                          'Color',
-                          'Nombre',
-                          'Departamento'
-                        ],
-                        formValue: formValuesRegistroMan,
-                        listSelectForm: arrList,
-                        enabled: false),
-                    SizedBox(height: responsiveHeight,),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      child: ElevatedButton(
-                        onPressed: (Provider.of<VarProvider>(context).varControl || false) ? () {
-                          showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return  Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SingleChildScrollView(
-                                  child: AlertDialog(
-                                    title: Text('Cerrar Turno',style: getTextStyleText(context, null,null) ),
-                                    content: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                      children:[
-                                        ElevatedButton(onPressed:(){
-                                          Navigator.of(context).pop(context);
-                                        },child: Text('Cancelar', style: getTextStyleButtonField(context)
-                                        )),
-                                        const SizedBox(width: 8),
-                                        ElevatedButton(onPressed: (Provider.of<VarProvider>(context).varSalir) == false?() async {
-                                          VehicleService vs = VehicleService();
-                                          Provider.of<VarProvider>(context,listen: false).updateVariable(false);
-                                          Provider.of<VarProvider>(context,listen: false).updateVarSalir(true);
-                                          var salirInt = (await vs.postCloseTurnVehicle(context));
-                                          if (salirInt) {
-                                            Provider.of<VarProvider>(context,listen: false).updateVarSalir(false);
-                                            Navigator.of(context).pop(context);
-                                            Navigator.of(context).pushNamed('home');
-                                            
-                                          }else{
-                                            Provider.of<VarProvider>(context,listen: false).updateVariable(true);
-                                            Provider.of<VarProvider>(context,listen: false).updateVarSalir(false);
-                                          }
-                                        }: null, child: Text('Aceptar', style: getTextStyleButtonField(context)
-                                        )),
-                                      ]
-                                    ),
-                                  ),
-                                )
-                              ],
-                            );
-                          }
-                          );
-                        }:null,
-                        child:  Padding(
-                          padding: EdgeInsets.all(responsivePadding),
-                          child: Text('Cerrar turno',style: getTextStyleButtonField(context)
+      return FutureBuilder<List<Map<String, dynamic>>>(
+      future: recolectandoLocales(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Scaffold(
+          body: Column(
+          children: [
+            Expanded(
+              child: Container(
+                color: const Color.fromRGBO(246, 247, 252, 1),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding:  
+                      MediaQuery.of(context).orientation == Orientation.portrait ? 
+                      EdgeInsets.only(left: MediaQuery.of(context).size.width*0.08 ,right:  MediaQuery.of(context).size.width*0.08) :
+                      EdgeInsets.only(left: MediaQuery.of(context).size.width*0.08 ,right: MediaQuery.of(context).size.width*0.08, top: MediaQuery.of(context).size.height*0.1),
+                      child: Column(children: [
+                        SizedBox(
+                          child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text('Control de vehículos',style: getTextStyleTitle(context,null) ),          
+                          )
+                        ),
+                        SizedBox(height: responsiveHeight),
+                        ButtonForm(
+                            control: 1,
+                            textButton: 'Inicio turno',
+                            btnPosition: 1,
+                            controller: controller,
+                            field: const [
+                              'Iniciar Turno',
+                              'Iniciar',
+                              'Nombre del guardia',
+                              'Turno',
+                              'Firma'
+                            ],
+                            formValue: formValuesInicioTur,
+                            listSelect: const [['Primer Turno', 'Segundo Turno', 'Tercer turno'],[]],
+                            enabled: true),
+                        SizedBox(height: responsiveHeight),
+                        const ButtonScreen(
+                            textButton: 'Escaner QR', 
+                            btnPosition: 1,
+                            screen: 'scanner_qr_vehicles',
                           ),
-                        )
-                      ),
+                        SizedBox(height: responsiveHeight),
+                        ButtonForm(
+                            controller: controller,
+                            control: 1,
+                            textButton: 'Registro Manual',
+                            btnPosition: 2,
+                            field: const [
+                              'Registro Manual',
+                              'Registrar',
+                              'placas',
+                              'Hotel',
+                              'Tipo de vehículo',
+                              'Color',
+                              'Nombre',
+                              'Departamento'
+                            ],
+                            formValue: formValuesRegistroMan,
+                            listSelectForm: snapshot.data,
+                            enabled: false),
+                        SizedBox(height: responsiveHeight,),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          child: ElevatedButton(
+                            onPressed: (Provider.of<VarProvider>(context).varControl || false) ? () {
+                              showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return  Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SingleChildScrollView(
+                                      child: AlertDialog(
+                                        title: Text('Cerrar Turno',style: getTextStyleText(context, null,null) ),
+                                        content: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          children:[
+                                            ElevatedButton(onPressed:(){
+                                              Navigator.of(context).pop(context);
+                                            },child: Text('Cancelar', style: getTextStyleButtonField(context)
+                                            )),
+                                            const SizedBox(width: 8),
+                                            ElevatedButton(onPressed: (Provider.of<VarProvider>(context).varSalir) == false?() async {
+                                              VehicleService vs = VehicleService();
+                                              Provider.of<VarProvider>(context,listen: false).updateVariable(false);
+                                              Provider.of<VarProvider>(context,listen: false).updateVarSalir(true);
+                                              var salirInt = (await vs.postCloseTurnVehicle(context));
+                                              if (salirInt) {
+                                                Provider.of<VarProvider>(context,listen: false).updateVarSalir(false);
+                                                Navigator.of(context).pop(context);
+                                                Navigator.of(context).pushNamed('home');
+                                                
+                                              }else{
+                                                Provider.of<VarProvider>(context,listen: false).updateVariable(true);
+                                                Provider.of<VarProvider>(context,listen: false).updateVarSalir(false);
+                                              }
+                                            }: null, child: Text('Aceptar', style: getTextStyleButtonField(context)
+                                            )),
+                                          ]
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                );
+                              }
+                              );
+                            }:null,
+                            child:  Padding(
+                              padding: EdgeInsets.all(responsivePadding),
+                              child: Text('Cerrar turno',style: getTextStyleButtonField(context)
+                              ),
+                            )
+                          ),
+                        ),
+                        SizedBox(height: responsiveHeight),
+                        ButtonForm(
+                            control: 1,
+                            textButton: 'Agregar observaciones',
+                            btnPosition: 3,
+                            controller: controller,
+                            field: const ['Enviar','Enviar', 'Agregue una descripción...'],
+                            formValue: formValuesObservacion,
+                            enabled: false),
+                        SizedBox(height: responsiveHeight),
+                        ButtonForm(
+                            control: 1,
+                            controller: controller,
+                            textButton: 'Descargar reporte',
+                            btnPosition: 4,
+                            field: const [
+                              'Descargar reporte',
+                              'Descargar',
+                              'Guardia',
+                              'Turno',
+                              'Fecha inicial y hora',
+                              'Fecha final y hora'
+                            ],
+                            listSelect: const [['Primer Turno', 'Segundo Turno', 'Tercer turno', 'Todos los turnos'],[]],
+                            formValue: formValuesDescRepor,
+                            enabled: true),
+                        SizedBox(height: responsiveHeight),
+                        ButtonForm(
+                          control: 1,
+                          controller: controller,
+                          textButton: 'Buscar vehículo',
+                          btnPosition: 5,
+                          field: const [
+                            'Buscar vehículo',
+                            'Buscar',
+                            'Placas',
+                            'Tipo de vehículo',
+                            'Color',
+                            'Nombre',
+                            'Entrada',
+                            'Salida'
+                          ],
+                          formValue: formValuesBuscarVh,
+                          enabled: true,
+                        ),
+                      ]),
                     ),
-                    SizedBox(height: responsiveHeight),
-                    ButtonForm(
-                        control: 1,
-                        textButton: 'Agregar observaciones',
-                        btnPosition: 3,
-                        controller: controller,
-                        field: const ['Enviar','Enviar', 'Agregue una descripción...'],
-                        formValue: formValuesObservacion,
-                        enabled: false),
-                    SizedBox(height: responsiveHeight),
-                    ButtonForm(
-                        control: 1,
-                        controller: controller,
-                        textButton: 'Descargar reporte',
-                        btnPosition: 4,
-                        field: const [
-                          'Descargar reporte',
-                          'Descargar',
-                          'Guardia',
-                          'Turno',
-                          'Fecha inicial y hora',
-                          'Fecha final y hora'
-                        ],
-                        listSelect: const [['Primer Turno', 'Segundo Turno', 'Tercer turno', 'Todos los turnos'],[]],
-                        formValue: formValuesDescRepor,
-                        enabled: true),
-                    SizedBox(height: responsiveHeight),
-                    ButtonForm(
-                      control: 1,
-                      controller: controller,
-                      textButton: 'Buscar vehículo',
-                      btnPosition: 5,
-                      field: const [
-                        'Buscar vehículo',
-                        'Buscar',
-                        'Placas',
-                        'Tipo de vehículo',
-                        'Color',
-                        'Nombre',
-                        'Entrada',
-                        'Salida'
-                      ],
-                      formValue: formValuesBuscarVh,
-                      enabled: true,
-                    ),
-                  ]),
+                  ),
                 ),
               ),
             ),
+          const SizedBox(child: Navbar(contexto2: 'control_vehicles'))
+          ],
+          )
+    );
+        }
+        return Scaffold(
+      body: Center(
+          child: FractionallySizedBox(
+            widthFactor: MediaQuery.of(context).orientation == Orientation.portrait ? 0.1 : 0.05,
+            heightFactor: MediaQuery.of(context).orientation == Orientation.portrait ? 0.05 : 0.1,
+            child: const CircularProgressIndicator(),
           ),
         ),
-      const SizedBox(child: Navbar(contexto2: 'control_vehicles'))
-      ],
-      )
     );
+  });
       
   }
   
-  Future<List<Map<String, dynamic>>> chargeHotel() async {
-    LocalService lc = LocalService();
+  Future<List<Map<String, dynamic>>> recolectandoLocales() async {
+
+    if (cargarDatos) {
+      LocalService lc = LocalService();
     final locals = await lc.getLocal(context);
 
     for (var el in locals.container) {
@@ -253,34 +271,20 @@ class _ControlVehiclesState extends State<ControlVehicles> {
       }
     }
     formValuesRegistroMan['hotel']!.contenido =  await storage.read(key: 'idHotelRegister') ;
-     /*  formValuesRegistroMan.addAll(
-        {
-          'hotel' : MultiInputsForm(contenido: await storage.read(key: 'idHotelRegister'), obligatorio: false, select: true,listSelectForm: arrList),
-        }
-      );  */
-
-    return arrList;
-  }
-  
-
-  @override
-  initState() { 
-  SystemChannels.textInput.invokeMethod('TextInput.hide');
-  chargeHotel();
-  VarProvider vh = VarProvider()
-  ..arrSharedPreferences().then((Map<String, dynamic> sharedPrefsData) {
+     VarProvider vh = VarProvider();
+  await vh.arrSharedPreferences().then((Map<String, dynamic> sharedPrefsData) async {
       if (sharedPrefsData['turn'] == null) {
-      SessionManager sm = SessionManager()
-        ..clearSession().then((value) async {
+      SessionManager sm = SessionManager();
+        await sm.clearSession().then((value) async {
           if (sharedPrefsData['dish'] == null) {
             final url = Uri.parse('https://www.comunicadosaraiza.com/movil_scan_api_prueba2/API/turn_assistance.php?idTurn=true');
-              (http.post(url, body: json.encode({'idTurn': sharedPrefsData["idTurn"] }))).then((value) {
+              await (http.post(url, body: json.encode({'idTurn': sharedPrefsData["idTurn"] }))).then((value) {
               Provider.of<VarProvider>(context,listen: false).updateVariable(false);
               setState(() { });
             });
           }else{
             final url = Uri.parse('https://www.comunicadosaraiza.com/movil_scan_api_prueba2/API/turn_food.php?cerrarSess=true');
-            http.post(url, body: json.encode({'local': (await storage.read(key: 'idHotelRegister')) })).then((value) {
+            await http.post(url, body: json.encode({'local': (await storage.read(key: 'idHotelRegister')) })).then((value) {
             Provider.of<VarProvider>(context,listen: false).updateVariable(false);
             setState(() { });
             });
@@ -290,6 +294,18 @@ class _ControlVehiclesState extends State<ControlVehicles> {
     }).catchError((error) {
       //
     });
+
+    cargarDatos = true;
+    }
+    
+    return arrList;
+  }
+  
+
+  @override
+  initState() { 
+  SystemChannels.textInput.invokeMethod('TextInput.hide');
+ 
      super.initState();
   }
 }

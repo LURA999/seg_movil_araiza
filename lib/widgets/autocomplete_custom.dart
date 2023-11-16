@@ -105,8 +105,6 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
              await widget.onFormValueChange!([arrNameSearch],['usuario']);
 
             break;
-          case 'course_name':
-          break;
           default:
         }
         }
@@ -200,7 +198,7 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
         }
         break;
       case 'nameSearch':
-          await buscaAutomaticaEmployeesSearch(value ??'*?');
+          await buscaAutomaticaEmployeesSearch(value ??'*?', '');
         break;
       case 'course_name':
         await buscarAutomaticaCoursesSearch(value ?? '*?');
@@ -255,9 +253,12 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
     return arr;  
   }
 
-  Future<List<Map<String,dynamic>>> buscaAutomaticaEmployeesSearch(String value) async {
+  Future<List<Map<String,dynamic>>> buscaAutomaticaEmployeesSearch(String value, String hotel ) async {
   AssistanceService vs = AssistanceService();
-  arr= await vs.showEmployeeAssistance(value.toLowerCase(),context);
+  // print(widget.formValue['hotel']);
+  // print(widget.formValue);
+  arr= await vs.showEmployeeAssistance(value.toLowerCase(),context,  widget.formValue['hotel']!.contenido
+ == '' ?  int.parse((await storage.read(key: 'idHotelRegister')).toString())  : int.parse(widget.formValue['hotel']!.contenido) );
     for (var i = 0; i < arr.length; i++) {
       if (tempOptions !=null) {
         tempOptions!.add(arr[i]['complete_name']);
@@ -269,6 +270,7 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
 
   Future<List<Map<String,dynamic>>> buscarAutomaticaCoursesSearch(String value) async {
   AssistanceService vs = AssistanceService();
+
   arr= await vs.showCoursesAssistance(value.toLowerCase(),context);
     for (var i = 0; i < arr.length; i++) {
       if (tempOptions !=null) {

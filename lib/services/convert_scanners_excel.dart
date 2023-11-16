@@ -56,7 +56,16 @@ Future<void> requestPermission(Function(bool) onPermissionResult) async {
 
 //dataguard es para los de trafico
 //jsonStrFood es para el comedor
-Future<void> jsonToExcel(List<Map<String, dynamic>> jsonStr, List<String> headersPerso,List<Map<String, dynamic>>? jsonStrObs,List<Map<String, dynamic>>? jsonStrFood, List<Map<String,dynamic>>? dataGuard, List<Map<String,dynamic>>? dataComments, int screen, String fileName, BuildContext context) async {
+Future<void> jsonToExcel(
+List<Map<String, dynamic>> jsonStr, 
+List<String> headersPerso,
+List<Map<String, dynamic>>? jsonStrObs,
+List<Map<String, dynamic>>? jsonStrFood, 
+List<Map<String,dynamic>>? dataGuard, 
+List<Map<String,dynamic>>? dataComments, 
+int screen, String fileName, 
+BuildContext context) async {
+  
   bool storagePermissionGranted = false;
   if (Platform.isAndroid || Platform.isIOS) {
   await requestPermission((bool granted) {

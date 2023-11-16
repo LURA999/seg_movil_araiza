@@ -72,7 +72,7 @@ class MultiInputs extends StatefulWidget {
     this.onFormValueChange, 
     this.controller, 
     this.screen,
-    this.activeListSelect
+    this.activeListSelect, 
   }) : super(key: key);
 
   @override

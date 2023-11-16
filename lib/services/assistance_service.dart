@@ -417,7 +417,7 @@ try {
   return listContainer; 
   }
 
-  Future<List<Map<String, dynamic>>> showEmployeeAssistance( String palabra,BuildContext context ) async {
+  Future<List<Map<String, dynamic>>> showEmployeeAssistance( String palabra,BuildContext context , int local ) async {
     
     List<Map<String, dynamic>> listContainer = [];
     AccessMap result = AccessMap();
@@ -427,11 +427,10 @@ try {
     messageError(context,'No hay conexión a Internet.', 'Error');
     return listContainer;
   } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
-
 try {
       isSaving = true;
       notifyListeners();
-      final url = Uri.parse('$link/qr_assistance.php?nameSearch=$palabra&local=${await storage.read(key: 'idHotelRegister')}');
+      final url = Uri.parse('$link/qr_assistance.php?nameSearch=$palabra&local=$local');
       var response =(await http.get(url)).body;
       final result = AccessMap.fromJson(json.decode(response));
       
