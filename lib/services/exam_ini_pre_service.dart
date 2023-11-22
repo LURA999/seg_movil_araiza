@@ -1719,7 +1719,6 @@ try {
 
 try {
     final url = Uri.parse('$link/medical_exam.php?id=$idExam');
-    print('$link/medical_exam.php?id=$idExam');
     var response = (await http.delete(url,headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
     final result = AccessMap.fromJson(jsonDecode(response));
     if (result.status == 200) {

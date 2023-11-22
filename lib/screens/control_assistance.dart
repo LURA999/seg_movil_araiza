@@ -63,7 +63,6 @@ class _ControlAssistanceState extends State<ControlAssistance> {
       future: recolectandoLocales(),
       builder: (context, snapshot) {
       if (snapshot.hasData) {
-        print(snapshot.data);
         return Scaffold(
           body: Column(
           children: [
@@ -223,6 +222,7 @@ class _ControlAssistanceState extends State<ControlAssistance> {
 
 Future<List<Map<String, dynamic>>> recolectandoLocales() async {
   if (cargarDatos) {
+    cargarDatos = false;
     LocalService lc = LocalService();
       final locals = await lc.getLocal(context);
       for (var el in locals.container) {
@@ -257,7 +257,6 @@ Future<List<Map<String, dynamic>>> recolectandoLocales() async {
       //
     }).then((value) {
     });
-    cargarDatos = false;
   }
   return arrList;
 }

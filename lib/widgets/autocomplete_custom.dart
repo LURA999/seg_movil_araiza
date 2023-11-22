@@ -63,12 +63,7 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
               tempOptions = null; // Reiniciar la variable temporal
             });
 
-            switch (widget.formProperty) {
-              case 'course_name':
-                widget.formValue[widget.formProperty]!.contenido = textEditingValue.text;
-              break;
-              default:
-            }
+            
           }
           return widget.goptions!.where((String option) {
             return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
@@ -160,6 +155,23 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
                // hintText: widget.labelText,
                 labelText: widget.labelText
               ),
+              onChanged: (value) {
+              switch (widget.formProperty) {
+                  case 'course_name':
+                    widget.formValue[widget.formProperty]!.contenido = value;
+                  break;
+                  case 'guard':
+                  if(widget.screen!=null){
+                    switch(widget.screen){
+                      case 1 :
+                      widget.formValue[widget.formProperty]!.contenido = value;
+                      break;
+                    }
+                  }
+                  break;
+              default:
+            }
+              },
               key: widget.key,
               validator: widget.formValue[widget.formProperty]!.obligatorio == true ? (value) {
                 if(value == null || value.isEmpty == true || value == ''){

@@ -563,7 +563,6 @@ try {
       url, 
       body: json.encode(e.toJson()))).body;
       result = AccessMap.fromJson(json.decode(response));
-      
       if (result.status == 200){ 
         listContainer =  result.container!;
         isSaving = false;

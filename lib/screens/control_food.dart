@@ -223,6 +223,7 @@ class _DiningRoomState extends State<DiningRoom> {
   }
 Future<List<Map<String, dynamic>>> recolectandoLocales() async {
   if (cargarDatos) {
+    cargarDatos = false;
     LocalService lc = LocalService();
       final locals = await lc.getLocal(context);
       for (var el in locals.container) {
@@ -254,7 +255,6 @@ Future<List<Map<String, dynamic>>> recolectandoLocales() async {
   }).catchError((error) {
     //
   });
-    cargarDatos = false;
   }
       return arrList;
   }

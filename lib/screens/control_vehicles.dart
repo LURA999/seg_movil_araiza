@@ -47,7 +47,7 @@ class _ControlVehiclesState extends State<ControlVehicles> {
     };
 
     final Map<String, MultiInputsForm> formValuesDescRepor = {
-      'guard' : MultiInputsForm(contenido: '',obligatorio: false,autocomplete: true, autocompleteAsync: true, screen: 0),
+      'guard' : MultiInputsForm(contenido: '',obligatorio: false,autocomplete: true, autocompleteAsync: true, screen: 1),
       'turn': MultiInputsForm(contenido: '', obligatorio: true, select: true, activeListSelect: false),
       'date_start_hour' : MultiInputsForm(contenido: '', obligatorio: true, activeClock: true),
       'date_final_hour' : MultiInputsForm(contenido: '', obligatorio: true, activeClock: true),
@@ -62,6 +62,7 @@ class _ControlVehiclesState extends State<ControlVehicles> {
       'entry' :MultiInputsForm(contenido: '', enabled: false),
       'outt' :MultiInputsForm(contenido: '', enabled: false),
     };
+  
   bool cargarDatos = true;
 
   @override
@@ -262,6 +263,7 @@ class _ControlVehiclesState extends State<ControlVehicles> {
   Future<List<Map<String, dynamic>>> recolectandoLocales() async {
 
     if (cargarDatos) {
+    cargarDatos = false;
       LocalService lc = LocalService();
     final locals = await lc.getLocal(context);
 
@@ -295,7 +297,6 @@ class _ControlVehiclesState extends State<ControlVehicles> {
       //
     });
 
-    cargarDatos = true;
     }
     
     return arrList;

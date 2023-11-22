@@ -446,7 +446,6 @@ return showDialog<String>(
                               List<Map<String, dynamic>> jsonStr = await vService.selectDateVehicle(de,context);
                               List<Map<String, dynamic>> jsonStrObs = await vService.selectObsVehicle(de,context);
                               List<Map<String, dynamic>> dataGuard = await vService.dataGuard(de.guard!,context);
-
                               if (jsonStr.isNotEmpty) {
                               DateTime now = DateTime.now();
                               String formattedDate = DateFormat('yyyyMMddss').format(now);
