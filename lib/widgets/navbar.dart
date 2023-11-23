@@ -1,5 +1,4 @@
 import 'package:app_seguimiento_movil/routers/router.dart';
-import 'package:app_seguimiento_movil/widgets/popUp_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -130,7 +129,7 @@ class _ButtonNavSvgState extends State<ButtonNavSvg> {
         onTap: () {
           int auxPrevDirectory = Provider.of<VarProvider>(context,listen: false).auxPrevDirectory;
           int auxNextDirectory = Provider.of<VarProvider>(context,listen: false).auxNextDirectory;
-    
+          
           if (widget.route == 'home') {
             auxPrevDirectory = 1;
             auxNextDirectory = 0;
@@ -146,6 +145,7 @@ class _ButtonNavSvgState extends State<ButtonNavSvg> {
               if (routes.length > 1) {
                 final previousRouteSettings = routes[routes.indexOf(routes.firstWhere((e) => e.settings.name == widget.contexto2)) - 1].settings;
                 final previousRouteName = previousRouteSettings.name== '/' ? 'home' : previousRouteSettings.name;
+                print(previousRouteSettings.name);
                 Navigator.of(context).pushNamed(previousRouteName!);
               } 
             } catch (e) {
@@ -160,16 +160,25 @@ class _ButtonNavSvgState extends State<ButtonNavSvg> {
             List<Set<String>> namesRoute = Routers.namesRouter;
             try {
               int indice = namesRoute.indexWhere((conjunto) => conjunto.contains(widget.contexto2));
+
+              
               // "Donde se encuentra la pantalla actual : ${routes.indexOf(routes.firstWhere((e) => e.settings.name == widget.contexto2))}: ${widget.contexto2} = el numero de pantalla que son en total : ${Routers.namesRouter.length}");
               // 'El historial a crecido hasta ${routes.length} widgets');
               // 'Estas en la pantalla ${widget.contexto2} y quieres ir para adelante a la pantalla ${routes.indexOf(routes.reversed.firstWhere((e) => e.settings.name == widget.contexto2)) + 1}');
-              if (indice <  namesRoute.length-1) { 
+              if (/* indice <  namesRoute.length-1 */ 1 < 2) { 
                 indice+=1;
                 //se disminuye uno, porque estamos accediendo a la ultima vista, que se accedio, ignorando la actual.
-                final previousRouteSettings = routes[routes.indexOf(routes.reversed.firstWhere((e) => e.settings.name == widget.contexto2)) -(indice - 1)].settings;
+
+                print(routes.indexOf(routes.reversed.firstWhere((e) => e.settings.name == widget.contexto2)) );
+
+                final previousRouteSettings = routes[routes.indexOf(routes.reversed.firstWhere((e) => e.settings.name == widget.contexto2)) - (indice -1)].settings;
+                print('i ${indice}');
+                print('n ${previousRouteSettings.name}');
+                print(namesRoute[indice]);
                 // var valido = namesRoute[indice].firstWhere((screen) => screen == previousRouteSettings.name);
                 if(namesRoute[indice].contains(previousRouteSettings.name)){
                   final previousRouteName = previousRouteSettings.name;
+                  
                   if( previousRouteName == 'medical_records' ) {
                     TextEditingController textController = TextEditingController();
                     showDialog(

@@ -1195,7 +1195,8 @@ _pages[i].add(Title(
                 ),
               ),
             ),
-            img[int.parse(key)].buffer.lengthInBytes == 0 ? Container() : LimitedBox(maxHeight: 200.0, child: Image.memory(img[int.parse(key)].buffer.asUint8List())),
+            img[int.parse(key)].buffer.lengthInBytes == 0 ? Container() : LimitedBox(maxHeight: 200.0, 
+            child: Image.memory(img[int.parse(key)].buffer.asUint8List())),
             FilledButton.icon(
               icon: const Icon(Icons.delete),
               onPressed: btnSave == true ? () async {

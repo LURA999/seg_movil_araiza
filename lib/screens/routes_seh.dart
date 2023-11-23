@@ -46,7 +46,7 @@ class _RoutesSehState extends State<RoutesSeh> {
         width : 0.3,
         navigator: [
             ()  {
-              Navigator.of(context).pushNamed('tour_seh', arguments: {
+              Navigator.of(context).pushNamed('tour_seh_tr1_a', arguments: {
                 'periodo': 1,
                 'recorrido' : 1,
                 'form':1,
@@ -54,7 +54,7 @@ class _RoutesSehState extends State<RoutesSeh> {
               });
             },   
             () {
-                Navigator.of(context).pushNamed('tour_seh', arguments: {
+                Navigator.of(context).pushNamed('tour_seh_tr1_b', arguments: {
                   'periodo': 1,
                   'recorrido' : 2,
                   'form':2,
@@ -63,7 +63,7 @@ class _RoutesSehState extends State<RoutesSeh> {
               
             },   
             () {
-              Navigator.of(context).pushNamed('tour_seh', arguments: {
+              Navigator.of(context).pushNamed('tour_seh_tr1_c', arguments: {
                 'periodo': 1,
                 'recorrido' : 3,
                 'form':3,
@@ -81,7 +81,7 @@ class _RoutesSehState extends State<RoutesSeh> {
         width : 0.3,
         navigator:  [
             () {
-              Navigator.of(context).pushNamed('tour_seh', arguments: {
+              Navigator.of(context).pushNamed('tour_seh_tr2_a', arguments: {
                 'periodo': 2,
                 'recorrido' : 1,
                 'form':4,
@@ -89,7 +89,7 @@ class _RoutesSehState extends State<RoutesSeh> {
               });
             },
             () {
-              Navigator.of(context).pushNamed('tour_seh', arguments: {
+              Navigator.of(context).pushNamed('tour_seh_tr2_b', arguments: {
                 'periodo': 2,
                 'recorrido' : 2,
                 'form':5,
@@ -97,7 +97,7 @@ class _RoutesSehState extends State<RoutesSeh> {
               });
             },
             () {
-              Navigator.of(context).pushNamed('tour_seh', arguments: {
+              Navigator.of(context).pushNamed('tour_seh_tr2_c', arguments: {
                 'periodo': 2,
                 'recorrido' : 3,
                 'form':6,
@@ -115,7 +115,7 @@ class _RoutesSehState extends State<RoutesSeh> {
         width : 0.3,
         navigator: [
             () {
-              Navigator.of(context).pushNamed('tour_seh', arguments: {
+              Navigator.of(context).pushNamed('tour_seh_tr3_a', arguments: {
                 'periodo': 3,
                 'recorrido' : 1,
                 'form':7,
@@ -123,7 +123,7 @@ class _RoutesSehState extends State<RoutesSeh> {
               });
             },
             () {
-              Navigator.of(context).pushNamed('tour_seh', arguments: {
+              Navigator.of(context).pushNamed('tour_seh_tr3_b', arguments: {
                 'periodo': 3,
                 'recorrido' : 2,
                 'form':8,
@@ -131,7 +131,7 @@ class _RoutesSehState extends State<RoutesSeh> {
               });
             },
             () {
-              Navigator.of(context).pushNamed('tour_seh', arguments: {
+              Navigator.of(context).pushNamed('tour_seh_tr3_c', arguments: {
                 'periodo': 3,
                 'recorrido' : 3,
                 'form':9,
@@ -149,7 +149,7 @@ class _RoutesSehState extends State<RoutesSeh> {
         width : 0.3,
         navigator: [
             () {
-              Navigator.of(context).pushNamed('tour_seh', arguments: {
+              Navigator.of(context).pushNamed('tour_seh_tr4_a', arguments: {
                 'periodo': 4,
                 'recorrido' : 1,
                 'form':10,
@@ -157,7 +157,7 @@ class _RoutesSehState extends State<RoutesSeh> {
               });
             },
             () {
-              Navigator.of(context).pushNamed('tour_seh', arguments: {
+              Navigator.of(context).pushNamed('tour_seh_tr4_b', arguments: {
                 'periodo': 4,
                 'recorrido' : 2,
                 'form':11,
@@ -165,7 +165,7 @@ class _RoutesSehState extends State<RoutesSeh> {
               });
             },
             () {
-                Navigator.of(context).pushNamed('tour_seh', arguments: {
+                Navigator.of(context).pushNamed('tour_seh_tr4_c', arguments: {
                 'periodo': 4,
                 'recorrido' : 3,
                 'form':12,

@@ -26,12 +26,11 @@ class _DropdownButtonWidgetState extends State<DropdownButtonWidget> {
   late List<Map<String,dynamic>>? arrSelect;
   late String? dropdownValue;
 
+
+
   @override
   Widget build(BuildContext context) {
-
-    if (widget.type == 1) {
-      final claves = widget.arrSelect![0].keys.toList();
-    }else{
+    if (widget.type != 1) {
       widget.formValue[widget.formProperty]!.contenido = (list!.indexOf(dropdownValue!)+1).toString();
     }
 
