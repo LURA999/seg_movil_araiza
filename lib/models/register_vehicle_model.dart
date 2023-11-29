@@ -9,7 +9,11 @@ class RegisterVehicle {
   String? turn;
   String? fkTurn;
   String? local;
-  
+  String? modelvh;
+
+    
+
+
   RegisterVehicle({
     this.platesSearch,
     this.typevh,
@@ -20,7 +24,8 @@ class RegisterVehicle {
     this.timeEnter,
     this.turn,
     this.fkTurn,
-    this.local
+    this.local,
+    this.modelvh,
   });
 
   RegisterVehicle.fromJson(Map<String, dynamic> json){
@@ -34,6 +39,7 @@ class RegisterVehicle {
     turn = json['turn'];
     local = json['local'];
     fkTurn = json['fkTurn'];
+    modelvh =json['modelvh'] ;
   }
 
   Map<String, dynamic> toJson() {
@@ -46,6 +52,7 @@ class RegisterVehicle {
     data['turn'] = turn!;
     data['local'] = local!;
     data['fkTurn'] = fkTurn!;
+    data['modelvh'] = modelvh.toString();
     if(timeExit != null && timeEnter != null){
       data['timeExit'] = timeExit!;
       data['timeEnter'] = timeEnter!;

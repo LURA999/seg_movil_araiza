@@ -8,10 +8,14 @@ import 'package:app_seguimiento_movil/services/services.dart';
 
 class VarProvider with ChangeNotifier {
  TurnVehicle tn = TurnVehicle();
+ //Para inicios de sesion
  bool varControl = false;
  bool varSalir = false;
+
+ //Para el navbar
  int auxPrevDirectory = 1;
  int auxNextDirectory = 1;
+ bool enableNav = false;
 
 
   void updateVariable(bool value) {
@@ -26,6 +30,17 @@ class VarProvider with ChangeNotifier {
 
   void updatePrev(int value) {
     auxPrevDirectory = value;
+    notifyListeners();
+  }
+
+  void updateEnableNav(bool value) {
+    enableNav = value;
+    notifyListeners();
+  }
+
+
+  void updateNext(int value) {
+    auxNextDirectory = value;
     notifyListeners();
   }
 

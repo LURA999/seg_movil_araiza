@@ -48,6 +48,7 @@ class _QuestRouteState extends State<QuestRoute>  {
   int periodo = 0;
   int recorrido = 0;
   String title = '';
+  String nameContext = '';
   double responsiveHeightTitle = 0;
   double responsiveHeightSub = 0;
   int form = 0;
@@ -66,6 +67,7 @@ class _QuestRouteState extends State<QuestRoute>  {
      periodo = param['periodo'];
      recorrido = param['recorrido'];
      title = param['title'];
+     nameContext = param['nameContext'];
      responsiveHeightTitle = 
      MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <500?
      MediaQuery.of(context).size.height * (MediaQuery.of(context).orientation == Orientation.landscape? 0.23 : 0.06)
@@ -788,7 +790,7 @@ class _QuestRouteState extends State<QuestRoute>  {
               ),
             ),
           ),
-         const SizedBox(child: Navbar(contexto2: 'tour_seh',))
+         SizedBox(child: Navbar(contexto2: nameContext))
         ],
       )
       );

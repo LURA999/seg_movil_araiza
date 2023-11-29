@@ -46,27 +46,34 @@ class _RoutesSehState extends State<RoutesSeh> {
         width : 0.3,
         navigator: [
             ()  {
+              Navigator.of(context).pop();
               Navigator.of(context).pushNamed('tour_seh_tr1_a', arguments: {
                 'periodo': 1,
                 'recorrido' : 1,
                 'form':1,
+                'nameContext' : 'tour_seh_tr1_a',
                 'title' : '1er trimestre - Área A'
               });
+
             },   
             () {
+                Navigator.of(context).pop();
                 Navigator.of(context).pushNamed('tour_seh_tr1_b', arguments: {
                   'periodo': 1,
                   'recorrido' : 2,
                   'form':2,
+                  'nameContext' : 'tour_seh_tr1_b',
                   'title' : '1er trimestre - Área B'
                 });
               
             },   
             () {
+              Navigator.of(context).pop();
               Navigator.of(context).pushNamed('tour_seh_tr1_c', arguments: {
                 'periodo': 1,
                 'recorrido' : 3,
                 'form':3,
+                'nameContext' : 'tour_seh_tr1_c',
                   'title' : '1er trimestre - Área C'
               });
             },   
@@ -81,26 +88,32 @@ class _RoutesSehState extends State<RoutesSeh> {
         width : 0.3,
         navigator:  [
             () {
+              Navigator.of(context).pop();
               Navigator.of(context).pushNamed('tour_seh_tr2_a', arguments: {
                 'periodo': 2,
                 'recorrido' : 1,
                 'form':4,
+                'nameContext' : 'tour_seh_tr2_a',
                 'title' : '2do trimestre - Área A'
               });
             },
             () {
+              Navigator.of(context).pop();
               Navigator.of(context).pushNamed('tour_seh_tr2_b', arguments: {
                 'periodo': 2,
                 'recorrido' : 2,
                 'form':5,
+                'nameContext' : 'tour_seh_tr2_b',
                 'title' : '2do trimestre - Área B'
               });
             },
             () {
+              Navigator.of(context).pop();
               Navigator.of(context).pushNamed('tour_seh_tr2_c', arguments: {
                 'periodo': 2,
                 'recorrido' : 3,
                 'form':6,
+                'nameContext' : 'tour_seh_tr2_c',
                 'title' : '2do trimestre - Área C'
               });
             },
@@ -115,26 +128,32 @@ class _RoutesSehState extends State<RoutesSeh> {
         width : 0.3,
         navigator: [
             () {
+              Navigator.of(context).pop();
               Navigator.of(context).pushNamed('tour_seh_tr3_a', arguments: {
                 'periodo': 3,
                 'recorrido' : 1,
                 'form':7,
+                'nameContext' : 'tour_seh_tr3_a',
                 'title' : '3er trimestre - Área A'
               });
             },
             () {
+              Navigator.of(context).pop();
               Navigator.of(context).pushNamed('tour_seh_tr3_b', arguments: {
                 'periodo': 3,
                 'recorrido' : 2,
                 'form':8,
+                'nameContext' : 'tour_seh_tr3_b',
                 'title' : '3er trimestre - Área B'
               });
             },
             () {
+              Navigator.of(context).pop();
               Navigator.of(context).pushNamed('tour_seh_tr3_c', arguments: {
                 'periodo': 3,
                 'recorrido' : 3,
                 'form':9,
+                'nameContext' : 'tour_seh_tr3_c',
                 'title' : '3er trimestre - Área C'
               });
             },
@@ -149,26 +168,32 @@ class _RoutesSehState extends State<RoutesSeh> {
         width : 0.3,
         navigator: [
             () {
+              Navigator.of(context).pop();
               Navigator.of(context).pushNamed('tour_seh_tr4_a', arguments: {
                 'periodo': 4,
                 'recorrido' : 1,
                 'form':10,
+                'nameContext': 'tour_seh_tr4_a',
                 'title' : '4to trimestre - Área A'
               });
             },
             () {
+              Navigator.of(context).pop();
               Navigator.of(context).pushNamed('tour_seh_tr4_b', arguments: {
                 'periodo': 4,
                 'recorrido' : 2,
                 'form':11,
+                'nameContext': 'tour_seh_tr4_b',
                 'title' : '4to trimestre - Área B'
               });
             },
             () {
+              Navigator.of(context).pop();
                 Navigator.of(context).pushNamed('tour_seh_tr4_c', arguments: {
                 'periodo': 4,
                 'recorrido' : 3,
                 'form':12,
+                'nameContext': 'tour_seh_tr4_c',
                 'title' : '4to trimestre - Área C'
               });
             
@@ -243,6 +268,7 @@ class _RoutesSehState extends State<RoutesSeh> {
                                   if(e.monthInitial <= month && month <= e.monthFinal){
                                     selectedArea(context,e.navigator);
                                   }else{
+                                     SystemChannels.textInput.invokeMethod('TextInput.hide');
                                      return showDialog(
                                       context: context, // Accede al contexto del widget actual
                                       builder: (BuildContext context) {

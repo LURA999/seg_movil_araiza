@@ -186,6 +186,7 @@ BuildContext context) async {
     rangeTitle.merge();
     rangeTitle.cellStyle.hAlign = HAlignType.center;
     rangeTitle.cellStyle.vAlign = VAlignType.center;
+
     var cellObservacion = sheet.getRangeByIndex(jsonStr.length + 8 + beginRow,1);
     cellObservacion.setText('OBSERVACION(ES)');
     cellObservacion.cellStyle.bold = true;
@@ -280,6 +281,15 @@ BuildContext context) async {
       rangeTitle.merge();
       rangeTitle.cellStyle.hAlign = HAlignType.center;
       rangeTitle.cellStyle.vAlign = VAlignType.center;
+      var cellObservacion = sheet.getRangeByIndex(jsonStr.length + 8 + beginRow,1);
+      cellObservacion.setText('OBSERVACIONES');
+      cellObservacion.cellStyle.bold = true;
+      for (var i = 0; i < jsonStrObs!.length; i++) {
+        var cell2 = sheet.getRangeByIndex(jsonStr.length + 9 + i + beginRow,1);
+        cell2.setText( jsonStrObs[i]['date']+' - '+jsonStrObs[i]['observation']);
+        Range obs =   sheet.getRangeByName('A${jsonStr.length + 9 + i + beginRow}:D${jsonStr.length + 9 + i + beginRow}');
+        obs.merge();
+      }
     break;
     default:
   }

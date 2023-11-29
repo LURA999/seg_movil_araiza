@@ -11,6 +11,7 @@ class Qr {
   String? fkTurn;
   String? employee_num;
   int? local;
+  String? modelvh;
 
   Qr({
     this.platesSearch,
@@ -23,6 +24,7 @@ class Qr {
     this.fkTurn,
     this.employee_num,
     this.local,
+    this.modelvh,
   });
 
   Qr.fromJson(Map<String, dynamic> json){
@@ -36,6 +38,7 @@ class Qr {
     timeExit = json['timeExit'] ?? '';
     employee_num = json['employee_num'] ?? '';
     local = json['local'] ?? '';
+    modelvh = json['modelvh'] ?? '';
   }
 
 
@@ -67,6 +70,7 @@ List<dynamic>  toJsonArr(Map<String, dynamic> arr) {
     data['fkTurn'] = fkTurn!.toString();
     data['employee_num'] = employee_num!.toString();
     data['local'] = local!.toString();
+    data['modelvh'] = modelvh ?? '';
 
     if(timeEntry != null && timeExit != null){
       data['timeEntry'] = timeEntry!.toString();

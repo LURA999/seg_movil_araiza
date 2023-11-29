@@ -400,6 +400,7 @@ return showDialog<String>(
                           r.employeeName = formValue['employeeName']!.contenido;
                           r.platesSearch = formValue['platesSearch']!.contenido;
                           r.typevh = formValue['typevh']!.contenido;
+                          r.modelvh = formValue['modelvh']!.contenido;
                           r.departament = formValue['departament']!.contenido;  
                           r.local = formValue['hotel']!.contenido;
                           setState((){
@@ -453,7 +454,7 @@ return showDialog<String>(
 
                                 await jsonToExcel(
                                 jsonStr,
-                                ['TIPO VEHICULO','COLOR','PLACAS','NOMBRE EMPLEADO', 'DEPARTAMENTO','ENTRADA'], 
+                                ['MARCA VEHICULO', 'MODELO VEHICULO','COLOR','PLACAS','NOMBRE EMPLEADO', 'DEPARTAMENTO','ENTRADA'], 
                               jsonStrObs,
                               null,
                               dataGuard,
@@ -520,6 +521,7 @@ return showDialog<String>(
                               for (var rc in r.container) {
                                 formValue['platesSearch']!.contenido = rc['plates'];
                                 formValue['typevh']!.contenido = rc['type_vh'];
+                                formValue['modelvh']!.contenido = rc['model_vh'];
                                 formValue['color']!.contenido = rc['color'];
                                 formValue['employeeName']!.contenido = rc['employee_name'];
                                 // formValue['salida']!.contenido = rc['timeExit'];
@@ -885,6 +887,9 @@ return showDialog<String>(
 
                           if(await aService.postRegisterAssistance(r,context)){
                           Navigator.pop(context);
+                           ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Empleado registrado'),backgroundColor: Colors.green),
+                            );
                           }else{
                           setState((){
                             desactivarButton = false;
@@ -905,6 +910,7 @@ return showDialog<String>(
                           de.local = (await storage.read(key: 'idHotelRegister')).toString();
                           
                           List<Map<String, dynamic>> jsonStr = await aService.selectDateAssistance(de, context);
+                          List<Map<String, dynamic>> jsonStrObs = await aService.selectDateAssistanceObservations(de, context);
                             if (jsonStr.isNotEmpty) {
                               DateTime now = DateTime.now();
                               String formattedDate = DateFormat('yyyyMMddss').format(now);
@@ -912,7 +918,7 @@ return showDialog<String>(
                                 await jsonToExcel(
                                 jsonStr,
                                 ["Numero de empleado", "Nombre completo", "Nombre del curso", "Horario", "Hora y Fecha de asistencia"], 
-                                null,
+                                jsonStrObs,
                                 null,
                                 null,
                                 null,

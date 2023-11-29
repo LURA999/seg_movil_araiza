@@ -82,13 +82,13 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
             switch (widget.screen){
             case 1:
               Access r = await vService.findVehicle(selection,int.parse((await storage.read(key: 'idHotelRegister')).toString()),context,1);
-              widget.onFormValueChange!(r.container,['plates','type_vh','color','employee_name','time_entry','time_exit']);
+              widget.onFormValueChange!(r.container,['plates','type_vh','model_vh','color','employee_name','time_entry','time_exit']);
               widget.formValue[widget.formProperty]!.contenido = selection;
            break;
             case 2:
               Access r = await vService.findVehicle(selection,int.parse(widget.formValue['hotel']!.contenido) ,context,2);
               (r.container as List<dynamic>)[0]['hotel'] =  widget.formValue['hotel']!.contenido;
-              widget.onFormValueChange!(r.container,['plates','hotel','type_vh','color','employee_name','department']);
+              widget.onFormValueChange!(r.container,['plates','hotel','type_vh', 'model_vh','color','employee_name','department']);
               widget.formValue[widget.formProperty]!.contenido = selection;
             break;
             }
@@ -114,11 +114,18 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
             onTap: () async {
               switch (widget.formProperty.toString()) {
                 case 'course_name':
-                setState(() {
+                /* setState(() {
                   final indiceGuion = option.indexOf(' ');
                   widget.formValue[widget.formProperty]!.contenido = option;
                   onSelected(option.substring(indiceGuion + 3));
-                });
+                }); */
+
+                setState(() {
+                 // final indiceGuion = option.indexOf(' ');
+                  widget.formValue[widget.formProperty]!.contenido = option;
+                onSelected(option);
+                  //onSelected(option.substring(indiceGuion + 3));
+                }); 
                 break;
               default:
               setState(() {

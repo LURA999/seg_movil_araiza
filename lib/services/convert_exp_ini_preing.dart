@@ -91,12 +91,43 @@ List months =
   pw.Container buildTableHereditaryBackground() {
     allFirstWidthTabHead = PdfPageFormat.letter.width * .085;
     List<Map<String,String>> family =[
-        {'rowName': 'Padre:', 'Buena_salud ': BackHeredity(0,0,checkBoxArr),'Mala_Salud ': BackHeredity(0,1,checkBoxArr), 'Finado': BackHeredity(0,2,checkBoxArr),'Alergia': BackHeredity(0,3,checkBoxArr), 'Diabetes': BackHeredity(0,4,checkBoxArr), 'Presion_alta':BackHeredity(0,5,checkBoxArr),'Colesterol':BackHeredity(0,6,checkBoxArr),'Enf_Corazon':BackHeredity(0,7,checkBoxArr),'Cancer':BackHeredity(0,8,checkBoxArr),'Anemia':BackHeredity(0,9,checkBoxArr)},
-        {'rowName': 'Madre:', 'Buena_salud ': BackHeredity(1,0,checkBoxArr),'Mala_Salud ': BackHeredity(1,1,checkBoxArr), 'Finado': BackHeredity(1,2,checkBoxArr),'Alergia': BackHeredity(1,3,checkBoxArr), 'Diabetes': BackHeredity(1,4,checkBoxArr), 'Presion_alta':BackHeredity(1,5,checkBoxArr),'Colesterol':BackHeredity(1,6,checkBoxArr),'Enf_Corazon':BackHeredity(1,7,checkBoxArr),'Cancer':BackHeredity(1,8,checkBoxArr),'Anemia':BackHeredity(1,9,checkBoxArr)},
-        {'rowName': 'Hermanos:', 'Buena_salud ': BackHeredity(2,0,checkBoxArr),'Mala_Salud ': BackHeredity(2,1,checkBoxArr), 'Finado': BackHeredity(2,2,checkBoxArr),'Alergia': BackHeredity(2,3,checkBoxArr), 'Diabetes': BackHeredity(2,4,checkBoxArr), 'Presion_alta':BackHeredity(2,5,checkBoxArr),'Colesterol':BackHeredity(2,6,checkBoxArr),'Enf_Corazon':BackHeredity(2,7,checkBoxArr),'Cancer':BackHeredity(2,8,checkBoxArr),'Anemia':BackHeredity(2,9,checkBoxArr)},
-        {'rowName': '', 'Buena_salud ': '','Mala_Salud ': '', 'Finado': '','Alergia': '', 'Diabetes': '', 'Presion_alta':'','Colesterol':'','Enf_Corazon':'','Cancer':'','Anemia':''},
-        {'rowName': 'Pareja:', 'Buena_salud ': BackHeredity(3,0,checkBoxArr),'Mala_Salud ': BackHeredity(3,1,checkBoxArr), 'Finado': BackHeredity(3,2,checkBoxArr),'Alergia': BackHeredity(3,3,checkBoxArr), 'Diabetes': BackHeredity(3,4,checkBoxArr), 'Presion_alta':BackHeredity(3,5,checkBoxArr),'Colesterol':BackHeredity(3,6,checkBoxArr),'Enf_Corazon':BackHeredity(3,7,checkBoxArr),'Cancer':BackHeredity(3,8,checkBoxArr),'Anemia':BackHeredity(3,9,checkBoxArr)},
-        {'rowName': 'Hijos:', 'Buena_salud ': BackHeredity(4,0,checkBoxArr),'Mala_Salud ': BackHeredity(4,1,checkBoxArr), 'Finado': BackHeredity(4,2,checkBoxArr),'Alergia': BackHeredity(4,3,checkBoxArr), 'Diabetes': BackHeredity(4,4,checkBoxArr), 'Presion_alta':BackHeredity(4,5,checkBoxArr),'Colesterol':BackHeredity(4,6,checkBoxArr),'Enf_Corazon':BackHeredity(4,7,checkBoxArr),'Cancer':BackHeredity(4,8,checkBoxArr),'Anemia':BackHeredity(4,9,checkBoxArr)},
+        {
+        'rowName': 'Padre:', 'Buena_salud ': BackHeredity(0,0,checkBoxArr),'Mala_Salud ': 
+        BackHeredity(0,1,checkBoxArr), 'Finado': BackHeredity(0,2,checkBoxArr),'Alergia': 
+        BackHeredity(0,3,checkBoxArr), 'Diabetes': BackHeredity(0,4,checkBoxArr), 'Presion_alta':
+        BackHeredity(0,5,checkBoxArr),'Colesterol':BackHeredity(0,6,checkBoxArr),'Enf_Corazon':
+        BackHeredity(0,7,checkBoxArr),'Cancer':BackHeredity(0,8,checkBoxArr),'Anemia':BackHeredity(0,9,checkBoxArr)
+        },
+        {
+        'rowName': 'Madre:', 'Buena_salud ': BackHeredity(1,0,checkBoxArr),'Mala_Salud ': 
+        BackHeredity(1,1,checkBoxArr), 'Finado': BackHeredity(1,2,checkBoxArr),'Alergia': 
+        BackHeredity(1,3,checkBoxArr), 'Diabetes': BackHeredity(1,4,checkBoxArr), 'Presion_alta':
+        BackHeredity(1,5,checkBoxArr),'Colesterol':BackHeredity(1,6,checkBoxArr),'Enf_Corazon':
+        BackHeredity(1,7,checkBoxArr),'Cancer':BackHeredity(1,8,checkBoxArr),'Anemia':BackHeredity(1,9,checkBoxArr)
+        },
+        {
+        'rowName': 'Hermanos:', 'Buena_salud ': BackHeredity(2,0,checkBoxArr),'Mala_Salud ': 
+        BackHeredity(2,1,checkBoxArr), 'Finado': BackHeredity(2,2,checkBoxArr),'Alergia': 
+        BackHeredity(2,3,checkBoxArr), 'Diabetes': BackHeredity(2,4,checkBoxArr), 'Presion_alta':
+        BackHeredity(2,5,checkBoxArr),'Colesterol':BackHeredity(2,6,checkBoxArr),'Enf_Corazon':
+        BackHeredity(2,7,checkBoxArr),'Cancer':BackHeredity(2,8,checkBoxArr),'Anemia':BackHeredity(2,9,checkBoxArr)
+        },
+        {
+        'rowName': '', 'Buena_salud ': '','Mala_Salud ': '', 'Finado': '','Alergia': '', 'Diabetes': '', 'Presion_alta':'','Colesterol':'','Enf_Corazon':'','Cancer':'','Anemia':''},
+        {
+        'rowName': 'Pareja:', 'Buena_salud ': BackHeredity(3,0,checkBoxArr),'Mala_Salud ': 
+        BackHeredity(3,1,checkBoxArr), 'Finado': BackHeredity(3,2,checkBoxArr),'Alergia': 
+        BackHeredity(3,3,checkBoxArr), 'Diabetes': BackHeredity(3,4,checkBoxArr), 'Presion_alta':
+        BackHeredity(3,5,checkBoxArr),'Colesterol':BackHeredity(3,6,checkBoxArr),'Enf_Corazon':
+        BackHeredity(3,7,checkBoxArr),'Cancer':BackHeredity(3,8,checkBoxArr),'Anemia':BackHeredity(3,9,checkBoxArr)
+        },
+        {
+        'rowName': 'Hijos:', 'Buena_salud ': BackHeredity(4,0,checkBoxArr),'Mala_Salud ': 
+        BackHeredity(4,1,checkBoxArr), 'Finado': BackHeredity(4,2,checkBoxArr),'Alergia': 
+        BackHeredity(4,3,checkBoxArr), 'Diabetes': BackHeredity(4,4,checkBoxArr), 'Presion_alta':
+        BackHeredity(4,5,checkBoxArr),'Colesterol':BackHeredity(4,6,checkBoxArr),'Enf_Corazon':
+        BackHeredity(4,7,checkBoxArr),'Cancer':BackHeredity(4,8,checkBoxArr),'Anemia':BackHeredity(4,9,checkBoxArr)
+        },
     ];
 
     return pw.Container(
