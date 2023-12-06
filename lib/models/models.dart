@@ -19,6 +19,7 @@ export 'package:app_seguimiento_movil/models/qr_food.dart';
 export 'package:app_seguimiento_movil/models/turn_assistance_model.dart';
 export 'package:app_seguimiento_movil/models/enum_rate.dart';
 export 'package:app_seguimiento_movil/models/accessListInt_model.dart';
+export 'package:app_seguimiento_movil/models/accessListString_model.dart';
 export 'package:app_seguimiento_movil/models/descriptions_seh.dart';
 export 'package:app_seguimiento_movil/models/option_table_route_model.dart';
 export 'package:app_seguimiento_movil/models/examAc_model.dart';

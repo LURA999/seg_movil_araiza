@@ -23,7 +23,7 @@ class VehicleService extends ChangeNotifier {
   final dio = Dio();
   //Esta en modo desarrollo?
   bool modoApk = kDebugMode?true:false; 
-  late String link = modoApk?'https://www.comunicadosaraiza.com/movil_scan_api_prueba2/API':'https://www.comunicadosaraiza.com/movil_scan_api_prueba2/API';
+  late String link = modoApk?'https://www.comunicadosaraiza.com/movil_scan_api_prueba/API':'https://www.comunicadosaraiza.com/movil_scan_api_prueba/API';
   final storage = const FlutterSecureStorage();
 
  Future<List<Map<String, dynamic>>> nameGuard( String name,BuildContext context ) async { 

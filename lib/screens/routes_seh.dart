@@ -59,7 +59,7 @@ class _RoutesSehState extends State<RoutesSeh> {
             () {
                 Navigator.of(context).pop();
                 Navigator.of(context).pushNamed('tour_seh_tr1_b', arguments: {
-                  'periodo': 1,
+                  'periodo': 2,
                   'recorrido' : 2,
                   'form':2,
                   'nameContext' : 'tour_seh_tr1_b',
@@ -70,7 +70,7 @@ class _RoutesSehState extends State<RoutesSeh> {
             () {
               Navigator.of(context).pop();
               Navigator.of(context).pushNamed('tour_seh_tr1_c', arguments: {
-                'periodo': 1,
+                'periodo': 3,
                 'recorrido' : 3,
                 'form':3,
                 'nameContext' : 'tour_seh_tr1_c',
@@ -90,7 +90,7 @@ class _RoutesSehState extends State<RoutesSeh> {
             () {
               Navigator.of(context).pop();
               Navigator.of(context).pushNamed('tour_seh_tr2_a', arguments: {
-                'periodo': 2,
+                'periodo': 4,
                 'recorrido' : 1,
                 'form':4,
                 'nameContext' : 'tour_seh_tr2_a',
@@ -100,7 +100,7 @@ class _RoutesSehState extends State<RoutesSeh> {
             () {
               Navigator.of(context).pop();
               Navigator.of(context).pushNamed('tour_seh_tr2_b', arguments: {
-                'periodo': 2,
+                'periodo': 5,
                 'recorrido' : 2,
                 'form':5,
                 'nameContext' : 'tour_seh_tr2_b',
@@ -110,7 +110,7 @@ class _RoutesSehState extends State<RoutesSeh> {
             () {
               Navigator.of(context).pop();
               Navigator.of(context).pushNamed('tour_seh_tr2_c', arguments: {
-                'periodo': 2,
+                'periodo': 6,
                 'recorrido' : 3,
                 'form':6,
                 'nameContext' : 'tour_seh_tr2_c',
@@ -130,7 +130,7 @@ class _RoutesSehState extends State<RoutesSeh> {
             () {
               Navigator.of(context).pop();
               Navigator.of(context).pushNamed('tour_seh_tr3_a', arguments: {
-                'periodo': 3,
+                'periodo': 7,
                 'recorrido' : 1,
                 'form':7,
                 'nameContext' : 'tour_seh_tr3_a',
@@ -140,7 +140,7 @@ class _RoutesSehState extends State<RoutesSeh> {
             () {
               Navigator.of(context).pop();
               Navigator.of(context).pushNamed('tour_seh_tr3_b', arguments: {
-                'periodo': 3,
+                'periodo': 8,
                 'recorrido' : 2,
                 'form':8,
                 'nameContext' : 'tour_seh_tr3_b',
@@ -150,7 +150,7 @@ class _RoutesSehState extends State<RoutesSeh> {
             () {
               Navigator.of(context).pop();
               Navigator.of(context).pushNamed('tour_seh_tr3_c', arguments: {
-                'periodo': 3,
+                'periodo': 9,
                 'recorrido' : 3,
                 'form':9,
                 'nameContext' : 'tour_seh_tr3_c',
@@ -170,7 +170,7 @@ class _RoutesSehState extends State<RoutesSeh> {
             () {
               Navigator.of(context).pop();
               Navigator.of(context).pushNamed('tour_seh_tr4_a', arguments: {
-                'periodo': 4,
+                'periodo': 10,
                 'recorrido' : 1,
                 'form':10,
                 'nameContext': 'tour_seh_tr4_a',
@@ -180,7 +180,7 @@ class _RoutesSehState extends State<RoutesSeh> {
             () {
               Navigator.of(context).pop();
               Navigator.of(context).pushNamed('tour_seh_tr4_b', arguments: {
-                'periodo': 4,
+                'periodo': 11,
                 'recorrido' : 2,
                 'form':11,
                 'nameContext': 'tour_seh_tr4_b',
@@ -190,7 +190,7 @@ class _RoutesSehState extends State<RoutesSeh> {
             () {
               Navigator.of(context).pop();
                 Navigator.of(context).pushNamed('tour_seh_tr4_c', arguments: {
-                'periodo': 4,
+                'periodo': 12,
                 'recorrido' : 3,
                 'form':12,
                 'nameContext': 'tour_seh_tr4_c',

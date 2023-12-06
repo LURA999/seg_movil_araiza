@@ -1,6 +1,7 @@
 import 'package:app_seguimiento_movil/services/services.dart';
 import 'package:app_seguimiento_movil/widgets/widgets.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -224,6 +225,7 @@ final ImagePicker _picker = ImagePicker();
           enabled: widget.formValue[widget.formProperty]!.enabled,
           controller: widget.controller,
           autofocus: widget.autofocus!,
+          inputFormatters: widget.keyboardType == TextInputType.number ? [FilteringTextInputFormatter.digitsOnly] : null,
           onFieldSubmitted: widget.onFieldSubmitted,
           initialValue: widget.controller == null ? widget.formValue[widget.formProperty]!.contenido : null,
           keyboardType: widget.keyboardType,

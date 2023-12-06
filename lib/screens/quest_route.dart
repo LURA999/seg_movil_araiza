@@ -42,8 +42,7 @@ class _QuestRouteState extends State<QuestRoute>  {
   List<String> preguntasHeaders = [];
   List<String?> comments = [];
   List<String> formPropertyComment = [];
-  String titleDescription = "";
-  String titleDescription2 = "";
+  List<String> titleDescription = [];
   List<Map<String,dynamic>> formValue =[];
   int periodo = 0;
   int recorrido = 0;
@@ -84,322 +83,6 @@ class _QuestRouteState extends State<QuestRoute>  {
      widthPreguntas = MediaQuery.of(context).size.height * 0.3;
 
      form = param['form'];
-
-    switch (recorrido) {
-        case 1:
-          area = "Area A";
-        break;
-        case 2:
-          area = "Area B";
-        break;
-        case 3:
-          area = "Area C";
-        break;    
-      }
-
-      switch(periodo) {
-      case 1: 
-      titleDescription = "Posturas correctas/forzadas\nRFSHMAT.ART.102";
-      titleDescription2 = "Fuerza manual extrema\nRFSHMAT.ART.101";
-      preguntasVerticales = [
-            "Verificar aseo y orden (NOM-001-STPS-2008)",
-            "Inspección de las herramientas de trabajo RFSMAT, ART. 95",
-            "Verificar iluminación RFSMAT, ART. 95",
-            "Verificación de la existencia de botiquín. NOM-005-STPS-1998",
-            "Verificar la existencia del Plan de prevención contra incendios. NOM-004-STPS-1999",
-            "Estado de las herramientas de trabajo NOM-004-STPS-1999",
-            "Revisión de pisos NOM-001-STPS-2008",
-            "Revisión de paredes NOM-001-STPS-2008",
-            "Revisión de techos NOM-001-STPS-2008",
-            "Revisión de puertas NOM-001-STPS-2008",
-            "Revisión de las instalaciones de agua NOM-001-STPS-2008",
-            ];
-        switch(recorrido) {
-          //Enero-Marzo
-          //Area A
-          case 1:
-          preguntasHeaders = [
-            "Torre A",			
-            "Bodega Torre A",			
-            "Gimnasio",			
-            "Area de descansa",			
-            "Lavanderia",			
-            "Cuarto de maquinas",			
-            "Bodega de alberca",			
-            "Cuarto A/C chiller",			
-            "Suites",			
-            "Oficina Corporativo",			
-            "Oficinas Sistemas/Direccion",			
-            "Caseta #2"		
-          ];
-          break;
-          //Enero-Marzo
-          //Area B
-          case 2:
-          preguntasHeaders = [
-            "Torre B",			
-            "Recepcion",			
-            "Lobby Bar",			
-            "Ama de llaves",			
-            "Oficina de banquetes",			
-            "Oficina de Ventas",			
-            "Oficina de AyB",			
-            "Oficina Araiza Diamante",			
-            "Oficina Gerencia General",			
-            "Almacen",			
-            "Oficina Mantenimiento",			
-            "Comedor de empleados"		
-          ];
-          break;
-          //Enero-Marzo
-          //Area C
-          case 3:
-            preguntasVerticales2 = [
-              "Detectores de humo NOM-002-STPS-2010",
-              "Verificación de la ubicación de extintores NOM-002-STPS-2010",
-              "Limpieza de pisos y paredes RFSHMAT, ART. 109",
-              "Estados de los equipos NOM-004-STPS-1999",
-              "Estado y limpieza de cuartos fríos RFSHMAT, ART. 109",
-              "Estados de los alimentos RFSHMAT, ART. 109	"
-            ];
-
-          preguntasHeaders = [
-              "Centro de convenciones",			
-              "Fonda / Privado",			
-              "Salon Guaycura",			
-              "Salones Mexicali",			
-              "Oficina RH",			
-              "Oficina Contraloria",			
-              "Oficina Reclutamiento",			
-              "Oficina compras",			
-              "Taller Mantenimiento",			
-              "Cuarto de Boylers",			
-              "Caseta #1",			
-              "Cocina empleados y cocina general",
-              "Cocina empleados y cocina general" 		
-            ];
-          break;
-        }
-      break;
-      case 2:
-        titleDescription = "Levantamiento pesado frecuente o forzado\nRFSHMAT.ART.102";
-        titleDescription2 = "Uso de equipo de proteccion personal\nRFSHMAT.ART.101";
-        preguntasVerticales = [
-          "Aseo y limpieza (NOM-001-STPS-2008)",
-          "Contactos no sobrecargados (NOM-002-STPS-2010)",
-          "Accesos libres de obstáculos (NOM-002-STPS-2010)",
-          "Iluminación y ventilación (RFSHMAT.ART.95)",
-          "Condiciones de sanitarios (NOM-001-STPS-2008)",
-          "Ventilación (RFSHMAT.ART.95)",
-          "Funcionamiento de detectores de humo (NOM-004-STPS-1999)",
-          "Ubicación de extintores de fuego y su recarga (NOM-002-STPS-2010)",
-          "Color y señalizacion (NOM-026-STPS-2008)"
-        ];
-      switch(recorrido) {
-        //Abr-jun
-        //Area A
-        case 1:
-        preguntasHeaders = [
-          "Torre A",			
-          "Bodega Torre A",			
-          "Gimnasio",			
-          "Area de descansa",			
-          "Lavanderia",			
-          "Cuarto de maquinas",			
-          "Bodega de alberca",			
-          "Cuarto A/C chiller",			
-          "Suites",			
-          "Oficina Corporativo",			
-          "Oficinas Sistemas/Direccion",			
-          "Caseta #2"		
-        ];
-
-        break;
-        //Abr-jun
-        //Area B
-        case 2:
-        preguntasHeaders = [
-          "Torre B",			
-          "Recepcion",			
-          "Lobby Bar",			
-          "Ama de llaves",			
-          "Oficina de banquetes",			
-          "Oficina de Ventas",			
-          "Oficina de AyB",			
-          "Oficina Araiza Diamante", 			
-          "Oficina Gerencia General",			
-          "Almacen",			
-          "Oficina Mantenimiento",			
-          "Comedor de empleados"		
-        ];
-
-        break;
-        //Abr-jun
-        //Area C
-        case 3:
-         preguntasHeaders = [
-          "Cocina",			
-          "Cocina comedor de empleados",			
-          "Centro de convenciones",			
-          "Fonda / Privado",			
-          "Salon Guaycura",			
-          "Salones Mexicali",			
-          "Oficina RH",			
-          "Oficina Contraloria",			
-          "Oficina Reclutamiento",			
-          "Oficina compras",			
-          "Taller Mantenimiento",			
-          "Cuarto de Boylers",			
-          "Caseta #1"		
-         ];
-        break;
-      }
-      break;
-      case 3:
-      titleDescription = "";
-      titleDescription2 = "";
-          preguntasVerticales = [
-          "Verificación de la ubicación de extintores. (NOM-002-STPS-2010)",
-          "Verificación de la vigencia de los extintores. (NOM-002-STPS-2010)",
-          "Verificación de ventilación (RFSHMAT, ART. 99)",
-          "Verificación de tableros eléctricos (NOM-004-STPS-1999)",
-          "Verificación de instalaciones y elementos estructurales. (NOM-001-STPS-2008)",
-          "Existencia de indicadores de corriente eléctrica en tomacorrientes (NOM-026-STPS-2008)",
-          "Aseo y limpieza (NOM-001-STPS-2008)",
-          "Existencia de plagas (NOM-001-STPS-2008)",
-          "Estado físico de escalones (NOM-001-STPS-2008)",
-          "Funcionamiento de luz de emergencia (NOM-004-STPS-1999)"];
-      switch(recorrido) {
-        //Jul - sep
-        //Area A
-        case 1:
-        preguntasHeaders = [
-          "Torre A",			
-          "Bodega Torre A",			
-          "Gimnasio",			
-          "Area de descansa",			
-          "Lavanderia",			
-          "Cuarto de maquinas",			
-          "Bodega de alberca",			
-          "Cuarto A/C chiller",			
-          "Suites",			
-          "Oficina Corporativo",			
-          "Oficinas Sistemas/Direccion",			
-          "Caseta #2"		
-        ];
-          
-        break;
-        //Jul - sep
-        //Area B
-        case 2:
-          preguntasHeaders =[
-            "Torre B",			
-            "Recepcion",			
-            "Lobby Bar",			
-            "Ama de llaves",			
-            "Oficina de banquetes",			
-            "Oficina de Ventas",			
-            "Oficina de AyB",			
-            "Oficina Araiza Diamante", 			
-            "Oficina Gerencia General",			
-            "Almacen",			
-            "Oficina Mantenimiento",			
-            "Comedor de empleados"		
-          ];
-        break;
-        case 3:
-        //Jul - sep
-        //Area C
-       preguntasHeaders = [
-            "Cocina",			
-            "Cocina comedor de empleados",			
-            "Centro de convenciones",			
-            "Fonda / Privado",			
-            "Salon Guaycura",			
-            "Salones Mexicali",			
-            "Oficina RH",			
-            "Oficina Contraloria"			
-            "Oficina Reclutamiento",			
-            "Oficina compras",			
-            "Taller Mantenimiento",			
-            "Cuarto de Boylers",			
-            "Caseta #1"		
-          ];
-        break;
-      }
-      break;
-      case 4:
-      
-        titleDescription = "Movimiento repetido extremo\nRFSHMAT.ART.102";
-        titleDescription2 = "Impacto repetido\nRFSHMAT.ART.101";
-        preguntasVerticales = [
-          "Funcionamiento de detectores de humo. (NOM-002-STPS-2010)",
-          "Funcionamiento de sistema de bombeo de hidrantes. (NOM-004-STPS-1999)",
-          "Funcionamiento de Alarma General. NOM-002-STPS-2010",
-          "Funcionamiento del sistema eléctrico. NOM-004-STPS-1999"
-        ];
-      switch(recorrido) {
-        //oct-dic
-        //Area A
-        case 1:
-        preguntasHeaders =[
-          "Torre A",			
-          "Bodega Torre A",			
-          "Gimnasio",			
-          "Area de descansa",			
-          "Lavanderia",			
-          "Cuarto de maquinas",			
-          "Bodega de alberca",			
-          "Cuarto A/C chiller",			
-          "Suites",			
-          "Oficina Corporativo",			
-          "Oficinas Sistemas/Direccion",			
-          "Caseta #2"		
-        ];
-        break;
-        //oct-dic
-        //Area B
-        case 2:
-        preguntasHeaders =[
-          "Torre B",			
-          "Recepcion",			
-          "Lobby Bar",			
-          "Ama de llaves",			
-          "Oficina de banquetes",			
-          "Oficina de Ventas",			
-          "Oficina de AyB",			
-          "Oficina Araiza Diamante", 			
-          "Oficina Gerencia General",			
-          "Almacen General",			
-          "Oficina Mantenimiento",			
-          "Comedor de empleados"		
-        ];
-        break;
-        //oct-dic
-        //Area C
-        case 3:
-        preguntasHeaders =[
-          "Cocina",			
-          "Cocina comedor de empleados",			
-          "Centro de convenciones",			
-          "Fonda / Privado",			
-          "Salon Guaycura",			
-          "Salones Mexicali",			
-          "Oficina RH",			
-          "Oficina Contraloria",			
-          "Oficina Reclutamiento",			
-          "Oficina compras",			
-          "Taller Mantenimiento",			
-          "Cuarto de Boylers",			
-          "Caseta #1"		
-        ];
-        break;
-      }
-      break;
-      default:
-        preguntasVerticales= [];
-      break;
-    }
   }
 
 
@@ -411,10 +94,20 @@ class _QuestRouteState extends State<QuestRoute>  {
 
     if (soloUnaVez4FutureBuilder) {
     answers = await seht.getAnswer(form, context);
+    preguntasVerticales = await seht.getQuestion(form, context);
+
+
+    if (form==3) {
+      preguntasVerticales2 = preguntasVerticales.sublist(preguntasVerticales.length - 6, preguntasVerticales.length );
+      for (var i =  0; i < 6 ; i++) {
+        preguntasVerticales.removeAt(preguntasVerticales.length - 1);
+      }
+    } 
+
+    preguntasHeaders = await seht.getTitle(form, context);
+    titleDescription = await seht.getTitleDescription(form, context);
     comments = await seht.getComments(form, context);
     descriptions = await seht.getDescriptions(form, context);
-
-    
       for (var i = 0; i < comments.length; i++) {
         arrEdConComment.add(TextEditingController());
         arrEdConComment[i].text = comments[i]['comment_text'];
@@ -503,7 +196,7 @@ class _QuestRouteState extends State<QuestRoute>  {
 
     if (soloUnaVez2) {
     for (var i = 0; i < preguntasHeaders.length; i++) {
-       if (periodo != 3) {  
+       if (periodo != 7 && periodo != 8 && periodo != 9) {  
         
         formPropertyComment.add("comment$i");
     
@@ -609,7 +302,7 @@ class _QuestRouteState extends State<QuestRoute>  {
                         DateTime now = DateTime.now();
                         String formattedDate = DateFormat('yyyyMMddss').format(now);
                         String fileName = '$formattedDate.xlsx';                        
-                        await jsonToExcelSehExcel(preguntasVerticales,preguntasHeaders,preguntasVerticales2,transformEnumArrayToInteger(rateRoutes),area, comments,[titleDescription,titleDescription2], intf,'Seh_$fileName',context);
+                        await jsonToExcelSehExcel(preguntasVerticales,preguntasHeaders,preguntasVerticales2,transformEnumArrayToInteger(rateRoutes),area, comments,titleDescription, intf,'Seh_$fileName',context);
                       setState(() {
                         desactivarbtndownload = false;
                       });
@@ -670,10 +363,12 @@ class _QuestRouteState extends State<QuestRoute>  {
                   ), 
                   ...temas,
     
-                if( periodo !=3)
+                if( periodo != 7 && periodo != 8 && periodo != 9)
                 Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                  Text( titleDescription,style: getTextStyleTitle2(context, null),),
+                  Text( titleDescription[0],style: getTextStyleTitle2(context, null),),
                     Padding(
                     padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.05),
                     child: TextFormField(
@@ -688,7 +383,7 @@ class _QuestRouteState extends State<QuestRoute>  {
                         )
                       ) ,
                     ),
-                  Text(titleDescription2,style: getTextStyleTitle2(context, null),),
+                  Text(titleDescription[1],style: getTextStyleTitle2(context, null),),
                     Padding(
                     padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.05),
                     child: TextFormField(
@@ -748,7 +443,7 @@ class _QuestRouteState extends State<QuestRoute>  {
                           DateTime now = DateTime.now();
                           String formattedDate = DateFormat('yyyyMMddss').format(now);
                           String fileName = '$formattedDate.xlsx';                        
-                          await jsonToExcelSehExcel(preguntasVerticales,preguntasHeaders, preguntasVerticales2,transformEnumArrayToInteger(rateRoutes),area, comments,[titleDescription,titleDescription2], intf,'Seh_$fileName',context);
+                          await jsonToExcelSehExcel(preguntasVerticales,preguntasHeaders, preguntasVerticales2,transformEnumArrayToInteger(rateRoutes),area, comments,titleDescription, intf,'Seh_$fileName',context);
                         setState(() {
                           desactivarbtndownload = false;
                         });
@@ -800,25 +495,14 @@ class _QuestRouteState extends State<QuestRoute>  {
   Widget columnOrRow(double responsiveRow, String e, int index, Orientation orientation) {
   // Ejemplo de uso:
   
-  if (orientation == Orientation.landscape) {
-    return Row(
-    children: [
-      Expanded(
-        child: preguntaContainer(responsiveRow, e),
-      ),
-      Expanded(
-        child: respuestasContainer(responsiveRow, index),
-      )            
-    ],
-  );
-  }else{
+    
      return Column(
     children: [
-      preguntaContainer(responsiveRow, e),
+      preguntaContainer(e,orientation),
       respuestasContainer(null, index),
     ],
   );
-  }
+  
 }
 
   Container respuestasContainer(double? responsiveRow, int index) {
@@ -832,14 +516,28 @@ class _QuestRouteState extends State<QuestRoute>  {
         child: RadioInputRateRoute(titulo: const ["Bueno","Regular","Malo"],index: index-1,tipoEnum: 3,rateRoutes: rateRoutes,  ))
       );
   }
-
-  Container preguntaContainer(double responsiveRow, String e) {
-    return Container(
-        height: responsiveRow,
-        alignment: Alignment.centerLeft,
-        decoration: BoxDecoration(border: Border.all(color: Colors.black)),
-        child: Text(e, style: getTextStyleText(context, null ,null).copyWith(height:  1.2) ),
+  
+  LayoutBuilder  preguntaContainer(String e,Orientation orientation) {
+    return LayoutBuilder(
+  builder: (context, constraints) {
+       return Container(
+        decoration: BoxDecoration(border: Border.all(color: Colors.black)), 
+        width: double.infinity,
+        padding: 
+        EdgeInsets.all(MediaQuery.of(context).size.height * 
+            (orientation == Orientation.landscape? 
+            MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <900 
+            ?   0.05  : 0.1
+            //Orientation.portrait
+            :  0.02 )),
+        child: Column(
+            children: [ 
+              Text(e, style: getTextStyleText(context, null ,null).copyWith(height:  1.2) )
+            ],
+          ),
       );
+      }
+    );
   }
 
 
@@ -868,46 +566,42 @@ class _QuestRouteState extends State<QuestRoute>  {
                     ),
                   ),
                 ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  alignment: Alignment.center,
-                  child: Column(
-                    children: [
-                     
-                    //En esta parte se imprime las preguntas verticales (perono se imprimen las preguntas verticales2)
-                      if(i < preguntasHeaders.length - (periodo==1 && recorrido == 3 ? 1 : 0 ))
-                      ...preguntasVerticales.map((e) {
-                        return columnOrRow(responsiveRow, e, ++index,orientation); 
-                    }
-                    ),
-                    //En esta parte se imprime las preguntas verticales, personalizadas
-                      if(i == preguntasHeaders.length - (periodo==1 && recorrido == 3 ? 1 : preguntasHeaders.length -1 ))
-                    ...preguntasVerticales2.map((e) {
-                        return columnOrRow(responsiveRow, e, ++index,orientation);
-                    }
-                    ),
-                    SizedBox(height: responsiveComment,),
-                     Column(
-                      children: [
-                        Text('Comentarios',style: getTextStyleTitle2(context, null),),
-                         Padding(
-                           padding: EdgeInsets.all(responsiveComment),
-                           child: TextFormField(
-                              controller: arrEdConComment[i],
-                             textCapitalization: TextCapitalization.characters,
-                             style: getTextStyleText(context,null,null),
-                             maxLines: 4,
-                             decoration:  InputDecoration(
-                               border: OutlineInputBorder(
-                                 borderRadius: BorderRadius.circular(0),
-                               )
-                             )
-                           ),
-                         ),
-                      ],
-                     )
-                    ],
+                Column(
+                  children: [
+                   
+                  //En esta parte se imprime las preguntas verticales (perono se imprimen las preguntas verticales2)
+                    if(i < preguntasHeaders.length - (periodo==3 && recorrido == 3 ? 1 : 0 ))
+                    ...preguntasVerticales.map((e) {
+                      return columnOrRow(responsiveRow, e, ++index,orientation); 
+                  }
                   ),
+                  //En esta parte se imprime las preguntas verticales, personalizadas
+                    if(i == preguntasHeaders.length - (periodo==3 && recorrido == 3 ? 1 : preguntasHeaders.length -1 ))
+                  ...preguntasVerticales2.map((e) {
+                      return columnOrRow(responsiveRow, e, ++index,orientation);
+                  }
+                  ),
+                  SizedBox(height: responsiveComment,),
+                   Column(
+                    children: [
+                      Text('Comentarios',style: getTextStyleTitle2(context, null),),
+                       Padding(
+                         padding: EdgeInsets.all(responsiveComment),
+                         child: TextFormField(
+                            controller: arrEdConComment[i],
+                           textCapitalization: TextCapitalization.characters,
+                           style: getTextStyleText(context,null,null),
+                           maxLines: 4,
+                           decoration:  InputDecoration(
+                             border: OutlineInputBorder(
+                               borderRadius: BorderRadius.circular(0),
+                             )
+                           )
+                         ),
+                       ),
+                    ],
+                   )
+                  ],
                 ),
               ],
             ),

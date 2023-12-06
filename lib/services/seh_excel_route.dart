@@ -267,10 +267,6 @@ Future<void> jsonToExcelSehExcel(List<String> preguntas,List<String> headers, Li
       r++;
     }
 
-    
-
-
-
 //COMENTARIOS
 
  final Range headerSecond = sheet.getRangeByIndex(preguntas.length + 6,2);

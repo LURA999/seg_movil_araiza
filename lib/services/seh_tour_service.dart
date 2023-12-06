@@ -12,7 +12,7 @@ class SehTourService extends ChangeNotifier{
 
   bool modoApk = kDebugMode?true:false; 
   bool isSaving = true;
-  late String link = modoApk?'https://www.comunicadosaraiza.com/movil_scan_api_prueba2/API':'https://www.comunicadosaraiza.com/movil_scan_api_prueba2/API';
+  late String link = modoApk?'https://www.comunicadosaraiza.com/movil_scan_api_prueba/API':'https://www.comunicadosaraiza.com/movil_scan_api_prueba/API';
 
 
  Future<bool> postForm(List<int> answer,int formAB, BuildContext context) async {
@@ -204,6 +204,123 @@ try {
     return []; 
   }
 
+Future<List<String>> getQuestion(int form,BuildContext context ) async {
+ 
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.', 'Error');
+    return [];
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    isSaving = true;
+    notifyListeners();
+     final url = Uri.parse('$link/tour_seh.php?form=$form&question=true');
+       var response = (await http.get(url)).body;
+      final result =  AccessListString.fromJson(jsonDecode(response));;
+
+      if (result.status == 200) {
+        isSaving = false;
+        notifyListeners();
+        return result.container! ;
+      } 
+    return []; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e','Error');
+    return []; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e','Error');
+    return []; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e','Error');
+    return []; 
+  }
+  }
+    return []; 
+  }
+
+  Future<List<String>> getTitle(int form,BuildContext context ) async {
+ 
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.', 'Error');
+    return [];
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    isSaving = true;
+    notifyListeners();
+     final url = Uri.parse('$link/tour_seh.php?form=$form&title=true');
+       var response = (await http.get(url)).body;
+      final result =  AccessListString.fromJson(jsonDecode(response));
+
+      if (result.status == 200) {
+        isSaving = false;
+        notifyListeners();
+        return result.container! ;
+      } 
+    return []; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e','Error');
+    return []; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e','Error');
+    return []; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e','Error');
+    return []; 
+  }
+  }
+    return []; 
+  }
+
+
+Future<List<String>> getTitleDescription(int form,BuildContext context ) async {
+ 
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.', 'Error');
+    return [];
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    isSaving = true;
+    notifyListeners();
+     final url = Uri.parse('$link/tour_seh.php?form=$form&titleDescription=true');
+       var response = (await http.get(url)).body;
+      final result =  AccessListString.fromJson(jsonDecode(response));
+
+      if (result.status == 200) {
+        isSaving = false;
+        notifyListeners();
+        return result.container! ;
+      } 
+    return []; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e','Error');
+    return []; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e','Error');
+    return []; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e','Error');
+    return []; 
+  }
+  }
+    return []; 
+  }
 
   Future<List<Map<String,dynamic>>> getDescriptions(int form,BuildContext context ) async {
  
