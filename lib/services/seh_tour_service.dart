@@ -65,6 +65,7 @@ try {
       isSaving = true;
       notifyListeners();
       final url = Uri.parse('$link/tour_seh.php?formComment=$formComment');
+      print(input.length);
       var response = (await http.patch(url, body: json.encode({'data':input}))).body;
       if (response.contains('200')){  
         isSaving = false;

@@ -267,6 +267,7 @@ class _QuestRouteState extends State<QuestRoute>  {
                         desactivarbtnsave = true;
                       });
                         await seht.postForm(transformEnumArrayToInteger(rateRoutes), form, context);
+                        
                         for (var i = 0; i < arrEdConComment.length; i++) {
                           comments.add(arrEdConComment[i].text);
                         }
@@ -404,26 +405,50 @@ class _QuestRouteState extends State<QuestRoute>  {
                   Row(
                   children: [
                     ElevatedButton(onPressed: desactivarbtnsave == false ? () async { 
-                        setState(() {
-                        desactivarbtnsave = true;
-                      });
-                        await seht.postForm(transformEnumArrayToInteger(rateRoutes), form, context);
+                        
+                       showDialog(
+                          context: context, // Accede al contexto del widget actual
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title:  Text("¿Estás seguro que desea continuar?",style: getTextStyleText(context,FontWeight.bold,null),),
+                              content: Text("Los datos no se guardarán automaticamente, los cambios se guardan manualmente.", style: getTextStyleText(context,null,null)),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context); // Cierra el diálogo
+                                  },
+                                  child:  Text('Cancelar', style: getTextStyleButtonField(context),),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    double responsiveRow = MediaQuery.of(context).size.height * (orientation == Orientation.landscape? 
+                                    MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <900 ? 0.15 :
+                                    0.1 : 0.05 ); 
+                                    double responsiveComment = MediaQuery.of(context).size.height * (orientation == Orientation.landscape? 0.05 : 0.01 ); 
+                                  rateRoutes = List.generate((preguntasVerticales.length + preguntasVerticales2.length) * preguntasHeaders.length, 
+                                  (index) => rateRoute.none );
+                                    temas = [];
+                                    comments = [];
+                                    for (var i = 0; i < arrEdConComment.length; i++) {
+                                      arrEdConComment[i].clear();
+                                    }
 
-                        for (var i = 0; i < formValue.length; i++) {
-                          comments.add(arrEdConComment[i].text);
-                        }
+                                    arrEdConDescription[0].text = '';
+                                    arrEdConDescription[1].text = '';
 
-                        await seht.postComments(comments, form, context);
-                        final intf = DescriptionsSeh(
-                          description1: arrEdConDescription[0].text,
-                          description2: arrEdConDescription[1].text,
-                        );
-                        await seht.postDescriptions(intf, form, context);
-                        comments = [];
-                      setState(() {
-                        desactivarbtnsave = false;
-                      });
-                    }:null,
+                                    llenarFormulario(responsiveRow, index, orientation, responsiveComment,);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text('Se ha vaciado el formulario', style: getTextStyleText(context, FontWeight.bold, Colors.white),),backgroundColor: Colors.green),
+                                    );
+                                    setState(() { });
+                                    Navigator.pop(context); // Cierra el diálogo
+                                  },
+                                  child:  Text('Aceptar', style: getTextStyleButtonField(context),),
+                                )
+                              ],
+                            );
+                          });
+                        }: null,
                     child:  Text('Guardar', style: getTextStyleButtonField(context),),
                       ) ,
                       SizedBox(width: MediaQuery.of(context).size.width * 0.01,),

@@ -107,13 +107,15 @@ BuildContext context) async {
   pictureLogo.height = 70; 
   
  
-
-
+  int beginColumn = 1;
+  if(screen == 3){
+    beginColumn = 2;
+  }
 
   // Agrega las celdas de encabezado
   List<String> headers = jsonStr[0].keys.toList();
   for (var i = 0; i < headers.length; i++) {
-   final Range header = sheet.getRangeByIndex(beginRow, i+1);
+   final Range header = sheet.getRangeByIndex(beginRow, i+beginColumn);
    header.setText(headersPerso[i]);
    header.cellStyle.bold = true;
   }
@@ -123,7 +125,7 @@ BuildContext context) async {
     var keys = jsonStr[i].keys.toList();
     var values = jsonStr[i].values.toList();
     for (var j = 0; j < keys.length; j++) {
-      var cell = sheet.getRangeByIndex(i + 1 + beginRow, j + 1);
+      var cell = sheet.getRangeByIndex(i + 1 + beginRow, j + beginColumn);
       cell.setText(values[j].toString());
     }
   }
@@ -135,6 +137,7 @@ BuildContext context) async {
   sheet.autoFitColumn(5);
   sheet.autoFitColumn(6);
   sheet.autoFitColumn(7);
+  sheet.autoFitColumn(8);
   
 
   switch (screen) {
@@ -281,6 +284,22 @@ BuildContext context) async {
       rangeTitle.merge();
       rangeTitle.cellStyle.hAlign = HAlignType.center;
       rangeTitle.cellStyle.vAlign = VAlignType.center;
+
+
+  // Agrega las celdas de encabezado
+   final Range header = sheet.getRangeByIndex(beginRow, 1);
+   header.setText('ID');
+   header.cellStyle.bold = true;
+
+
+  //Contenido de las cabeceras agregadas
+  for (var i = 0; i < jsonStr.length; i++) {
+      var cell = sheet.getRangeByIndex(i + 1 + beginRow, 1);
+      cell.setText((1+i).toString());
+    
+  }
+
+
       var cellObservacion = sheet.getRangeByIndex(jsonStr.length + 8 + beginRow,1);
       cellObservacion.setText('OBSERVACIONES');
       cellObservacion.cellStyle.bold = true;
