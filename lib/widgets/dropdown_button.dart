@@ -40,12 +40,15 @@ class _DropdownButtonWidgetState extends State<DropdownButtonWidget> {
           side:  const BorderSide(color: AppTheme.primary),
         ),
         child: Container(
+          
           height: 65,
           alignment: Alignment.center,
           child: DropdownButton<String>(
+            
           value: dropdownValue,
           icon: const Icon(Icons.arrow_drop_down_circle_rounded,color: AppTheme.primary),
           elevation: 16,
+
           isExpanded: true,
           // style: const TextStyle(color: Colors.deepPurple),
           underline: Container(
@@ -65,6 +68,7 @@ class _DropdownButtonWidgetState extends State<DropdownButtonWidget> {
           items: widget.type == 2 ?
           list!.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
+              enabled: widget.formValue[widget.formProperty].enabled ?? true,
               value: value,
               child: Text(value,style: getTextStyleText(context,null,null)),
             );
@@ -73,6 +77,7 @@ class _DropdownButtonWidgetState extends State<DropdownButtonWidget> {
           arrSelect!.map<DropdownMenuItem<String>>((Map<String, dynamic> value) {
             final claves = value.keys.toList();
             return DropdownMenuItem<String>(
+              enabled: widget.formValue[widget.formProperty].enabled ?? true,
               value: value[claves[0]],
               child: Text(value[claves[1]],style: getTextStyleText(context,null,null)),
             );

@@ -37,7 +37,7 @@ class _ControlAssistanceState extends State<ControlAssistance> {
     final Map<String, MultiInputsForm> formValuesRegistroMan = {
       'employee_number' : MultiInputsForm(contenido: '', obligatorio: true),   
       'nameSearch' : MultiInputsForm(contenido: '', obligatorio: false, autocomplete: true, autocompleteAsync: true),   
-      'hotel' : MultiInputsForm(contenido: '', obligatorio: false, select: true, activeListSelect: true),
+      'hotel' : MultiInputsForm(contenido: '', obligatorio: false, select: true, activeListSelect: true, enabled: false),
     };
 
     final Map<String, MultiInputsForm> formValuesObservacion = {

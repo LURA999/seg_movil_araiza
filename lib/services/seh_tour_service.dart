@@ -14,7 +14,6 @@ class SehTourService extends ChangeNotifier{
   bool isSaving = true;
   late String link = modoApk?'https://www.comunicadosaraiza.com/movil_scan_api_prueba/API':'https://www.comunicadosaraiza.com/movil_scan_api_prueba/API';
 
-
  Future<bool> postForm(List<int> answer,int formAB, BuildContext context) async {
     var connectivityResult = await (Connectivity().checkConnectivity());  
   if (connectivityResult == ConnectivityResult.none) {
@@ -65,7 +64,7 @@ try {
       isSaving = true;
       notifyListeners();
       final url = Uri.parse('$link/tour_seh.php?formComment=$formComment');
-      print(input.length);
+      
       var response = (await http.patch(url, body: json.encode({'data':input}))).body;
       if (response.contains('200')){  
         isSaving = false;
@@ -140,7 +139,7 @@ try {
 try {
     isSaving = true;
     notifyListeners();
-     final url = Uri.parse('$link/tour_seh.php?form=$form&answer=true');
+     final url = Uri.parse('$link/tour_seh.php?form=$form&answer=true&local=${(await storage.read(key: 'idHotelRegister'))}');
        var response = (await http.get(url)).body;
       final result = AccessListInt.fromJson(jsonDecode(response));
       if (result.status == 200) {
@@ -217,9 +216,9 @@ Future<List<String>> getQuestion(int form,BuildContext context ) async {
 try {
     isSaving = true;
     notifyListeners();
-     final url = Uri.parse('$link/tour_seh.php?form=$form&question=true');
-       var response = (await http.get(url)).body;
-      final result =  AccessListString.fromJson(jsonDecode(response));;
+      final url = Uri.parse('$link/tour_seh.php?form=$form&question=true&local=${(await storage.read(key: 'idHotelRegister'))}');
+      var response = (await http.get(url)).body;
+      final result =  AccessListString.fromJson(jsonDecode(response));
 
       if (result.status == 200) {
         isSaving = false;
@@ -296,7 +295,7 @@ Future<List<String>> getTitleDescription(int form,BuildContext context ) async {
 try {
     isSaving = true;
     notifyListeners();
-     final url = Uri.parse('$link/tour_seh.php?form=$form&titleDescription=true');
+     final url = Uri.parse('$link/tour_seh.php?form=$form&titleDescription=true&local=${(await storage.read(key: 'idHotelRegister'))}');
        var response = (await http.get(url)).body;
       final result =  AccessListString.fromJson(jsonDecode(response));
 
