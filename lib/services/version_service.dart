@@ -30,6 +30,7 @@ try {
     final url = Uri.parse('$link/version_app.php');
     var response = (await http.get(url)).body;
       final result = AccessMap.fromJson(jsonDecode(response));
+      print(result.container);
     // var response = await http.post(url, body: {'pass': pass, 'departament': departament});
     if (result.status == 200){
       isSaving = false;

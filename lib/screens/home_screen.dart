@@ -46,14 +46,27 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> downloadAndInstallUpdate(BuildContext context) async {
     VersionService versServ = VersionService();
 
-    final versionLast = (await versServ.getLastVersion(context))[0]['version'];
-    if( versionLast != version){
+    final versionLast = (await versServ.getLastVersion(context));
+    if( versionLast[0]['version'] != version){
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Actualizar la aplicación'),
-          content: Text('¿Deseas instalar la actualización "$versionLast", usted tiene la version $version?'),
+          title: Text('Actualizar la aplicación',style: getTextStyleText(context,FontWeight.bold,null),),
+          content: Container(
+            height: MediaQuery.of(context).size.height * 0.3,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('¿Deseas instalar la actualización "${versionLast[0]['version']}", usted tiene la version $version?',style: getTextStyleText(context,null,null),),
+                  SizedBox(height:10),  
+                  
+                  Text(versionLast[0]['description'].replaceAll(r'\n', '\n'), style: getTextStyleText(context,null,null),)
+                ],
+              ),
+            ),
+          ),
           actions: <Widget>[
             ElevatedButton(
               child: Text('Cancelar'),
