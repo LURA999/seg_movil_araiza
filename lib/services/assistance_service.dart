@@ -18,7 +18,7 @@ class AssistanceService extends ChangeNotifier{
 
   bool modoApk = kDebugMode?true:false; 
   bool isSaving = true;
-  late String link = modoApk?'https://www.comunicadosaraiza.com/movil_scan_api_prueba/API':'https://www.comunicadosaraiza.com/movil_scan_api_prueba/API';
+  late String link = modoApk?'https://www.comunicadosaraiza.com/movil_scan_api_prueba2/API':'https://www.comunicadosaraiza.com/movil_scan_api_prueba2/API';
   final storage = FlutterSecureStorage();
 
 
@@ -385,8 +385,6 @@ try {
 try {
       isSaving = true;
       notifyListeners();
-      print('$link/qr_assistance.php');
-      print(json.encode(e.toJson()));
       final url = Uri.parse('$link/qr_assistance.php');
       var response = (await http.post(
       url, 
@@ -434,9 +432,6 @@ Future<List<Map<String, dynamic>>> selectDateAssistanceObservations( DateExcelAs
 try {
       isSaving = true;
       notifyListeners();
-
-      print('$link/turn_assistance.php?getObservations=true');
-      print(json.encode(e.toJson()));
       final url = Uri.parse('$link/turn_assistance.php?getObservations=true');
       var response = (await http.post(
       url, 

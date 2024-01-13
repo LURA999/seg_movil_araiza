@@ -7,7 +7,7 @@ import '../widgets/widgets.dart';
 
 
 class QuestData {
-  final List<int> answers;
+  final List<List<int>> answers;
   final List<Map<String, dynamic>> comments;
   final List<Map<String, dynamic>> descriptions;
 
@@ -36,7 +36,6 @@ class _QuestRouteState extends State<QuestRoute>  {
   List<SizedBox> temas =[];
  SehTourService seht= SehTourService();
   double widthLineTable = 0.5;
-  String area = "";
   List<String> preguntasVerticales= [];    
   List<String> preguntasVerticales2= [];    
   List<String> preguntasHeaders = [];
@@ -88,7 +87,7 @@ class _QuestRouteState extends State<QuestRoute>  {
 
   Future<QuestData> fetchData() async {
 
-    List<int> answers = [];
+    List<List<int>> answers = [];
     List<Map<String,dynamic>> comments = [];
     List<Map<String,dynamic>> descriptions = [];
 
@@ -130,28 +129,34 @@ class _QuestRouteState extends State<QuestRoute>  {
     return FutureBuilder<QuestData>(
       future: fetchData(),
       builder: (context, snapshot) {
-      List<int> transformEnumArrayToInteger(List<rateRoute> enumArray) {
-        // El método map realiza el mapeo automáticamente sin necesidad de recorrer explícitamente
-        return enumArray.map((element) {
-          switch (element) {
+      List<List<int>> transformEnumArrayToInteger(List<rateRoute> enumArray,int i , List<List<int>> e) {
+        
+        for (var el in enumArray) {
+          switch (el) {
             case rateRoute.none:
-              return 0; // Puedes asignar el valor entero que desees para cada elemento de la enumeración
+              e[i][0] = 0;
+            break;
             case rateRoute.bueno:
-              return 1;
+              e[i][0] = 1;
+              break;
             case rateRoute.regular:
-              return 2;
+              e[i][0] = 2;
+            break;
             case rateRoute.malo:
-              return 3;
+              e[i][0] = 3;
+            break;
             default:
-              return 0; // Opción por defecto si hay algún valor inesperado en la enumeración
+              e[i][0] = 0; // Opción por defecto si hay algún valor inesperado en la enumeración
           }
-        }).toList(); // Convertimos el iterable resultante en una lista de enteros
+          i++;
+        }
+        return e;
       }
     
-       List<rateRoute> transIntegerformToEnumArray(List<int> enumArray) {
+       List<rateRoute> transIntegerformToEnumArray(List<List<int>> enumArray) {
         // El método map realiza el mapeo automáticamente sin necesidad de recorrer explícitamente
         return enumArray.map((element) {
-          switch (element) {
+          switch (element[0]) {
             case  0:
               return rateRoute.none; // Puedes asignar el valor entero que desees para cada elemento de la enumeración
             case 1 :
@@ -266,8 +271,8 @@ class _QuestRouteState extends State<QuestRoute>  {
                         setState(() {
                         desactivarbtnsave = true;
                       });
-                        await seht.postForm(transformEnumArrayToInteger(rateRoutes), form, context);
-                        
+                        await seht.postForm(transformEnumArrayToInteger(rateRoutes, 0, snapshot.data!.answers), form, context);
+
                         for (var i = 0; i < arrEdConComment.length; i++) {
                           comments.add(arrEdConComment[i].text);
                         }
@@ -303,7 +308,7 @@ class _QuestRouteState extends State<QuestRoute>  {
                         DateTime now = DateTime.now();
                         String formattedDate = DateFormat('yyyyMMddss').format(now);
                         String fileName = '$formattedDate.xlsx';                        
-                        await jsonToExcelSehExcel(preguntasVerticales,preguntasHeaders,preguntasVerticales2,transformEnumArrayToInteger(rateRoutes),area, comments,titleDescription, intf,'Seh_$fileName',context);
+                        await jsonToExcelSehExcel(preguntasVerticales,preguntasHeaders,preguntasVerticales2,transformEnumArrayToInteger(rateRoutes, 0,snapshot.data!.answers),title, comments,titleDescription, intf,'Seh_$fileName',context);
                       setState(() {
                         desactivarbtndownload = false;
                       });
@@ -468,7 +473,7 @@ class _QuestRouteState extends State<QuestRoute>  {
                           DateTime now = DateTime.now();
                           String formattedDate = DateFormat('yyyyMMddss').format(now);
                           String fileName = '$formattedDate.xlsx';                        
-                          await jsonToExcelSehExcel(preguntasVerticales,preguntasHeaders, preguntasVerticales2,transformEnumArrayToInteger(rateRoutes),area, comments,titleDescription, intf,'Seh_$fileName',context);
+                          await jsonToExcelSehExcel(preguntasVerticales,preguntasHeaders, preguntasVerticales2,transformEnumArrayToInteger(rateRoutes, 0,snapshot.data!.answers), title, comments,titleDescription, intf,'Seh_$fileName',context);
                         setState(() {
                           desactivarbtndownload = false;
                         });
@@ -598,14 +603,14 @@ class _QuestRouteState extends State<QuestRoute>  {
                     if(i < preguntasHeaders.length - (periodo==3 && recorrido == 3 ? 1 : 0 ))
                     ...preguntasVerticales.map((e) {
                       return columnOrRow(responsiveRow, e, ++index,orientation); 
-                  }
+                    }
                   ),
                   //En esta parte se imprime las preguntas verticales, personalizadas
                     if(i == preguntasHeaders.length - (periodo==3 && recorrido == 3 ? 1 : preguntasHeaders.length -1 ))
                   ...preguntasVerticales2.map((e) {
                       return columnOrRow(responsiveRow, e, ++index,orientation);
                   }
-                  ),
+                  ), 
                   SizedBox(height: responsiveComment,),
                    Column(
                     children: [

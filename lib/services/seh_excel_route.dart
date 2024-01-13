@@ -54,7 +54,7 @@ Future<void> requestPermission(Function(bool) onPermissionResult) async {
 }
 
 
-Future<void> jsonToExcelSehExcel(List<String> preguntas,List<String> headers, List<String> preguntas2,List<int> res,String area,  List<String?> comments,List<String> Titlecomments, DescriptionsSeh descriptionsSeh, String fileName, BuildContext context) async {
+Future<void> jsonToExcelSehExcel(List<String> preguntas,List<String> headers, List<String> preguntas2,List<List<int>> res,String area,  List<String?> comments,List<String> Titlecomments, DescriptionsSeh descriptionsSeh, String fileName, BuildContext context) async {
   bool storagePermissionGranted = false;
   if (Platform.isAndroid || Platform.isIOS) {
   await requestPermission((bool granted) {
@@ -83,7 +83,8 @@ Future<void> jsonToExcelSehExcel(List<String> preguntas,List<String> headers, Li
   int recorrerColumna  = 0; 
   int espacioColumn = 0;
   if (preguntas2.isNotEmpty) {
-    recorrerColumna = preguntas.length+1;  
+    //En esta linea de codigo, decido en que columna se van a incrustar las preguntas verticales
+    recorrerColumna = headers.length - 1;  
     espacioColumn = 1;
   }
 
@@ -91,7 +92,7 @@ Future<void> jsonToExcelSehExcel(List<String> preguntas,List<String> headers, Li
   int indexAuxHeader = 0;
 
   for (var i = 0; i < headers.length + espacioColumn; i++) {
-     // Obtenemos el índice del header actual y los siguientes dos headers
+    // Obtenemos el índice del header actual y los siguientes dos headers
     int startIdx = 3 + (i * 3);
     int endIdx = 5 + (i * 3);
 
@@ -99,9 +100,6 @@ Future<void> jsonToExcelSehExcel(List<String> preguntas,List<String> headers, Li
     final Range mergedHeader = sheet.getRangeByIndex(1, startIdx, 1, endIdx);
     mergedHeader.merge();
     
-
-
-
   if (preguntas2.isNotEmpty) {
     //creando la columna vacia
     // Establecemos el texto del header correspondiente a cada grupo de celdas fusionadas
@@ -184,9 +182,6 @@ Future<void> jsonToExcelSehExcel(List<String> preguntas,List<String> headers, Li
         x++;
       }
     }
-
-    
-
   }
 
   int indexPreguntas2 = 0;
@@ -242,8 +237,8 @@ Future<void> jsonToExcelSehExcel(List<String> preguntas,List<String> headers, Li
      */
     for (var z = 0; z < headers.length - espacioColumn; z++) {
       for (var i = 0; i < preguntas.length; i++) {
-        if (res[r] != 0 ) {
-          var cell1 = sheet.getRangeByIndex(i+3, (res[r] + (z>0 ? z*3 + 1 : 1)) +1 );
+        if (res[r][0] != 0 ) {
+          var cell1 = sheet.getRangeByIndex(i+3, (res[r][0] + (z>0 ? z*3 + 1 : 1)) +1 );
           cell1.setText('X');
           cell1.cellStyle.fontSize = 10;
           cell1.cellStyle.fontName = 'Arial';
@@ -258,8 +253,8 @@ Future<void> jsonToExcelSehExcel(List<String> preguntas,List<String> headers, Li
     */
 
     for (var i = 0; i < preguntas2.length; i++) {
-      if (res[r] != 0 ) {
-        var cell1 = sheet.getRangeByIndex(i+3, res[r] + (((recorrerColumna+2) * 3))-1 );
+      if (res[r][0] != 0 ) {
+        var cell1 = sheet.getRangeByIndex(i+3, res[r][0] + (((recorrerColumna+2) * 3))-1 );
         cell1.setText('X');
         cell1.cellStyle.fontSize = 10;
         cell1.cellStyle.fontName = 'Arial';

@@ -12,10 +12,12 @@ class SehTourService extends ChangeNotifier{
 
   bool modoApk = kDebugMode?true:false; 
   bool isSaving = true;
-  late String link = modoApk?'https://www.comunicadosaraiza.com/movil_scan_api_prueba/API':'https://www.comunicadosaraiza.com/movil_scan_api_prueba/API';
+  late String link = modoApk?'https://www.comunicadosaraiza.com/movil_scan_api_prueba2/API':'https://www.comunicadosaraiza.com/movil_scan_api_prueba2/API';
 
- Future<bool> postForm(List<int> answer,int formAB, BuildContext context) async {
+ Future<bool> postForm(List<List<int>> answer,int formAB, BuildContext context) async {
     var connectivityResult = await (Connectivity().checkConnectivity());  
+  
+   print(answer);
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
     messageError(context,'No hay conexión a Internet.', 'Error');
@@ -102,7 +104,8 @@ try {
       isSaving = true;
       notifyListeners();
       final url = Uri.parse('$link/tour_seh.php?formDescription=$formComment');
-      var response = (await http.patch(url, body: json.encode(input.toJson()))).body;
+      var json = input.toJson()['local'] = (await storage.read(key: 'idHotelRegister'));
+      var response = (await http.patch(url, body: json)).body;
       if (response.contains('200')){  
         isSaving = false;
         notifyListeners();
@@ -127,7 +130,7 @@ try {
       return false; 
     }
 
-    Future<List<int>> getAnswer(int form,BuildContext context ) async {
+    Future<List<List<int>>> getAnswer(int form,BuildContext context ) async {
  
   var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
@@ -141,7 +144,7 @@ try {
     notifyListeners();
      final url = Uri.parse('$link/tour_seh.php?form=$form&answer=true&local=${(await storage.read(key: 'idHotelRegister'))}');
        var response = (await http.get(url)).body;
-      final result = AccessListInt.fromJson(jsonDecode(response));
+      final result =  AccessListBidiInt.fromJson(jsonDecode(response));
       if (result.status == 200) {
         isSaving = false;
         notifyListeners();
@@ -177,7 +180,7 @@ try {
 try {
     isSaving = true;
     notifyListeners();
-     final url = Uri.parse('$link/tour_seh.php?form=$form&comments=true');
+     final url = Uri.parse('$link/tour_seh.php?form=$form&comments=true&local=${(await storage.read(key: 'idHotelRegister'))}');
        var response = (await http.get(url)).body;
       final result =  AccessMap.fromJson(jsonDecode(response));
 
@@ -255,7 +258,7 @@ try {
 try {
     isSaving = true;
     notifyListeners();
-     final url = Uri.parse('$link/tour_seh.php?form=$form&title=true');
+     final url = Uri.parse('$link/tour_seh.php?form=$form&title=true&local=${(await storage.read(key: 'idHotelRegister'))}');
        var response = (await http.get(url)).body;
       final result =  AccessListString.fromJson(jsonDecode(response));
 
@@ -298,7 +301,6 @@ try {
      final url = Uri.parse('$link/tour_seh.php?form=$form&titleDescription=true&local=${(await storage.read(key: 'idHotelRegister'))}');
        var response = (await http.get(url)).body;
       final result =  AccessListString.fromJson(jsonDecode(response));
-
       if (result.status == 200) {
         isSaving = false;
         notifyListeners();
@@ -334,10 +336,9 @@ try {
 try {
     isSaving = true;
     notifyListeners();
-     final url = Uri.parse('$link/tour_seh.php?form=$form&descriptions=true');
+     final url = Uri.parse('$link/tour_seh.php?form=$form&descriptions=true&local=${(await storage.read(key: 'idHotelRegister'))}');
        var response = (await http.get(url)).body;
       final result =  AccessMap.fromJson(jsonDecode(response));
-
       if (result.status == 200) {
         isSaving = false;
         notifyListeners();

@@ -37,5 +37,7 @@ export 'package:app_seguimiento_movil/models/examPa_model.dart';
 export 'package:app_seguimiento_movil/models/examPe_model.dart';
 export 'package:app_seguimiento_movil/models/examPhX_model.dart';
 export 'package:app_seguimiento_movil/models/examPhY_model.dart';
+export 'package:app_seguimiento_movil/models/accessListBidInt_model.dart';
+
 
 
