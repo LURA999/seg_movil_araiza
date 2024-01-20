@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:app_seguimiento_movil/models/models.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../services/seh_excel_route.dart';
@@ -7,7 +10,7 @@ import '../widgets/widgets.dart';
 
 
 class QuestData {
-  final List<List<int>> answers;
+  late final List<List<int>> answers;
   final List<Map<String, dynamic>> comments;
   final List<Map<String, dynamic>> descriptions;
 
@@ -36,10 +39,12 @@ class _QuestRouteState extends State<QuestRoute>  {
   List<SizedBox> temas =[];
  SehTourService seht= SehTourService();
   double widthLineTable = 0.5;
+  List<List<int>> answers=[];
+  List<List<int>> answersRespaldo=[];
   List<String> preguntasVerticales= [];    
   List<String> preguntasVerticales2= [];    
   List<String> preguntasHeaders = [];
-  List<String?> comments = [];
+  List<Map<String,dynamic>> comments = [];  
   List<String> formPropertyComment = [];
   List<String> titleDescription = [];
   List<Map<String,dynamic>> formValue =[];
@@ -87,14 +92,18 @@ class _QuestRouteState extends State<QuestRoute>  {
 
   Future<QuestData> fetchData() async {
 
-    List<List<int>> answers = [];
-    List<Map<String,dynamic>> comments = [];
     List<Map<String,dynamic>> descriptions = [];
 
     if (soloUnaVez4FutureBuilder) {
     answers = await seht.getAnswer(form, context);
+    if (answers.isEmpty) {
+        Navigator.of(context).pop();
+        messageError(context, 'No tiene preguntas registradas', 'Error');
+      } 
     preguntasVerticales = await seht.getQuestion(form, context);
-
+    answersRespaldo = (jsonDecode(jsonEncode(answers)) as List)
+      .map((dynamic sublist) => (sublist as List).cast<int>())
+      .toList();
 
     if (form==3) {
       preguntasVerticales2 = preguntasVerticales.sublist(preguntasVerticales.length - 6, preguntasVerticales.length );
@@ -109,7 +118,7 @@ class _QuestRouteState extends State<QuestRoute>  {
     descriptions = await seht.getDescriptions(form, context);
       for (var i = 0; i < comments.length; i++) {
         arrEdConComment.add(TextEditingController());
-        arrEdConComment[i].text = comments[i]['comment_text'];
+        arrEdConComment[i].text = comments[i]['comment_text'].toString();
       }
 
       arrEdConDescription[0].text = descriptions[0]['description1'];
@@ -117,8 +126,10 @@ class _QuestRouteState extends State<QuestRoute>  {
      
 
       soloUnaVez4FutureBuilder = false;
+
+      
     }
-   
+ 
 
   return QuestData(answers: answers, comments: comments, descriptions: descriptions);
   }
@@ -129,8 +140,8 @@ class _QuestRouteState extends State<QuestRoute>  {
     return FutureBuilder<QuestData>(
       future: fetchData(),
       builder: (context, snapshot) {
-      List<List<int>> transformEnumArrayToInteger(List<rateRoute> enumArray,int i , List<List<int>> e) {
-        
+      List<List<int>> transformEnumArrayToInteger(List<rateRoute> enumArray, List<List<int>> e) {
+        int i = 0;
         for (var el in enumArray) {
           switch (el) {
             case rateRoute.none:
@@ -173,6 +184,7 @@ class _QuestRouteState extends State<QuestRoute>  {
       Orientation orientation = MediaQuery.of(context).orientation;
 
     int index = 0;
+
     if (!snapshot.hasData && !snapshot.hasError || orientation !=  AuxOrientation) {
       
     AuxOrientation = orientation;
@@ -196,7 +208,7 @@ class _QuestRouteState extends State<QuestRoute>  {
      if (soloUnaVez) {
         soloUnaVez = false;
         rateRoutes = snapshot.data ==null ? List.generate((preguntasVerticales.length + preguntasVerticales2.length) * preguntasHeaders.length, 
-        (index) => rateRoute.none ): transIntegerformToEnumArray(snapshot.data!.answers) ; 
+        (index) => rateRoute.none ): transIntegerformToEnumArray(answers) ; 
       }
 
     if (soloUnaVez2) {
@@ -230,8 +242,6 @@ class _QuestRouteState extends State<QuestRoute>  {
     }
 
   if (soloUnaVez3 ) {
-      
-
     double responsiveRow = MediaQuery.of(context).size.height * (orientation == Orientation.landscape? 
     MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <900 ? 0.15 :
      0.1 : 0.05 ); 
@@ -268,22 +278,33 @@ class _QuestRouteState extends State<QuestRoute>  {
                     children: [
                       SizedBox(width: MediaQuery.of(context).size.width * 0.01,),
                       ElevatedButton(onPressed: desactivarbtnsave == false ? () async { 
-                        setState(() {
+                      setState(() {
                         desactivarbtnsave = true;
                       });
-                        await seht.postForm(transformEnumArrayToInteger(rateRoutes, 0, snapshot.data!.answers), form, context);
+                        List<List<int>> list = transformEnumArrayToInteger(rateRoutes, answers);
 
-                        for (var i = 0; i < arrEdConComment.length; i++) {
-                          comments.add(arrEdConComment[i].text);
+                        for (var i = 0; i < list.length; i++) {
+                          if(!const ListEquality().equals(answersRespaldo[i], list[i])){
+                            await seht.postForm(list[i], form, context);
+                          }
                         }
-                        await seht.postComments(comments, form, context);
+                        
+                        
+                        for (var i = 0; i < arrEdConComment.length; i++) {
+                          if (comments[i]['comment_text'].toString() != arrEdConComment[i].text.toString()) {
+                          comments[i]['comment_text'] = arrEdConComment[i].text.toString();
+                          await seht.postComments(comments[i], form, context);
+                          }
+                        }
+
                         final intf = DescriptionsSeh(
                           description1: arrEdConDescription[0].text,
                           description2: arrEdConDescription[1].text,
+                          local: await storage.read(key: 'idHotelRegister')
                         );
 
                         await seht.postDescriptions(intf, form, context);
-                        comments = [];
+                        // comments = [];                                                                                                           
                       setState(() {
                         desactivarbtnsave = false;
                       });
@@ -299,16 +320,17 @@ class _QuestRouteState extends State<QuestRoute>  {
                       final intf = DescriptionsSeh(
                         description1: arrEdConDescription[0].text,
                         description2: arrEdConDescription[1].text,
+                        local: await storage.read(key: 'idHotelRegister')
                       );
 
                       for (var i = 0; i < formValue.length; i++) {
-                        comments.add(arrEdConComment[i].text);
+                        comments[i]['comment_text'] = arrEdConComment[i].text.toString();
                       }
 
                         DateTime now = DateTime.now();
                         String formattedDate = DateFormat('yyyyMMddss').format(now);
                         String fileName = '$formattedDate.xlsx';                        
-                        await jsonToExcelSehExcel(preguntasVerticales,preguntasHeaders,preguntasVerticales2,transformEnumArrayToInteger(rateRoutes, 0,snapshot.data!.answers),title, comments,titleDescription, intf,'Seh_$fileName',context);
+                        await jsonToExcelSehExcel(preguntasVerticales,preguntasHeaders,preguntasVerticales2, transformEnumArrayToInteger(rateRoutes,answers),title, comments,titleDescription, intf,'Seh_$fileName',context);
                       setState(() {
                         desactivarbtndownload = false;
                       });
@@ -317,10 +339,10 @@ class _QuestRouteState extends State<QuestRoute>  {
                       ),
                      SizedBox(width: MediaQuery.of(context).size.width * 0.01,),
                       ElevatedButton(onPressed: desactivarbtndownload == false? () async { 
-                      showDialog(
+                      await showDialog(
                           context: context, // Accede al contexto del widget actual
                           builder: (BuildContext context) {
-                            return AlertDialog(
+                             return AlertDialog(
                               title:  Text("¿Estás seguro que desea continuar?",style: getTextStyleText(context,FontWeight.bold,null),),
                               content: Text("Los datos no se guardarán automaticamente, los cambios se guardan manualmente.", style: getTextStyleText(context,null,null)),
                               actions: [
@@ -336,10 +358,12 @@ class _QuestRouteState extends State<QuestRoute>  {
                                     MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <900 ? 0.15 :
                                     0.1 : 0.05 ); 
                                     double responsiveComment = MediaQuery.of(context).size.height * (orientation == Orientation.landscape? 0.05 : 0.01 ); 
-                                  rateRoutes = List.generate((preguntasVerticales.length + preguntasVerticales2.length) * preguntasHeaders.length, 
-                                  (index) => rateRoute.none );
+                                    
+                                    rateRoutes = List.generate((preguntasVerticales.length + preguntasVerticales2.length) * preguntasHeaders.length, 
+                                    (index) => rateRoute.none );
                                     temas = [];
-                                    comments = [];
+                                    comments[0]['comment_text'] = '';
+                                    comments[1]['comment_text'] = '';
                                     for (var i = 0; i < arrEdConComment.length; i++) {
                                       arrEdConComment[i].clear();
                                     }
@@ -351,17 +375,17 @@ class _QuestRouteState extends State<QuestRoute>  {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(content: Text('Se ha vaciado el formulario', style: getTextStyleText(context, FontWeight.bold, Colors.white),),backgroundColor: Colors.green),
                                     );
-                                    setState(() { });
+
                                     Navigator.pop(context); // Cierra el diálogo
+                                    setState(() { });
                                   },
                                   child:  Text('Aceptar', style: getTextStyleButtonField(context),),
                                 )
                               ],
                             );
                           });
+                          setState(() { });
 
-                      
-                      
                       }: null,
                       child:  Text('Limpiar',style: getTextStyleButtonField(context)),
                       ) 
@@ -410,8 +434,68 @@ class _QuestRouteState extends State<QuestRoute>  {
                   Row(
                   children: [
                     ElevatedButton(onPressed: desactivarbtnsave == false ? () async { 
+                      
+                      setState(() {
+                        desactivarbtnsave = true;
+                      });
+                        List<List<int>> list = transformEnumArrayToInteger(rateRoutes, answers);
+
+                        for (var i = 0; i < list.length; i++) {
+                          if(!const ListEquality().equals(answersRespaldo[i], list[i])){
+                            await seht.postForm(list[i], form, context);
+                          }
+                        }
+
+                        for (var i = 0; i < arrEdConComment.length; i++) {
+                          if (comments[i]['comment_text'].toString() != arrEdConComment[i].text.toString()) {
+                          comments[i]['comment_text'] = arrEdConComment[i].text.toString();
+                          await seht.postComments(comments[i], form, context);
+                          }
+                        }
                         
-                       showDialog(
+                        final intf = DescriptionsSeh(
+                          description1: arrEdConDescription[0].text,
+                          description2: arrEdConDescription[1].text,
+                          local: await storage.read(key: 'idHotelRegister')
+                        );
+
+                        await seht.postDescriptions(intf, form, context);
+                       // comments = [];                                                                                                           
+                      setState(() {
+                        desactivarbtnsave = false;
+                      });
+                        }: null,
+                    child:  Text('Guardar', style: getTextStyleButtonField(context),),
+                      ) ,
+                      SizedBox(width: MediaQuery.of(context).size.width * 0.01,),
+                        ElevatedButton(onPressed: desactivarbtndownload == false? () async { 
+                        setState(() {
+                          desactivarbtndownload = true;
+                        });
+
+                        final intf = DescriptionsSeh(
+                            description1: arrEdConDescription[0].text,
+                            description2: arrEdConDescription[1].text,
+                            local: await storage.read(key: 'idHotelRegister')
+                          );
+                        
+                          for (var i = 0; i < formValue.length; i++) {
+                            comments[i]['comment_text'] = arrEdConComment[i].text.toString();
+                          }
+                          DateTime now = DateTime.now();
+                          String formattedDate = DateFormat('yyyyMMddss').format(now);
+                          String fileName = '$formattedDate.xlsx';                        
+                          await jsonToExcelSehExcel(preguntasVerticales,preguntasHeaders, preguntasVerticales2, transformEnumArrayToInteger(rateRoutes,answers), title, comments,titleDescription, intf,'Seh_$fileName',context);
+                        setState(() {
+                          desactivarbtndownload = false;
+                        });
+                        }: null,
+                        child:  Text('Descargar',style: getTextStyleButtonField(context)),
+                        ),
+                      SizedBox(width: MediaQuery.of(context).size.width * 0.01,),
+                        ElevatedButton(onPressed: () { 
+                          
+                        showDialog(
                           context: context, // Accede al contexto del widget actual
                           builder: (BuildContext context) {
                             return AlertDialog(
@@ -430,10 +514,14 @@ class _QuestRouteState extends State<QuestRoute>  {
                                     MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <900 ? 0.15 :
                                     0.1 : 0.05 ); 
                                     double responsiveComment = MediaQuery.of(context).size.height * (orientation == Orientation.landscape? 0.05 : 0.01 ); 
-                                  rateRoutes = List.generate((preguntasVerticales.length + preguntasVerticales2.length) * preguntasHeaders.length, 
-                                  (index) => rateRoute.none );
+                                    
+                                    rateRoutes = List.generate((preguntasVerticales.length + preguntasVerticales2.length) * preguntasHeaders.length, 
+                                    (index) => rateRoute.none );
+
                                     temas = [];
-                                    comments = [];
+                                    comments[0]['comment_text'] = '';
+                                    comments[1]['comment_text'] = '';
+
                                     for (var i = 0; i < arrEdConComment.length; i++) {
                                       arrEdConComment[i].clear();
                                     }
@@ -453,59 +541,6 @@ class _QuestRouteState extends State<QuestRoute>  {
                               ],
                             );
                           });
-                        }: null,
-                    child:  Text('Guardar', style: getTextStyleButtonField(context),),
-                      ) ,
-                      SizedBox(width: MediaQuery.of(context).size.width * 0.01,),
-                        ElevatedButton(onPressed: desactivarbtndownload == false? () async { 
-                        setState(() {
-                          desactivarbtndownload = true;
-                        });
-
-                        final intf = DescriptionsSeh(
-                            description1: arrEdConDescription[0].text,
-                            description2: arrEdConDescription[1].text,
-                          );
-                        
-                          for (var i = 0; i < formValue.length; i++) {
-                            comments.add(arrEdConComment[i].text);
-                          }
-                          DateTime now = DateTime.now();
-                          String formattedDate = DateFormat('yyyyMMddss').format(now);
-                          String fileName = '$formattedDate.xlsx';                        
-                          await jsonToExcelSehExcel(preguntasVerticales,preguntasHeaders, preguntasVerticales2,transformEnumArrayToInteger(rateRoutes, 0,snapshot.data!.answers), title, comments,titleDescription, intf,'Seh_$fileName',context);
-                        setState(() {
-                          desactivarbtndownload = false;
-                        });
-                        }: null,
-                        child:  Text('Descargar',style: getTextStyleButtonField(context)),
-                        ),
-                      SizedBox(width: MediaQuery.of(context).size.width * 0.01,),
-                        ElevatedButton(onPressed: () { 
-                          
-                        double responsiveRow = MediaQuery.of(context).size.height * (orientation == Orientation.landscape? 
-                        MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <900 ? 0.15 :
-                        0.1 : 0.05 ); 
-                        double responsiveComment = MediaQuery.of(context).size.height * (orientation == Orientation.landscape? 0.05 : 0.01 ); 
-                      rateRoutes = List.generate((preguntasVerticales.length + preguntasVerticales2.length) * preguntasHeaders.length, 
-                      (index) => rateRoute.none );
-                        temas = [];
-
-                        arrEdConDescription[0].text = '';
-                        arrEdConDescription[1].text = '';
-
-                        for (var i = 0; i < arrEdConComment.length; i++) {
-                        setState(() {
-                          arrEdConComment[i].text = '';
-                        });
-                        }
-
-                        llenarFormulario(responsiveRow, index, orientation, responsiveComment);
-
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Se ha vaciado el formulario', style: getTextStyleText(context, FontWeight.bold, Colors.white),),backgroundColor: Colors.green),
-                        );
-
                         },
                         child:  Text('Limpiar',style: getTextStyleButtonField(context)),
                         ) 
@@ -524,8 +559,6 @@ class _QuestRouteState extends State<QuestRoute>  {
   }
   Widget columnOrRow(double responsiveRow, String e, int index, Orientation orientation) {
   // Ejemplo de uso:
-  
-    
      return Column(
     children: [
       preguntaContainer(e,orientation),
@@ -547,6 +580,28 @@ class _QuestRouteState extends State<QuestRoute>  {
       );
   }
   
+  
+  double paddingPregunta(Orientation orientation){
+    if (MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <900) {
+      if (orientation == Orientation.landscape) {
+        return MediaQuery.of(context).size.height *  0.08;
+      }else{
+        return MediaQuery.of(context).size.height *  0.02;
+      }
+    }else{
+      if (orientation == Orientation.landscape) {
+        if (MediaQuery.of(context).size.height > MediaQuery.of(context).size.width ) {
+          return MediaQuery.of(context).size.height *  0.01;
+        }else{
+          return MediaQuery.of(context).size.height *  0.05;
+        }
+      }else{
+        return MediaQuery.of(context).size.height *  0.015;
+      }
+    }
+  }
+
+
   LayoutBuilder  preguntaContainer(String e,Orientation orientation) {
     return LayoutBuilder(
   builder: (context, constraints) {
@@ -554,12 +609,7 @@ class _QuestRouteState extends State<QuestRoute>  {
         decoration: BoxDecoration(border: Border.all(color: Colors.black)), 
         width: double.infinity,
         padding: 
-        EdgeInsets.all(MediaQuery.of(context).size.height * 
-            (orientation == Orientation.landscape? 
-            MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <900 
-            ?   0.05  : 0.1
-            //Orientation.portrait
-            :  0.02 )),
+        EdgeInsets.all(paddingPregunta(orientation)),
         child: Column(
             children: [ 
               Text(e, style: getTextStyleText(context, null ,null).copyWith(height:  1.2) )
@@ -582,8 +632,10 @@ class _QuestRouteState extends State<QuestRoute>  {
                   width: MediaQuery.of(context).size.width ,
                   height: MediaQuery.of(context).size.height * 
                   (MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <900 ?
-                  (orientation == Orientation.landscape? 0.16 : 0.07 )
+                  //cellphones
+                  (orientation == Orientation.landscape? 0.16 :  0.07 )
                   :
+                  //tablets
                   (orientation == Orientation.landscape? 0.1 : 0.05 )),
                   child: Container(
                     decoration: const BoxDecoration(

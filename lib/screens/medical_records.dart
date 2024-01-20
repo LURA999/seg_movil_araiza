@@ -799,7 +799,7 @@ Future<void> fetchDataTable() async {
       final arrHeredity =  await eips.getExamHeredityFam(snapshot.data![index].exam,context);
       if (arrHeredity.isNotEmpty) {
         bolArr = [ [],[],[],[],[]];
-        for (var i = 0; i < 5; i++) {
+        for (var i = 0; i < arrHeredity.length; i++) {
           arrHeredity[i].forEach((key, value) {
             bolArr![i].add(int.parse(value) == 0 ? false : true);
           });
@@ -819,7 +819,7 @@ Future<void> fetchDataTable() async {
       }
 
       
-      //Edit
+       //Edit
       if (type == 1) {
       await bMedical.newMethod(setState,context, arrDepa, resString, resString2, resString3, bolArr, 
       yesNotEnum, checkboxDLN, causeDisease, yesNotDisease, manoDomEnum, metodoAntiEnum,int.parse(snapshot.data![index].exam.toString()), true );
@@ -834,7 +834,7 @@ Future<void> fetchDataTable() async {
       } else if(type == 3){
         generatePDF(context,true, arrDepa,resString, resString2, resString3, bolArr, 
         yesNotEnum, checkboxDLN, causeDisease, yesNotDisease, manoDomEnum, metodoAntiEnum);
-      }                  
+      }             
     }else{
       messageError(context,'No hay conexión a Internet.', 'Error');
     }

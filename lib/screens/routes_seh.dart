@@ -29,6 +29,11 @@ class _RoutesSehState extends State<RoutesSeh> {
     fontWeight: FontWeight.bold,
   );
 
+  ChangeLocal changeLocal = ChangeLocal();
+  final TextEditingController controller = TextEditingController(); 
+  ExamIniPreService eips = ExamIniPreService();
+  List<MedicalRecord> files = [ ];
+
   @override
   void initState() { 
     super.initState();
@@ -225,7 +230,34 @@ class _RoutesSehState extends State<RoutesSeh> {
                     SizedBox(
                         child: Align(
                         alignment: Alignment.center,
-                        child: Text('Recorrido de áreas',style: getTextStyleTitle(context,null)),          
+                        child: 
+                        Row(
+                          children: [
+                            Text('Recorrido de áreas',style: getTextStyleTitle(context,null)), 
+                            const Spacer(),
+                                IconButton(onPressed: () async {
+                                  await changeLocal.chargeHotel(context);
+                                  controller.clear();
+                                  final list = await eips.getAllExamListSearch(context,'');
+                                  files.clear();
+                                  setState(() { }); 
+
+                                  for (var el in list) {
+                                    files.add(
+                                    MedicalRecord(
+                                      id: int.parse(el['numEmployee']), 
+                                      name: el['name'] == '' ? 'N/A' : el['name'], 
+                                      date: el['datetime_modification'], 
+                                      type: el['examName'] ?? 'N/A', 
+                                      lastModify: el['datetime_modification'],
+                                      exam: int.parse(el['idExam'])
+                                      )
+                                    );
+                                  }
+                                  setState(() { }); 
+                                }, icon: Icon(Icons.settings))
+                          ],
+                        )
                         )
                       ),
                     Container(

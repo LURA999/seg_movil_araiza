@@ -1,13 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:app_seguimiento_movil/services/services.dart';
+import 'package:download/download.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-
+import 'package:universal_platform/universal_platform.dart';
 import '../models/models.dart';
 
 
@@ -62,18 +63,23 @@ List months =
 ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'];
   final DateTime now = DateTime.now();
   bool storagePermissionGranted = false;
-  if (Platform.isAndroid || Platform.isIOS) {
-  await requestPermission((bool granted) {
-    storagePermissionGranted = granted;
-  }); 
-   
-  if (!storagePermissionGranted) {
-    try {
-      throw Exception('No se han concedido los permisos de almacenamiento.');      
-    } catch (e) {
-    //  print(e);
+
+  if (!UniversalPlatform.isWeb) {
+    if (Platform.isAndroid || Platform.isIOS) {
+    await requestPermission((bool granted) {
+      storagePermissionGranted = granted;
+    }); 
+    
+    if (!storagePermissionGranted) {
+      try {
+        throw Exception('No se han concedido los permisos de almacenamiento.');      
+      } catch (e) {
+      //  print(e);
+      }
+    }
     }
   }
+  
 
   final pdf = pw.Document();
   // Cargar la fuente personalizada desde un archivo .ttf
@@ -4578,6 +4584,10 @@ final Uint8List bytes = await pdf.save();
   String resultado = fecha + hora;
   var fileName = "tabla_medico_$resultado";
 
+  if (UniversalPlatform.isWeb) {
+    Stream<int> pdf = Stream.fromIterable(bytes);
+    download(pdf, '$fileName.pdf'); 
+  }else{
   if(save) {
     String? path =  await pickDownloadDirectory(context);
       Directory directory = Directory(path!);
@@ -4612,8 +4622,10 @@ final Uint8List bytes = await pdf.save();
       await file.writeAsBytes(bytes); 
       await OpenFile.open('$path/tabla_medico_$resultado.pdf');
     }
+  }
+  
 }
-}
+
 
 
 

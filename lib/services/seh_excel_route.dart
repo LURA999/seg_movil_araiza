@@ -1,5 +1,6 @@
 import 'dart:async'; 
 import 'package:app_seguimiento_movil/models/models.dart';
+import 'package:download/download.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:syncfusion_flutter_xlsio/xlsio.dart';
@@ -7,9 +8,11 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
+import 'package:universal_platform/universal_platform.dart';
 
 Future<String> getDownloadDirectoryPath() async {
   String path = '';
+  
   if (Platform.isAndroid) {
     const platform = MethodChannel('flutter_android_directory');
     try {
@@ -54,15 +57,18 @@ Future<void> requestPermission(Function(bool) onPermissionResult) async {
 }
 
 
-Future<void> jsonToExcelSehExcel(List<String> preguntas,List<String> headers, List<String> preguntas2,List<List<int>> res,String area,  List<String?> comments,List<String> Titlecomments, DescriptionsSeh descriptionsSeh, String fileName, BuildContext context) async {
+Future<void> jsonToExcelSehExcel(List<String> preguntas,List<String> headers, List<String> preguntas2,List<List<int>> res,String area, List<Map<String,dynamic>> comments,List<String> Titlecomments, DescriptionsSeh descriptionsSeh, String fileName, BuildContext context) async {
   bool storagePermissionGranted = false;
-  if (Platform.isAndroid || Platform.isIOS) {
-  await requestPermission((bool granted) {
-    storagePermissionGranted = granted;
-  }); 
-   
-  if (!storagePermissionGranted) {
-    throw Exception('No se han concedido los permisos de almacenamiento.');
+  if(!UniversalPlatform.isWeb){
+    if (Platform.isAndroid || Platform.isIOS) {
+    await requestPermission((bool granted) {
+      storagePermissionGranted = granted;
+    }); 
+    
+    if (!storagePermissionGranted) {
+      throw Exception('No se han concedido los permisos de almacenamiento.');
+    }
+  }
   }
 
   // Crea el archivo Excel
@@ -284,7 +290,7 @@ Future<void> jsonToExcelSehExcel(List<String> preguntas,List<String> headers, Li
     preguntasRange.cellStyle.fontName = 'Calibri';
 
     final Range commentsRange = sheet.getRangeByIndex(preguntas.length + 8 + i + reng, 2,preguntas.length + 8 + i + reng + 1,2);
-    commentsRange.setText(comments[i]);
+    commentsRange.setText(comments[i]['comment_text']);
     commentsRange.cellStyle.fontSize = 11;
     commentsRange.cellStyle.fontName = 'Calibri';
     commentsRange.cellStyle.vAlign = VAlignType.center;
@@ -357,9 +363,12 @@ final Range desc1 = sheet.getRangeByIndex(preguntas.length + 7,16,preguntas.leng
   desc2.merge();
 }
 
-
+  //String? directorio = await FilePicker.platform.getDirectoryPath();
+  if(UniversalPlatform.isWeb){
+    Stream<int> pdf = Stream.fromIterable(workbook.saveAsStream());
+    download(pdf, '$fileName.xlsx'); 
+  }else{
     String? path =  await pickDownloadDirectory(context);
-
     Directory directory = Directory(path!);
     if (await directory.exists()) {
      final file = File('$path/$fileName');  
@@ -380,6 +389,5 @@ final Range desc1 = sheet.getRangeByIndex(preguntas.length + 7,16,preguntas.leng
     );
       //path = await getDownloadDirectoryPath();
     }
-      
   } 
 }

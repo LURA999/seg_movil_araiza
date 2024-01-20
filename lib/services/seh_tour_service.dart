@@ -14,11 +14,9 @@ class SehTourService extends ChangeNotifier{
   bool isSaving = true;
   late String link = modoApk?'https://www.comunicadosaraiza.com/movil_scan_api_prueba2/API':'https://www.comunicadosaraiza.com/movil_scan_api_prueba2/API';
 
- Future<bool> postForm(List<List<int>> answer,int formAB, BuildContext context) async {
+ Future<bool> postForm(List<int> answer,int formAB, BuildContext context) async {
     var connectivityResult = await (Connectivity().checkConnectivity());  
-  
-   print(answer);
-  if (connectivityResult == ConnectivityResult.none) {
+    if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
     messageError(context,'No hay conexión a Internet.', 'Error');
     return false;
@@ -54,7 +52,7 @@ try {
     }
 
 
-Future<bool> postComments(List<String?> input,int formComment, BuildContext context) async {
+Future<bool> postComments(Map<String,dynamic> input,int formComment, BuildContext context) async {
     var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
@@ -66,8 +64,7 @@ try {
       isSaving = true;
       notifyListeners();
       final url = Uri.parse('$link/tour_seh.php?formComment=$formComment');
-      
-      var response = (await http.patch(url, body: json.encode({'data':input}))).body;
+      var response = (await http.patch(url, body: json.encode(input))).body;
       if (response.contains('200')){  
         isSaving = false;
         notifyListeners();
@@ -104,8 +101,7 @@ try {
       isSaving = true;
       notifyListeners();
       final url = Uri.parse('$link/tour_seh.php?formDescription=$formComment');
-      var json = input.toJson()['local'] = (await storage.read(key: 'idHotelRegister'));
-      var response = (await http.patch(url, body: json)).body;
+      var response = (await http.patch(url, body: json.encode(input.toJson()))).body;
       if (response.contains('200')){  
         isSaving = false;
         notifyListeners();

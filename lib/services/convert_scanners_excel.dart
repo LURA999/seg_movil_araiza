@@ -8,6 +8,10 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
+import 'package:universal_platform/universal_platform.dart';
+import 'package:download/download.dart';
+
+// import 'package:file_picker_web/file_picker_web.dart';
 
 Future<String> getDownloadDirectoryPath() async {
   String path = '';
@@ -65,16 +69,20 @@ List<Map<String,dynamic>>? dataGuard,
 List<Map<String,dynamic>>? dataComments, 
 int screen, String fileName, 
 BuildContext context) async {
-  
   bool storagePermissionGranted = false;
-  if (Platform.isAndroid || Platform.isIOS) {
-  await requestPermission((bool granted) {
-    storagePermissionGranted = granted;
-  }); 
-   
-  if (!storagePermissionGranted) {
-    throw Exception('No se han concedido los permisos de almacenamiento.');
+  if (!UniversalPlatform.isWeb) {
+    if (Platform.isAndroid || Platform.isIOS) {
+    await requestPermission((bool granted) {
+      storagePermissionGranted = granted;
+    }); 
+    
+    if (!storagePermissionGranted) {
+      throw Exception('No se han concedido los permisos de almacenamiento.');
+    }
+    } 
   }
+  
+  
   // // Decodifica el JSON
   //  final List<Map<String, dynamic>> jsonOf = List<Map<String, dynamic>>.from(jsonStr);
   
@@ -139,7 +147,6 @@ BuildContext context) async {
   sheet.autoFitColumn(7);
   sheet.autoFitColumn(8);
   
-
   switch (screen) {
     
     //TRAFICO
@@ -312,29 +319,31 @@ BuildContext context) async {
     break;
     default:
   }
-
+  if (UniversalPlatform.isWeb) {
+    Stream<int> excel = Stream.fromIterable(workbook.saveAsStream());
+    download(excel, fileName); 
+  } else{
   String? path =  await pickDownloadDirectory(context);
-
   Directory directory = Directory(path!);
     if (await directory.exists()) {
-     final file = File('$path/$fileName');  
-     try {
+    final file = File('$path/$fileName');  
+    try {
       await file.writeAsBytes(workbook.saveAsStream());
       ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Archivo guardado en $file')),
       );
-     } catch (e) {
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('$e')),
       );
-     }
-     
+    }
+    
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('La carpeta seleccionada no existe')),
     );
-      //path = await getDownloadDirectoryPath();
+      //path = await getDownloadDirectoryPath(); 
     }
-      
-    }
+  }
+  
 }

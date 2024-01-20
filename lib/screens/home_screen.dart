@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:app_seguimiento_movil/widgets/widgets.dart';
+import 'package:file_picker/_internal/file_picker_web.dart';
 import 'package:flutter/material.dart';
 import 'package:app_seguimiento_movil/services/services.dart';
 import 'package:flutter/services.dart';
@@ -17,7 +18,7 @@ class HomeScreen extends StatefulWidget {
 final storage = FlutterSecureStorage();
 
 class _HomeScreenState extends State<HomeScreen> {
-  String version = '3.1.1';
+  String version = '3.2.1';
   
   final List<Map<String, dynamic>> arrList = [];
 
@@ -87,8 +88,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 // print(file.path);
                 //  await OpenFile.open(file.path);
-                if (await canLaunchUrlString('https://www.comunicadosaraiza.com/apps_release/app-movilDepartaments-$versionLast.apk')) {
-                   await launchUrlString('https://www.comunicadosaraiza.com/apps_release/app-movilDepartaments-$versionLast.apk',
+                if (await canLaunchUrlString('https://www.comunicadosaraiza.com/apps_release/app-movilDepartaments-${versionLast[0]['version']}.apk')) {
+                   await launchUrlString('https://www.comunicadosaraiza.com/apps_release/app-movilDepartaments-${versionLast[0]['version']}.apk',
                   mode: LaunchMode.externalApplication);
                 } 
               },
@@ -173,11 +174,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-
     super.initState();
     SystemChannels.textInput.invokeMethod('TextInput.hide');
-    chargeHotel().then((value) => 
-    downloadAndInstallUpdate(context)
+    chargeHotel().then((value) {
+       downloadAndInstallUpdate(context);
+      
+    }
+    
     ); 
     
   }
@@ -185,7 +188,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
         backgroundColor: const Color(0xFF293641),
         body: Column(
@@ -343,8 +345,7 @@ class _ContainerOptionState extends State<ContainerOption> {
                             autofucus = false;
                             switch (widget.id) {
                               case 1:
-                                Navigator.of(context)
-                                    .pushNamed('control_vehicles');
+                                Navigator.of(context).pushNamed('control_vehicles');
                                 break;
                               case 2:
                                 Navigator.of(context).pushNamed('control_rh');

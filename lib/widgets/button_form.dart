@@ -911,6 +911,7 @@ return showDialog<String>(
                           
                           List<Map<String, dynamic>> jsonStr = await aService.selectDateAssistance(de, context);
                           List<Map<String, dynamic>> jsonStrObs = await aService.selectDateAssistanceObservations(de, context);
+                       
                             if (jsonStr.isNotEmpty) {
                               DateTime now = DateTime.now();
                               String formattedDate = DateFormat('yyyyMMddss').format(now);
