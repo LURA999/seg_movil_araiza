@@ -48,11 +48,12 @@ class _ControlAssistanceState extends State<ControlAssistance> {
       'course_name': MultiInputsForm(contenido: '', obligatorio: false, autocomplete: true, autocompleteAsync: true),
       'date_start_hour': MultiInputsForm(contenido: '', obligatorio: false, activeClock: true, keyboardType: TextInputType.datetime, enabled: true), 
       'date_final_hour': MultiInputsForm(contenido: '', obligatorio: false, activeClock: true, keyboardType: TextInputType.datetime, enabled: true), 
+      'group' : MultiInputsForm(contenido: '',obligatorio: false, select: true, activeListSelect: true),
     };
 
-    final TextEditingController controller = TextEditingController();
-    bool cargarDatos = true;
- @override
+  final TextEditingController controller = TextEditingController();
+  bool cargarDatos = true;
+  @override
   Widget build(BuildContext context) {
     double responsiveHeight = MediaQuery.of(context).size.height * 0.02;
     double responsivePadding = MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.width * 0.02 : MediaQuery.of(context).size.height * 0.02;
@@ -120,7 +121,8 @@ class _ControlAssistanceState extends State<ControlAssistance> {
                               'Hotel'
                             ],
                             formValue: formValuesRegistroMan,
-                            enabled: false),
+                            enabled: false
+                          ),
                         SizedBox(height: responsiveHeight),
                         SizedBox(
                           width: MediaQuery.of(context).size.width,
@@ -184,19 +186,22 @@ class _ControlAssistanceState extends State<ControlAssistance> {
                             enabled: false),
                         SizedBox(height: responsiveHeight),
                         ButtonForm(
-                            controller: controller,
-                            control: 3,
-                            textButton: 'Descargar reporte',
-                            btnPosition: 4,
-                            field: const [
-                              'Descargar reporte',
-                              'Descargar',
-                              'Buscar curso',
-                              'Fecha inicial y hora',
-                              'Fecha final y hora'
-                            ],
-                            formValue: formValuesDescRepor,
-                            enabled: true),
+                          controller: controller,
+                          control: 3,
+                          thirdButton: 'Crear Rifa',
+                          textButton: 'Descargar reporte',
+                          btnPosition: 4,
+                          field: const [
+                            'Descargar reporte',
+                            'Descargar',
+                            'Buscar curso',
+                            'Fecha inicial y hora',
+                            'Fecha final y hora',
+                            'Personal',
+                          ],
+                          formValue: formValuesDescRepor,
+                          listSelectForm: const [{'idPers': '0', 'personal': 'Todos los empleados'},{'idPers': '1', 'personal': 'Sindicalizado'},{'idPers': '2', 'personal': 'No sindicalizado'}],
+                          enabled: true),
                       ]),
                     ),
                   ),
@@ -238,14 +243,14 @@ Future<List<Map<String, dynamic>>> recolectandoLocales() async {
       SessionManager sm = SessionManager();
         await sm.clearSession().then((value) async {
           if (sharedPrefsData['dish'] == null) {
-            final url = Uri.parse('https://www.comunicadosaraiza.com/movil_scan_api_prueba2/API/turn_vehicle.php?idTurn=true');
+            final url = Uri.parse('https://www.comunicadosaraiza.com/movil_scan_api_prueba/API/turn_vehicle.php?idTurn=true');
            await (http.post(url, body: json.encode({'idTurn': sharedPrefsData["idTurn"] }))).then((value) {
             Provider.of<VarProvider>(context,listen: false).updateVariable(false);
             setState(() { });
           });
           } else { 
             //food
-            final url = Uri.parse('https://www.comunicadosaraiza.com/movil_scan_api_prueba2/API/turn_food.php?cerrarSess=true');
+            final url = Uri.parse('https://www.comunicadosaraiza.com/movil_scan_api_prueba/API/turn_food.php?cerrarSess=true');
             await http.post(url, body: json.encode({'local': ( await storage.read(key: 'idHotelRegister')) })).then((value) {
             Provider.of<VarProvider>(context,listen: false).updateVariable(false);
             setState(() { });

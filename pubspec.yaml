@@ -56,7 +56,7 @@ dependencies:
   open_file: ^3.3.2
   flutter_signature_pad: ^3.0.1
   image_picker: ^1.0.1
-  datetime_picker_formfield: ^2.0.1
+  datetime_picker_formfield_new: ^2.1.0
   connectivity_plus: ^4.0.1
   docx_template: ^0.3.4
   flutter_secure_storage: ^5.0.0
@@ -67,6 +67,7 @@ dependencies:
   collection: ^1.17.1
   download: ^1.0.0
   universal_platform: ^1.0.0+1
+  #fluro: ^2.0.5
   #device_apps: ^2.2.0
   #flutter_file_dialog: ^3.0.2
   #url_launcher: ^6.1.14

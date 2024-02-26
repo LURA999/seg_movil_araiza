@@ -1,12 +1,12 @@
 import 'dart:ui';
 import 'package:app_seguimiento_movil/widgets/widgets.dart';
-import 'package:file_picker/_internal/file_picker_web.dart';
 import 'package:flutter/material.dart';
 import 'package:app_seguimiento_movil/services/services.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import '../models/multi_inputs_model.dart';
+import 'package:universal_platform/universal_platform.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -18,7 +18,7 @@ class HomeScreen extends StatefulWidget {
 final storage = FlutterSecureStorage();
 
 class _HomeScreenState extends State<HomeScreen> {
-  String version = '3.2.1';
+  String version = '3.2.5';
   
   final List<Map<String, dynamic>> arrList = [];
 
@@ -27,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (identifier == null) {
       LocalService lc = LocalService();
       final locals = await lc.getLocal(context);
-
+      // print('local ${locals.container.toString()}');
       for (var el in locals.container) {
         if (int.parse(el['idLocal']) > 0) {
           arrList.add(el);
@@ -176,9 +176,11 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     SystemChannels.textInput.invokeMethod('TextInput.hide');
+
     chargeHotel().then((value) {
-       downloadAndInstallUpdate(context);
-      
+      if (!UniversalPlatform.isWeb ) {
+        downloadAndInstallUpdate(context);
+      }
     }
     
     ); 
@@ -341,6 +343,9 @@ class _ContainerOptionState extends State<ContainerOption> {
                           });
                           var pass = await depService.checkPassWord(
                               password, widget.id, context);
+                          setState(() {
+                              desactivar = false;
+                          });
                           if (pass.status == 200) {
                             autofucus = false;
                             switch (widget.id) {
@@ -444,8 +449,12 @@ class _ContainerOptionState extends State<ContainerOption> {
                                           MainAxisAlignment.center,
                                       children: [
                                         ElevatedButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                            setState(() {
+                                              desactivar = false;
+                                            });
+                                          },
                                           child: Text('Salir',
                                               style: getTextStyleButtonField(
                                                   context)),

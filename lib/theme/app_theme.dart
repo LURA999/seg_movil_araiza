@@ -31,6 +31,7 @@ class AppTheme {
         //ElevatedButtons
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.white,
             backgroundColor: primary,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(0),
@@ -57,12 +58,32 @@ class AppTheme {
             borderSide: BorderSide( color: primary),
           ),
         ),
-
-       /*  datePickerTheme:  DatePickerThemeData(
-                          headerBackgroundColor: Colors.orange,
-                          backgroundColor: Colors.blue,
-                         
-        ) */
+        
+      datePickerTheme:  const DatePickerThemeData(
+      headerBackgroundColor: AppTheme.primary,
+      weekdayStyle: TextStyle(
+         fontFamily: 'GothamBold',
+      ),
+      rangePickerHeaderHeadlineStyle: TextStyle(
+        fontFamily: 'GothamBold',
+      ),
+      headerHelpStyle: TextStyle(
+        fontFamily: 'GothamBold',
+      ),
+      headerHeadlineStyle: TextStyle(
+        fontFamily: 'GothamBold',
+      ),
+       
+      ),
+      timePickerTheme: const TimePickerThemeData(
+        dialHandColor: AppTheme.primary,
+        helpTextStyle: TextStyle(
+          fontFamily: 'GothamBold',
+        ),
+        dialTextStyle: TextStyle(
+          fontFamily: 'GothamBold',
+        )
+      )
   );
 
   

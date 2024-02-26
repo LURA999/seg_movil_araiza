@@ -27,9 +27,11 @@ class LocalService extends ChangeNotifier{
 try {
     isSaving = true;
     notifyListeners();
+    print('$link/local.php?opc=-1');
     final url = Uri.parse('$link/local.php?opc=-1');
     var response = (await http.get(url)).body;
-      final result = Access.fromJson(jsonDecode(response));
+    print(response);
+    final result = Access.fromJson(jsonDecode(response));
     // var response = await http.post(url, body: {'pass': pass, 'departament': departament});
     if (result.status == 200){
       isSaving = false;

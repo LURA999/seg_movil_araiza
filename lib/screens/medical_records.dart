@@ -66,7 +66,7 @@ void actualizarWidget() {
     for (var el in list) {
       files.add(
       MedicalRecord(
-        id: int.parse(el['numEmployee']), 
+        id: int.parse(el['numEmployee']) == 0 ? 'N/A' :int.parse(el['numEmployee']).toString(), 
         name: el['name'] == '' ? 'N/A' : el['name'], 
         date: el['datetime_modification'], 
         type: el['examName'] ?? 'N/A', 
@@ -193,7 +193,7 @@ return Scaffold(
                                   for (var el in list) {
                                     files.add(
                                     MedicalRecord(
-                                      id: int.parse(el['numEmployee']), 
+                                      id: int.parse(el['numEmployee']) == 0 ? 'N/A' :int.parse(el['numEmployee']).toString(), 
                                       name: el['name'] == '' ? 'N/A' : el['name'], 
                                       date: el['datetime_modification'], 
                                       type: el['examName'] ?? 'N/A', 
@@ -390,7 +390,7 @@ Future<void> searchTable(dynamic context) async {
     for (var el in list) {
       files.add(
       MedicalRecord(
-        id: int.parse(el['numEmployee']), 
+        id: int.parse(el['numEmployee']) == 0 ? 'N/A' :int.parse(el['numEmployee']).toString(), 
         name: el['name'] == '' ? 'N/A' : el['name'], 
         date: el['datetime_modification'], 
         type: el['examName'] ?? 'N/A', 
@@ -409,7 +409,7 @@ refill(List<Map<String, dynamic>> list ){
     for (var el in list) {
       files.add(
       MedicalRecord(
-        id: int.parse(el['numEmployee']), 
+        id: int.parse(el['numEmployee']) == 0 ? 'N/A' :int.parse(el['numEmployee']).toString(), 
         name: el['name'] == '' ? 'N/A' : el['name'], 
         date: el['datetime_modification'], 
         type: el['examName'] ?? 'N/A', 
@@ -521,7 +521,6 @@ Future<void> fetchDataTable() async {
                             :
                             MediaQuery.of(context).size.height * (MediaQuery.of(context).orientation == Orientation.landscape? 0.04 : 0.02)),),
                           Text('  Descargar', style: getTextStyleButtonFieldRow(context))
-                          
                         ],
                       )
                     ),
@@ -695,7 +694,7 @@ Future<void> fetchDataTable() async {
           return Stack(
             children: [
               const ModalBarrier(
-                dismissible: false,
+                dismissible: true,
                 color:  Color.fromARGB(80, 0, 0, 0),
               ),
               AlertDialog(
@@ -714,16 +713,16 @@ Future<void> fetchDataTable() async {
       final  info = await eips.getOneExamPart1(snapshot.data![index].exam,context);
       resString = [];
       info[0].forEach((key, value) {
-        if(cExamPart1 < 147){
+        if(cExamPart1 < 148){
           resString.add(value.toString() == 'null'? '' : value.toString());
-        } else if (cExamPart1 > 146 && cExamPart1 < 193) {
+        } else if (cExamPart1 > 147 && cExamPart1 < 194) {
             switch (int.parse(value)) {
               case 1:  yesNotEnum.add(YesNot.si); break;
               case 2:  yesNotEnum.add(YesNot.no); break; 
               default:
                 yesNotEnum.add(YesNot.none); 
             }
-        }else if(cExamPart1 > 192&& cExamPart1 < 205) {
+        }else if(cExamPart1 > 193&& cExamPart1 < 206) {
           checkboxDLN[0].add(int.parse(value) == 2 ? true : false);
         }else{
           switch (key) {

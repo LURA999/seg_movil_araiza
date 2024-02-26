@@ -38,17 +38,17 @@ class _DropdownButtonWidgetState extends State<DropdownButtonWidget> {
         onPressed:  null,
         style: OutlinedButton.styleFrom(
           side:  const BorderSide(color: AppTheme.primary),
+           shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(0),
+            ),
         ),
         child: Container(
-          
           height: 65,
           alignment: Alignment.center,
           child: DropdownButton<String>(
-            
           value: dropdownValue,
           icon: const Icon(Icons.arrow_drop_down_circle_rounded,color: AppTheme.primary),
           elevation: 16,
-
           isExpanded: true,
           // style: const TextStyle(color: Colors.deepPurple),
           underline: Container(

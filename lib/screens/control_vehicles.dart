@@ -283,13 +283,13 @@ class _ControlVehiclesState extends State<ControlVehicles> {
       SessionManager sm = SessionManager();
         await sm.clearSession().then((value) async {
           if (sharedPrefsData['dish'] == null) {
-            final url = Uri.parse('https://www.comunicadosaraiza.com/movil_scan_api_prueba2/API/turn_assistance.php?idTurn=true');
+            final url = Uri.parse('https://www.comunicadosaraiza.com/movil_scan_api_prueba/API/turn_assistance.php?idTurn=true');
               await (http.post(url, body: json.encode({'idTurn': sharedPrefsData["idTurn"] }))).then((value) {
               Provider.of<VarProvider>(context,listen: false).updateVariable(false);
               setState(() { });
             });
           }else{
-            final url = Uri.parse('https://www.comunicadosaraiza.com/movil_scan_api_prueba2/API/turn_food.php?cerrarSess=true');
+            final url = Uri.parse('https://www.comunicadosaraiza.com/movil_scan_api_prueba/API/turn_food.php?cerrarSess=true');
             await http.post(url, body: json.encode({'local': (await storage.read(key: 'idHotelRegister')) })).then((value) {
             Provider.of<VarProvider>(context,listen: false).updateVariable(false);
             setState(() { });

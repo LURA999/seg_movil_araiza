@@ -1,5 +1,6 @@
 import 'package:app_seguimiento_movil/services/services.dart';
 import 'package:app_seguimiento_movil/screens/screens.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:app_seguimiento_movil/theme/app_theme.dart';
 import 'package:provider/provider.dart';
@@ -36,6 +37,16 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
+class MyCustomScrollBehavior extends MaterialScrollBehavior {
+  // Override behavior methods like buildOverscrollIndicator and buildScrollbar
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+        // etc.
+      };
+}
+
 class _MyAppState extends State<MyApp> {
   
 
@@ -45,6 +56,7 @@ class _MyAppState extends State<MyApp> {
   final navigatorKey = GlobalKey<NavigatorState>();
 
     return MaterialApp(
+      scrollBehavior:MyCustomScrollBehavior(),
       debugShowCheckedModeBanner: false,
       navigatorKey: navigatorKey,
       navigatorObservers: [navigatorObserver],

@@ -245,7 +245,7 @@ class _RoutesSehState extends State<RoutesSeh> {
                                   for (var el in list) {
                                     files.add(
                                     MedicalRecord(
-                                      id: int.parse(el['numEmployee']), 
+                                      id: int.parse(el['numEmployee']) == 0 ? 'N/A' :int.parse(el['numEmployee']).toString(), 
                                       name: el['name'] == '' ? 'N/A' : el['name'], 
                                       date: el['datetime_modification'], 
                                       type: el['examName'] ?? 'N/A', 

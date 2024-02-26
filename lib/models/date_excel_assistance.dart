@@ -5,12 +5,14 @@ class DateExcelAssistance {
    String? course_name;
    String? local;
    String? idCourse;
+   String? personal;
 
     DateExcelAssistance({ 
       this.dateStart, 
       this.dateFinal, 
       this.course_name, 
-      this.local
+      this.local,
+      this.personal
     });
 
 
@@ -19,6 +21,7 @@ class DateExcelAssistance {
       dateFinal = json['dateFinal'];
       course_name = json['course_name'];
       local = json['local'];
+      personal = json['personal'];
     }
 
 
@@ -28,6 +31,7 @@ class DateExcelAssistance {
        data['dateFinal'] = dateFinal ?? '';
        data['course_name'] = course_name ?? '';
        data['local'] = local ?? '';
+       data['personal'] = personal ?? '';
       return data;
     }
 }

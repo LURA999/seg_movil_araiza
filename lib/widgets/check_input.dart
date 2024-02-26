@@ -22,23 +22,24 @@ class CheckInput extends StatefulWidget {
 class _CheckInputState extends State<CheckInput> {
   @override
   Widget build(BuildContext context) {
-     Color getColor(Set<MaterialState> states) {
+     /* Color getColor(Set<MaterialState> states) {
       const Set<MaterialState> interactiveStates = <MaterialState>{
         MaterialState.pressed,
-        MaterialState.hovered,
+        //MaterialState.hovered,
         MaterialState.focused,
       };
       if (states.any(interactiveStates.contains)) {
         return AppTheme.primary;
       }
+
       return AppTheme.primary;
-    }
+    }  */
 
     return Row(
       children: [
         Checkbox(
           checkColor: Colors.white,
-          fillColor: MaterialStateProperty.resolveWith(getColor),
+          // fillColor: MaterialStateProperty.resolveWith(getColor),
           value: widget.listChecked[widget.indexPrincipal][widget.indexSecundario],
           onChanged: (bool? value) {
             setState(() {

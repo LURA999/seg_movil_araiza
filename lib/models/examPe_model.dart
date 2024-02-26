@@ -3,7 +3,8 @@ class ExamPeModel {
   int? idPersonal;
   String? name;
   String? address;
-  String? place_and_birthday;
+  String? place_birthday;
+  String? date_birthday;
   String? schooling;
   String? college_career;
   int? sex;
@@ -17,7 +18,8 @@ class ExamPeModel {
       this.idPersonal,
       this.name,
       this.address,
-      this.place_and_birthday,
+      this.place_birthday,
+      this.date_birthday,
       this.schooling,
       this.college_career,
       this.sex,
@@ -33,7 +35,8 @@ class ExamPeModel {
       idPersonal = json['idPersonal'];
       name = json['name'];
       address = json['address'];
-      place_and_birthday = json['place_and_birthday'];
+      place_birthday = json['place_birthday'];
+      date_birthday = json['date_birthday'];
       schooling = json['schooling'];
       college_career = json['college_career'];
       sex = json['sex'];
@@ -49,7 +52,8 @@ class ExamPeModel {
       final Map<String, dynamic> data = {};
       data['name'] = name ?? '';
       data['address'] = address ?? '';
-      data['place_and_birthday'] = place_and_birthday ?? '';
+      data['place_birthday'] = place_birthday ?? '';
+      data['date_birthday'] = date_birthday ?? '';
       data['schooling'] = schooling ?? '';
       data['college_career'] = college_career ?? '';
       data['sex'] = sex ?? '';

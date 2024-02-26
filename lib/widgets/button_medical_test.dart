@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:ui' as ui;
-
 import 'package:app_seguimiento_movil/services/services.dart';
 import 'package:app_seguimiento_movil/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -154,7 +153,8 @@ List<Map<String, dynamic>> formpart1 = [
   'Edo. Civil' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
   'Domicilio' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
   'Tel. fijo y/o cel' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true, keyboardType: TextInputType.number),
-  'Lugar y fecha de nacimiento' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
+  'Lugar de nacimiento' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
+  'Fecha de nacimiento' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true, keyboardType: TextInputType.datetime, activeClock: false),
   'Actividad extra a su trabajo' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
   'Escolaridad' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
   'Carrera universitaria' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] :  '', obligatorio: true,  enabled: true),
@@ -265,79 +265,19 @@ List<Map<String, dynamic>> formpart1 = [
   // (Con una X anote los datos positivos según sea el caso)
   '1.- Sized' : const SizedBox(height: 20,),
   'Padre' : const Align(alignment: Alignment.centerLeft, child: Text('Padre',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))),
-  '1.- opc' : 
-  [
-  CheckInput(contenido: 'Buena salud',listChecked: checkBoxArr ?? listChecked_sec4 ,indexPrincipal:0,indexSecundario: 0,),
-  CheckInput(contenido: 'Mala salud',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:0,indexSecundario: 1,),
-  CheckInput(contenido: 'Finado',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:0,indexSecundario: 2),
-  CheckInput(contenido: 'Alergia',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:0,indexSecundario: 3),
-  CheckInput(contenido: 'Diabetes',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:0,indexSecundario: 4),
-  CheckInput(contenido: 'Presion Alta',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:0,indexSecundario: 5),
-  CheckInput(contenido: 'Colesterol',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:0,indexSecundario: 6),
-  CheckInput(contenido: 'Enf. Corazón',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:0,indexSecundario: 7),
-  CheckInput(contenido: 'Cancer',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:0,indexSecundario: 8),
-  CheckInput(contenido: 'Anemia',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:0,indexSecundario: 9) 
-],
+  '1.- opc' :  0,
   '2.- Sized' : const SizedBox(height: 20,),
   'Madre' : const Align(alignment: Alignment.centerLeft, child: Text('Madre',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))),
-  '2.- opc' : 
-  [
-  CheckInput(contenido: 'Buena salud',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:1,indexSecundario: 0,),
-  CheckInput(contenido: 'Mala salud',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:1,indexSecundario: 1,),
-  CheckInput(contenido: 'Finado',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:1,indexSecundario: 2,),
-  CheckInput(contenido: 'Alergia',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:1,indexSecundario: 3,),
-  CheckInput(contenido: 'Diabetes',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:1,indexSecundario: 4,),
-  CheckInput(contenido: 'Presion Alta',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:1,indexSecundario: 5,),
-  CheckInput(contenido: 'Colesterol',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:1,indexSecundario: 6,),
-  CheckInput(contenido: 'Enf. Corazón',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:1,indexSecundario: 7,),
-  CheckInput(contenido: 'Cancer',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:1,indexSecundario: 8,),
-  CheckInput(contenido: 'Anemia',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:1,indexSecundario: 9,), 
-  ],
+  '2.- opc' : 1,
   '3.- Sized' : const SizedBox(height: 20,),
   'Hermanos' : const Align(alignment: Alignment.centerLeft, child: Text('Hermanos',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))),
-  '3.- opc' : 
-  [
-    CheckInput(contenido: 'Buena salud',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:2,indexSecundario: 0,),
-    CheckInput(contenido: 'Mala salud',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:2,indexSecundario: 1,),
-    CheckInput(contenido: 'Finado',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:2,indexSecundario: 2,),
-    CheckInput(contenido: 'Alergia',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:2,indexSecundario: 3,),
-    CheckInput(contenido: 'Diabetes',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:2,indexSecundario: 4,),
-    CheckInput(contenido: 'Presion Alta',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:2,indexSecundario: 5,),
-    CheckInput(contenido: 'Colesterol',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:2,indexSecundario: 6,),
-    CheckInput(contenido: 'Enf. Corazón',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:2,indexSecundario: 7,),
-    CheckInput(contenido: 'Cancer',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:2,indexSecundario: 8,),
-    CheckInput(contenido: 'Anemia',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:2,indexSecundario: 9,), 
-  ],
+  '3.- opc' : 2,
   '4.- Sized' : const SizedBox(height: 20,),
   'Pareja' : const Align(alignment: Alignment.centerLeft, child: Text('Pareja',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))),
-'4.- opc' : 
-[
-  CheckInput(contenido: 'Buena salud',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:3,indexSecundario: 0,),
-  CheckInput(contenido: 'Mala salud',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:3,indexSecundario: 1,),
-  CheckInput(contenido: 'Finado',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:3,indexSecundario: 2,),
-  CheckInput(contenido: 'Alergia',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:3,indexSecundario: 3,),
-  CheckInput(contenido: 'Diabetes',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:3,indexSecundario: 4,),
-  CheckInput(contenido: 'Presion Alta',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:3,indexSecundario: 5,),
-  CheckInput(contenido: 'Colesterol',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:3,indexSecundario: 6,),
-  CheckInput(contenido: 'Enf. Corazón',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:3,indexSecundario: 7,),
-  CheckInput(contenido: 'Cancer',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:3,indexSecundario: 8,),
-  CheckInput(contenido: 'Anemia',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:3,indexSecundario: 9,), 
-],
+  '4.- opc' : 3,
   '5.- Sized' : const SizedBox(height: 20,),
   'Hijos' : const Align(alignment: Alignment.centerLeft, child: Text('Hijos',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))),
-  '5.- opc' : 
-  [
-    CheckInput(contenido: 'Buena salud',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:4,indexSecundario: 0,),
-    CheckInput(contenido: 'Mala salud',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:4,indexSecundario: 1,),
-    CheckInput(contenido: 'Finado',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:4,indexSecundario: 2,),
-    CheckInput(contenido: 'Alergia',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:4,indexSecundario: 3,),
-    CheckInput(contenido: 'Diabetes',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:4,indexSecundario: 4,),
-    CheckInput(contenido: 'Presion Alta',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:4,indexSecundario: 5,),
-    CheckInput(contenido: 'Colesterol',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:4,indexSecundario: 6,),
-    CheckInput(contenido: 'Enf. Corazón',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:4,indexSecundario: 7,),
-    CheckInput(contenido: 'Cancer',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:4,indexSecundario: 8,),
-    CheckInput(contenido: 'Anemia',listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal:4,indexSecundario: 9,), 
-  ],
+  '5.- opc' : 4
 },
 {//5.-ANTECEDENTES PERSONALES (Con una X anote los datos positivos según sea el caso) (5)
   'Titulo' : const Align(alignment: Alignment.bottomLeft, child: Text('¿Eres?',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))),
@@ -595,7 +535,7 @@ List<Map<String, dynamic>> formpart1 = [
    '0': MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC++] : '', obligatorio: true,paintSignature: true)
  */},
 { //6.- INTERROGATORIO POR APARATOS Y SISTEMAS. (7)
-  'Sentidos' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC = 48 ] :  '', obligatorio: true,  enabled: true),
+  'Sentidos' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[multiInputC = 49 ] :  '', obligatorio: true,  enabled: true),
   'Digestivo' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[++multiInputC] :  '', obligatorio: true,  enabled: true),
   'Respiratorio' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[++multiInputC] :  '', obligatorio: true,  enabled: true),
   'Circulatorio' : MultiInputsForm(contenido: multiInputArr != null ? multiInputArr[++multiInputC] :  '', obligatorio: true,  enabled: true),
@@ -849,7 +789,8 @@ List<Map<String, dynamic>> formpartBackUp = [
   'Edo. Civil' :'',
   'Domicilio' :'',
   'Tel. fijo y/o cel' : '',
-  'Lugar y fecha de nacimiento' :'',
+  'Lugar de nacimiento' :'',
+  'Fecha de nacimiento' :'',
   'Actividad extra a su trabajo' :'',
   'Escolaridad' :'',
   'Carrera universitaria' :'',
@@ -1248,13 +1189,26 @@ _pages[i].add(Title(
         }
       }
       break;
-      case List<CheckInput>:
-        _pages[i].add(SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: value,
-        ),
-      ));
+      case int:
+      _pages[i].add(
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              CheckInput(contenido: 'Buena salud', listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal: value, indexSecundario: 0,),
+              CheckInput(contenido: 'Mala salud', listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal: value, indexSecundario: 1,),
+              CheckInput(contenido: 'Finado', listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal: value, indexSecundario: 2),
+              CheckInput(contenido: 'Alergia', listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal: value, indexSecundario: 3),
+              CheckInput(contenido: 'Diabetes', listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal: value, indexSecundario: 4),
+              CheckInput(contenido: 'Presion Alta', listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal: value, indexSecundario: 5),
+              CheckInput(contenido: 'Colesterol', listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal: value, indexSecundario: 6),
+              CheckInput(contenido: 'Enf. Corazón', listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal: value, indexSecundario: 7),
+              CheckInput(contenido: 'Cancer', listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal: value, indexSecundario: 8),
+              CheckInput(contenido: 'Anemia', listChecked: checkBoxArr ?? listChecked_sec4,indexPrincipal: value, indexSecundario: 9)
+            ],
+          ),
+        )
+      );
       break;
       default:
       _pages[i].add(value);
@@ -1520,7 +1474,7 @@ StatefulBuilder(
                       List<bool> activadoArr = [];
                       bool activado = false;
 
-                      if (int.tryParse((formpart1[0]['Numero de Empleado'] as MultiInputsForm).contenido!) is int) {
+                      // if (int.tryParse((formpart1[0]['Numero de Empleado'] as MultiInputsForm).contenido!) is int) {
                       setState((){
                         btnSave = false;
                       });
@@ -1563,7 +1517,8 @@ StatefulBuilder(
                       epm.marital_status = (formpart1[1]['Edo. Civil'] as MultiInputsForm).contenido!;
                       epm.address = (formpart1[1]['Domicilio'] as MultiInputsForm).contenido!;
                       epm.tel_cel = (formpart1[1]['Tel. fijo y/o cel'] as MultiInputsForm).contenido!;
-                      epm.place_and_birthday = (formpart1[1]['Lugar y fecha de nacimiento'] as MultiInputsForm).contenido!;
+                      epm.place_birthday = (formpart1[1]['Lugar de nacimiento'] as MultiInputsForm).contenido!.toString();
+                      epm.date_birthday = (formpart1[1]['Fecha de nacimiento'] as MultiInputsForm).contenido!.toString();
                       epm.extra_activity = (formpart1[1]['Actividad extra a su trabajo'] as MultiInputsForm).contenido!;
                       epm.schooling = (formpart1[1]['Escolaridad'] as MultiInputsForm).contenido!;
                       epm.college_career = (formpart1[1]['Carrera universitaria'] as MultiInputsForm).contenido!;
@@ -1584,7 +1539,8 @@ StatefulBuilder(
                           'Edo. Civil',
                           'Domicilio',
                           'Tel. fijo y/o cel',
-                          'Lugar y fecha de nacimiento',
+                          'Lugar de nacimiento',
+                          'Fecha de nacimiento',
                           'Actividad extra a su trabajo',
                           'Escolaridad',
                           'Carrera universitaria',
@@ -1743,7 +1699,9 @@ StatefulBuilder(
                           '2.- Resultado',
                           'Lactancia'
                         ];
+
                         activadoArr.add(clavesAComparar.any((clave) {
+                         
                           return (formpart1[5][clave] as MultiInputsForm).contenido!.toString() !=
                               formpartBackUp[5][clave].toString();
                         }));
@@ -2508,7 +2466,8 @@ StatefulBuilder(
                       }
                       
                       ExamMaModel emm = ExamMaModel();
-                      emm.numEmployee = int.parse((formpart1[0]['Numero de Empleado'] as MultiInputsForm).contenido!.toString());
+                      // messageError(context, (formpart1[0]['Numero de Empleado'] as MultiInputsForm).contenido.toString(), 'title');
+                      emm.numEmployee = int.parse(((formpart1[0]['Numero de Empleado'] as MultiInputsForm).contenido == '' ? '0' : (formpart1[0]['Numero de Empleado'] as MultiInputsForm).contenido).toString());
                       emm.fk_initial_pre_entry = edm.idDetExamInPr;
 
                       //1+ 320 = 321
@@ -2532,9 +2491,9 @@ StatefulBuilder(
                         ));
                       
                       
-                      }else{
+                     /*  }else{
                         messageError(context, 'Por favor, para guardar ingrese el número de empleado', 'Error');
-                      }
+                      } */
 
                       }catch(e){
                         Navigator.of(context).pop();

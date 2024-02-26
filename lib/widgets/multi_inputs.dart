@@ -1,6 +1,6 @@
 import 'package:app_seguimiento_movil/services/services.dart';
 import 'package:app_seguimiento_movil/widgets/widgets.dart';
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
@@ -143,16 +143,17 @@ final ImagePicker _picker = ImagePicker();
     }
 
     if (widget.keyboardType.toString().contains('datetime') || widget.keyboardType == TextInputType.datetime) {
-      MaterialTapTargetSize tapTargetSize = MaterialTapTargetSize.padded;
-        final format = DateFormat("yyyy-MM-dd ${widget.formValue[widget.formProperty]!.activeClock == true?'HH:mm':''}");
-
-
+        MaterialTapTargetSize tapTargetSize = MaterialTapTargetSize.padded;
+        DateFormat? format = DateFormat("yyyy-MM-dd${widget.formValue[widget.formProperty]!.activeClock == true?' HH:mm':''}");
         return DateTimeField(
         enabled: widget.formValue[widget.formProperty].enabled ?? true,
-        initialValue: widget.formValue[widget.formProperty]!.contenido.toString()!= '0000-00-00' && widget.formValue[widget.formProperty]!.contenido.toString()!= '' ?DateFormat("yyyy-MM-dd").parse(widget.formValue[widget.formProperty]!.contenido.toString()): null,
+        initialValue: widget.formValue[widget.formProperty]!.contenido.toString()!= '0000-00-00' && widget.formValue[widget.formProperty]!.contenido.toString()!= '' && widget.formValue[widget.formProperty]!.contenido.toString() != 'null' ?DateFormat("yyyy-MM-dd").parse(widget.formValue[widget.formProperty]!.contenido.toString()): null,
         controller: widget.controller,
         style: getTextStyleText(context,null,null),
         format: format,
+        onChanged: ((value) => {
+          print(value)
+        }),
         validator: widget.formValue[widget.formProperty]!.obligatorio == true ? (value ) {
             if(value == null || value == ''){
               return 'Este campo es requerido';
@@ -162,8 +163,9 @@ final ImagePicker _picker = ImagePicker();
         decoration:  InputDecoration(
           enabled: widget.formValue[widget.formProperty].enabled ?? true,
           labelText: widget.labelText,
-          suffixIcon: const Icon(Icons.date_range), 
-          hintText: "yyyy/mm/dd ${widget.formValue[widget.formProperty]!.activeClock == true?'HH:mm':''}"
+          labelStyle: getTextStyleText(context,null,null),
+          prefixIcon: const Icon(Icons.date_range), 
+          hintText: "yyyy-mm-dd ${widget.formValue[widget.formProperty]!.activeClock == true?'HH:mm':''}"
         ),
         onShowPicker: (context, currentValue) async {
           return await showDatePicker(
@@ -252,6 +254,7 @@ final ImagePicker _picker = ImagePicker();
           decoration:  InputDecoration(
             hintText: widget.hintText,
             labelText: widget.labelText,      
+            labelStyle: getTextStyleText(context,null,null),
             helperText: widget.helperText,
             counterText: widget.counterText,
             //dentro del input del lado derecho
@@ -298,6 +301,16 @@ final ImagePicker _picker = ImagePicker();
           widget.formValue['descriptionFood']!.contenido = r.container![0]['observation'];
           widget.controller!.text =  r.container![0]['observation']?? '';
         });
+      break;
+      case 'descriptionAssistance':
+      AssistanceService as = AssistanceService();
+       AccessMap r = (await as.getObservation(context));
+       if(r.status == 200){
+        setState(() {
+          widget.formValue['descriptionAssistance']!.contenido = r.container![0]['observation'];
+          widget.controller!.text =  r.container![0]['observation']?? '';
+        });
+       }
       break;
       case 'descriptionAssistance':
       AssistanceService as = AssistanceService();

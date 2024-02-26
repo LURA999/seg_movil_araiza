@@ -160,7 +160,8 @@ class __AutocompleteCustomState extends State<AutocompleteCustom> {
               style: getTextStyleText(context,null,null),
               decoration: InputDecoration(
                // hintText: widget.labelText,
-                labelText: widget.labelText
+                labelText: widget.labelText,
+                labelStyle: getTextStyleText(context,null,null),
               ),
               onChanged: (value) {
               switch (widget.formProperty) {

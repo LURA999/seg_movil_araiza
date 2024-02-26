@@ -88,9 +88,10 @@ List months =
   
   double allFirstWidthTabHead = PdfPageFormat.letter.width * .12;
   double heightTabIlHead = PdfPageFormat.letter.height * 0.095 ;
-  double heightReng = PdfPageFormat.letter.height * 0.025;
+  double heightReng = PdfPageFormat.letter.height * 0.030;
   pw.TextStyle capLetterStyle = pw.TextStyle(fontSize: 10,font: pw.Font.times());
-  pw.TextStyle littleLetterStyle = pw.TextStyle(fontSize: 7,font: pw.Font.times());
+  pw.TextStyle littleLetterStyle = pw.TextStyle(fontSize: 10,font: pw.Font.times());
+  pw.TextStyle letStyleBackHerHeader = pw.TextStyle(fontSize: 10,font: pw.Font.times());
   
   double widthLineTable = 0.5;
   
@@ -159,8 +160,8 @@ List months =
                 alignment: pw.Alignment.center,
                 height: heightReng,
                 padding: const pw.EdgeInsets.only(top: 5,bottom: 5),
-                child: pw.Text('Buena\nsalud ',
-                style: capLetterStyle),
+                child: pw.Text('Buena salud ',
+                style: letStyleBackHerHeader),
                 decoration: pw.BoxDecoration(
                   border: pw.Border.all(color: PdfColors.black, width: widthLineTable)
                 ),
@@ -172,8 +173,8 @@ List months =
                 alignment: pw.Alignment.center,
                 height: heightReng,
                 padding: const pw.EdgeInsets.only(top: 5,bottom: 5),
-                child: pw.Text('Mala\nsalud ',
-                style: capLetterStyle),
+                child: pw.Text('Mala salud ',
+                style: letStyleBackHerHeader),
                 decoration: pw.BoxDecoration(
                   border: pw.Border.all(color: PdfColors.black, width: widthLineTable)
                 ),
@@ -186,7 +187,7 @@ List months =
                 height: heightReng,
                 padding: const pw.EdgeInsets.only(top: 5,bottom: 5),
                 child: pw.Text('Finado',
-                style: capLetterStyle),
+                style: letStyleBackHerHeader),
                 decoration: pw.BoxDecoration(
                   border: pw.Border.all(color: PdfColors.black, width: widthLineTable)
                 ),
@@ -199,7 +200,7 @@ List months =
                 height: heightReng,
                 padding: const pw.EdgeInsets.only(top: 5,bottom: 5),
                 child: pw.Text('Alergía',
-                style: capLetterStyle),
+                style: letStyleBackHerHeader),
                 decoration: pw.BoxDecoration(
                   border: pw.Border.all(color: PdfColors.black, width: widthLineTable)
                 ),
@@ -212,7 +213,7 @@ List months =
                 height: heightReng,
                 padding: const pw.EdgeInsets.only(top: 5,bottom: 5),
                 child: pw.Text('Diabetes',
-                style: capLetterStyle),
+                style: letStyleBackHerHeader),
                 decoration: pw.BoxDecoration(
                   border: pw.Border.all(color: PdfColors.black, width: widthLineTable)
                 ),
@@ -224,8 +225,8 @@ List months =
                 alignment: pw.Alignment.center,
                 height: heightReng,
                 padding: const pw.EdgeInsets.only(top: 5,bottom: 5),
-                child: pw.Text('Presión\nAlta',
-                style: capLetterStyle),
+                child: pw.Text('Presión Alta',
+                style: letStyleBackHerHeader),
                 decoration: pw.BoxDecoration(
                   border: pw.Border.all(color: PdfColors.black, width: widthLineTable)
                 ),
@@ -238,7 +239,7 @@ List months =
                 height: heightReng,
                 padding: const pw.EdgeInsets.only(top: 5,bottom: 5),
                 child: pw.Text('Colesterol',
-                style: capLetterStyle),
+                style: letStyleBackHerHeader),
                 decoration: pw.BoxDecoration(
                   border: pw.Border.all(color: PdfColors.black, width: widthLineTable)
                 ),
@@ -249,9 +250,9 @@ List months =
               child: pw.Container(
                 alignment: pw.Alignment.center,
                 height: heightReng,
-                padding: const pw.EdgeInsets.only(top: 5,bottom: 5),
-                child: pw.Text('Enf.\nCorazón',
-                style: capLetterStyle),
+                // padding: const pw.EdgeInsets.only(top: 5,bottom: 5),
+                child: pw.Text('Enf. Corazón',
+                style: letStyleBackHerHeader),
                 decoration: pw.BoxDecoration(
                   border: pw.Border.all(color: PdfColors.black, width: widthLineTable)
                 ),
@@ -264,7 +265,7 @@ List months =
                 height: heightReng,
                 padding: const pw.EdgeInsets.only(top: 5,bottom: 5),
                 child: pw.Text('Cáncer',
-                style: capLetterStyle),
+                style: letStyleBackHerHeader),
                 decoration: pw.BoxDecoration(
                   border: pw.Border.all(color: PdfColors.black, width: widthLineTable)
                 ),
@@ -277,7 +278,7 @@ List months =
                 height: heightReng,
                 padding: const pw.EdgeInsets.only(top: 5,bottom: 5),
                 child: pw.Text('Anemia',
-                style: capLetterStyle),
+                style: letStyleBackHerHeader),
                 decoration: pw.BoxDecoration(
                   border: pw.Border.all(color: PdfColors.black, width: widthLineTable)
                 ),
@@ -706,8 +707,8 @@ List months =
           pw.Expanded(
             child: pw.Container(
               alignment: pw.Alignment.center,
-              child: pw.Text(
-                multiInputHArr != null ? multiInputHArr[3 + (index * 11)] : '',
+              child: pw.Text(                  
+                multiInputHArr != null ? multiInputHArr[3 + (index * 11)] != '0000-00-00' ?  multiInputHArr[3 + (index * 11)] : '': '',
                 style: littleLetterStyle,
                 textAlign: pw.TextAlign.center,
               ),
@@ -1129,7 +1130,8 @@ pw.Container buildTableAccident_Illness() {
             child: pw.Container(
               alignment: pw.Alignment.center,
               child: pw.Text(
-                multiInputAEArr!= null ? multiInputAEArr[1 + (index * 5)] : '',
+                
+                multiInputAEArr!= null ? multiInputAEArr[1 + (index * 5)] != '0000-00-00' ? multiInputAEArr[1 + (index * 5)]  : ' ': ' ',
                 style: littleLetterStyle,
                 textAlign: pw.TextAlign.center,
               ),
@@ -1255,7 +1257,7 @@ pw.Container buildTableAccident_Illness() {
             child: pw.Container(
               alignment: pw.Alignment.center,
               child: pw.Text(
-                multiInputAEArr!= null ? multiInputAEArr[4 + (index * 5)] : '',
+                multiInputAEArr!= null ? multiInputAEArr[4 + (index * 5)] != '0' ? multiInputAEArr[4 + (index * 5)] :' ' : ' ',
                 style: littleLetterStyle,
                 textAlign: pw.TextAlign.center,
               ),
@@ -1277,7 +1279,7 @@ pw.Container buildTableAccident_Illness() {
 
 pw.TextStyle letterBold12 =  pw.TextStyle(fontSize: 12,font: pw.Font.timesBold());
 pw.TextStyle letterText12 =  pw.TextStyle(fontSize: 12,font: pw.Font.times());
-pw.TextStyle letterText =  pw.TextStyle(fontSize: 9,font: pw.Font.times());
+pw.TextStyle letterText =  pw.TextStyle(fontSize: 12,font: pw.Font.times());
 
 pw.TextStyle letterText10 =  pw.TextStyle(fontSize: 10,font: pw.Font.times());
 
@@ -1309,7 +1311,7 @@ pdf.addPage(
       children: [
         pw.Text('FECHA: ',style: letterBold12), 
         pw.Container(
-          child: pw.Text(multiInputArr != null ? multiInputArr[0] :  ''),
+          child: pw.Text(multiInputArr != null  ? multiInputArr[0] :  ''),
             decoration: pw.BoxDecoration(
               border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
             )
@@ -1420,7 +1422,7 @@ pdf.addPage(
             pw.Text('Lugar y fecha de nacimiento: ',style: letterText), 
             pw.Container(
               padding: const pw.EdgeInsets.all(2),
-              child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText),
+              child: pw.Text(multiInputArr != null ? '${multiInputArr[++multiInputC]}, ${multiInputArr[++multiInputC]}' : ' ',style: letterText),
                 decoration: pw.BoxDecoration(
                   border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                 )
@@ -1510,10 +1512,10 @@ pdf.addPage(
               children: [
                 pw.Row(
                   children: [
-                    pw.Text('GENERAL ',style: letterText10.copyWith(fontWeight: pw.FontWeight.bold)),
+                    pw.Text('GENERAL ',style: letterText12.copyWith(fontWeight: pw.FontWeight.bold)),
                     pw.SizedBox(width: 5),
                     pw.Container(
-                      child: pw.Text('DLN',style: letterText10.copyWith(fontWeight: pw.FontWeight.bold)),
+                      child: pw.Text('DLN',style: letterText12.copyWith(fontWeight: pw.FontWeight.bold)),
                       decoration: checkboxDLNArr !=null ? checkboxDLNArr[0][0] == true ? 
                       pw.BoxDecoration(
                         shape:  pw.BoxShape.circle,
@@ -1524,10 +1526,10 @@ pdf.addPage(
                 ),
               pw.Row(children: 
               [
-                pw.Text('Actitud: ',style: letterText10),
+                pw.Text('Actitud: ',style: letterText12),
                 pw.Container(
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                   decoration: pw.BoxDecoration(
                     border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -1535,10 +1537,10 @@ pdf.addPage(
                 )
               ]) ,
             pw.Row(children: [
-                pw.Text('Marcha: ',style: letterText10),
+                pw.Text('Marcha: ',style: letterText12),
                 pw.Container(
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                   decoration: pw.BoxDecoration(
                     border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -1547,10 +1549,10 @@ pdf.addPage(
             ])
               ,
               pw.Row(children: [
-                pw.Text('Apariencia: ',style: letterText10),
+                pw.Text('Apariencia: ',style: letterText12),
                 pw.Container(
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                   decoration: pw.BoxDecoration(
                     border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -1559,10 +1561,10 @@ pdf.addPage(
 
               ]),
               pw.Row(children: [
-                pw.Text('Edo. ánimo: ',style: letterText10),
+                pw.Text('Edo. ánimo: ',style: letterText12),
                 pw.Container(
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                   decoration: pw.BoxDecoration(
                     border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -1582,10 +1584,10 @@ pdf.addPage(
               children: [
                 pw.Row(
                   children: [
-                    pw.Text('OÍDOS',style: letterText10.copyWith(fontWeight: pw.FontWeight.bold)),
+                    pw.Text('OÍDOS',style: letterText12.copyWith(fontWeight: pw.FontWeight.bold)),
                     pw.SizedBox(width: 5),
                     pw.Container(
-                      child: pw.Text('DLN',style: letterText10.copyWith(fontWeight: pw.FontWeight.bold)),
+                      child: pw.Text('DLN',style: letterText12.copyWith(fontWeight: pw.FontWeight.bold)),
                       decoration: checkboxDLNArr !=null ? checkboxDLNArr[0][1] == true ? 
                       pw.BoxDecoration(
                         shape:  pw.BoxShape.circle,
@@ -1596,21 +1598,21 @@ pdf.addPage(
                 ),
                 pw.Row(
                   children: [
-                    pw.Text('Oreja   ',style: letterText10),
-                    pw.Text('D ',style: letterText10),
+                    pw.Text('Oreja   ',style: letterText12),
+                    pw.Text('D ',style: letterText12),
                     pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
                       ) 
                     ),
                     pw.SizedBox(width: 5),
-                    pw.Text('I ',style: letterText10),
+                    pw.Text('I ',style: letterText12),
                     pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
@@ -1620,21 +1622,21 @@ pdf.addPage(
                 ),
                 pw.Row(
                   children: [
-                    pw.Text('C A E   ',style: letterText10),
-                    pw.Text('D ',style: letterText10),
+                    pw.Text('C A E   ',style: letterText12),
+                    pw.Text('D ',style: letterText12),
                     pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
                       ) 
                     ),
                     pw.SizedBox(width: 5),
-                    pw.Text('I ',style: letterText10),
+                    pw.Text('I ',style: letterText12),
                     pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
@@ -1645,21 +1647,21 @@ pdf.addPage(
                 ),
                 pw.Row(
                   children: [
-                    pw.Text('Tímpano   ',style: letterText10),
-                    pw.Text('D ',style: letterText10),
+                    pw.Text('Tímpano   ',style: letterText12),
+                    pw.Text('D ',style: letterText12),
                     pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
                       ) 
                     ),
                     pw.SizedBox(width: 5),
-                    pw.Text('I ',style: letterText10),
+                    pw.Text('I ',style: letterText12),
                     pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
@@ -1681,10 +1683,10 @@ pdf.addPage(
               children: [
                 pw.Row(
                   children: [
-                    pw.Text('CABEZA',style: letterText10.copyWith(fontWeight: pw.FontWeight.bold)),
+                    pw.Text('CABEZA',style: letterText12.copyWith(fontWeight: pw.FontWeight.bold)),
                     pw.SizedBox(width: 5),
                     pw.Container(
-                      child: pw.Text('DLN',style: letterText10.copyWith(fontWeight: pw.FontWeight.bold)),
+                      child: pw.Text('DLN',style: letterText12.copyWith(fontWeight: pw.FontWeight.bold)),
                       decoration: checkboxDLNArr !=null ? checkboxDLNArr[0][2] == true ? 
                       pw.BoxDecoration(
                         shape:  pw.BoxShape.circle,
@@ -1694,10 +1696,10 @@ pdf.addPage(
                   ],
                 ),
               pw.Row(children: [
-                pw.Text('Cabello: ',style: letterText10),
+                pw.Text('Cabello: ',style: letterText12),
                 pw.Container(
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                   decoration: pw.BoxDecoration(
                     border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -1705,10 +1707,10 @@ pdf.addPage(
                 )
               ]),
               pw.Row(children: [
-                pw.Text('Superficie: ',style: letterText10),
+                pw.Text('Superficie: ',style: letterText12),
                 pw.Container(
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                   decoration: pw.BoxDecoration(
                     border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -1716,10 +1718,10 @@ pdf.addPage(
                 )
               ]),
               pw.Row(children: [
-                pw.Text('Forma: ',style: letterText10),
+                pw.Text('Forma: ',style: letterText12),
                 pw.Container(
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                   decoration: pw.BoxDecoration(
                     border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -1727,10 +1729,10 @@ pdf.addPage(
                 )
               ]),
               pw.Row(children: [
-                pw.Text('Senos PN: ',style: letterText10),
+                pw.Text('Senos PN: ',style: letterText12),
                 pw.Container(
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                   decoration: pw.BoxDecoration(
                     border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -1750,10 +1752,10 @@ pdf.addPage(
               children: [
                 pw.Row(
                   children: [
-                    pw.Text('OJOS',style: letterText10.copyWith(fontWeight: pw.FontWeight.bold)),
+                    pw.Text('OJOS',style: letterText12.copyWith(fontWeight: pw.FontWeight.bold)),
                     pw.SizedBox(width: 5),
                     pw.Container(
-                      child: pw.Text('DLN',style: letterText10.copyWith(fontWeight: pw.FontWeight.bold)),
+                      child: pw.Text('DLN',style: letterText12.copyWith(fontWeight: pw.FontWeight.bold)),
                       decoration: checkboxDLNArr !=null ? checkboxDLNArr[0][3] == true ? 
                       pw.BoxDecoration(
                         shape:  pw.BoxShape.circle,
@@ -1763,10 +1765,10 @@ pdf.addPage(
                   ],
                 ),
               pw.Row(children: [
-                pw.Text('Reflejos: ',style: letterText10),
+                pw.Text('Reflejos: ',style: letterText12),
                 pw.Container(
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                   decoration: pw.BoxDecoration(
                     border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -1774,10 +1776,10 @@ pdf.addPage(
                 )
               ]),
               pw.Row(children: [
-                pw.Text('Pupilares: ',style: letterText10),
+                pw.Text('Pupilares: ',style: letterText12),
                 pw.Container(
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                   decoration: pw.BoxDecoration(
                     border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -1785,10 +1787,10 @@ pdf.addPage(
                 )
               ]),
               pw.Row(children: [
-                pw.Text('Fondo de Ojo: ',style: letterText10),
+                pw.Text('Fondo de Ojo: ',style: letterText12),
                 pw.Container(
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                   decoration: pw.BoxDecoration(
                     border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -1797,21 +1799,21 @@ pdf.addPage(
               ]),
                 pw.Row(
                   children: [
-                    pw.Text('Pterigion   ',style: letterText10),
-                    pw.Text('D ',style: letterText10),
+                    pw.Text('Pterigion   ',style: letterText12),
+                    pw.Text('D ',style: letterText12),
                     pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
                       ) 
                     ),
                     pw.SizedBox(width: 5),
-                    pw.Text('I ',style: letterText10),
+                    pw.Text('I ',style: letterText12),
                     pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
@@ -1833,10 +1835,10 @@ pdf.addPage(
                   children: [
                     pw.Row(
                       children: [
-                        pw.Text('NEUROLÓGICO',style: letterText10.copyWith(fontWeight: pw.FontWeight.bold)),
+                        pw.Text('NEUROLÓGICO',style: letterText12.copyWith(fontWeight: pw.FontWeight.bold)),
                         pw.SizedBox(width: 5),
                         pw.Container(
-                        child: pw.Text('DLN',style: letterText10.copyWith(fontWeight: pw.FontWeight.bold)),
+                        child: pw.Text('DLN',style: letterText12.copyWith(fontWeight: pw.FontWeight.bold)),
                         decoration: checkboxDLNArr !=null ? checkboxDLNArr[0][4] == true ? 
                         pw.BoxDecoration(
                           shape:  pw.BoxShape.circle,
@@ -1846,10 +1848,10 @@ pdf.addPage(
                       ],
                     ),
                   pw.Row(children: [
-                    pw.Text('Reflejos OT: ',style: letterText10),
+                    pw.Text('Reflejos OT: ',style: letterText12),
                     pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
@@ -1857,10 +1859,10 @@ pdf.addPage(
                     )
                   ]),
                   pw.Row(children: [
-                    pw.Text('Romberg: ',style: letterText10),
+                    pw.Text('Romberg: ',style: letterText12),
                     pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
@@ -1868,10 +1870,10 @@ pdf.addPage(
                     )
                   ]),
                   pw.Row(children: [
-                    pw.Text('Talón Rodilla:  ',style: letterText10),
+                    pw.Text('Talón Rodilla:  ',style: letterText12),
                     pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
@@ -1895,10 +1897,10 @@ pdf.addPage(
               children: [
                 pw.Row(
                   children: [
-                    pw.Text('BOCA/FARINGE ',style: letterText10.copyWith(fontWeight: pw.FontWeight.bold)),
+                    pw.Text('BOCA/FARINGE ',style: letterText12.copyWith(fontWeight: pw.FontWeight.bold)),
                     pw.SizedBox(width: 5),
                     pw.Container(
-                      child: pw.Text('DLN',style: letterText10.copyWith(fontWeight: pw.FontWeight.bold)),
+                      child: pw.Text('DLN',style: letterText12.copyWith(fontWeight: pw.FontWeight.bold)),
                       decoration: checkboxDLNArr !=null ? checkboxDLNArr[0][5] == true ? 
                       pw.BoxDecoration(
                         shape:  pw.BoxShape.circle,
@@ -1908,10 +1910,10 @@ pdf.addPage(
                   ],
                 ),
               pw.Row(children: [
-                pw.Text('Labios: ',style: letterText10),
+                pw.Text('Labios: ',style: letterText12),
                 pw.Container(
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ' /*'Lorem Ipsum es hol'*/,style: letterText10),
+                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ' /*'Lorem Ipsum es hol'*/,style: letterText12),
                   decoration: pw.BoxDecoration(
                     border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -1919,10 +1921,10 @@ pdf.addPage(
                 )
               ]),
               pw.Row(children: [
-                pw.Text('Aliento: ',style: letterText10),
+                pw.Text('Aliento: ',style: letterText12),
                 pw.Container(
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                   decoration: pw.BoxDecoration(
                     border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -1930,10 +1932,10 @@ pdf.addPage(
                 )
               ]),
               pw.Row(children: [
-                pw.Text('Lengua: ',style: letterText10),
+                pw.Text('Lengua: ',style: letterText12),
                 pw.Container(
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                   decoration: pw.BoxDecoration(
                     border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -1941,10 +1943,10 @@ pdf.addPage(
                 )
               ]),
               pw.Row(children: [
-                pw.Text('Faringe: ',style: letterText10),
+                pw.Text('Faringe: ',style: letterText12),
                 pw.Container(
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                   decoration: pw.BoxDecoration(
                     border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -1952,10 +1954,10 @@ pdf.addPage(
                 )
               ]),
               pw.Row(children: [
-                pw.Text('Amígdalas: ',style: letterText10),
+                pw.Text('Amígdalas: ',style: letterText12),
                 pw.Container(
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                   decoration: pw.BoxDecoration(
                     border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -1963,10 +1965,10 @@ pdf.addPage(
                 )
               ]),
               pw.Row(children: [
-                pw.Text('Dientes: ',style: letterText10),
+                pw.Text('Dientes: ',style: letterText12),
                 pw.Container(
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                   decoration: pw.BoxDecoration(
                     border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -1974,10 +1976,10 @@ pdf.addPage(
                 )
               ]),
               pw.Row(children: [
-                pw.Text('Mucosa: ',style: letterText10),
+                pw.Text('Mucosa: ',style: letterText12),
                 pw.Container(
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                   decoration: pw.BoxDecoration(
                     border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -1997,10 +1999,10 @@ pdf.addPage(
               children: [
                 pw.Row(
                   children: [
-                    pw.Text('TÓRAX  RESP.',style: letterText10.copyWith(fontWeight: pw.FontWeight.bold)),
+                    pw.Text('TÓRAX  RESP.',style: letterText12.copyWith(fontWeight: pw.FontWeight.bold)),
                     pw.SizedBox(width: 5),
                     pw.Container(
-                      child: pw.Text('DLN',style: letterText10.copyWith(fontWeight: pw.FontWeight.bold)),
+                      child: pw.Text('DLN',style: letterText12.copyWith(fontWeight: pw.FontWeight.bold)),
                       decoration: checkboxDLNArr !=null ? checkboxDLNArr[0][6] == true ? 
                       pw.BoxDecoration(
                         shape:  pw.BoxShape.circle,
@@ -2010,10 +2012,10 @@ pdf.addPage(
                   ],
                 ),
               pw.Row(children: [
-                pw.Text('Forma: ',style: letterText10),
+                pw.Text('Forma: ',style: letterText12),
                 pw.Container(
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                   decoration: pw.BoxDecoration(
                     border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -2021,10 +2023,10 @@ pdf.addPage(
                 )
               ]),
               pw.Row(children: [
-                pw.Text('Diafragma: ',style: letterText10),
+                pw.Text('Diafragma: ',style: letterText12),
                 pw.Container(
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                   decoration: pw.BoxDecoration(
                     border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -2032,10 +2034,10 @@ pdf.addPage(
                 )
               ]),
               pw.Row(children: [
-                pw.Text('Frotes: ',style: letterText10),
+                pw.Text('Frotes: ',style: letterText12),
                 pw.Container(
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                   decoration: pw.BoxDecoration(
                     border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -2043,10 +2045,10 @@ pdf.addPage(
                 )
               ]),
               pw.Row(children: [
-                pw.Text('Ventilación: ',style: letterText10),
+                pw.Text('Ventilación: ',style: letterText12),
                 pw.Container(
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                   decoration: pw.BoxDecoration(
                     border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -2054,10 +2056,10 @@ pdf.addPage(
                 )
               ]),
               pw.Row(children: [
-                pw.Text('Estertores: ',style: letterText10),
+                pw.Text('Estertores: ',style: letterText12),
                 pw.Container(
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                   decoration: pw.BoxDecoration(
                     border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -2077,10 +2079,10 @@ pdf.addPage(
               children: [
                 pw.Row(
                   children: [
-                    pw.Text('ABDOMEN',style: letterText10.copyWith(fontWeight: pw.FontWeight.bold)),
+                    pw.Text('ABDOMEN',style: letterText12.copyWith(fontWeight: pw.FontWeight.bold)),
                     pw.SizedBox(width: 5),
                     pw.Container(
-                      child: pw.Text('DLN',style: letterText10.copyWith(fontWeight: pw.FontWeight.bold)),
+                      child: pw.Text('DLN',style: letterText12.copyWith(fontWeight: pw.FontWeight.bold)),
                       decoration: checkboxDLNArr !=null ? checkboxDLNArr[0][7] == true ? 
                       pw.BoxDecoration(
                         shape:  pw.BoxShape.circle,
@@ -2090,10 +2092,10 @@ pdf.addPage(
                   ],
                 ),
               pw.Row(children: [
-                pw.Text('Forma: ',style: letterText10),
+                pw.Text('Forma: ',style: letterText12),
                 pw.Container(
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                   decoration: pw.BoxDecoration(
                     border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -2101,10 +2103,10 @@ pdf.addPage(
                 )
               ]),
               pw.Row(children: [
-                pw.Text('Dolor: ',style: letterText10),
+                pw.Text('Dolor: ',style: letterText12),
                 pw.Container(
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                   decoration: pw.BoxDecoration(
                     border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -2112,10 +2114,10 @@ pdf.addPage(
                 )
               ]),
               pw.Row(children: [
-                pw.Text('Masas: ',style: letterText10),
+                pw.Text('Masas: ',style: letterText12),
                 pw.Container(
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                   decoration: pw.BoxDecoration(
                     border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -2124,21 +2126,21 @@ pdf.addPage(
               ]),
                 pw.Row(
                   children: [
-                    pw.Text('Hernia   ',style: letterText10),
-                    pw.Text('D ',style: letterText10),
+                    pw.Text('Hernia   ',style: letterText12),
+                    pw.Text('D ',style: letterText12),
                     pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
                       ) 
                     ),
                     pw.SizedBox(width: 5),
-                    pw.Text('I ',style: letterText10),
+                    pw.Text('I ',style: letterText12),
                     pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
@@ -2159,10 +2161,10 @@ pdf.addPage(
               children: [
                 pw.Row(
                   children: [
-                    pw.Text('NARIZ',style: letterText10.copyWith(fontWeight: pw.FontWeight.bold)),
+                    pw.Text('NARIZ',style: letterText12.copyWith(fontWeight: pw.FontWeight.bold)),
                     pw.SizedBox(width: 5),
                     pw.Container(
-                      child: pw.Text('DLN',style: letterText10.copyWith(fontWeight: pw.FontWeight.bold)),
+                      child: pw.Text('DLN',style: letterText12.copyWith(fontWeight: pw.FontWeight.bold)),
                       decoration: checkboxDLNArr !=null ? checkboxDLNArr[0][8] == true ? 
                       pw.BoxDecoration(
                         shape:  pw.BoxShape.circle,
@@ -2172,10 +2174,10 @@ pdf.addPage(
                   ],
                 ),
               pw.Row(children: [
-                pw.Text('Septum: ',style: letterText10),
+                pw.Text('Septum: ',style: letterText12),
                 pw.Container(
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                   decoration: pw.BoxDecoration(
                     border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -2184,21 +2186,21 @@ pdf.addPage(
               ]),
                 pw.Row(
                   children: [
-                    pw.Text('Mucosa   ',style: letterText10),
-                    pw.Text('D ',style: letterText10),
+                    pw.Text('Mucosa   ',style: letterText12),
+                    pw.Text('D ',style: letterText12),
                     pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
                       ) 
                     ),
                     pw.SizedBox(width: 5),
-                    pw.Text('I ',style: letterText10),
+                    pw.Text('I ',style: letterText12),
                     pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
@@ -2208,10 +2210,10 @@ pdf.addPage(
                   ],
                 ),
               pw.Row(children: [
-                pw.Text('Ventilación: ',style: letterText10),
+                pw.Text('Ventilación: ',style: letterText12),
                 pw.Container(
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                   decoration: pw.BoxDecoration(
                     border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -2235,10 +2237,10 @@ pdf.addPage(
               children: [
                 pw.Row(
                   children: [
-                    pw.Text('ÁREA PRECORDIAL',style: letterText10.copyWith(fontWeight: pw.FontWeight.bold)),
+                    pw.Text('ÁREA PRECORDIAL',style: letterText12.copyWith(fontWeight: pw.FontWeight.bold)),
                     pw.SizedBox(width: 5),
                    pw.Container(
-                      child: pw.Text('DLN',style: letterText10.copyWith(fontWeight: pw.FontWeight.bold)),
+                      child: pw.Text('DLN',style: letterText12.copyWith(fontWeight: pw.FontWeight.bold)),
                       decoration: checkboxDLNArr !=null ? checkboxDLNArr[0][9] == true ? 
                       pw.BoxDecoration(
                         shape:  pw.BoxShape.circle,
@@ -2248,10 +2250,10 @@ pdf.addPage(
                   ],
                 ),
               pw.Row(children: [
-                pw.Text('Frecuencia: ',style: letterText10),
+                pw.Text('Frecuencia: ',style: letterText12),
                 pw.Container(
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                   decoration: pw.BoxDecoration(
                     border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -2259,10 +2261,10 @@ pdf.addPage(
                 )
               ]),
               pw.Row(children: [
-                  pw.Text('Ritmo: ',style: letterText10),
+                  pw.Text('Ritmo: ',style: letterText12),
                 pw.Container(
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                   decoration: pw.BoxDecoration(
                     border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -2270,10 +2272,10 @@ pdf.addPage(
                 )
               ]),
               pw.Row(children: [
-                pw.Text('Tonos: ',style: letterText10),
+                pw.Text('Tonos: ',style: letterText12),
                 pw.Container(
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                   decoration: pw.BoxDecoration(
                     border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -2281,10 +2283,10 @@ pdf.addPage(
                 )
               ]),
               pw.Row(children: [
-                pw.Text('Frotes: ',style: letterText10),
+                pw.Text('Frotes: ',style: letterText12),
                 pw.Container(
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                   decoration: pw.BoxDecoration(
                     border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -2292,10 +2294,10 @@ pdf.addPage(
                 )
               ]),
               pw.Row(children: [
-              pw.Text('Soplos: ',style: letterText10),
+              pw.Text('Soplos: ',style: letterText12),
                 pw.Container(
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                   decoration: pw.BoxDecoration(
                     border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -2316,10 +2318,10 @@ pdf.addPage(
               children: [
                 pw.Row(
                   children: [
-                    pw.Text('PIEL',style: letterText10.copyWith(fontWeight: pw.FontWeight.bold)),
+                    pw.Text('PIEL',style: letterText12.copyWith(fontWeight: pw.FontWeight.bold)),
                     pw.SizedBox(width: 5),
                     pw.Container(
-                      child: pw.Text('DLN',style: letterText10.copyWith(fontWeight: pw.FontWeight.bold)),
+                      child: pw.Text('DLN',style: letterText12.copyWith(fontWeight: pw.FontWeight.bold)),
                       decoration: checkboxDLNArr !=null ? checkboxDLNArr[0][10] == true ? 
                       pw.BoxDecoration(
                         shape:  pw.BoxShape.circle,
@@ -2329,10 +2331,10 @@ pdf.addPage(
                   ],
                 ),
               pw.Row(children: [
-                pw.Text('Cicatrices',style: letterText10),
+                pw.Text('Cicatrices: ',style: letterText12),
                 pw.Container(
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                   decoration: pw.BoxDecoration(
                     border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -2340,10 +2342,10 @@ pdf.addPage(
                 )
               ]),
               pw.Row(children: [
-                pw.Text('Textura: ',style: letterText10),
+                pw.Text('Textura: ',style: letterText12),
                 pw.Container(
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                   decoration: pw.BoxDecoration(
                     border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -2351,10 +2353,10 @@ pdf.addPage(
                 )
               ]),
               pw.Row(children: [
-                pw.Text('Diaforesis: ',style: letterText10),
+                pw.Text('Diaforesis: ',style: letterText12),
                 pw.Container(
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                   decoration: pw.BoxDecoration(
                     border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -2362,10 +2364,10 @@ pdf.addPage(
                 )
               ]),
               pw.Row(children: [
-                pw.Text('Otras Lesiones: ',style: letterText10),
+                pw.Text('Otras Lesiones: ',style: letterText12),
                 pw.Container(
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                   decoration: pw.BoxDecoration(
                     border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -2385,10 +2387,10 @@ pdf.addPage(
               children: [
                 pw.Row(
                   children: [
-                    pw.Text('EXTREMIDADES',style: letterText10.copyWith(fontWeight: pw.FontWeight.bold)),
+                    pw.Text('EXTREMIDADES',style: letterText12.copyWith(fontWeight: pw.FontWeight.bold)),
                     pw.SizedBox(width: 5),
                     pw.Container(
-                      child: pw.Text('DLN',style: letterText10.copyWith(fontWeight: pw.FontWeight.bold)),
+                      child: pw.Text('DLN',style: letterText12.copyWith(fontWeight: pw.FontWeight.bold)),
                       decoration: checkboxDLNArr !=null ? checkboxDLNArr[0][11] == true ? 
                       pw.BoxDecoration(
                         shape:  pw.BoxShape.circle,
@@ -2399,21 +2401,21 @@ pdf.addPage(
                 ),
                 pw.Row(
                   children: [
-                    pw.Text('M.S. Articular ',style: letterText10),
-                    pw.Text('D ',style: letterText10),
+                    pw.Text('M.S. Articular ',style: letterText12),
+                    pw.Text('D ',style: letterText12),
                     pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
                       ) 
                     ),
                     pw.SizedBox(width: 5),
-                    pw.Text('I ',style: letterText10),
+                    pw.Text('I ',style: letterText12),
                     pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
@@ -2423,21 +2425,21 @@ pdf.addPage(
                 ),
                 pw.Row(
                   children: [
-                    pw.Text('Muscular   ',style: letterText10),
-                    pw.Text('D ',style: letterText10),
+                    pw.Text('Muscular   ',style: letterText12),
+                    pw.Text('D ',style: letterText12),
                     pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
                       ) 
                     ),
                     pw.SizedBox(width: 5),
-                    pw.Text('I ',style: letterText10),
+                    pw.Text('I ',style: letterText12),
                     pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
@@ -2448,21 +2450,21 @@ pdf.addPage(
                 ),
                 pw.Row(
                   children: [
-                    pw.Text('Nervioso   ',style: letterText10),
-                    pw.Text('D ',style: letterText10),
+                    pw.Text('Nervioso   ',style: letterText12),
+                    pw.Text('D ',style: letterText12),
                     pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
                       ) 
                     ),
                     pw.SizedBox(width: 5),
-                    pw.Text('I ',style: letterText10),
+                    pw.Text('I ',style: letterText12),
                     pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
@@ -2479,24 +2481,24 @@ pdf.addPage(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   mainAxisAlignment: pw.MainAxisAlignment.start,
                   children: [
-                  pw.Text('M.I.',style: letterText10.copyWith(fontWeight: pw.FontWeight.bold)),
+                  pw.Text('M.I.',style: letterText12.copyWith(fontWeight: pw.FontWeight.bold)),
                   pw.Row(
                       children: [
-                        pw.Text('Articular   ',style: letterText10),
-                        pw.Text('D ',style: letterText10),
+                        pw.Text('Articular   ',style: letterText12),
+                        pw.Text('D ',style: letterText12),
                         pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
                       ) 
                     ),
                         pw.SizedBox(width: 5),
-                        pw.Text('I ',style: letterText10),
+                        pw.Text('I ',style: letterText12),
                         pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
@@ -2507,21 +2509,21 @@ pdf.addPage(
                   ),
                   pw.Row(
                       children: [
-                        pw.Text('Muscular   ',style: letterText10),
-                        pw.Text('D ',style: letterText10),
+                        pw.Text('Muscular   ',style: letterText12),
+                        pw.Text('D ',style: letterText12),
                         pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
                       ) 
                     ),
                         pw.SizedBox(width: 5),
-                        pw.Text('I ',style: letterText10),
+                        pw.Text('I ',style: letterText12),
                         pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
@@ -2532,21 +2534,21 @@ pdf.addPage(
                   ),
                   pw.Row(
                       children: [
-                        pw.Text('Nervioso   ',style: letterText10),
-                        pw.Text('D ',style: letterText10),
+                        pw.Text('Nervioso   ',style: letterText12),
+                        pw.Text('D ',style: letterText12),
                         pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
                       ) 
                     ),
                         pw.SizedBox(width: 5),
-                        pw.Text('I ',style: letterText10),
+                        pw.Text('I ',style: letterText12),
                         pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
@@ -2568,10 +2570,10 @@ pdf.addPage(
                   children: [
                     pw.Row(
                       children: [
-                        pw.Text('Columna: ',style: letterText10.copyWith(fontWeight: pw.FontWeight.bold)),
+                        pw.Text('Columna: ',style: letterText12.copyWith(fontWeight: pw.FontWeight.bold)),
                         pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
@@ -2646,11 +2648,11 @@ pdf.addPage(
           children: [
             pw.Container(
               padding: const pw.EdgeInsets.only(bottom: 10),
-              child: pw.Text('5.1.-ANTECEDENTES PERSONALES NO PATOLÓGICOS                                      Diestro ( ${manoDominante == 1 ? 'X' : ''} ) Zurdo ( ${manoDominante == 2 ? 'X' : ''} ) Ambos ( ${manoDominante == 3 ? 'X' : ''} )',style: letterText10)
+              child: pw.Text('5.1.-ANTECEDENTES PERSONALES NO PATOLÓGICOS                   Diestro ( ${manoDominante == 1 ? 'X' : ''} ) Zurdo ( ${manoDominante == 2 ? 'X' : ''} ) Ambos ( ${manoDominante == 3 ? 'X' : ''} )',style: letterText12)
             ),
             pw.Row(
               children: [
-                pw.Text('Tabaquismo   No ',style: letterText10), 
+                pw.Text('Tabaquismo   No ',style: letterText12), 
                 pw.Container(
                   padding: const pw.EdgeInsets.all(2),
                   child: pw.Text(YesNotFunction(++radioButtonC, yestNotEnumArr, 2),style: letterText),
@@ -2659,7 +2661,7 @@ pdf.addPage(
                     )
                   ) 
                 ),
-                pw.Text(' SI ',style: letterText10), 
+                pw.Text(' SI ',style: letterText12), 
                 pw.Container(
                   padding: const pw.EdgeInsets.all(2),
                   child: pw.Text(YesNotFunction(radioButtonC, yestNotEnumArr, 1),style: letterText),
@@ -2669,27 +2671,27 @@ pdf.addPage(
                   ) 
                 ),
                 pw.Spacer(),
-                pw.Text('Edad de inicio: ',style: letterText10), 
+                pw.Text('Edad de inicio: ',style: letterText12), 
                 pw.Container(
                   padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] != '0' ? multiInputArr[multiInputC] : ' ' : ' ',style: letterText),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
                   ) 
                 ),
                 pw.Spacer(),
-                pw.Text('Cantidad de cigarrillos al día: ',style: letterText10), 
+                pw.Text('Cantidad de cigarrillos al día: ',style: letterText12), 
                 pw.Container(
                   padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] != '0' ? multiInputArr[multiInputC] : ' ' : ' ',style: letterText),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
                   ) 
                 ),
                 pw.Spacer(),
-                pw.Text('Ingesta de alcohol   No ',style: letterText10), 
+                pw.Text('Ingesta de alcohol   No ',style: letterText12), 
                 pw.Container(
                   padding: const pw.EdgeInsets.all(2),
                   child: pw.Text( YesNotFunction(++radioButtonC, yestNotEnumArr, 2), style: letterText),
@@ -2698,7 +2700,7 @@ pdf.addPage(
                     )
                   ) 
                 ),
-                pw.Text(' Si ',style: letterText10), 
+                pw.Text(' Si ',style: letterText12), 
                 pw.Container(
                   padding: const pw.EdgeInsets.all(2),
                   child: pw.Text(YesNotFunction(radioButtonC, yestNotEnumArr, 1),style: letterText),
@@ -2711,27 +2713,27 @@ pdf.addPage(
             ),
             pw.Row(
               children: [
-                pw.Text('Edad de Inicio: ',style: letterText10), 
+                pw.Text('Edad de Inicio: ',style: letterText12), 
                 pw.Container(
                   padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] != '0' ? multiInputArr[multiInputC] : ' ' : ' ',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
                   ) 
                 ),
                 pw.Spacer(),
-                pw.Text('Frecuencia: ',style: letterText10), 
+                pw.Text('Frecuencia: ',style: letterText12), 
                 pw.Container(
                   padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
                   ) 
                 ),
                 pw.Spacer(),
-                pw.Text('Toxicomanías   No ',style: letterText10), 
+                pw.Text('Toxicomanías   No ',style: letterText12), 
                 pw.Container(
                   padding: const pw.EdgeInsets.all(2),
                   child: pw.Text(YesNotFunction(++radioButtonC, yestNotEnumArr, 2),style: letterText),
@@ -2740,7 +2742,7 @@ pdf.addPage(
                     )
                   ) 
                 ),
-                pw.Text(' Si ',style: letterText10), 
+                pw.Text(' Si ',style: letterText12), 
                 pw.Container(
                   padding: const pw.EdgeInsets.all(2),
                   child: pw.Text(YesNotFunction(radioButtonC, yestNotEnumArr, 1),style: letterText),
@@ -2750,10 +2752,10 @@ pdf.addPage(
                   ) 
                 ),
                 pw.Spacer(),
-                pw.Text('Edad de inicio: ',style: letterText10), 
+                pw.Text('Edad de inicio: ',style: letterText12), 
                 pw.Container(
                   padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] != '0' ? multiInputArr[multiInputC] : ' ' : ' ',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -2763,17 +2765,17 @@ pdf.addPage(
             ),
             pw.Row(
               children: [
-                pw.Text('Tipo y frecuencia: ',style: letterText10), 
+                pw.Text('Tipo y frecuencia: ',style: letterText12), 
                 pw.Container(
                   padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
                   ) 
                 ),
                 pw.Spacer(),
-                pw.Text('Alergias a medicamentos   No ',style: letterText10), 
+                pw.Text('Alergias a medicamentos   No ',style: letterText12), 
                 pw.Container(
                   padding: const pw.EdgeInsets.all(2),
                   child: pw.Text(YesNotFunction(++radioButtonC, yestNotEnumArr, 2),style: letterText),
@@ -2782,7 +2784,7 @@ pdf.addPage(
                     )
                   ) 
                 ),
-                pw.Text(' Si ',style: letterText10), 
+                pw.Text(' Si ',style: letterText12), 
                 pw.Container(
                   padding: const pw.EdgeInsets.all(2),
                   child: pw.Text(YesNotFunction(radioButtonC, yestNotEnumArr, 1),style: letterText),
@@ -2792,7 +2794,7 @@ pdf.addPage(
                   ) 
                 ),
                 pw.Spacer(),
-                pw.Text(' ¿A cuál? ',style: letterText10), 
+                pw.Text(' ¿A cuál? ',style: letterText12), 
                 pw.Container(
                   padding: const pw.EdgeInsets.all(2),
                   child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText),
@@ -2805,7 +2807,7 @@ pdf.addPage(
             ),
             pw.Row(
               children: [
-                pw.Text('Alergias a alimentos   No ',style: letterText10), 
+                pw.Text('Alergias a alimentos   No ',style: letterText12), 
                 pw.Container(
                   padding: const pw.EdgeInsets.all(2),
                   child: pw.Text(YesNotFunction(++radioButtonC, yestNotEnumArr, 2),style: letterText),
@@ -2814,7 +2816,7 @@ pdf.addPage(
                     )
                   ) 
                 ),
-                pw.Text(' Si ',style: letterText10), 
+                pw.Text(' Si ',style: letterText12), 
                 pw.Container(
                   padding: const pw.EdgeInsets.all(2),
                   child: pw.Text(YesNotFunction(radioButtonC, yestNotEnumArr, 1),style: letterText),
@@ -2824,7 +2826,7 @@ pdf.addPage(
                   ) 
                 ),
                 pw.Spacer(),
-                pw.Text(' ¿A cuál? ',style: letterText10), 
+                pw.Text(' ¿A cuál? ',style: letterText12), 
                 pw.Container(
                   padding: const pw.EdgeInsets.all(2),
                   child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText),
@@ -2851,7 +2853,7 @@ pdf.addPage(
                     border:pw.Border.all(width: widthLineTable, color: PdfColors.black), 
                   )
                 ),
-                pw.Text(' No ',style: letterText10), 
+                pw.Text(' No ',style: letterText12), 
                 pw.Container(
                 margin: (paddingMarginSquare = YesNotFunction(radioButtonC, yestNotEnumArr, 2)) == 'X' ? const pw.EdgeInsets.all(0) : const pw.EdgeInsets.all(4),
                 padding: (paddingMarginSquare == 'X' ? const pw.EdgeInsets.only(right: 2,left: 2) :  const pw.EdgeInsets.all(4)),
@@ -2860,7 +2862,7 @@ pdf.addPage(
                     border:pw.Border.all(width: widthLineTable, color: PdfColors.black), 
                   )
                 ),
-                pw.Text('   Tétanos:   Si ',style: letterText10), 
+                pw.Text('   Tétanos:   Si ',style: letterText12), 
                   pw.Container(
                   margin: (paddingMarginSquare = YesNotFunction(++radioButtonC, yestNotEnumArr, 1)) == 'X' ? const pw.EdgeInsets.all(0) : const pw.EdgeInsets.all(4),
                   padding: (paddingMarginSquare == 'X' ? const pw.EdgeInsets.only(right: 2,left: 2) :  const pw.EdgeInsets.all(4)),
@@ -2869,7 +2871,7 @@ pdf.addPage(
                       border:pw.Border.all(width: widthLineTable, color: PdfColors.black), 
                     )
                   ),
-                  pw.Text(' No ',style: letterText10), 
+                  pw.Text(' No ',style: letterText12), 
                   pw.Container(
                   margin: (paddingMarginSquare = YesNotFunction(radioButtonC, yestNotEnumArr, 2)) == 'X' ? const pw.EdgeInsets.all(0) : const pw.EdgeInsets.all(4),
                   padding: (paddingMarginSquare == 'X' ? const pw.EdgeInsets.only(right: 2,left: 2) :  const pw.EdgeInsets.all(4)),
@@ -2878,7 +2880,7 @@ pdf.addPage(
                       border:pw.Border.all(width: widthLineTable, color: PdfColors.black), 
                     )
                   ),
-                pw.Text('   Hepatitis:   Si ',style: letterText10), 
+                pw.Text('   Hepatitis:   Si ',style: letterText12), 
                   pw.Container(
                   margin: (paddingMarginSquare = YesNotFunction(++radioButtonC, yestNotEnumArr, 1)) == 'X' ? const pw.EdgeInsets.all(0) : const pw.EdgeInsets.all(4),
                   padding: (paddingMarginSquare == 'X' ? const pw.EdgeInsets.only(right: 2,left: 2) :  const pw.EdgeInsets.all(4)),
@@ -2887,7 +2889,7 @@ pdf.addPage(
                       border:pw.Border.all(width: widthLineTable, color: PdfColors.black), 
                     )
                   ),
-                  pw.Text(' No ',style: letterText10), 
+                  pw.Text(' No ',style: letterText12), 
                   pw.Container(
                   margin: (paddingMarginSquare = YesNotFunction(radioButtonC, yestNotEnumArr, 2)) == 'X' ? const pw.EdgeInsets.all(0) : const pw.EdgeInsets.all(4),
                   padding: (paddingMarginSquare == 'X' ? const pw.EdgeInsets.only(right: 2,left: 2) :  const pw.EdgeInsets.all(4)),
@@ -2900,7 +2902,7 @@ pdf.addPage(
             ),
             pw.Row(
               children: [
-                pw.Text('Neumococo:   Si ',style: letterText10), 
+                pw.Text('Neumococo:   Si ',style: letterText12), 
                   pw.Container(
                   margin: (paddingMarginSquare = YesNotFunction(++radioButtonC, yestNotEnumArr, 1)) == 'X' ? const pw.EdgeInsets.all(0) : const pw.EdgeInsets.all(4),
                   padding: (paddingMarginSquare == 'X' ? const pw.EdgeInsets.only(right: 2,left: 2) :  const pw.EdgeInsets.all(4)),
@@ -2909,7 +2911,7 @@ pdf.addPage(
                       border:pw.Border.all(width: widthLineTable, color: PdfColors.black), 
                     )
                   ),
-                  pw.Text(' No ',style: letterText10), 
+                  pw.Text(' No ',style: letterText12), 
                   pw.Container(
                   margin: (paddingMarginSquare = YesNotFunction(radioButtonC, yestNotEnumArr, 2)) == 'X' ? const pw.EdgeInsets.all(0) : const pw.EdgeInsets.all(4),
                   padding: (paddingMarginSquare == 'X' ? const pw.EdgeInsets.only(right: 2,left: 2) :  const pw.EdgeInsets.all(4)),
@@ -2918,11 +2920,11 @@ pdf.addPage(
                       border:pw.Border.all(width: widthLineTable, color: PdfColors.black), 
                     )
                   ),
-                pw.Text('             Otras: ',style: letterText10), 
+                pw.Text('             Otras: ',style: letterText12), 
                   pw.Container(
                   margin: const pw.EdgeInsets.all(0),
                   padding: const pw.EdgeInsets.all(4),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -2932,7 +2934,7 @@ pdf.addPage(
             ),
             pw.Row(
               children: [
-                pw.Text('¿Practica algún deporte?   No ',style: letterText10), 
+                pw.Text('¿Practica algún deporte?   No ',style: letterText12), 
                 pw.Container(
                   padding: const pw.EdgeInsets.all(2),
                   child: pw.Text(YesNotFunction(++radioButtonC, yestNotEnumArr, 2),style: letterText),
@@ -2941,7 +2943,7 @@ pdf.addPage(
                     )
                   ) 
                 ),
-                pw.Text(' Si ',style: letterText10), 
+                pw.Text(' Si ',style: letterText12), 
                 pw.Container(
                   padding: const pw.EdgeInsets.all(2),
                   child: pw.Text(YesNotFunction(radioButtonC, yestNotEnumArr, 1),style: letterText),
@@ -2951,20 +2953,20 @@ pdf.addPage(
                   ) 
                 ),
                 pw.Spacer(),
-                pw.Text(' ¿A cuál? ',style: letterText10), 
+                pw.Text(' ¿A cuál? ',style: letterText12), 
                 pw.Container(
                   padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
                   ) 
                 ),
                 pw.Spacer(),
-                pw.Text(' ¿Con qué frecuencia? ',style: letterText10), 
+                pw.Text(' ¿Con qué frecuencia? ',style: letterText12), 
                 pw.Container(
                   padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -2978,48 +2980,48 @@ pdf.addPage(
              */
             pw.Container(
               margin: const pw.EdgeInsets.only(top: 25, bottom: 4),
-              child: pw.Text('ANTECEDENTES GINECOLÓGICOS (SOLO SE APLICA A MUJERES)',style: letterText10),
+              child: pw.Text('ANTECEDENTES GINECOLÓGICOS (SOLO SE APLICA A MUJERES)',style: letterText12),
             ),
             pw.Row(
               children: [
-                pw.Text('Edad de su primera menstruación: ',style: letterText10), 
+                pw.Text('Edad de su primera menstruación: ',style: letterText12), 
                 pw.Container(
                   margin: null,
                   // padding:  const pw.EdgeInsets.all(2),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] != '0' ? multiInputArr[multiInputC] : ' ' : ' ' ,style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
                   ) 
                 ),
                 pw.Spacer(),
-                pw.Text('Edad de inicio de vida sexual: ',style: letterText10), 
+                pw.Text('Edad de inicio de vida sexual: ',style: letterText12), 
                 pw.Container(
                   margin: const pw.EdgeInsets.all(3),
                   // padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] != '0' ? multiInputArr[multiInputC] : ' ' : ' ',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
                   ) 
                 ),
                 pw.Spacer(),
-                pw.Text('Número de Embarazos: ',style: letterText10), 
+                pw.Text('Número de Embarazos: ',style: letterText12), 
                 pw.Container(
                   margin: const pw.EdgeInsets.all(3),
                   // padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] != '0' ? multiInputArr[multiInputC] : ' ' : ' ',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
                   ) 
                 ),
                 pw.Spacer(),
-                pw.Text('Partos: ',style: letterText10), 
+                pw.Text('Partos: ',style: letterText12), 
                 pw.Container(
                   margin: const pw.EdgeInsets.all(3),
                   // padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] != '0' ? multiInputArr[multiInputC] : ' ' : ' ',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -3029,44 +3031,44 @@ pdf.addPage(
             ),
             pw.Row(
               children: [
-                pw.Text('Cesáreas: ',style: letterText10), 
+                pw.Text('Cesáreas: ',style: letterText12), 
                 pw.Container(
                   margin: const pw.EdgeInsets.all(3),
                   // padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] != '0' ? multiInputArr[multiInputC] : ' ' : ' ',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
                   ) 
                 ),
                 pw.Spacer(),
-                pw.Text('Abortos: ',style: letterText10), 
+                pw.Text('Abortos: ',style: letterText12), 
                 pw.Container(
                   margin: const pw.EdgeInsets.all(3),
                   // padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] != '0' ? multiInputArr[multiInputC] : ' ' : ' ',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
                   ) 
                 ),
                 pw.Spacer(),
-                pw.Text('Fecha de Ultima Regla: ',style: letterText10), 
+                pw.Text('Fecha de Ultima Regla: ',style: letterText12), 
                 pw.Container(
                   margin: const pw.EdgeInsets.all(3),
                   // padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] != '0000-00-00' ? multiInputArr[multiInputC] : ' ' : ' ',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
                   ) 
                 ),
                 pw.Spacer(),
-                pw.Text('Ritmo: ',style: letterText10), 
+                pw.Text('Ritmo: ',style: letterText12), 
                 pw.Container(
                   margin: const pw.EdgeInsets.all(3),
                   // padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -3076,55 +3078,55 @@ pdf.addPage(
             ),
             pw.Row(
               children: [
-                pw.Text('Método anticonceptivo actual: Pastillas: ',style: letterText10), 
+                pw.Text('Método anticonceptivo actual: Pastillas: ',style: letterText12), 
                 pw.Container(
                   margin: const pw.EdgeInsets.all(3),
                   // padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(methodAnti == 1 ? 'X' : '',style: letterText10),
+                  child: pw.Text(methodAnti == 1 ? 'X' : '',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
                   ) 
                 ),
                 pw.Spacer(),
-                pw.Text('Dispositivo: ',style: letterText10), 
+                pw.Text('Dispositivo: ',style: letterText12), 
                 pw.Container(
                   margin: const pw.EdgeInsets.all(3),
                   // padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(methodAnti == 2 ? 'X' : '',style: letterText10),
+                  child: pw.Text(methodAnti == 2 ? 'X' : '',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
                   ) 
                 ),
                 pw.Spacer(),
-                pw.Text('Condón: ',style: letterText10), 
+                pw.Text('Condón: ',style: letterText12), 
                 pw.Container(
                   margin: const pw.EdgeInsets.all(3),
                   // padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(methodAnti == 3 ? 'X' : '',style: letterText10),
+                  child: pw.Text(methodAnti == 3 ? 'X' : '',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
                   ) 
                 ),
                 pw.Spacer(),
-                pw.Text('OTB: ',style: letterText10), 
+                pw.Text('OTB: ',style: letterText12), 
                 pw.Container(
                   margin: const pw.EdgeInsets.all(3),
                   // padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(methodAnti == 4 ? 'X' : '',style: letterText10),
+                  child: pw.Text(methodAnti == 4 ? 'X' : '',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
                   ) 
                 ),
                 pw.Spacer(),
-                pw.Text('Inyección: ',style: letterText10), 
+                pw.Text('Inyección: ',style: letterText12), 
                 pw.Container(
                   margin: const pw.EdgeInsets.all(3),
                   // padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(methodAnti == 5 ? 'X' : '',style: letterText10),
+                  child: pw.Text(methodAnti == 5 ? 'X' : '',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -3134,44 +3136,45 @@ pdf.addPage(
             ),
             pw.Row(
               children: [
-                pw.Text('Implante: ',style: letterText10), 
+                pw.Text('Implante: ',style: letterText12), 
                 pw.Container(
                   margin: const pw.EdgeInsets.all(3),
                   // padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(methodAnti == 6 ? 'X' : '',style: letterText10),
+                  child: pw.Text(methodAnti == 6 ? 'X' : '',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
                   ) 
                 ),
                 pw.Spacer(),
-                pw.Text('Fecha de Último Papanicolaou: ',style: letterText10), 
+                pw.Text('Fecha de Último Papanicolaou: ',style: letterText12), 
                 pw.Container(
                   margin: const pw.EdgeInsets.all(3),
                   // padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] != '0000-00-00' ? multiInputArr[multiInputC] : ' ' : ' ',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
                   ) 
                 ),
                 pw.Spacer(),
-                pw.Text('Resultado: ',style: letterText10), 
+                pw.Text('Resultado: ',style: letterText12), 
                 pw.Container(
+                  width: 50,
                   margin: const pw.EdgeInsets.all(3),
                   // padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
                   ) 
                 ),
                 pw.Spacer(),
-                pw.Text('Fecha de Mamografía: ',style: letterText10), 
+                pw.Text('Fecha de Mamografía: ',style: letterText12), 
                 pw.Container(
                   margin: const pw.EdgeInsets.all(3),
                   // padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] != '0000-00-00' ? multiInputArr[multiInputC] : ' ' : ' ',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -3181,22 +3184,23 @@ pdf.addPage(
             ),
             pw.Row(
               children: [
-                pw.Text('Resultado: ',style: letterText10), 
+                pw.Text('Resultado: ',style: letterText12), 
                 pw.Container(
+                  width: 100,
                   margin: const pw.EdgeInsets.all(3),
                   // padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
                   ) 
                 ),
                 pw.SizedBox(width: PdfPageFormat.letter.width * 0.025),
-                pw.Text('Lactancia: ',style: letterText10), 
+                pw.Text('Lactancia: ',style: letterText12), 
                 pw.Container(
                   margin: const pw.EdgeInsets.all(3),
                   // padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -3216,11 +3220,11 @@ pdf.addPage(
               children: [
                 pw.Container(
                   padding: const pw.EdgeInsets.only(bottom: 10, top: 13),
-                  child: pw.Text('5.2.-ANTECEDENTES PERSONALES PATOLÓGICOS',style: letterText10)
+                  child: pw.Text('5.2.-ANTECEDENTES PERSONALES PATOLÓGICOS',style: letterText12)
                 ),
                 pw.Container(
                   padding: const pw.EdgeInsets.only(bottom: 10),
-                  child: pw.Text('Marque SI o NO con una X al lado de cualquiera de las siguientes enfermedades que usted haya padecido o padezca',style: letterText10)
+                  child: pw.Text('Marque SI o NO con una X al lado de cualquiera de las siguientes enfermedades que usted haya padecido o padezca',style: letterText12)
                 ),
                 pw.Row(
                   children: [
@@ -3654,57 +3658,57 @@ pdf.addPage(
               children: [
                 pw.Row(
                 children: [
-                  pw.Text('Hospitalizaciones:   No ',style: letterText10), 
+                  pw.Text('Hospitalizaciones:   No ',style: letterText12), 
                   pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(YesNotFunction(++radioButtonC, yestNotEnumArr, 2),style: letterText10),
+                    child: pw.Text(YesNotFunction(++radioButtonC, yestNotEnumArr, 2),style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                       )
                     ) 
                   ),
-                  pw.Text(' Si ',style: letterText10), 
+                  pw.Text(' Si ',style: letterText12), 
                   pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(YesNotFunction(radioButtonC, yestNotEnumArr, 1),style: letterText10),
-                      decoration: pw.BoxDecoration(
-                        border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
-                      )
-                    ) 
-                  ),
-                  pw.Spacer(),
-                  pw.Text('Motivo: ',style: letterText10), 
-                  pw.Container(
-                    padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                    child: pw.Text(YesNotFunction(radioButtonC, yestNotEnumArr, 1),style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                       )
                     ) 
                   ),
                   pw.Spacer(),
-                  pw.Text('Cirugías   No ',style: letterText10), 
+                  pw.Text('Motivo: ',style: letterText12), 
                   pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(YesNotFunction(++radioButtonC, yestNotEnumArr, 2),style: letterText10),
+                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                       )
                     ) 
                   ),
-                  pw.Text(' Si ',style: letterText10), 
+                  pw.Spacer(),
+                  pw.Text('Cirugías   No ',style: letterText12), 
                   pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(YesNotFunction(radioButtonC, yestNotEnumArr, 1),style: letterText10),
+                    child: pw.Text(YesNotFunction(++radioButtonC, yestNotEnumArr, 2),style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                       )
                     ) 
                   ),
-                  pw.Text(' ¿Cuál? ',style: letterText10), 
+                  pw.Text(' Si ',style: letterText12), 
                   pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                    child: pw.Text(YesNotFunction(radioButtonC, yestNotEnumArr, 1),style: letterText12),
+                      decoration: pw.BoxDecoration(
+                        border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
+                      )
+                    ) 
+                  ),
+                  pw.Text(' ¿Cuál? ',style: letterText12), 
+                  pw.Container(
+                    padding: const pw.EdgeInsets.all(2),
+                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                       )
@@ -3714,48 +3718,48 @@ pdf.addPage(
               ),
               pw.Row(
                 children: [
-                  pw.Text('Transfusiones:   No ',style: letterText10), 
+                  pw.Text('Transfusiones:   No ',style: letterText12), 
                   pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(YesNotFunction(++radioButtonC, yestNotEnumArr, 2),style: letterText10),
+                    child: pw.Text(YesNotFunction(++radioButtonC, yestNotEnumArr, 2),style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                       )
                     ) 
                   ),
-                  pw.Text(' Si ',style: letterText10), 
+                  pw.Text(' Si ',style: letterText12), 
                   pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(YesNotFunction(radioButtonC, yestNotEnumArr, 1),style: letterText10),
-                      decoration: pw.BoxDecoration(
-                        border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
-                      )
-                    ) 
-                  ),
-                  pw.Spacer(),
-                  pw.Text('Motivo: ',style: letterText10), 
-                  pw.Container(
-                    padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                    child: pw.Text(YesNotFunction(radioButtonC, yestNotEnumArr, 1),style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                       )
                     ) 
                   ),
                   pw.Spacer(),
-                  pw.Text('Traumatismos y Fracturas   No ',style: letterText10), 
+                  pw.Text('Motivo: ',style: letterText12), 
                   pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(YesNotFunction(++radioButtonC, yestNotEnumArr, 2),style: letterText10),
+                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                       )
                     ) 
                   ),
-                  pw.Text(' Si ',style: letterText10), 
+                  pw.Spacer(),
+                  pw.Text('Traumatismos y Fracturas   No ',style: letterText12), 
                   pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(YesNotFunction(radioButtonC, yestNotEnumArr, 1),style: letterText10),
+                    child: pw.Text(YesNotFunction(++radioButtonC, yestNotEnumArr, 2),style: letterText12),
+                      decoration: pw.BoxDecoration(
+                        border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
+                      )
+                    ) 
+                  ),
+                  pw.Text(' Si ',style: letterText12), 
+                  pw.Container(
+                    padding: const pw.EdgeInsets.all(2),
+                    child: pw.Text(YesNotFunction(radioButtonC, yestNotEnumArr, 1),style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                       )
@@ -3765,38 +3769,39 @@ pdf.addPage(
               ),
               pw.Row(
                 children: [
-                  pw.Text('Parte del cuerpo: ',style: letterText10),                 
+                  pw.Text('Parte del cuerpo: ',style: letterText12),                 
                   pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                       )
                     ) 
                   ),
                   pw.Spacer(),
-                  pw.Text('Complicaciones: No ',style: letterText10), 
+                  pw.Text('Complicaciones: No ',style: letterText12), 
                   pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(YesNotFunction(++radioButtonC, yestNotEnumArr, 2),style: letterText10),
+                    child: pw.Text(YesNotFunction(++radioButtonC, yestNotEnumArr, 2),style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                       )
                     ) 
                   ),
-                  pw.Text(' Si ',style: letterText10), 
+                  pw.Text(' Si ',style: letterText12), 
                   pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(YesNotFunction(radioButtonC, yestNotEnumArr, 1),style: letterText10),
+                    child: pw.Text(YesNotFunction(radioButtonC, yestNotEnumArr, 1),style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                       )
                     ) 
                   ),
-                  pw.Text(' ¿Cuál? ',style: letterText10), 
+                  pw.Text(' ¿Cuál? ',style: letterText12), 
                   pw.Container(
+                  width: 200,
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                       )
@@ -3806,38 +3811,38 @@ pdf.addPage(
               ),
               pw.Row(
                 children: [
-                  pw.Text('Enfermedades crónicas:   No ',style: letterText10), 
+                  pw.Text('Enfermedades crónicas:   No ',style: letterText12), 
                   pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(YesNotFunction(++radioButtonC, yestNotEnumArr, 2),style: letterText10),
+                    child: pw.Text(YesNotFunction(++radioButtonC, yestNotEnumArr, 2),style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                       )
                     ) 
                   ),
-                  pw.Text(' Si ',style: letterText10), 
+                  pw.Text(' Si ',style: letterText12), 
                   pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(YesNotFunction(radioButtonC, yestNotEnumArr, 1),style: letterText10),
+                    child: pw.Text(YesNotFunction(radioButtonC, yestNotEnumArr, 1),style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                       )
                     ) 
                   ),
                   pw.Spacer(),
-                  pw.Text('¿Cuál?: ',style: letterText10), 
+                  pw.Text('¿Cuál?: ',style: letterText12), 
                   pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                       )
                     ) 
                   ),
-                  pw.Text(' Tratamiento actual ',style: letterText10), 
+                  pw.Text(' Tratamiento actual ',style: letterText12), 
                   pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                    child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                       )
@@ -3885,11 +3890,11 @@ pdf.addPage(
               children: [
                 pw.TextSpan(
                   text: 'Estoy consciente que todo lo que manifiesto es verídico y se me apercibe que de lo contrario se me aplicará lo estipulado por el Artículo 47 de la Ley Federal del Trabajo, que a la letra dice: Artículo 47.-',
-                  style: pw.TextStyle(fontSize: 7, fontWeight: pw.FontWeight.bold),
+                  style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold),
                 ),
                 const pw.TextSpan(
                   text: ' Son causas de rescisión de la relación de trabajo, sin responsabilidad para el patrón: I. Engañarlo el trabajador o en su caso, el sindicato que lo hubiese propuesto o recomendado con certificados falsos o referencias en los que se atribuyan al trabajador capacidad, aptitudes o facultades de que carezca.',
-                  style: pw.TextStyle(fontSize: 7)
+                  style: pw.TextStyle(fontSize: 9)
                 ),
               ],
             ),
@@ -3942,7 +3947,7 @@ pdf.addPage(
                 pw.Container(
                   width: 500,
                   padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -3963,7 +3968,7 @@ pdf.addPage(
                 pw.Container(
                   width: 500,
                   padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -3978,7 +3983,7 @@ pdf.addPage(
                 pw.Container(
                   width: 460,
                   padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -3993,7 +3998,7 @@ pdf.addPage(
                 pw.Container(
                   width: 475,
                   padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -4008,7 +4013,7 @@ pdf.addPage(
                 pw.Container(
                   width: 450,
                   padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -4023,7 +4028,7 @@ pdf.addPage(
                 pw.Container(
                   width: 420,
                   padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -4038,7 +4043,7 @@ pdf.addPage(
                   pw.Container(
                   width: 500,
                   padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -4061,8 +4066,9 @@ pdf.addPage(
                 children:[
                   pw.Text('T/A ', style: letterText),
                   pw.Container(
+                  width: 30,
                   padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] != '0' ? multiInputArr[multiInputC] : ' ' : ' ',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                       )
@@ -4077,8 +4083,9 @@ pdf.addPage(
                   pw.Text('mmhg  ', style: letterText),
                   pw.Text('F/C ', style: letterText),
                   pw.Container(
+                  width: 30,
                   padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] != '0' ? multiInputArr[multiInputC] : ' ' : ' ',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                       )
@@ -4086,8 +4093,9 @@ pdf.addPage(
                   ),
                   pw.Text('  Peso ', style: letterText),
                  pw.Container(
+                  width: 30,
                   padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] != '0' ? multiInputArr[multiInputC] : ' ' : ' ',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                       )
@@ -4096,8 +4104,9 @@ pdf.addPage(
                   pw.Text('Kg ', style: letterText),
                   pw.Text(' Talla ', style: letterText),
                   pw.Container(
+                  width: 30,
                   padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] != '0' ? multiInputArr[multiInputC] : ' ' : ' ',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                       )
@@ -4106,8 +4115,9 @@ pdf.addPage(
                   pw.Text('cm  ', style: letterText),
                   pw.Text('P.abd ', style: letterText),
                   pw.Container(
+                  width: 30,
                   padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                       )
@@ -4115,8 +4125,9 @@ pdf.addPage(
                   ),
                   pw.Text(' F/R ', style: letterText),
                   pw.Container(
+                  width: 30,
                   padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                       )
@@ -4124,8 +4135,9 @@ pdf.addPage(
                   ),
                   pw.Text(' Temp. ', style: letterText),
                   pw.Container(
+                  width: 30,
                   padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                       )
@@ -4133,8 +4145,9 @@ pdf.addPage(
                   ),
                   pw.Text(' I.M.C. ', style: letterText),
                   pw.Container(
+                  width: 30,
                   padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                       )
@@ -4177,7 +4190,7 @@ pdf.addPage(
                     pw.Text('OD JAEGUER J', style: letterText12),
                     pw.Container(
                       padding: const pw.EdgeInsets.all(2),
-                      child: pw.Text(multiInputArr != null ? multiInputArr[130] : ' ',style: letterText10),
+                      child: pw.Text(multiInputArr != null ? multiInputArr[130] : ' ',style: letterText12),
                         decoration: pw.BoxDecoration(
                           border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
@@ -4187,7 +4200,7 @@ pdf.addPage(
                     pw.Text('OD ROSENBAUN 20/', style: letterText12),
                     pw.Container(
                       padding: const pw.EdgeInsets.all(2),
-                      child: pw.Text(multiInputArr != null ? multiInputArr[128] : ' ',style: letterText10),
+                      child: pw.Text(multiInputArr != null ? multiInputArr[128] : ' ',style: letterText12),
                         decoration: pw.BoxDecoration(
                           border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
@@ -4201,7 +4214,7 @@ pdf.addPage(
                     pw.Text('LENTES SI ', style: letterText12),
                     pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(YesNotFunction(++radioButtonC, yestNotEnumArr, 1),style: letterText10),
+                    child: pw.Text(YesNotFunction(++radioButtonC, yestNotEnumArr, 1),style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                       )
@@ -4210,7 +4223,7 @@ pdf.addPage(
                     pw.Text('NO ', style: letterText12),
                     pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(YesNotFunction(radioButtonC, yestNotEnumArr, 2),style: letterText10),
+                    child: pw.Text(YesNotFunction(radioButtonC, yestNotEnumArr, 2),style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                       )
@@ -4220,7 +4233,7 @@ pdf.addPage(
                     pw.Text('OI JAEGUER J', style: letterText12),   
                     pw.Container(
                       padding: const pw.EdgeInsets.all(2),
-                      child: pw.Text(multiInputArr != null ? multiInputArr[131] : ' ',style: letterText10),
+                      child: pw.Text(multiInputArr != null ? multiInputArr[131] : ' ',style: letterText12),
                         decoration: pw.BoxDecoration(
                           border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
@@ -4230,7 +4243,7 @@ pdf.addPage(
                     pw.Text('OI ROSENBAUN 20/', style: letterText12),
                     pw.Container(
                       padding: const pw.EdgeInsets.all(2),
-                      child: pw.Text(multiInputArr != null ? multiInputArr[129] : ' ',style: letterText10),
+                      child: pw.Text(multiInputArr != null ? multiInputArr[129] : ' ',style: letterText12),
                         decoration: pw.BoxDecoration(
                           border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
@@ -4244,7 +4257,7 @@ pdf.addPage(
                     pw.Text('DE LEJOS SNELLEN OD 20/', style: letterText12),
                     pw.Container(
                       padding: const pw.EdgeInsets.all(2),
-                      child: pw.Text(multiInputArr != null ? multiInputArr[132] : ' ',style: letterText10),
+                      child: pw.Text(multiInputArr != null ? multiInputArr[132] : ' ',style: letterText12),
                         decoration: pw.BoxDecoration(
                           border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
@@ -4253,7 +4266,7 @@ pdf.addPage(
                     pw.Text('OI 20/', style: letterText12),
                     pw.Container(
                       padding: const pw.EdgeInsets.all(2),
-                      child: pw.Text(multiInputArr != null ? multiInputArr[133] : ' ',style: letterText10),
+                      child: pw.Text(multiInputArr != null ? multiInputArr[133] : ' ',style: letterText12),
                         decoration: pw.BoxDecoration(
                           border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
@@ -4267,7 +4280,7 @@ pdf.addPage(
                     pw.Text(' SI ', style: letterText12),
                     pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(YesNotFunction(++radioButtonC, yestNotEnumArr, 1),style: letterText10),
+                    child: pw.Text(YesNotFunction(++radioButtonC, yestNotEnumArr, 1),style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                       )
@@ -4276,7 +4289,7 @@ pdf.addPage(
                     pw.Text(' NO ', style: letterText12),
                     pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(YesNotFunction(radioButtonC, yestNotEnumArr, 2 ),style: letterText10),
+                    child: pw.Text(YesNotFunction(radioButtonC, yestNotEnumArr, 2 ),style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                       )
@@ -4290,7 +4303,7 @@ pdf.addPage(
                     pw.Text(' OD ', style: letterText12),
                     pw.Container(
                       padding: const pw.EdgeInsets.all(2),
-                      child: pw.Text(multiInputArr != null ? multiInputArr[ 134 ] : ' ',style: letterText10),
+                      child: pw.Text(multiInputArr != null ? multiInputArr[ 134 ] : ' ',style: letterText12),
                         decoration: pw.BoxDecoration(
                           border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
@@ -4299,7 +4312,7 @@ pdf.addPage(
                     pw.Text(' OI ', style: letterText12),
                     pw.Container(
                       padding: const pw.EdgeInsets.all(2),
-                      child: pw.Text(multiInputArr != null ? multiInputArr[135] : ' ',style: letterText10),
+                      child: pw.Text(multiInputArr != null ? multiInputArr[135] : ' ',style: letterText12),
                         decoration: pw.BoxDecoration(
                           border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
@@ -4308,7 +4321,7 @@ pdf.addPage(
                     pw.Text(' COLOR ', style: letterText12),
                     pw.Container(
                       padding: const pw.EdgeInsets.all(2),
-                      child: pw.Text(multiInputArr != null ? multiInputArr[multiInputC = 136] : ' ',style: letterText10),
+                      child: pw.Text(multiInputArr != null ? multiInputArr[multiInputC = 136] : ' ',style: letterText12),
                         decoration: pw.BoxDecoration(
                           border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
@@ -4323,7 +4336,7 @@ pdf.addPage(
                     pw.Text(' SI ', style: letterText12),
                     pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(YesNotFunction(++radioButtonC, yestNotEnumArr, 1),style: letterText10),
+                    child: pw.Text(YesNotFunction(++radioButtonC, yestNotEnumArr, 1),style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                       )
@@ -4332,7 +4345,7 @@ pdf.addPage(
                     pw.Text(' NO ', style: letterText12),
                     pw.Container(
                     padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(YesNotFunction(radioButtonC, yestNotEnumArr, 2),style: letterText10),
+                    child: pw.Text(YesNotFunction(radioButtonC, yestNotEnumArr, 2),style: letterText12),
                       decoration: pw.BoxDecoration(
                         border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                       )
@@ -4357,7 +4370,7 @@ pdf.addPage(
                     pw.Container(
                       width: 420,
                       padding: const pw.EdgeInsets.all(2),
-                      child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                      child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                         decoration: pw.BoxDecoration(
                           border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
@@ -4377,7 +4390,7 @@ pdf.addPage(
                     pw.Container(
                       width: 420,
                       padding: const pw.EdgeInsets.all(2),
-                      child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                      child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                         decoration: pw.BoxDecoration(
                           border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                         )
@@ -4409,7 +4422,7 @@ pdf.addPage(
                 pw.Container(
                   width: 400,
                   padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -4422,7 +4435,7 @@ pdf.addPage(
                 pw.Container(
                   width: 400,
                   padding: const pw.EdgeInsets.all(2),
-                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                  child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                     decoration: pw.BoxDecoration(
                       border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                     )
@@ -4464,7 +4477,7 @@ pdf.addPage(
               pw.Container(
                 width: 80,
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText10),
+                child: pw.Text(multiInputArr != null ? multiInputArr[++multiInputC] : ' ',style: letterText12),
                   decoration: pw.BoxDecoration(
                     border: pw.Border(bottom: pw.BorderSide(width: widthLineTable, color: PdfColors.black), 
                   )
@@ -4507,7 +4520,7 @@ pdf.addPage(
               crossAxisAlignment: pw.CrossAxisAlignment.start,
               mainAxisAlignment: pw.MainAxisAlignment.start,
               children: [
-                pw.Text('CONDICIONES Y OBSERVACIONES', style: letterText10),
+                pw.Text('CONDICIONES Y OBSERVACIONES', style: letterText12),
                 pw.Container(
                   width: 570,
                   padding: const pw.EdgeInsets.all(2),
@@ -4544,8 +4557,8 @@ pdf.addPage(
                         height: 50.0,
                         child : pw.Image( pw.MemoryImage(transformationImage(multiInputArr != null? multiInputArr[144] : ''))),
                       ),
-                      pw.Text('_______________________________',style:letterText10),
-                      pw.Text('Firma de Aspirante',style:letterText10)
+                      pw.Text('_______________________________',style:letterText12),
+                      pw.Text('Firma de Aspirante',style:letterText12)
                     ]
                   )
                 ), 
@@ -4559,8 +4572,8 @@ pdf.addPage(
                         height: 50.0,
                         child : pw.Image( pw.MemoryImage(transformationImage(multiInputArr != null? multiInputArr[145] : ''))),
                       ),
-                      pw.Text('_______________________________',style:letterText10),
-                      pw.Text('Nombre, Firma y Ced. Prof. del Médico\nDr. Alfredo Gruel Culebro',style:letterText10)
+                      pw.Text('_______________________________',style:letterText12),
+                      pw.Text('Nombre, Firma y Ced. Prof. del Médico\nDr. Alfredo Gruel Culebro',style:letterText12)
                     ]
                   )
                 ),

@@ -26,11 +26,14 @@ final int btnPosition;
 final int control;
 final TextEditingController? controller;
 final List<Map<String,dynamic>>? listSelectForm;
+final String? thirdButton;
+
 const ButtonForm({
 super.key,
 required this.textButton,
 required this.btnPosition,
 this.listSelect,
+this.thirdButton,
 required this.field,
 required this.formValue,
 required this.enabled, 
@@ -51,6 +54,9 @@ final storage = FlutterSecureStorage();
 Widget build(BuildContext context) {
 double responsivePadding = MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.width * 0.02 : MediaQuery.of(context).size.height * 0.02;
 
+
+
+
 return SizedBox(
     width: MediaQuery.of(context).size.width,
     child: ElevatedButton(
@@ -67,8 +73,20 @@ return SizedBox(
           //de otra forma se desactivan los otros 4 botones (en este caso solo se desactivan 2 botones, porqe los otros dos, no pertencen a esta clase)
           ((Provider.of<VarProvider>(context, listen: false).varControl || widget.enabled)
               ? ()  {
-                
-                  newMethod(context, widget.formValue, widget.btnPosition);
+                List<Widget> inputFields = [];
+                                final Map<String, MultiInputsForm> formValuesBuscar = {
+                  'search' : MultiInputsForm(contenido: '')
+                };
+
+                //vars para el touch paint  
+                final sign0 = GlobalKey<SignatureState>();
+                ByteData img = ByteData(0);
+                SignatureState? sign;
+
+                final GlobalKey<FormState> myFormKey = GlobalKey<FormState>();
+
+                int i = 2;
+                newMethod(context, widget.formValue, widget.btnPosition, inputFields, formValuesBuscar, sign0, img, sign, myFormKey,i);
                 }
               : null),
       child: Padding(
@@ -81,17 +99,26 @@ return SizedBox(
   }
 
 
+List<int> generateUniqueRandomNumbers(int count, int min, int max) {
+  if (count > (max - min + 1)) {
+    throw ArgumentError("Count must be less than or equal to the range of unique numbers.");
+  }
+
+  List<int> numbers = List.generate(max - min + 1, (index) => min + index);
+  numbers.shuffle();
+
+  return numbers.sublist(0, count);
+}
+
 Future<String?> newMethod(BuildContext context,
-Map<String, MultiInputsForm> formValue, int btnPosition) {
+Map<String, MultiInputsForm> formValue, int btnPosition, List<Widget> inputFields,
+Map<String, MultiInputsForm>formValuesBuscar,  
+GlobalKey<SignatureState> sign0,  
+ByteData img, 
+SignatureState?sign,  
+GlobalKey<FormState>myFormKey,  
+int  i) {
 
-//vars para el touch paint  
-final sign0 = GlobalKey<SignatureState>();
-ByteData img = ByteData(0);
-SignatureState? sign;
-
-final GlobalKey<FormState> myFormKey = GlobalKey<FormState>();
-List<Widget> inputFields = [];
-int i = 2;
 
 onFormValueChange(dynamic value,List<String> keyValue) {
   int ivalue = 0;
@@ -741,14 +768,14 @@ return showDialog<String>(
                             context: context,
                             builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: const Text('Mensaje'),
-                                  content: const Text('No tiene empleados registrados'),
+                                  title: Text('Mensaje',style: getTextStyleText(context,FontWeight.bold,null)),
+                                  content: Text('No tiene empleados registrados', style: getTextStyleText(context,null,null)),
                                   actions: [
                                     ElevatedButton(
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
-                                      child: Text('Aceptar',style: getTextStyleButtonField(context)),
+                                      child: Text('Aceptar', style: getTextStyleButtonField(context)),
                                     ),
                                   ],
                                 );
@@ -906,12 +933,11 @@ return showDialog<String>(
                           DateExcelAssistance de = DateExcelAssistance();
                           de.dateStart = formValue['date_start_hour']!.contenido!; 
                           de.dateFinal = formValue['date_final_hour']!.contenido!;
-                          de.course_name = formValue['course_name']!.contenido!.toString().split('-')[0].trim();
+                          de.course_name = formValue['course_name']!.contenido!;
                           de.local = (await storage.read(key: 'idHotelRegister')).toString();
-                          
+                          de.personal = formValue['group']!.contenido!;
                           List<Map<String, dynamic>> jsonStr = await aService.selectDateAssistance(de, context);
                           List<Map<String, dynamic>> jsonStrObs = await aService.selectDateAssistanceObservations(de, context);
-                       
                             if (jsonStr.isNotEmpty) {
                               DateTime now = DateTime.now();
                               String formattedDate = DateFormat('yyyyMMddss').format(now);
@@ -938,14 +964,14 @@ return showDialog<String>(
                             context: context,
                             builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: const Text('Mensaje'),
-                                  content: const Text('No tiene empleados registrados'),
+                                  title: Text('Mensaje',style: getTextStyleText(context,FontWeight.bold,null)),
+                                  content: Text('No tiene empleados registrados', style: getTextStyleText(context,null,null)),
                                   actions: [
                                     ElevatedButton(
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
-                                      child: Text('Aceptar',style: getTextStyleButtonField(context)),
+                                      child: Text('Aceptar', style: getTextStyleButtonField(context)),
                                     ),
                                   ],
                                 );
@@ -979,6 +1005,113 @@ return showDialog<String>(
                   }:null,
                   child: Text(widget.field[1],style: getTextStyleButtonField(context)),
                 ),
+                if(widget.thirdButton != null)
+                ElevatedButton(
+                  onPressed: () async { 
+                    if (myFormKey.currentState!.validate()){
+                      AssistanceService aService = AssistanceService();
+                      DateExcelAssistance de = DateExcelAssistance();
+                      de.dateStart = formValue['date_start_hour']!.contenido!; 
+                      de.dateFinal = formValue['date_final_hour']!.contenido!;
+                      de.course_name = formValue['course_name']!.contenido!;
+                      de.local = (await storage.read(key: 'idHotelRegister')).toString();
+                      de.personal = formValue['group']!.contenido!;
+                      List<Map<String, dynamic>> jsonStr = await aService.selectDateAssistance(de, context);
+                     if (jsonStr.isNotEmpty) {
+                        showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                            return AlertDialog(
+                              contentPadding: const EdgeInsets.all(10.0), // Adjust the padding as needed
+                              title:  Text('Rifa',style: getTextStyleText(context,FontWeight.bold,null)),
+                              content: SizedBox(
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    children: [
+                                      Text('Hay aproximadamente ${jsonStr.length} empleados', style: getTextStyleText(context,null,null)),
+                                      Text('¿Cuantos ganadores desea obtener?', style: getTextStyleText(context,null,null)),
+                                      MultiInputs(formProperty: 'search', formValue: formValuesBuscar, maxLines: 1, autofocus: false, keyboardType: TextInputType.number,)
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              actions: [
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    if ( int.tryParse(formValuesBuscar['search']!.contenido.toString()) != null ) {
+                                      List<Map<String, dynamic>> jsonStrAux = [];
+                                      List<int> amount =  generateUniqueRandomNumbers(int.parse(formValuesBuscar['search']!.contenido.toString()),1,jsonStr.length);
+                                      for (var i = 0; i < amount.length; i++) {
+                                        jsonStrAux.add(jsonStr[amount[i]]);
+                                      }
+
+                                      DateTime now = DateTime.now();
+                                      String formattedDate = DateFormat('yyyyMMddss').format(now);
+                                      String fileName = ' assistencia_$formattedDate.xlsx';
+                                        await jsonToExcel(
+                                        jsonStrAux,
+                                        ["Numero de empleado", "Nombre completo", "Nombre del curso", "Horario", "Hora y Fecha de asistencia"], 
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        3,
+                                        fileName, 
+                                        context);  
+                                      Navigator.pop(context);
+                                    } 
+                                    
+                                  },
+                                  child: Text('Descargar ganadores',style: getTextStyleButtonField(context)),
+                                )
+                              ],
+                            );
+                        });
+                        }else{
+                        setState((){
+                          desactivarButton = false;
+                        });
+                          showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Mensaje',style: getTextStyleText(context,FontWeight.bold,null)),
+                              content: Text('No tiene empleados registrados', style: getTextStyleText(context,null,null)),
+                              actions: [
+                                ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text('Aceptar', style: getTextStyleButtonField(context)),
+                                ),
+                              ],
+                            );
+                        });
+                        }
+                    } else{
+                      setState((){
+                        desactivarButton = false;
+                      });
+                      showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Mensaje',style: getTextStyleText(context,FontWeight.bold,null)),
+                            content: Text('Por favor llene los campos necesarios', style: getTextStyleText(context,null,null),),
+                            actions: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text('Aceptar',style: getTextStyleButtonField(context)),
+                              ),
+                            ],
+                          );
+                      });
+                    }
+                  },
+                  child: Text(widget.thirdButton!,style: getTextStyleButtonField(context)),
+                )
               ],
             ),
           ),
