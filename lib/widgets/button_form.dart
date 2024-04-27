@@ -890,7 +890,11 @@ return showDialog<String>(
                           TurnAssistance t= TurnAssistance();
                           t.description = formValue['descriptionAssistance']!.contenido;
                           if(await aService.postObvAssistance(t,context)){
+                            
+                          formValue.forEach((key, value) { value.contenido = ''; });
                           Navigator.pop(context);
+                          setState((){});
+
                           }else{
                           setState((){
                             desactivarButton = false;
@@ -912,6 +916,8 @@ return showDialog<String>(
                           });
 
                           if(await aService.postRegisterAssistance(r,context)){
+                          formValue.forEach((key, value) { value.contenido = ''; });
+                          setState((){});  
                           Navigator.pop(context);
                            ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('Empleado registrado'),backgroundColor: Colors.green),
