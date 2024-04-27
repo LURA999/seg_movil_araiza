@@ -50,12 +50,10 @@ class _ButtonFormState extends State<ButtonForm> {
 final List<TextEditingController> controllerArr = []; 
 final storage = FlutterSecureStorage();
 
+
 @override
 Widget build(BuildContext context) {
 double responsivePadding = MediaQuery.of(context).orientation == Orientation.portrait ? MediaQuery.of(context).size.width * 0.02 : MediaQuery.of(context).size.height * 0.02;
-
-
-
 
 return SizedBox(
     width: MediaQuery.of(context).size.width,
@@ -470,7 +468,6 @@ return showDialog<String>(
                               de.dateFinal = formValue['date_final_hour']!.contenido!;
                               de.turn = formValue['turn']!.contenido!;
                               de.guard = formValue['guard']!.contenido;
-                              
                               List<Map<String, dynamic>> jsonStr = await vService.selectDateVehicle(de,context);
                               List<Map<String, dynamic>> jsonStrObs = await vService.selectObsVehicle(de,context);
                               List<Map<String, dynamic>> dataGuard = await vService.dataGuard(de.guard!,context);
@@ -756,6 +753,8 @@ return showDialog<String>(
                                 2,
                                 fileName, 
                                 context);  
+                            
+                            formValue.forEach((key, value) { value.contenido = ''; });
                             Navigator.pop(context);
                             setState((){
                               desactivarButton = false;
@@ -935,7 +934,7 @@ return showDialog<String>(
                           de.dateFinal = formValue['date_final_hour']!.contenido!;
                           de.course_name = formValue['course_name']!.contenido!;
                           de.local = (await storage.read(key: 'idHotelRegister')).toString();
-                          de.personal = formValue['group']!.contenido!;
+                          de.personal = formValue['group']!.contenido!;                          
                           List<Map<String, dynamic>> jsonStr = await aService.selectDateAssistance(de, context);
                           List<Map<String, dynamic>> jsonStrObs = await aService.selectDateAssistanceObservations(de, context);
                             if (jsonStr.isNotEmpty) {
@@ -952,6 +951,7 @@ return showDialog<String>(
                                 3,
                                 fileName, 
                                 context);  
+                            formValue.forEach((key, value) { value.contenido = ''; });
                             Navigator.pop(context);
                             setState((){
                               desactivarButton = false;
@@ -1016,6 +1016,7 @@ return showDialog<String>(
                       de.course_name = formValue['course_name']!.contenido!;
                       de.local = (await storage.read(key: 'idHotelRegister')).toString();
                       de.personal = formValue['group']!.contenido!;
+
                       List<Map<String, dynamic>> jsonStr = await aService.selectDateAssistance(de, context);
                      if (jsonStr.isNotEmpty) {
                         showDialog(
@@ -1057,7 +1058,7 @@ return showDialog<String>(
                                         null,
                                         3,
                                         fileName, 
-                                        context);  
+                                        context); 
                                       Navigator.pop(context);
                                     } 
                                     

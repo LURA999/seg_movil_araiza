@@ -151,8 +151,16 @@ final ImagePicker _picker = ImagePicker();
         controller: widget.controller,
         style: getTextStyleText(context,null,null),
         format: format,
-        onChanged: ((value) => {
-          print(value)
+        onChanged: ((DateTime? date)  {
+          if (date != null && widget.formValue[widget.formProperty]!.activeClock == true) {
+              widget.formValue[widget.formProperty]!.contenido = DateFormat("yyyy-MM-dd HH:mm:ss").format(date);
+            } else {
+              if (date != null  && widget.formValue[widget.formProperty]!.activeClock == false) {
+                widget.formValue[widget.formProperty]!.contenido = DateFormat("yyyy-MM-dd").format(date);
+              }else{
+                widget.formValue[widget.formProperty]!.contenido = '';
+              }
+            } 
         }),
         validator: widget.formValue[widget.formProperty]!.obligatorio == true ? (value ) {
             if(value == null || value == ''){

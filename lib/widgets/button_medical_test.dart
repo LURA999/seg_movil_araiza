@@ -1547,10 +1547,12 @@ StatefulBuilder(
                           'Núm. de hijos'
                         ];
 
+                        
                         activado = clavesAComparar.any((clave) {
                           return (formpart1[1][clave] as MultiInputsForm).contenido!.toString() !=
                               formpartBackUp[1][clave].toString();
                         });
+                        
                         
                         if (activado) {
                           // print('actualizando segunda seccion');

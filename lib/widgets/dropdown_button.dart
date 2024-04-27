@@ -29,7 +29,7 @@ class _DropdownButtonWidgetState extends State<DropdownButtonWidget> {
 
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {      
     if (widget.type != 1) {
       widget.formValue[widget.formProperty]!.contenido = (list!.indexOf(dropdownValue!)+1).toString();
     }

@@ -12,7 +12,7 @@ class SehTourService extends ChangeNotifier{
 
   bool modoApk = kDebugMode?true:false; 
   bool isSaving = true;
-  late String link = modoApk?'https://www.comunicadosaraiza.com/movil_scan_api_prueba/API':'https://www.comunicadosaraiza.com/movil_scan_api_prueba2/API';
+  late String link = modoApk?'https://www.comunicadosaraiza.com/movil_scan_api_prueba2/API':'https://www.comunicadosaraiza.com/movil_scan_api_prueba2/API';
 
  Future<bool> postForm(List<int> answer,int formAB, BuildContext context) async {
     var connectivityResult = await (Connectivity().checkConnectivity());  

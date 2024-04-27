@@ -15,7 +15,7 @@ class ExamIniPreService extends ChangeNotifier{
 
   bool modoApk = kDebugMode?true:false; 
   bool isSaving = true;
-  late String link = modoApk?'https://www.comunicadosaraiza.com/movil_scan_api_prueba/API':'https://www.comunicadosaraiza.com/movil_scan_api_prueba2/API';
+  late String link = modoApk?'https://www.comunicadosaraiza.com/movil_scan_api_prueba2/API':'https://www.comunicadosaraiza.com/movil_scan_api_prueba2/API';
 
   final storage = FlutterSecureStorage();
 
@@ -1101,6 +1101,7 @@ try {
     decodedJson['idExam'] = idExam;
     // Codifica nuevamente el objeto Dart en JSON
     final nuevoJson = json.encode(decodedJson);
+
     var response = (await http.patch(url, body: nuevoJson,headers: {HttpHeaders.contentTypeHeader: "application/json"})).body;
     final result = AccessMap.fromJson(jsonDecode(response));
     if (result.status == 200) {
