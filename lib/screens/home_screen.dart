@@ -1,8 +1,11 @@
 import 'dart:ui';
 import 'package:app_seguimiento_movil/widgets/widgets.dart';
+import 'package:flutter/animation.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:app_seguimiento_movil/services/services.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import '../models/multi_inputs_model.dart';
@@ -230,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             Expanded(
-              child: Ink(
+              child: Container(
                 decoration: const BoxDecoration(
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(35),
@@ -250,7 +253,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         //para celulares
                         EdgeInsets.fromLTRB(
                             MediaQuery.of(context).size.width * .03,
-                            MediaQuery.of(context).size.height * .03,
+                            MediaQuery.of(context).size.height * .02,
                             MediaQuery.of(context).size.width * .03,
                             MediaQuery.of(context).size.height * .0,
                           )
@@ -258,7 +261,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         //para tablets
                         EdgeInsets.fromLTRB(
                             MediaQuery.of(context).size.width * .05,
-                            MediaQuery.of(context).size.height * .05,
+                            MediaQuery.of(context).size.height * .04,
                             MediaQuery.of(context).size.width * .05,
                             MediaQuery.of(context).size.height * .0,
                           ),
@@ -286,6 +289,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
+
 class ContainerOption extends StatefulWidget {
   final String svg;
   final int id;
@@ -296,23 +300,198 @@ class ContainerOption extends StatefulWidget {
   State<ContainerOption> createState() => _ContainerOptionState();
 }
 
+Color color = Colors.white;
+
 class _ContainerOptionState extends State<ContainerOption> {
   bool obscureText = true;
   final DepartamentService depService = DepartamentService();
   String? errorMessage;
   String password = '';
   bool autofucus = true;
+  bool desactivar = false;
+  
+  clickMenu() {  
+        setState(() {
+          color = Colors.white;
+        });
+        TextEditingController textController = TextEditingController();
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return Stack(
+                children: [
+                  const ModalBarrier(
+                    dismissible: false,
+                    color: Color.fromARGB(80, 0, 0, 0),
+                  ),
+                  StatefulBuilder(builder:
+                      (BuildContext context, StateSetter setState) {
+                    handleButtonPressed() async {
+                      
+                      setState(() {
+                        desactivar = true;
+                      });
+                      var pass = await depService.checkPassWord(
+                          password, widget.id, context);
+                      setState(() {
+                          desactivar = false;
+                      });
+                      if (pass.status == 200) {
+                        autofucus = false;
+                        switch (widget.id) {
+                          case 1:
+                            Navigator.of(context).pushNamed('control_vehicles');
+                            break;
+                          case 2:
+                            Navigator.of(context).pushNamed('control_rh');
+                            break;
+                          case 3:
+                            Navigator.of(context).pushNamed('control_seh');
+                            break;
+                          default:
+                        }
+                      } else {
+                        setState(() {
+                          desactivar = false;
+                        });
+                      }
+                    }
+    
+                    return Dialog(
+                        insetPadding:
+                        MediaQuery.of(context).size.height < 960 &&
+                                MediaQuery.of(context).size.width < 500
+                        ?
+                        //para celulares
+                        EdgeInsets.fromLTRB(
+                          MediaQuery.of(context).size.width * .2,
+                          MediaQuery.of(context).size.height * .0,
+                          MediaQuery.of(context).size.width * .2,
+                          MediaQuery.of(context).size.height * .0,
+                        )
+                        :
+                        //para tablets
+                        EdgeInsets.fromLTRB(
+                          MediaQuery.of(context).size.width * .3,
+                          MediaQuery.of(context).size.height * .0,
+                          MediaQuery.of(context).size.width * .3,
+                          MediaQuery.of(context).size.height * .0,
+                        ),
+                        child: GestureDetector(
+                          onTap: () {
+                            SystemChannels.textInput
+                                .invokeMethod('TextInput.hide');
+                          },
+                          child: SingleChildScrollView(
+                            child: Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: Column(children: [
+                                Container(
+                                  padding:
+                                      const EdgeInsets.only(bottom: 10),
+                                  child: Center(
+                                      child: Text('Ingrese la contraseña ', 
+                                          style: getTextStyleTitle2(
+                                              context, null).copyWith(height: 1))),
+                                ),
+                                TextFormField(
+                                  controller: textController,
+                                  enabled: true,
+                                  textAlign: TextAlign.center,
+                                  autofocus: autofucus,
+                                  obscureText: obscureText,
+                                  decoration: InputDecoration(
+                                    suffixIcon: IconButton(
+                                        icon: Icon(obscureText
+                                            ? Icons.visibility
+                                            : Icons.visibility_off),
+                                        onPressed: () {
+                                          setState(() {
+                                            obscureText = !obscureText;
+                                          });
+                                        }),
+                                  ),
+                                  style: getTextStyleButtonField(context),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      password = value;
+                                    });
+                                  },
+                                  validator: (value) {
+                                    if (value == null ||
+                                        value.isEmpty ||
+                                        value == '') {
+                                      return 'Ingrese la contraseña';
+                                    }
+                                    return null;
+                                  },
+                                  onEditingComplete: desactivar == false
+                                      ? handleButtonPressed
+                                      : null,
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                ButtonBar(
+                                  alignment: MainAxisAlignment.center,
+                                  overflowButtonSpacing: 5,
+                                  children: [
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        setState(() {
+                                          desactivar = false;
+                                        });
+                                      },
+                                      child: Text('Salir',
+                                          style: getTextStyleButtonField(
+                                              context)),
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: desactivar == false
+                                          ? handleButtonPressed
+                                          : null,
+                                      child: Text('Ingresar',
+                                          style: getTextStyleButtonField(
+                                              context)),
+                                    ),
+                                  ],
+                                )
+                              ]),
+                            ),
+                          ),
+                        ));
+                  }),
+                ],
+              );
+            });
+      }
 
   @override
   Widget build(BuildContext context) {
     
-    bool desactivar = false;
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Ink(
-        height: 100,
+    return GestureDetector(
+      onTapDown: (details) {  
+        setState(() {
+          color = const Color.fromARGB(255, 230, 230, 230);
+        });
+      }, 
+      onPanDown: (details) {
+        setState(() {
+          color = const Color.fromARGB(255, 230, 230, 230);
+        });
+      },
+      onPanEnd: (details) {
+        setState(() {
+          color = Colors.white;
+        });
+      },
+      onLongPressUp: clickMenu,
+      onTap: clickMenu,
+      child: Container(
+         height: 100,
         decoration: BoxDecoration(
-            color: Colors.white, // Color de fondo del Ink
+            color: /* Colors.white */ color, // Color de fondo del Ink
             borderRadius: BorderRadius.circular(10.0),
             boxShadow: const [
               BoxShadow(
@@ -322,204 +501,36 @@ class _ContainerOptionState extends State<ContainerOption> {
                 offset: Offset(0, 1),
               ),
             ]),
-        child: InkWell(
-          onTap: () {
-            TextEditingController textController = TextEditingController();
-            showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return Stack(
-                    children: [
-                      const ModalBarrier(
-                        dismissible: false,
-                        color: Color.fromARGB(80, 0, 0, 0),
-                      ),
-                      StatefulBuilder(builder:
-                          (BuildContext context, StateSetter setState) {
-                        handleButtonPressed() async {
-                          
-                          setState(() {
-                            desactivar = true;
-                          });
-                          var pass = await depService.checkPassWord(
-                              password, widget.id, context);
-                          setState(() {
-                              desactivar = false;
-                          });
-                          if (pass.status == 200) {
-                            autofucus = false;
-                            switch (widget.id) {
-                              case 1:
-                                Navigator.of(context).pushNamed('control_vehicles');
-                                break;
-                              case 2:
-                                Navigator.of(context).pushNamed('control_rh');
-                                break;
-                              case 3:
-                                Navigator.of(context).pushNamed('control_seh');
-                                break;
-                              default:
-                            }
-                          } else {
-                            setState(() {
-                              desactivar = false;
-                            });
-                          }
-                        }
-
-                        return Dialog(
-                            insetPadding:
-                                MediaQuery.of(context).size.height < 960 &&
-                                        MediaQuery.of(context).size.width < 500
-                                    ?
-                                    //para celulares
-                                    EdgeInsets.fromLTRB(
-                                        MediaQuery.of(context).size.width * .2,
-                                        MediaQuery.of(context).size.height * .0,
-                                        MediaQuery.of(context).size.width * .2,
-                                        MediaQuery.of(context).size.height * .0,
-                                      )
-                                    :
-                                    //para tablets
-                                    EdgeInsets.fromLTRB(
-                                        MediaQuery.of(context).size.width * .3,
-                                        MediaQuery.of(context).size.height * .0,
-                                        MediaQuery.of(context).size.width * .3,
-                                        MediaQuery.of(context).size.height * .0,
-                                      ),
-                            child: GestureDetector(
-                              onTap: () {
-                                SystemChannels.textInput
-                                    .invokeMethod('TextInput.hide');
-                              },
-                              child: SingleChildScrollView(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Column(children: [
-                                    Container(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 10),
-                                      child: Center(
-                                          child: Text('Ingrese la contraseña ',
-                                              style: getTextStyleTitle2(
-                                                  context, null))),
-                                    ),
-                                    TextFormField(
-                                      controller: textController,
-                                      enabled: true,
-                                      textAlign: TextAlign.center,
-                                      autofocus: autofucus,
-                                      obscureText: obscureText,
-                                      decoration: InputDecoration(
-                                        suffixIcon: IconButton(
-                                            icon: Icon(obscureText
-                                                ? Icons.visibility
-                                                : Icons.visibility_off),
-                                            onPressed: () {
-                                              setState(() {
-                                                obscureText = !obscureText;
-                                              });
-                                            }),
-                                      ),
-                                      style: getTextStyleButtonField(context),
-                                      onChanged: (value) {
-                                        setState(() {
-                                          password = value;
-                                        });
-                                      },
-                                      validator: (value) {
-                                        if (value == null ||
-                                            value.isEmpty ||
-                                            value == '') {
-                                          return 'Ingrese la contraseña';
-                                        }
-                                        return null;
-                                      },
-                                      onEditingComplete: desactivar == false
-                                          ? handleButtonPressed
-                                          : null,
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                            setState(() {
-                                              desactivar = false;
-                                            });
-                                          },
-                                          child: Text('Salir',
-                                              style: getTextStyleButtonField(
-                                                  context)),
-                                        ),
-                                        const SizedBox(
-                                          width: 10,
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: desactivar == false
-                                              ? handleButtonPressed
-                                              : null,
-                                          child: Text('Ingresar',
-                                              style: getTextStyleButtonField(
-                                                  context)),
-                                        ),
-                                      ],
-                                    )
-                                  ]),
-                                ),
-                              ),
-                            ));
-                      }),
-                    ],
-                  );
-                });
-          },
-          child: Container(
-            height: MediaQuery.of(context).size.height *
-                (MediaQuery.of(context).orientation == Orientation.portrait
-                    ? 0.05
-                    : 0.1),
-            //Si es verdadero, se tiene que aplicar para celulares, y si no, para tablets
-            /** Medidas genericas desde cuando un movil se convierte en una tablet */
-            padding: MediaQuery.of(context).size.height < 960 &&
-                    MediaQuery.of(context).size.width < 500
-                ? (MediaQuery.of(context).orientation == Orientation.portrait
-                    ?
-                    //pare celulares
-                    EdgeInsets.fromLTRB(
-                        MediaQuery.of(context).size.width * .023,
-                        MediaQuery.of(context).size.height * .023,
-                        MediaQuery.of(context).size.width * .023,
-                        MediaQuery.of(context).size.height * .023)
-                    : EdgeInsets.fromLTRB(
-                        MediaQuery.of(context).size.width * .06,
-                        MediaQuery.of(context).size.height * .06,
-                        MediaQuery.of(context).size.width * .06,
-                        MediaQuery.of(context).size.height * .06))
-                :
-                //para tablets
-                (EdgeInsets.fromLTRB(
-                    MediaQuery.of(context).size.width * .06,
-                    MediaQuery.of(context).size.height * .06,
-                    MediaQuery.of(context).size.width * .06,
-                    MediaQuery.of(context).size.height * .06)),
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-            ),
-            child: Image.asset(
+        child: Padding(
+          padding:  MediaQuery.of(context).size.height < 960 &&
+                  MediaQuery.of(context).size.width < 500
+              ? (MediaQuery.of(context).orientation == Orientation.portrait
+                  ?
+                  //pare celulares
+                  EdgeInsets.fromLTRB(
+                      MediaQuery.of(context).size.width * .023,
+                      MediaQuery.of(context).size.height * .023,
+                      MediaQuery.of(context).size.width * .023,
+                      MediaQuery.of(context).size.height * .023)
+                  : EdgeInsets.fromLTRB(
+                      MediaQuery.of(context).size.width * .06,
+                      MediaQuery.of(context).size.height * .06,
+                      MediaQuery.of(context).size.width * .06,
+                      MediaQuery.of(context).size.height * .06))
+              :
+              //para tablets
+              (EdgeInsets.fromLTRB(
+                  MediaQuery.of(context).size.width * .06,
+                  MediaQuery.of(context).size.height * .06,
+                  MediaQuery.of(context).size.width * .06,
+                  MediaQuery.of(context).size.height * .06)),
+          child: Image.asset(
+              alignment: Alignment.center,
               'assets/images/main/${widget.svg}.png',
-              height: 200,
+              
             ),
-          ),
         ),
-      ),
+      ) 
     );
   }
 
