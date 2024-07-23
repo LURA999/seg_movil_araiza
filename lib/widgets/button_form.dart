@@ -276,512 +276,241 @@ return showDialog<String>(
               ),
             ),
           ),
-          SizedBox(
-            child: ButtonBar(
-              alignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child:  Text('Cerrar',style: getTextStyleButtonField(context)),
-                ),
-                ElevatedButton(
-                    onPressed: !desactivarButton ? () async {
-                    var connectivityResult = await (Connectivity().checkConnectivity());
-                    if (connectivityResult == ConnectivityResult.none) {
-                      // No hay conexión a Internet
-                      messageError(context,'No hay conexión a Internet.', 'Error');
-                      
-                    } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+          ButtonBar(
+            alignment: MainAxisAlignment.center,
+            overflowButtonSpacing: 5,
+            children: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child:  Text('Cerrar',style: getTextStyleButtonField(context), textAlign: TextAlign.center,),
+              ),
+              ElevatedButton(
+                  onPressed: !desactivarButton ? () async {
+                  var connectivityResult = await (Connectivity().checkConnectivity());
+                  if (connectivityResult == ConnectivityResult.none) {
+                    // No hay conexión a Internet
+                    messageError(context,'No hay conexión a Internet.', 'Error');
                     
-                    if(!myFormKey.currentState!.validate()){
-                      return ;
-                    }
-                    AssistanceService aService = AssistanceService();
-                    FoodService fService = FoodService();
-                    VehicleService vService = VehicleService();
-                    switch (widget.control) {
-                      case 1:
-                        //TRAFICO
-                        //Inicio turno
-                        if (btnPosition == 1) {
-                          if (sign == null || formValue['guard']!.contenido == '' || formValue['guard']!.contenido == null || formValue['sign']!.contenido == '' || formValue['sign']!.contenido == null) {
-                            showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text('Por favor acomplete todos los campos',style:  MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <900  ?
-                                //para celulares
-                                TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.015),fontWeight: FontWeight.bold):
-                                //para tablets
-                                TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),fontWeight: FontWeight.bold,)),
-                                content: ElevatedButton(onPressed: () {
-                                    Navigator.of(context).pop(context);
-                                },
-                                child: Text('Aceptar',style: getTextStyleButtonField(context))
-                                )
-                              );
-                              }
-                              );
-                          }else{
-                            var connectivityResult = await (Connectivity().checkConnectivity());
-                            if (connectivityResult == ConnectivityResult.none) {
-                              // No hay conexión a Internet
-                              messageError(context,'No hay conexión a Internet.', 'Error');
-                              
-                            } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+                  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+                  
+                  if(!myFormKey.currentState!.validate()){
+                    return ;
+                  }
+                  AssistanceService aService = AssistanceService();
+                  FoodService fService = FoodService();
+                  VehicleService vService = VehicleService();
+                  switch (widget.control) {
+                    case 1:
+                      //TRAFICO
+                      //Inicio turno
+                      if (btnPosition == 1) {
+                        if (sign == null || formValue['guard']!.contenido == '' || formValue['guard']!.contenido == null || formValue['sign']!.contenido == '' || formValue['sign']!.contenido == null) {
+                          showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Por favor acomplete todos los campos',style:  MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <900  ?
+                              //para celulares
+                              TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .04: 0.015),fontWeight: FontWeight.bold):
+                              //para tablets
+                              TextStyle(fontSize: MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .02: 0.015),fontWeight: FontWeight.bold,)),
+                              content: ElevatedButton(onPressed: () {
+                                  Navigator.of(context).pop(context);
+                              },
+                              child: Text('Aceptar',style: getTextStyleButtonField(context))
+                              )
+                            );
+                            }
+                            );
+                        }else{
+                          var connectivityResult = await (Connectivity().checkConnectivity());
+                          if (connectivityResult == ConnectivityResult.none) {
+                            // No hay conexión a Internet
+                            messageError(context,'No hay conexión a Internet.', 'Error');
                             
-                            final image = await sign!.getData();
-                            var data = await image.toByteData(format: ui.ImageByteFormat.png);
-                            final encoded = base64.encode(data!.buffer.asUint8List());
-                            formValue['sign']!.contenido = encoded;
-                            TurnVehicle t= TurnVehicle();
-                            if (formValue['sign']!.contenido != '' && formValue['sign']!.contenido != null) {
-                              t.guard = formValue['guard']!.contenido.toString().trim().replaceAll(RegExp('  +'), ' ');
-                              t.sign = formValue['sign']!.contenido;
-                              t.turn = formValue['turn']!.contenido;
-                              setState((){
-                                desactivarButton = true;
-                              });
-                              
-
-                              return showDialog(
-                            context: context,
-                            builder: (BuildContext context) => Stack(
-                              children: [
-                                const ModalBarrier(
-                                  dismissible: false,
-                                  color:  Color.fromARGB(80, 0, 0, 0),
-                                ),
-                                StatefulBuilder(
-                                builder: (BuildContext context, StateSetter setState) {
-                                    return Align(
-                                    alignment: Alignment.center,
-                                      child: SingleChildScrollView(
-                                        child: AlertDialog(
-                                        actionsAlignment: MainAxisAlignment.center,
-                                          title: Text('¿Desea continuar?',style: getTextStyleTitle2(context, null)),
-                                          content: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            children:[
-                                            Text('Nombre:', style: getTextStyleText(context,FontWeight.bold,null),),
-                                            Text(t.guard!, style: getTextStyleText(context,null,null),),
-                                            const SizedBox(height: 10,),
-                                            Text('Turno:', style: getTextStyleText(context,FontWeight.bold,null)),
-                                            Text(t.turn! == '1'?'Primer Turno':t.turn! == '2'?'Segundo Turno': 'Tercer Turno', style: getTextStyleText(context,null,null), )
-                                            ]
+                          } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+                          
+                          final image = await sign!.getData();
+                          var data = await image.toByteData(format: ui.ImageByteFormat.png);
+                          final encoded = base64.encode(data!.buffer.asUint8List());
+                          formValue['sign']!.contenido = encoded;
+                          TurnVehicle t= TurnVehicle();
+                          if (formValue['sign']!.contenido != '' && formValue['sign']!.contenido != null) {
+                            t.guard = formValue['guard']!.contenido.toString().trim().replaceAll(RegExp('  +'), ' ');
+                            t.sign = formValue['sign']!.contenido;
+                            t.turn = formValue['turn']!.contenido;
+                            setState((){
+                              desactivarButton = true;
+                            });
+                            
+          
+                            return showDialog(
+                          context: context,
+                          builder: (BuildContext context) => Stack(
+                            children: [
+                              const ModalBarrier(
+                                dismissible: false,
+                                color:  Color.fromARGB(80, 0, 0, 0),
+                              ),
+                              StatefulBuilder(
+                              builder: (BuildContext context, StateSetter setState) {
+                                  return Align(
+                                  alignment: Alignment.center,
+                                    child: SingleChildScrollView(
+                                      child: AlertDialog(
+                                      actionsAlignment: MainAxisAlignment.center,
+                                        title: Text('¿Desea continuar?',style: getTextStyleTitle2(context, null)),
+                                        content: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children:[
+                                          Text('Nombre:', style: getTextStyleText(context,FontWeight.bold,null),),
+                                          Text(t.guard!, style: getTextStyleText(context,null,null),),
+                                          const SizedBox(height: 10,),
+                                          Text('Turno:', style: getTextStyleText(context,FontWeight.bold,null)),
+                                          Text(t.turn! == '1'?'Primer Turno':t.turn! == '2'?'Segundo Turno': 'Tercer Turno', style: getTextStyleText(context,null,null), )
+                                          ]
+                                        ),
+                                        actions: [
+                                          ElevatedButton(
+                                            onPressed: desactivarButton == true? () {
+                                              Navigator.pop(context);
+                                              setState((){
+                                                desactivarButton = false;
+                                              });
+                                            }:null,
+                                            child: Text('Cancelar',style: getTextStyleButtonField(context)),
                                           ),
-                                          actions: [
-                                            ElevatedButton(
-                                              onPressed: desactivarButton == true? () {
-                                                Navigator.pop(context);
-                                                setState((){
+                                          ElevatedButton(
+                                            
+                                            onPressed: desactivarButton == true? () async {
+                                              setState((){
                                                   desactivarButton = false;
                                                 });
-                                              }:null,
-                                              child: Text('Cancelar',style: getTextStyleButtonField(context)),
-                                            ),
-                                            ElevatedButton(
-                                              
-                                              onPressed: desactivarButton == true? () async {
-                                                setState((){
-                                                    desactivarButton = false;
-                                                  });
-                                                  if((await vService.postTurnVehicle(t,context)).status != 200){
-                                                  Navigator.pop(context);
-                                                }else{
-                                                  Navigator.pop(context);
-                                                  Provider.of<VarProvider>(context, listen: false).updateVariable(true);
-                                                  Navigator.pop(context);
-                                                }
-                                              } : null,
-                                              child: Text('Aceptar',style: getTextStyleButtonField(context)),
-                                            ),
-                                          ],
-                                        ),
+                                                if((await vService.postTurnVehicle(t,context)).status != 200){
+                                                Navigator.pop(context);
+                                              }else{
+                                                Navigator.pop(context);
+                                                Provider.of<VarProvider>(context, listen: false).updateVariable(true);
+                                                Navigator.pop(context);
+                                              }
+                                            } : null,
+                                            child: Text('Aceptar',style: getTextStyleButtonField(context)),
+                                          ),
+                                        ],
                                       ),
-                                    );
-                                }),
-                              ],
-                            ));
-                            }
-                            }else {
-                              return ; 
-                            }
+                                    ),
+                                  );
+                              }),
+                            ],
+                          ));
+                          }
+                          }else {
+                            return ; 
                           }
                         }
-    
-                        //registro 
-                        if (btnPosition == 2) {
-                          RegisterVehicle r= RegisterVehicle();
-                          VarProvider vh = VarProvider();
-                          final json = await vh.arrSharedPreferences();
-                          json['sign'] = [];
-                          r.turn = json['turn'].toString();
-                          r.fkTurn = json['idTurn'].toString();
-                          r.color = formValue['color']!.contenido ;
-                          r.employeeName = formValue['employeeName']!.contenido;
-                          r.platesSearch = formValue['platesSearch']!.contenido;
-                          r.typevh = formValue['typevh']!.contenido;
-                          r.modelvh = formValue['modelvh']!.contenido;
-                          r.departament = formValue['departament']!.contenido;  
-                          r.local = formValue['hotel']!.contenido;
-                          setState((){
-                              desactivarButton = true;
-                          });
-                        AccessMap res =  await vService.postRegisterVehicle(r,context);
- 
-                        if(res.status == 200){
-                            Navigator.pop(context);
+                      }
+              
+                      //registro 
+                      if (btnPosition == 2) {
+                        RegisterVehicle r= RegisterVehicle();
+                        VarProvider vh = VarProvider();
+                        final json = await vh.arrSharedPreferences();
+                        json['sign'] = [];
+                        r.turn = json['turn'].toString();
+                        r.fkTurn = json['idTurn'].toString();
+                        r.color = formValue['color']!.contenido ;
+                        r.employeeName = formValue['employeeName']!.contenido;
+                        r.platesSearch = formValue['platesSearch']!.contenido;
+                        r.typevh = formValue['typevh']!.contenido;
+                        r.modelvh = formValue['modelvh']!.contenido;
+                        r.departament = formValue['departament']!.contenido;  
+                        r.local = formValue['hotel']!.contenido;
+                        setState((){
+                            desactivarButton = true;
+                        });
+                      AccessMap res =  await vService.postRegisterVehicle(r,context);
+           
+                      if(res.status == 200){
+                          Navigator.pop(context);
+                      }else{
+                        setState((){
+                          desactivarButton = false;
+                      });
+                      }
+                      }
+              
+                      //Agregar observaciones
+                      if (btnPosition == 3) {
+                        setState((){
+                          desactivarButton = true;
+                        });
+                        TurnVehicle t= TurnVehicle();
+                        t.description = formValue['descriptionVehicle']!.contenido;
+                        if(await vService.postObvVehicle(t,context)){
+                        Navigator.pop(context);
                         }else{
                           setState((){
                             desactivarButton = false;
-                        });
-                        }
-                        }
-    
-                        //Agregar observaciones
-                        if (btnPosition == 3) {
-                          setState((){
-                            desactivarButton = true;
                           });
-                          TurnVehicle t= TurnVehicle();
-                          t.description = formValue['descriptionVehicle']!.contenido;
-                          if(await vService.postObvVehicle(t,context)){
-                          Navigator.pop(context);
-                          }else{
-                            setState((){
-                              desactivarButton = false;
-                            });
-                          }
                         }
-
-                          if(btnPosition == 4) {
-                            if ((formValue['date_start_hour']!.contenido! != '') || formValue['date_final_hour']!.contenido! !=''){
-                              setState((){
-                              desactivarButton = true;
-                            });
-                              DateExcelVehicle de = DateExcelVehicle();
-                              de.dateStart = formValue['date_start_hour']!.contenido!; 
-                              de.dateFinal = formValue['date_final_hour']!.contenido!;
-                              de.turn = formValue['turn']!.contenido!;
-                              de.guard = formValue['guard']!.contenido;
-                              List<Map<String, dynamic>> jsonStr = await vService.selectDateVehicle(de,context);
-                              List<Map<String, dynamic>> jsonStrObs = await vService.selectObsVehicle(de,context);
-                              List<Map<String, dynamic>> dataGuard = await vService.dataGuard(de.guard!,context);
-                              if (jsonStr.isNotEmpty) {
-                              DateTime now = DateTime.now();
-                              String formattedDate = DateFormat('yyyyMMddss').format(now);
-                              String fileName = '$formattedDate.xlsx';
-
-                                await jsonToExcel(
-                                jsonStr,
-                                ['MARCA VEHICULO', 'MODELO VEHICULO','COLOR','PLACAS','NOMBRE EMPLEADO', 'DEPARTAMENTO','ENTRADA'], 
-                              jsonStrObs,
-                              null,
-                              dataGuard,
-                              null,
-                              1,
-                              fileName, 
-                              context);
-                              Navigator.pop(context);
-                            }else{
-                              setState((){
-                              desactivarButton = false;
-                            });
-                            
-                              showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text('Mensaje',style: getTextStyleText(context,FontWeight.bold,null)),
-                                  content: Text('No tiene vehiculos registrados', style: getTextStyleText(context,null,null),),
-                                  actions: [
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text('Aceptar',style: getTextStyleButtonField(context)),
-                                    ),
-                                  ],
-                                );
-                            });
-                            }
-                          }else{
-                              setState((){
-                              desactivarButton = false;
-                            });
-                            showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text('Mensaje',style: getTextStyleText(context,FontWeight.bold,null)),
-                                  content: Text('Por favor llene los campos necesarios', style: getTextStyleText(context,null,null),),
-                                  actions: [
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text('Aceptar',style: getTextStyleButtonField(context)),
-                                    ),
-                                  ],
-                                );
-                            });
-                          }
-                        } 
-
-                        //Descargar excel
-                        if (btnPosition == 5) {
-                          int i = 0;
-
-                          if (formValue['platesSearch']!.contenido != null && formValue['platesSearch']!.contenido != '') {
-                            setState((){
-                              desactivarButton = true;
-                            });
-                            Access r = await vService.findVehicle(formValue['platesSearch']!.contenido!, int.parse((await storage.read(key: 'idHotelRegister')).toString()) ,context,1);
-                            if (r.container != null) {
-                              for (var rc in r.container) {
-                                formValue['platesSearch']!.contenido = rc['plates'];
-                                formValue['typevh']!.contenido = rc['type_vh'];
-                                formValue['modelvh']!.contenido = rc['model_vh'];
-                                formValue['color']!.contenido = rc['color'];
-                                formValue['employeeName']!.contenido = rc['employee_name'];
-                                // formValue['salida']!.contenido = rc['timeExit'];
-                                formValue['entry']!.contenido = rc['time_entry'];
-                                formValue['outt']!.contenido = '';
-                              } 
-                            }
-                            
-                            formValue.forEach((key, value) {
-                              controllerArr[i].text = formValue[key]!.contenido!;
-                              i++;
-                            });
-
-                            setState((){
-                              desactivarButton = false;
-                            });
-                          }
-                        }
-
-                        break;
-                      case 2:
-                        //COMEDOR                        
-                        //Inicio turno
-                        if (btnPosition == 1) {
-                          TurnFood t= TurnFood();
-
-                          if(formValue['picture']!.contenido != '' && formValue['picture']!.contenido != null){
-                            setState((){
-                              desactivarButton = true;
-                            });
-                            t.picture = formValue['picture']!.contenido;
-                            t.dish = formValue['dish']!.contenido;
-                            t.garrison = formValue['garrison']!.contenido;
-                            t.dessert = formValue['dessert']!.contenido;
-                            t.received = formValue['received_number']!.contenido;
-                            t.menu_portal = formValue['menu_portal']!.contenido;
-
-                            return showDialog(
-                            context: context,
-                            builder: (BuildContext context) => Stack(
-                              children: [
-                                const ModalBarrier(
-                                  dismissible: false,
-                                  color:  Color.fromARGB(80, 0, 0, 0),
-                                ),
-                                StatefulBuilder(
-                                builder: (BuildContext context, StateSetter setState) {
-                                    return Align(
-                                    alignment: Alignment.center,
-                                      child: SingleChildScrollView(
-                                        child: AlertDialog(
-                                        actionsAlignment: MainAxisAlignment.center,
-                                          title: Text('¿Desea continuar?',style: getTextStyleTitle2(context, null)),
-                                          content: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            children:[
-                                            Text('Platillo:', style: getTextStyleText(context,FontWeight.bold,null),),
-                                            Text(t.dish!, style: getTextStyleText(context,null,null),),
-                                            const SizedBox(height: 10,),
-                                            Text('Guarnicion:', style: getTextStyleText(context,FontWeight.bold,null)),
-                                            Text(t.garrison!, style: getTextStyleText(context,null,null), ),
-                                            const SizedBox(height: 10,),
-                                            Text('Postre:', style: getTextStyleText(context,FontWeight.bold,null)),
-                                            Text(t.dessert! == '' || t.dessert == null ?'N/A': t.dessert!, style: getTextStyleText(context,null,null), ),
-                                            const SizedBox(height: 10,),
-                                            Text('Cantidad recibida:', style: getTextStyleText(context,FontWeight.bold,null)),
-                                            Text(t.received!, style: getTextStyleText(context,null,null), ),
-                                            const SizedBox(height: 10,),
-                                            Text('Menu de Hoy (Portal de Comunicación):', style: getTextStyleText(context,FontWeight.bold,null)),
-                                            Text(t.menu_portal!, style: getTextStyleText(context,null,null), )
-                                            ]
-                                          ),
-                                          actions: [
-                                            ElevatedButton(
-                                              onPressed: desactivarButton == true? () {
-                                                Navigator.pop(context);
-                                                setState((){
-                                                  desactivarButton = false;
-                                                });
-                                              } : null,
-                                              child: Text('Cancelar',style: getTextStyleButtonField(context)),
-                                            ),
-                                            ElevatedButton(
-                                              onPressed: desactivarButton == true? () async {
-                                                var connectivityResult = await (Connectivity().checkConnectivity());
-                                                if (connectivityResult == ConnectivityResult.none) {
-                                                  // No hay conexión a Internet
-                                                  messageError(context,'No hay conexión a Internet.', 'Error');
-                                                  
-                                                } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
-                                                setState((){
-                                                    desactivarButton = false;
-                                                  });
-                                                  if(( await fService.postTurnFood(t,context)).status != 200){
-                                                  Navigator.pop(context);
-                                                  }else{
-                                                    Navigator.pop(context);
-                                                    Provider.of<VarProvider>(context, listen: false).updateVariable(true);
-                                                    Navigator.pop(context);
-                                                  }
-                                                }
-                                              } : null,
-                                              child: Text('Aceptar',style: getTextStyleButtonField(context)),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                }),
-                              ],
-                            ));
-                        
-
-                          }else{
-                            setState((){
-                              desactivarButton = true;
-                            });
-                            return showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title:  Text('Llene todos los campos', style: getTextStyleText(context,FontWeight.bold,null),),
-                                  content: Text('Por favor suba una foto del platillo.', style: getTextStyleText(context,null,null),),
-                                  actions: [
-                                    ElevatedButton(
-                                      onPressed: () async { 
-                                          
-                                      setState((){
-                                        desactivarButton = false;
-                                      });
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text('Aceptar',style: getTextStyleButtonField(context)),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          }
-                        }
-    
-                        //registro
-                        if (btnPosition == 2) {
-                          setState((){
-                            desactivarButton = true;
-                          });
-                          RegisterFood r= RegisterFood();
-                          r.numEmployee = formValue['employee_number']!.contenido;
-                          r.name = '';
-                          r.contract = '3';
-                          r.local = formValue['hotel']!.contenido;
-                        if(await fService.postRegisterFood(r,context)){
-                          Navigator.pop(context);
-                          }else{
-                          setState((){
-                            desactivarButton = false;
-                          });
-                          }
-                        }
-    
-                        //Agregar observaciones
-                        if (btnPosition == 3) {
-                          setState((){
-                            desactivarButton = true;
-                          });
-                          TurnFood t= TurnFood();
-                          t.description = formValue['descriptionFood']!.contenido;
-                          t.local = await storage.read(key: 'idHotelRegister');
-                          if(await fService.postObvFood(t,context)){
-                          Navigator.pop(context);
-                          }else{
-                          setState((){
-                            desactivarButton = false;
-                          });
-                          }
-                        }
-
-                        //descargar excel
+                      }
+          
                         if(btnPosition == 4) {
                           if ((formValue['date_start_hour']!.contenido! != '') || formValue['date_final_hour']!.contenido! !=''){
-                          setState((){
+                            setState((){
                             desactivarButton = true;
                           });
-                          DateExcelFood de = DateExcelFood();
-                          de.dateStart = formValue['date_start_hour']!.contenido!; 
-                          de.dateFinal = formValue['date_final_hour']!.contenido!;
-                          de.dish = formValue['dish']!.contenido!.toString();
-                          de.local = (await storage.read(key: 'idHotelRegister')) ;
-                          List<Map<String, dynamic>> jsonStr = await fService.selectDateFood(de, context);
-                          List<Map<String, dynamic>> jsonStrObs = await fService.selectObsFood(de, context);
-                          List<Map<String, dynamic>> jsonStrMenu = await fService.selectFoodMenu(de, context);
-                          List<Map<String, dynamic>> jsonStrCom = await fService.selectDateFoodComment(de, context);
+                            DateExcelVehicle de = DateExcelVehicle();
+                            de.dateStart = formValue['date_start_hour']!.contenido!; 
+                            de.dateFinal = formValue['date_final_hour']!.contenido!;
+                            de.turn = formValue['turn']!.contenido!;
+                            de.guard = formValue['guard']!.contenido;
+                            List<Map<String, dynamic>> jsonStr = await vService.selectDateVehicle(de,context);
+                            List<Map<String, dynamic>> jsonStrObs = await vService.selectObsVehicle(de,context);
+                            List<Map<String, dynamic>> dataGuard = await vService.dataGuard(de.guard!,context);
                             if (jsonStr.isNotEmpty) {
-                              DateTime now = DateTime.now();
-                              String formattedDate = DateFormat('yyyyMMddss').format(now);
-                              String fileName = '$formattedDate.xlsx';
-                                await jsonToExcel(
-                                jsonStr,
-                                ['Numero de empleado','Nombre','Contrato','Fecha comida'], 
-                                jsonStrObs,
-                                jsonStrMenu,
-                                null,
-                                jsonStrCom,
-                                2,
-                                fileName, 
-                                context);  
-                            
-                            formValue.forEach((key, value) { value.contenido = ''; });
+                            DateTime now = DateTime.now();
+                            String formattedDate = DateFormat('yyyyMMddss').format(now);
+                            String fileName = '$formattedDate.xlsx';
+          
+                              await jsonToExcel(
+                              jsonStr,
+                              ['MARCA VEHICULO', 'MODELO VEHICULO','COLOR','PLACAS','NOMBRE EMPLEADO', 'DEPARTAMENTO','ENTRADA'], 
+                            jsonStrObs,
+                            null,
+                            dataGuard,
+                            null,
+                            1,
+                            fileName, 
+                            context);
                             Navigator.pop(context);
+                          }else{
                             setState((){
-                              desactivarButton = false;
-                            });
-                            }else{
+                            desactivarButton = false;
+                          });
+                          
+                            showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Mensaje',style: getTextStyleText(context,FontWeight.bold,null)),
+                                content: Text('No tiene vehiculos registrados', style: getTextStyleText(context,null,null),),
+                                actions: [
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text('Aceptar',style: getTextStyleButtonField(context)),
+                                  ),
+                                ],
+                              );
+                          });
+                          }
+                        }else{
                             setState((){
-                              desactivarButton = false;
-                            });
-                              showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text('Mensaje',style: getTextStyleText(context,FontWeight.bold,null)),
-                                  content: Text('No tiene empleados registrados', style: getTextStyleText(context,null,null)),
-                                  actions: [
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text('Aceptar', style: getTextStyleButtonField(context)),
-                                    ),
-                                  ],
-                                );
-                            });
-                            }
-                        } else{
-                          setState((){
                             desactivarButton = false;
                           });
                           showDialog(
@@ -801,19 +530,59 @@ return showDialog<String>(
                               );
                           });
                         }
-                        }
-                        break;
-                      default:
-                      //ASISTENCIA
-                      if(btnPosition == 1){
-                        TurnAssistance t= TurnAssistance();
+                      } 
+          
+                      //Descargar excel
+                      if (btnPosition == 5) {
+                        int i = 0;
+          
+                        if (formValue['platesSearch']!.contenido != null && formValue['platesSearch']!.contenido != '') {
                           setState((){
                             desactivarButton = true;
                           });
-                          t.course_name = formValue['course_name']!.contenido;
-                          t.schedule = formValue['schedule']!.contenido;
-                          //t.time = formValue['garrison']!.contenido;
-                        
+                          Access r = await vService.findVehicle(formValue['platesSearch']!.contenido!, int.parse((await storage.read(key: 'idHotelRegister')).toString()) ,context,1);
+                          if (r.container != null) {
+                            for (var rc in r.container) {
+                              formValue['platesSearch']!.contenido = rc['plates'];
+                              formValue['typevh']!.contenido = rc['type_vh'];
+                              formValue['modelvh']!.contenido = rc['model_vh'];
+                              formValue['color']!.contenido = rc['color'];
+                              formValue['employeeName']!.contenido = rc['employee_name'];
+                              // formValue['salida']!.contenido = rc['timeExit'];
+                              formValue['entry']!.contenido = rc['time_entry'];
+                              formValue['outt']!.contenido = '';
+                            } 
+                          }
+                          
+                          formValue.forEach((key, value) {
+                            controllerArr[i].text = formValue[key]!.contenido!;
+                            i++;
+                          });
+          
+                          setState((){
+                            desactivarButton = false;
+                          });
+                        }
+                      }
+          
+                      break;
+                    case 2:
+                      //COMEDOR                        
+                      //Inicio turno
+                      if (btnPosition == 1) {
+                        TurnFood t= TurnFood();
+          
+                        if(formValue['picture']!.contenido != '' && formValue['picture']!.contenido != null){
+                          setState((){
+                            desactivarButton = true;
+                          });
+                          t.picture = formValue['picture']!.contenido;
+                          t.dish = formValue['dish']!.contenido;
+                          t.garrison = formValue['garrison']!.contenido;
+                          t.dessert = formValue['dessert']!.contenido;
+                          t.received = formValue['received_number']!.contenido;
+                          t.menu_portal = formValue['menu_portal']!.contenido;
+          
                           return showDialog(
                           context: context,
                           builder: (BuildContext context) => Stack(
@@ -834,11 +603,20 @@ return showDialog<String>(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           mainAxisAlignment: MainAxisAlignment.start,
                                           children:[
-                                            Text('Curso:', style: getTextStyleText(context,FontWeight.bold,null),),
-                                            Text(t.course_name!, style: getTextStyleText(context,null,null),),
-                                            const SizedBox(height: 10,),
-                                            Text('Horario:', style: getTextStyleText(context,FontWeight.bold,null)),
-                                            Text(t.schedule!, style: getTextStyleText(context,null,null), ),
+                                          Text('Platillo:', style: getTextStyleText(context,FontWeight.bold,null),),
+                                          Text(t.dish!, style: getTextStyleText(context,null,null),),
+                                          const SizedBox(height: 10,),
+                                          Text('Guarnicion:', style: getTextStyleText(context,FontWeight.bold,null)),
+                                          Text(t.garrison!, style: getTextStyleText(context,null,null), ),
+                                          const SizedBox(height: 10,),
+                                          Text('Postre:', style: getTextStyleText(context,FontWeight.bold,null)),
+                                          Text(t.dessert! == '' || t.dessert == null ?'N/A': t.dessert!, style: getTextStyleText(context,null,null), ),
+                                          const SizedBox(height: 10,),
+                                          Text('Cantidad recibida:', style: getTextStyleText(context,FontWeight.bold,null)),
+                                          Text(t.received!, style: getTextStyleText(context,null,null), ),
+                                          const SizedBox(height: 10,),
+                                          Text('Menu de Hoy (Portal de Comunicación):', style: getTextStyleText(context,FontWeight.bold,null)),
+                                          Text(t.menu_portal!, style: getTextStyleText(context,null,null), )
                                           ]
                                         ),
                                         actions: [
@@ -854,15 +632,16 @@ return showDialog<String>(
                                           ElevatedButton(
                                             onPressed: desactivarButton == true? () async {
                                               var connectivityResult = await (Connectivity().checkConnectivity());
-                                                if (connectivityResult == ConnectivityResult.none) {
-                                                  // No hay conexión a Internet
-                                                  messageError(context,'No hay conexión a Internet.', 'Error');
-                                                } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
-                                                setState((){
-                                                    desactivarButton = false;
-                                                  });
-                                                  if(( await aService.postTurnAssistance(t,context)).status != 200){
-                                                  Navigator.pop(context);
+                                              if (connectivityResult == ConnectivityResult.none) {
+                                                // No hay conexión a Internet
+                                                messageError(context,'No hay conexión a Internet.', 'Error');
+                                                
+                                              } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+                                              setState((){
+                                                  desactivarButton = false;
+                                                });
+                                                if(( await fService.postTurnFood(t,context)).status != 200){
+                                                Navigator.pop(context);
                                                 }else{
                                                   Navigator.pop(context);
                                                   Provider.of<VarProvider>(context, listen: false).updateVariable(true);
@@ -879,248 +658,468 @@ return showDialog<String>(
                               }),
                             ],
                           ));
-                        }
-
-                          //Agregar observaciones
-                        if (btnPosition == 3) {
+                      
+          
+                        }else{
                           setState((){
                             desactivarButton = true;
                           });
-                          
-                          TurnAssistance t= TurnAssistance();
-                          t.description = formValue['descriptionAssistance']!.contenido;
-                          if(await aService.postObvAssistance(t,context)){
-                            
-                          formValue.forEach((key, value) { value.contenido = ''; });
-                          Navigator.pop(context);
-                          setState((){});
-
-                          }else{
-                          setState((){
-                            desactivarButton = false;
-                          });
-                          }
-                        }
-
-                        //Registro manual
-                          if (btnPosition == 2) {
-                          QrAssistance r= QrAssistance();
-                          VarProvider vh = VarProvider();
-                          final json = await vh.arrSharedPreferences();
-                          r.idTurn = json['idTurn'].toString();
-                          r.employee_num = formValue['employee_number']!.contenido;
-                          r.local = formValue['hotel']!.contenido;
-                          // r.local = formValue[]
-                          setState((){
-                              desactivarButton = true;
-                          });
-
-                          if(await aService.postRegisterAssistance(r,context)){
-                          formValue.forEach((key, value) { value.contenido = ''; });
-                          setState((){});  
-                          Navigator.pop(context);
-                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Empleado registrado'),backgroundColor: Colors.green),
-                            );
-                          }else{
-                          setState((){
-                            desactivarButton = false;
-                          });
-                          }
-                        }
-
-                        //descargar excel
-                        if(btnPosition == 4) {
-                          if (/* (formValue['date_start_hour']!.contenido! != '') || formValue['date_final_hour']!.contenido! !='' */ myFormKey.currentState!.validate()){
-                          setState((){
-                            desactivarButton = true;
-                          });
-                          DateExcelAssistance de = DateExcelAssistance();
-                          de.dateStart = formValue['date_start_hour']!.contenido!; 
-                          de.dateFinal = formValue['date_final_hour']!.contenido!;
-                          de.course_name = formValue['course_name']!.contenido!;
-                          de.local = (await storage.read(key: 'idHotelRegister')).toString();
-                          de.personal = formValue['group']!.contenido!;                          
-                          List<Map<String, dynamic>> jsonStr = await aService.selectDateAssistance(de, context);
-                          List<Map<String, dynamic>> jsonStrObs = await aService.selectDateAssistanceObservations(de, context);
-                            if (jsonStr.isNotEmpty) {
-                              DateTime now = DateTime.now();
-                              String formattedDate = DateFormat('yyyyMMddss').format(now);
-                              String fileName = ' assistencia_$formattedDate.xlsx';
-                                await jsonToExcel(
-                                jsonStr,
-                                ["Numero de empleado", "Nombre completo", "Nombre del curso", "Horario", "Hora y Fecha de asistencia"], 
-                                jsonStrObs,
-                                null,
-                                null,
-                                null,
-                                3,
-                                fileName, 
-                                context);  
-                            formValue.forEach((key, value) { value.contenido = ''; });
-                            Navigator.pop(context);
-                            setState((){
-                              desactivarButton = false;
-                            });
-                            }else{
-                            setState((){
-                              desactivarButton = false;
-                            });
-                              showDialog(
+                          return showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text('Mensaje',style: getTextStyleText(context,FontWeight.bold,null)),
-                                  content: Text('No tiene empleados registrados', style: getTextStyleText(context,null,null)),
-                                  actions: [
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text('Aceptar', style: getTextStyleButtonField(context)),
-                                    ),
-                                  ],
-                                );
-                            });
-                            }
-                        } else{
-                          setState((){
-                            desactivarButton = false;
-                          });
-                          showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
                               return AlertDialog(
-                                title: Text('Mensaje',style: getTextStyleText(context,FontWeight.bold,null)),
-                                content: Text('Por favor llene los campos necesarios', style: getTextStyleText(context,null,null),),
+                                title:  Text('Llene todos los campos', style: getTextStyleText(context,FontWeight.bold,null),),
+                                content: Text('Por favor suba una foto del platillo.', style: getTextStyleText(context,null,null),),
                                 actions: [
                                   ElevatedButton(
-                                    onPressed: () {
+                                    onPressed: () async { 
+                                        
+                                    setState((){
+                                      desactivarButton = false;
+                                    });
                                       Navigator.pop(context);
                                     },
                                     child: Text('Aceptar',style: getTextStyleButtonField(context)),
                                   ),
                                 ],
                               );
-                          });
+                            },
+                          );
                         }
-                        }
-                      break;
-                    }
-                    }
-                  }:null,
-                  child: Text(widget.field[1],style: getTextStyleButtonField(context)),
-                ),
-                if(widget.thirdButton != null)
-                ElevatedButton(
-                  onPressed: () async { 
-                    if (myFormKey.currentState!.validate()){
-                      AssistanceService aService = AssistanceService();
-                      DateExcelAssistance de = DateExcelAssistance();
-                      de.dateStart = formValue['date_start_hour']!.contenido!; 
-                      de.dateFinal = formValue['date_final_hour']!.contenido!;
-                      de.course_name = formValue['course_name']!.contenido!;
-                      de.local = (await storage.read(key: 'idHotelRegister')).toString();
-                      de.personal = formValue['group']!.contenido!;
-
-                      List<Map<String, dynamic>> jsonStr = await aService.selectDateAssistance(de, context);
-                     if (jsonStr.isNotEmpty) {
-                        showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                            return AlertDialog(
-                              contentPadding: const EdgeInsets.all(10.0), // Adjust the padding as needed
-                              title:  Text('Rifa',style: getTextStyleText(context,FontWeight.bold,null)),
-                              content: SizedBox(
-                                child: SingleChildScrollView(
-                                  child: Column(
-                                    children: [
-                                      Text('Hay aproximadamente ${jsonStr.length} empleados', style: getTextStyleText(context,null,null)),
-                                      Text('¿Cuantos ganadores desea obtener?', style: getTextStyleText(context,null,null)),
-                                      MultiInputs(formProperty: 'search', formValue: formValuesBuscar, maxLines: 1, autofocus: false, keyboardType: TextInputType.number,)
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              actions: [
-                                ElevatedButton(
-                                  onPressed: () async {
-                                    if ( int.tryParse(formValuesBuscar['search']!.contenido.toString()) != null ) {
-                                      List<Map<String, dynamic>> jsonStrAux = [];
-                                      List<int> amount =  generateUniqueRandomNumbers(int.parse(formValuesBuscar['search']!.contenido.toString()),1,jsonStr.length);
-                                      for (var i = 0; i < amount.length; i++) {
-                                        jsonStrAux.add(jsonStr[amount[i]]);
-                                      }
-
-                                      DateTime now = DateTime.now();
-                                      String formattedDate = DateFormat('yyyyMMddss').format(now);
-                                      String fileName = ' assistencia_$formattedDate.xlsx';
-                                        await jsonToExcel(
-                                        jsonStrAux,
-                                        ["Numero de empleado", "Nombre completo", "Nombre del curso", "Horario", "Hora y Fecha de asistencia"], 
-                                        null,
-                                        null,
-                                        null,
-                                        null,
-                                        3,
-                                        fileName, 
-                                        context); 
-                                      Navigator.pop(context);
-                                    } 
-                                    
-                                  },
-                                  child: Text('Descargar ganadores',style: getTextStyleButtonField(context)),
-                                )
-                              ],
-                            );
+                      }
+              
+                      //registro
+                      if (btnPosition == 2) {
+                        setState((){
+                          desactivarButton = true;
                         });
+                        RegisterFood r= RegisterFood();
+                        r.numEmployee = formValue['employee_number']!.contenido;
+                        r.name = '';
+                        r.contract = '3';
+                        r.local = formValue['hotel']!.contenido;
+                      if(await fService.postRegisterFood(r,context)){
+                        Navigator.pop(context);
                         }else{
                         setState((){
                           desactivarButton = false;
                         });
-                          showDialog(
+                        }
+                      }
+              
+                      //Agregar observaciones
+                      if (btnPosition == 3) {
+                        setState((){
+                          desactivarButton = true;
+                        });
+                        TurnFood t= TurnFood();
+                        t.description = formValue['descriptionFood']!.contenido;
+                        t.local = await storage.read(key: 'idHotelRegister');
+                        if(await fService.postObvFood(t,context)){
+                        Navigator.pop(context);
+                        }else{
+                        setState((){
+                          desactivarButton = false;
+                        });
+                        }
+                      }
+          
+                      //descargar excel
+                      if(btnPosition == 4) {
+                        if ((formValue['date_start_hour']!.contenido! != '') || formValue['date_final_hour']!.contenido! !=''){
+                        setState((){
+                          desactivarButton = true;
+                        });
+                        DateExcelFood de = DateExcelFood();
+                        de.dateStart = formValue['date_start_hour']!.contenido!; 
+                        de.dateFinal = formValue['date_final_hour']!.contenido!;
+                        de.dish = formValue['dish']!.contenido!.toString();
+                        de.local = (await storage.read(key: 'idHotelRegister')) ;
+                        List<Map<String, dynamic>> jsonStr = await fService.selectDateFood(de, context);
+                        List<Map<String, dynamic>> jsonStrObs = await fService.selectObsFood(de, context);
+                        List<Map<String, dynamic>> jsonStrMenu = await fService.selectFoodMenu(de, context);
+                        List<Map<String, dynamic>> jsonStrCom = await fService.selectDateFoodComment(de, context);
+                          if (jsonStr.isNotEmpty) {
+                            DateTime now = DateTime.now();
+                            String formattedDate = DateFormat('yyyyMMddss').format(now);
+                            String fileName = '$formattedDate.xlsx';
+                              await jsonToExcel(
+                              jsonStr,
+                              ['Numero de empleado','Nombre','Contrato','Fecha comida'], 
+                              jsonStrObs,
+                              jsonStrMenu,
+                              null,
+                              jsonStrCom,
+                              2,
+                              fileName, 
+                              context);  
+                          
+                          formValue.forEach((key, value) { value.contenido = ''; });
+                          Navigator.pop(context);
+                          setState((){
+                            desactivarButton = false;
+                          });
+                          }else{
+                          setState((){
+                            desactivarButton = false;
+                          });
+                            showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Mensaje',style: getTextStyleText(context,FontWeight.bold,null)),
+                                content: Text('No tiene empleados registrados', style: getTextStyleText(context,null,null)),
+                                actions: [
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text('Aceptar', style: getTextStyleButtonField(context)),
+                                  ),
+                                ],
+                              );
+                          });
+                          }
+                      } else{
+                        setState((){
+                          desactivarButton = false;
+                        });
+                        showDialog(
                         context: context,
                         builder: (BuildContext context) {
                             return AlertDialog(
                               title: Text('Mensaje',style: getTextStyleText(context,FontWeight.bold,null)),
-                              content: Text('No tiene empleados registrados', style: getTextStyleText(context,null,null)),
+                              content: Text('Por favor llene los campos necesarios', style: getTextStyleText(context,null,null),),
                               actions: [
                                 ElevatedButton(
                                   onPressed: () {
                                     Navigator.pop(context);
                                   },
-                                  child: Text('Aceptar', style: getTextStyleButtonField(context)),
+                                  child: Text('Aceptar',style: getTextStyleButtonField(context)),
                                 ),
                               ],
                             );
                         });
+                      }
+                      }
+                      break;
+                    default:
+                    //ASISTENCIA
+                    if(btnPosition == 1){
+                      TurnAssistance t= TurnAssistance();
+                        setState((){
+                          desactivarButton = true;
+                        });
+                        t.course_name = formValue['course_name']!.contenido;
+                        t.schedule = formValue['schedule']!.contenido;
+                        //t.time = formValue['garrison']!.contenido;
+                      
+                        return showDialog(
+                        context: context,
+                        builder: (BuildContext context) => Stack(
+                          children: [
+                            const ModalBarrier(
+                              dismissible: false,
+                              color:  Color.fromARGB(80, 0, 0, 0),
+                            ),
+                            StatefulBuilder(
+                            builder: (BuildContext context, StateSetter setState) {
+                                return Align(
+                                alignment: Alignment.center,
+                                  child: SingleChildScrollView(
+                                    child: AlertDialog(
+                                    actionsAlignment: MainAxisAlignment.center,
+                                      title: Text('¿Desea continuar?',style: getTextStyleTitle2(context, null)),
+                                      content: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children:[
+                                          Text('Curso:', style: getTextStyleText(context,FontWeight.bold,null),),
+                                          Text(t.course_name!, style: getTextStyleText(context,null,null),),
+                                          const SizedBox(height: 10,),
+                                          Text('Horario:', style: getTextStyleText(context,FontWeight.bold,null)),
+                                          Text(t.schedule!, style: getTextStyleText(context,null,null), ),
+                                        ]
+                                      ),
+                                      actions: [
+                                        ElevatedButton(
+                                          onPressed: desactivarButton == true? () {
+                                            Navigator.pop(context);
+                                            setState((){
+                                              desactivarButton = false;
+                                            });
+                                          } : null,
+                                          child: Text('Cancelar',style: getTextStyleButtonField(context)),
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: desactivarButton == true? () async {
+                                            var connectivityResult = await (Connectivity().checkConnectivity());
+                                              if (connectivityResult == ConnectivityResult.none) {
+                                                // No hay conexión a Internet
+                                                messageError(context,'No hay conexión a Internet.', 'Error');
+                                              } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+                                              setState((){
+                                                  desactivarButton = false;
+                                                });
+                                                if(( await aService.postTurnAssistance(t,context)).status != 200){
+                                                Navigator.pop(context);
+                                              }else{
+                                                Navigator.pop(context);
+                                                Provider.of<VarProvider>(context, listen: false).updateVariable(true);
+                                                Navigator.pop(context);
+                                              }
+                                            }
+                                          } : null,
+                                          child: Text('Aceptar',style: getTextStyleButtonField(context)),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                            }),
+                          ],
+                        ));
+                      }
+          
+                        //Agregar observaciones
+                      if (btnPosition == 3) {
+                        setState((){
+                          desactivarButton = true;
+                        });
+                        
+                        TurnAssistance t= TurnAssistance();
+                        t.description = formValue['descriptionAssistance']!.contenido;
+                        if(await aService.postObvAssistance(t,context)){
+                          
+                        formValue.forEach((key, value) { value.contenido = ''; });
+                        Navigator.pop(context);
+                        setState((){});
+          
+                        }else{
+                        setState((){
+                          desactivarButton = false;
+                        });
                         }
-                    } else{
-                      setState((){
-                        desactivarButton = false;
-                      });
+                      }
+          
+                      //Registro manual
+                        if (btnPosition == 2) {
+                        QrAssistance r= QrAssistance();
+                        VarProvider vh = VarProvider();
+                        final json = await vh.arrSharedPreferences();
+                        r.idTurn = json['idTurn'].toString();
+                        r.employee_num = formValue['employee_number']!.contenido;
+                        r.local = formValue['hotel']!.contenido;
+                        // r.local = formValue[]
+                        setState((){
+                            desactivarButton = true;
+                        });
+          
+                        if(await aService.postRegisterAssistance(r,context)){
+                        formValue.forEach((key, value) { value.contenido = ''; });
+                        setState((){});  
+                        Navigator.pop(context);
+                         ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Empleado registrado'),backgroundColor: Colors.green),
+                          );
+                        }else{
+                        setState((){
+                          desactivarButton = false;
+                        });
+                        }
+                      }
+          
+                      //descargar excel
+                      if(btnPosition == 4) {
+                        if (/* (formValue['date_start_hour']!.contenido! != '') || formValue['date_final_hour']!.contenido! !='' */ myFormKey.currentState!.validate()){
+                        setState((){
+                          desactivarButton = true;
+                        });
+                        DateExcelAssistance de = DateExcelAssistance();
+                        de.dateStart = formValue['date_start_hour']!.contenido!; 
+                        de.dateFinal = formValue['date_final_hour']!.contenido!;
+                        de.course_name = formValue['course_name']!.contenido!;
+                        de.local = (await storage.read(key: 'idHotelRegister')).toString();
+                        de.personal = formValue['group']!.contenido!;                          
+                        List<Map<String, dynamic>> jsonStr = await aService.selectDateAssistance(de, context);
+                        List<Map<String, dynamic>> jsonStrObs = await aService.selectDateAssistanceObservations(de, context);
+                          if (jsonStr.isNotEmpty) {
+                            DateTime now = DateTime.now();
+                            String formattedDate = DateFormat('yyyyMMddss').format(now);
+                            String fileName = ' assistencia_$formattedDate.xlsx';
+                              await jsonToExcel(
+                              jsonStr,
+                              ["Numero de empleado", "Nombre completo", "Nombre del curso", "Horario", "Hora y Fecha de asistencia"], 
+                              jsonStrObs,
+                              null,
+                              null,
+                              null,
+                              3,
+                              fileName, 
+                              context);  
+                          formValue.forEach((key, value) { value.contenido = ''; });
+                          Navigator.pop(context);
+                          setState((){
+                            desactivarButton = false;
+                          });
+                          }else{
+                          setState((){
+                            desactivarButton = false;
+                          });
+                            showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Mensaje',style: getTextStyleText(context,FontWeight.bold,null)),
+                                content: Text('No tiene empleados registrados', style: getTextStyleText(context,null,null)),
+                                actions: [
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text('Aceptar', style: getTextStyleButtonField(context)),
+                                  ),
+                                ],
+                              );
+                          });
+                          }
+                      } else{
+                        setState((){
+                          desactivarButton = false;
+                        });
+                        showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Mensaje',style: getTextStyleText(context,FontWeight.bold,null)),
+                              content: Text('Por favor llene los campos necesarios', style: getTextStyleText(context,null,null),),
+                              actions: [
+                                ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text('Aceptar',style: getTextStyleButtonField(context)),
+                                ),
+                              ],
+                            );
+                        });
+                      }
+                      }
+                    break;
+                  }
+                  }
+                }:null,
+                child: Text(widget.field[1],style: getTextStyleButtonField(context)),
+              ),
+              if(widget.thirdButton != null)
+              ElevatedButton(
+                onPressed: () async { 
+                  if (myFormKey.currentState!.validate()){
+                    AssistanceService aService = AssistanceService();
+                    DateExcelAssistance de = DateExcelAssistance();
+                    de.dateStart = formValue['date_start_hour']!.contenido!; 
+                    de.dateFinal = formValue['date_final_hour']!.contenido!;
+                    de.course_name = formValue['course_name']!.contenido!;
+                    de.local = (await storage.read(key: 'idHotelRegister')).toString();
+                    de.personal = formValue['group']!.contenido!;
+          
+                    List<Map<String, dynamic>> jsonStr = await aService.selectDateAssistance(de, context);
+                   if (jsonStr.isNotEmpty) {
                       showDialog(
                       context: context,
                       builder: (BuildContext context) {
                           return AlertDialog(
+                            contentPadding: const EdgeInsets.all(10.0), // Adjust the padding as needed
+                            title:  Text('Rifa',style: getTextStyleText(context,FontWeight.bold,null)),
+                            content: SizedBox(
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    Text('Hay aproximadamente ${jsonStr.length} empleados', style: getTextStyleText(context,null,null)),
+                                    Text('¿Cuantos ganadores desea obtener?', style: getTextStyleText(context,null,null)),
+                                    MultiInputs(formProperty: 'search', formValue: formValuesBuscar, maxLines: 1, autofocus: false, keyboardType: TextInputType.number,)
+                                  ],
+                                ),
+                              ),
+                            ),
+                            actions: [
+                              ElevatedButton(
+                                onPressed: () async {
+                                  if ( int.tryParse(formValuesBuscar['search']!.contenido.toString()) != null ) {
+                                    List<Map<String, dynamic>> jsonStrAux = [];
+                                    List<int> amount =  generateUniqueRandomNumbers(int.parse(formValuesBuscar['search']!.contenido.toString()),1,jsonStr.length);
+                                    for (var i = 0; i < amount.length; i++) {
+                                      jsonStrAux.add(jsonStr[amount[i]]);
+                                    }
+          
+                                    DateTime now = DateTime.now();
+                                    String formattedDate = DateFormat('yyyyMMddss').format(now);
+                                    String fileName = ' assistencia_$formattedDate.xlsx';
+                                      await jsonToExcel(
+                                      jsonStrAux,
+                                      ["Numero de empleado", "Nombre completo", "Nombre del curso", "Horario", "Hora y Fecha de asistencia"], 
+                                      null,
+                                      null,
+                                      null,
+                                      null,
+                                      3,
+                                      fileName, 
+                                      context); 
+                                    Navigator.pop(context);
+                                  } 
+                                  
+                                },
+                                child: Text('Descargar ganadores',style: getTextStyleButtonField(context)),
+                              )
+                            ],
+                          );
+                      });
+                      }else{
+                      setState((){
+                        desactivarButton = false;
+                      });
+                        showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                          return AlertDialog(
                             title: Text('Mensaje',style: getTextStyleText(context,FontWeight.bold,null)),
-                            content: Text('Por favor llene los campos necesarios', style: getTextStyleText(context,null,null),),
+                            content: Text('No tiene empleados registrados', style: getTextStyleText(context,null,null)),
                             actions: [
                               ElevatedButton(
                                 onPressed: () {
                                   Navigator.pop(context);
                                 },
-                                child: Text('Aceptar',style: getTextStyleButtonField(context)),
+                                child: Text('Aceptar', style: getTextStyleButtonField(context)),
                               ),
                             ],
                           );
                       });
-                    }
-                  },
-                  child: Text(widget.thirdButton!,style: getTextStyleButtonField(context)),
-                )
-              ],
-            ),
+                      }
+                  } else{
+                    setState((){
+                      desactivarButton = false;
+                    });
+                    showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Mensaje',style: getTextStyleText(context,FontWeight.bold,null)),
+                          content: Text('Por favor llene los campos necesarios', style: getTextStyleText(context,null,null),),
+                          actions: [
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text('Aceptar',style: getTextStyleButtonField(context)),
+                            ),
+                          ],
+                        );
+                    });
+                  }
+                },
+                child: Text(widget.thirdButton!,style: getTextStyleButtonField(context)),
+              )
+            ],
           ),
         ],
       ),
