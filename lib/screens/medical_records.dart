@@ -8,8 +8,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_pagination/flutter_pagination.dart';
 import 'package:flutter_pagination/widgets/button_styles.dart';
 
-
-
 class MedicalRecords extends StatefulWidget {
 const MedicalRecords({Key? key}) : super(key: key);
 
@@ -189,8 +187,8 @@ return Scaffold(
                                   final list = await eips.getAllExamListSearch(context,'');
                                   files.clear();
                                   setState(() { }); 
-
-                                  for (var el in list) {
+                                  await searchTable(context);
+                                  /* for (var el in list) {
                                     files.add(
                                     MedicalRecord(
                                       id: int.parse(el['numEmployee']) == 0 ? 'N/A' :int.parse(el['numEmployee']).toString(), 
@@ -201,8 +199,8 @@ return Scaffold(
                                       exam: int.parse(el['idExam'])
                                       )
                                     );
-                                  }
-                                  currentPage = 1;
+                                  } 
+                                  currentPage = 1;*/
                                   setState(() { }); 
                                 }, icon: Icon(Icons.settings))
                               ],
@@ -622,12 +620,12 @@ Future<void> fetchDataTable() async {
                                   ElevatedButton(onPressed: (){
                                       Navigator.of(context2).pop();
                                     }
-                                  , child: Text('Cancelar')),
+                                  , child: const Text('Cancelar')),
                                   ElevatedButton(onPressed: () async {
                                       await onTapEdit(snapshot, index, context, 4, bMedical); 
                                       Navigator.of(context2).pop();
                                   }
-                                  , child: Text('Aceptar'))
+                                  , child: const Text('Aceptar'))
                                   
                                 ],
                               ),
@@ -755,9 +753,9 @@ Future<void> fetchDataTable() async {
 
       DepartamentService dp = DepartamentService();
       arrDepa =  await dp.getDepartament(context);
-
       final arrHis =  await eips.getExamHistory(snapshot.data![index].exam,context);
-            resString2 = [];
+      // print(arrHis);
+      resString2 = [];
       if (arrHis.isNotEmpty) {
         for (var i = 0; i < 4; i++) {
           arrHis[i].forEach((key, value) {

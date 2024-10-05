@@ -176,6 +176,7 @@ try {
 try {
     isSaving = true;
     notifyListeners();
+
      final url = Uri.parse('$link/tour_seh.php?form=$form&comments=true&local=${(await storage.read(key: 'idHotelRegister'))}');
        var response = (await http.get(url)).body;
       final result =  AccessMap.fromJson(jsonDecode(response));
@@ -293,7 +294,6 @@ Future<List<String>> getTitleDescription(int form,BuildContext context ) async {
 
 try {
     isSaving = true;
-    notifyListeners();
      final url = Uri.parse('$link/tour_seh.php?form=$form&titleDescription=true&local=${(await storage.read(key: 'idHotelRegister'))}');
        var response = (await http.get(url)).body;
       final result =  AccessListString.fromJson(jsonDecode(response));

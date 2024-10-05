@@ -477,10 +477,12 @@ try {
 try {
       isSaving = true;
       notifyListeners();
+      print('% $link/qr_assistance.php?nameSearch=$palabra&local=$local');
       final url = Uri.parse('$link/qr_assistance.php?nameSearch=$palabra&local=$local');
       var response =(await http.get(url)).body;
+    
       final result = AccessMap.fromJson(json.decode(response));
-      
+      print('% ${json.decode(response)}');
       if (result.status == 200){ 
         listContainer =  result.container!;
         isSaving = false;

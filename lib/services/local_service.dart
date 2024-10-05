@@ -13,8 +13,8 @@ class LocalService extends ChangeNotifier{
   bool modoApk = kDebugMode?true:false; 
   bool isSaving = true;
   late String link = modoApk?'https://www.comunicadosaraiza.com/portal_api/API':'https://www.comunicadosaraiza.com/portal_api/API';
-
-
+  late String link2 = 'https://www.comunicadosaraiza.com/movil_scan_api_prueba2/API';
+  
  Future<Access> getLocal(BuildContext context ) async {
   Access result = Access();
   var connectivityResult = await (Connectivity().checkConnectivity());
@@ -61,6 +61,49 @@ try {
   } 
 
 
+  Future<Access> compararPass(String pass, int cve,BuildContext context ) async {
+  Access result = Access();
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none ) {
+    // No hay conexión a Internet
+    messageError(context,'No hay conexión a Internet.', 'Error');
+    return result;
+  } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+
+try {
+    isSaving = true;
+    notifyListeners();
+    final url = Uri.parse('$link2/local.php?cve=$cve&pass=$pass');
+    var response = (await http.get(url)).body;
+    final result = Access.fromJson(jsonDecode(response));
+    if (result.status == 200){
+      isSaving = false;
+      notifyListeners();
+      return result;
+    }else{
+      messageError(context,'Contraseña incorrecta.','Error');
+    }
+
+    isSaving = false;
+    notifyListeners();
+    return result; 
+  } on SocketException catch (e) {
+    // Error de conexión de red (sin conexión a Internet)
+    messageError(context,'Error de conexión de red: $e','Error');
+    return result; 
+  } on HttpException catch (e) {
+    // Error de la solicitud HTTP
+    messageError(context,'Error de la solicitud HTTP: $e','Error');
+    return result; 
+  } catch (e) {
+    // Otro tipo de error
+    messageError(context,'Error inesperado: $e','Error');
+    return result; 
+  }
+  }
+  // messageError(context,'Error desconocido.');
+    return result; 
+  } 
 
 }
 

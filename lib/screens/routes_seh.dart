@@ -2,10 +2,12 @@ import 'package:app_seguimiento_movil/theme/app_theme.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../models/models.dart';
 import '../services/services.dart';
 import '../widgets/widgets.dart';
+
 
 class RoutesSeh extends StatefulWidget {
   const RoutesSeh({Key? key}) : super(key: key);
@@ -59,7 +61,6 @@ class _RoutesSehState extends State<RoutesSeh> {
                 'nameContext' : 'tour_seh_tr1_a',
                 'title' : '1er trimestre - Área A'
               });
-
             },   
             () {
                 Navigator.of(context).pop();
@@ -79,9 +80,22 @@ class _RoutesSehState extends State<RoutesSeh> {
                 'recorrido' : 3,
                 'form':3,
                 'nameContext' : 'tour_seh_tr1_c',
-                  'title' : '1er trimestre - Área C'
-              });
+                'title' : '1er trimestre - Área C'
+                }
+              );
             },   
+             () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pushNamed('tour_seh_tr1_d', 
+                arguments: {
+                  'periodo': 4,
+                  'recorrido' : 4,
+                  'form': 13,
+                  'nameContext' : 'tour_seh_tr1_d',
+                  'title' : '1er trimestre - Área D'
+                }
+              );
+            },  
           ]
       ), 
       OptionRoute(
@@ -268,6 +282,7 @@ class _RoutesSehState extends State<RoutesSeh> {
                         MediaQuery.of(context).size.height * .0),
                       child:  
                       Column(children: opciones.map((e) {
+                        
                          return Container(
                           padding: EdgeInsets.only(
                           bottom: MediaQuery.of(context).size.height * .02),
@@ -298,7 +313,7 @@ class _RoutesSehState extends State<RoutesSeh> {
                                   messageError(context,'No hay conexión a Internet.', 'Error');
                                 } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
                                   if(e.monthInitial <= month && month <= e.monthFinal){
-                                    selectedArea(context,e.navigator);
+                                    selectedArea(context,e.navigator, e.monthInitial);
                                   }else{
                                      SystemChannels.textInput.invokeMethod('TextInput.hide');
                                      return showDialog(
@@ -317,7 +332,7 @@ class _RoutesSehState extends State<RoutesSeh> {
                                             TextButton(
                                               onPressed: () {
                                                 Navigator.pop(context); 
-                                                selectedArea(context,e.navigator); // Cierra el diálogo
+                                                selectedArea(context,e.navigator, e.monthInitial ); // Cierra el diálogo
                                               },
                                               child:  Text('Aceptar', style: getTextStyleButtonField(context),),
                                             ),
@@ -378,7 +393,11 @@ class _RoutesSehState extends State<RoutesSeh> {
     );
   }
 
-  Future<dynamic> selectedArea(BuildContext context,List<void Function()> function ) {
+  Future<dynamic> selectedArea(BuildContext context,List<void Function()> function, int monthInitial ) async {
+    
+    final storage = FlutterSecureStorage();
+    int local = int.parse(await storage.read(key: 'idHotelRegister') as String);
+    
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -401,6 +420,11 @@ class _RoutesSehState extends State<RoutesSeh> {
                       )),
                       ElevatedButton(onPressed: function[2],
                       child: Text('Area C', style: getTextStyleButtonField(context)
+                      )),
+                      
+                      if( local == 4 && monthInitial == 1)
+                      ElevatedButton(onPressed: function[3],
+                      child: Text('Area D', style: getTextStyleButtonField(context)
                       ))
                     ]
                   ),
@@ -408,7 +432,6 @@ class _RoutesSehState extends State<RoutesSeh> {
               )
             ],
           );
-        }
-        );
+        });
   }
 }

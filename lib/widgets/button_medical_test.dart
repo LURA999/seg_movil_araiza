@@ -27,6 +27,9 @@ Future<String?> newMethod(StateSetter setState,BuildContext context, List<Map<St
 List<String>? multiInputHArr, List<String>? multiInputAEArr, List<List<bool>>? checkBoxArr, List<YesNot>? yestNotEnumArr, 
 List<List<bool>>? checkboxDLNArr, List<Cause>? causeDiseaseArr, List<YesNot>? yestNotEnumArrDisease,List<ManoDominante>? manoArr,
 List<MetodoAnti>? methodArr, int idExam, bool edit ) {
+
+
+// print(multiInputArr![25]);
 int _currentPageIndex = 0;
 List<bool> _activarSignature = [true,true];
 int multiInputC = 1; 
@@ -114,7 +117,7 @@ List<List<bool>> listChecked_sec4 =[
 
 
 //ESTAS SON VARIABLES PARA ACTIVAR EL DLN
-List<List<bool>> listChecked_sec7 =  checkboxDLNArr ??[
+List<List<bool>> listChecked_sec7 =  checkboxDLNArr ?? [
 [false,false,false,false,false,false,false,false,false,false,false,false],
 ];
 
@@ -138,6 +141,7 @@ final List<GlobalKey<FormState>> myFormKey = [
   GlobalKey<FormState>(),
   GlobalKey<FormState>(),
 ];
+
 // final List<TextEditingController> controller = [TextEditingController(),TextEditingController(),TextEditingController()];
 List<Map<String, dynamic>> formpart1 = [
 {//Primeras preguntas (0)
@@ -1223,14 +1227,13 @@ setState((){});
  * 47
 145
  */
-
 if (edit && copyBack) {
   yestNotEnumArrDiseaseFake = List.from(yestNotEnumArrDisease!);
   yestNotEnumArrFake = List.from(yestNotEnumArr!); 
   manoArrFake = List.from(manoArr!);
   methodArrFake = List.from(methodArr!);
   firmaAspirante = multiInputArr![47].toString();
-  firmaDoctor = multiInputArr[145].toString();
+  firmaDoctor = multiInputArr[147].toString();
   listChecked_sec7Fake = [List.from(listChecked_sec7[0])];
   causeEnumFake = List.from(causeDiseaseArr!);  
   numEmployee = int.parse(multiInputArr[1]);
@@ -2265,11 +2268,11 @@ StatefulBuilder(
                       edm.condition_observation = (formpart1[11]['CONDICIONES Y OBSERVACIONES'] as MultiInputsForm).contenido!;
                       
                       if (sign[1] != null) {
-                         final image = await sign[1]!.getData() ;
+                         final image = await sign[1]!.getData();
                         var data = await image.toByteData(format: ui.ImageByteFormat.png);
                         edm.doctor_signature = base64.encode(data!.buffer.asUint8List());
                       } else{
-                        edm.doctor_signature = multiInputArr != null ? multiInputArr[145] : '';
+                        edm.doctor_signature = multiInputArr != null ? multiInputArr[147] : '';
                       }
 
                       // if (sign[2] !=null ) {

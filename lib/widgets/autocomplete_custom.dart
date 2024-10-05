@@ -14,7 +14,7 @@ class AutocompleteCustom extends StatefulWidget {
   late Map<String, dynamic> formValue;
   final bool onSelect = true;
   Function(dynamic,List<String>)? onFormValueChange;
-  
+
 
    AutocompleteCustom({
     Key? key,

@@ -4,12 +4,14 @@ import 'package:app_seguimiento_movil/services/services.dart';
 import 'package:download/download.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:universal_platform/universal_platform.dart';
 import '../models/models.dart';
+
 
 
 String departamentName(List<Map<String,dynamic>> arrDepartaments, List<String>? multiInputArr) {
@@ -52,6 +54,8 @@ void generatePDF( BuildContext context, bool save,List<Map<String,dynamic>> arrD
 List<String>? multiInputHArr, List<String>? multiInputAEArr, List<List<bool>>? checkBoxArr, List<YesNot>? yestNotEnumArr, 
 List<List<bool>>? checkboxDLNArr, List<Cause>? causeDiseaseArr, List<YesNot>? yestNotEnumArrDisease,List<ManoDominante>? manoArr,
 List<MetodoAnti>? methodArr) async {
+final storage = FlutterSecureStorage();
+int local = int.parse(await storage.read(key: 'idHotelRegister') as String);
 int multiInputC = 2; 
 int multiInputCH = 0; 
 int multiInputCAE = 0; 
@@ -654,6 +658,7 @@ List months =
             width: firstCellWidthTabHead,
             child: pw.Container(
               alignment: pw.Alignment.center,
+              //Empresa
               child: pw.Text(
                 multiInputHArr != null ? multiInputHArr[index * 11] : '',
                 style: littleLetterStyle,
@@ -673,6 +678,7 @@ List months =
             child: pw.Container(
               alignment: pw.Alignment.center,
               child: pw.Text(
+                //Puestos
                 multiInputHArr != null ? multiInputHArr[1 + (index * 11)] : '', 
                 style: littleLetterStyle,
                 textAlign: pw.TextAlign.center,
@@ -691,6 +697,7 @@ List months =
             child: pw.Container(
               alignment: pw.Alignment.center,
               child: pw.Text(
+                //Tiempo
                 multiInputHArr != null ? multiInputHArr[2 + (index * 11)] : '',
                 style: littleLetterStyle,
                 textAlign: pw.TextAlign.center,
@@ -707,7 +714,8 @@ List months =
           pw.Expanded(
             child: pw.Container(
               alignment: pw.Alignment.center,
-              child: pw.Text(                  
+              child: pw.Text(           
+                //Cuando salio       
                 multiInputHArr != null ? multiInputHArr[3 + (index * 11)] != '0000-00-00' ?  multiInputHArr[3 + (index * 11)] : '': '',
                 style: littleLetterStyle,
                 textAlign: pw.TextAlign.center,
@@ -725,6 +733,7 @@ List months =
             child: pw.Container(
               alignment: pw.Alignment.center,
               child: pw.Text(
+                //Rotación de puesto
                 multiInputHArr != null ? multiInputHArr[4 + (index * 11)] : '',
                 style: littleLetterStyle,
                 textAlign: pw.TextAlign.center,
@@ -742,6 +751,7 @@ List months =
             child: pw.Container(
               alignment: pw.Alignment.center,
               child: pw.Text(
+                //Químicos solventes
                 multiInputHArr != null ? multiInputHArr[5 + (index * 11)] : '',
                 style: littleLetterStyle,
                 textAlign: pw.TextAlign.center,
@@ -759,6 +769,7 @@ List months =
             child: pw.Container(
               alignment: pw.Alignment.center,
               child: pw.Text(
+                //Humos
                 multiInputHArr != null ? multiInputHArr[6 + (index * 11)] : '',
                 style: littleLetterStyle,
                 textAlign: pw.TextAlign.center,
@@ -776,6 +787,7 @@ List months =
             child: pw.Container(
               alignment: pw.Alignment.center,
               child: pw.Text(
+                //Vapores
                 multiInputHArr != null ? multiInputHArr[7 + (index * 11)] : '',
                 style: littleLetterStyle,
                 textAlign: pw.TextAlign.center,
@@ -793,6 +805,7 @@ List months =
             child: pw.Container(
               alignment: pw.Alignment.center,
               child: pw.Text(
+                //Polvos
                 multiInputHArr != null ? multiInputHArr[8 + (index * 11)] : '',
                 style: littleLetterStyle,
                 textAlign: pw.TextAlign.center,
@@ -810,6 +823,7 @@ List months =
             child: pw.Container(
               alignment: pw.Alignment.center,
               child: pw.Text(
+                //Ruido
                 multiInputHArr != null ? multiInputHArr[9 + (index * 11)] : '',
                 style: littleLetterStyle,
                 textAlign: pw.TextAlign.center,
@@ -827,6 +841,7 @@ List months =
             child: pw.Container(
               alignment: pw.Alignment.center,
               child: pw.Text(
+                //Carga de material
                 multiInputHArr != null ? multiInputHArr[10 + (index * 11)] : '',
                 style: littleLetterStyle,
                 textAlign: pw.TextAlign.center,
@@ -4579,7 +4594,7 @@ pdf.addPage(
                         child : pw.Image( pw.MemoryImage(transformationImage(multiInputArr != null? multiInputArr[145] : ''))),
                       ),
                       pw.Text('_______________________________',style:letterText12),
-                      pw.Text('Nombre, Firma y Ced. Prof. del Médico\nDr. Alfredo Gruel Culebro',style:letterText12)
+                      pw.Text('Nombre, Firma y Ced. Prof. del Médico\n ${local == 1 ? "Dr. Alfredo Gruel Culebro" : ""} ',style:letterText12)
                     ]
                   )
                 ),
@@ -4625,7 +4640,7 @@ final Uint8List bytes = await pdf.save();
         
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('La carpeta seleccionada no existe')),
+          const SnackBar(content: Text('La carpeta seleccionada no existe')),
         );
         }
     }else{

@@ -87,7 +87,6 @@ class SehControl extends StatelessWidget {
                         child: Column ( 
                         children:[
                         Container(
-
                           padding: const EdgeInsets.only(bottom: 10),
                           child: Center(child: Text('Ingrese la contraseña ',style: getTextStyleTitle2(context,null))),
                         ),
@@ -99,7 +98,7 @@ class SehControl extends StatelessWidget {
                         obscureText: obscureText,
                         decoration: InputDecoration(
                         suffixIcon:IconButton(
-                        icon: Icon( Icons.visibility ),
+                        icon: const Icon( Icons.visibility ),
                         onPressed: () {
                            setState(() {
                              obscureText = !obscureText;
@@ -120,13 +119,12 @@ class SehControl extends StatelessWidget {
                         },
                       onEditingComplete: desactivar == false ? handleButtonPressed : null,
                       ),
-                      
                       const SizedBox(height: 10,),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                            ElevatedButton(
+                          ElevatedButton(
                           onPressed: () => Navigator.pop(context),
                           child: Text('Salir',style:  getTextStyleButtonField(context)),
                           ),
@@ -136,9 +134,7 @@ class SehControl extends StatelessWidget {
                           child: Text('Ingresar',style:  getTextStyleButtonField(context)),
                           ),
                         ],
-                      )
-                      
-                      ]
+                      )]
                       ),
                     ),
                 ),

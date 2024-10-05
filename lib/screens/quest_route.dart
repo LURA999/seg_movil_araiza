@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:app_seguimiento_movil/models/models.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +21,7 @@ class QuestData {
 }
 
 class QuestRoute extends StatefulWidget {
+  
   const QuestRoute({Key? key}) : super(key: key);
 
   @override
@@ -29,6 +29,7 @@ class QuestRoute extends StatefulWidget {
 }
 
 class _QuestRouteState extends State<QuestRoute>  {
+  
   List<TextEditingController> arrEdConComment = [];
   List<TextEditingController> arrEdConDescription = [TextEditingController(),TextEditingController()];
   List<rateRoute> rateRoutes =[];
@@ -61,7 +62,7 @@ class _QuestRouteState extends State<QuestRoute>  {
   double widthPreguntas = 0;
   Orientation? AuxOrientation ;
   bool isLoading = false;
-
+  int local = 0;
 @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -71,6 +72,8 @@ class _QuestRouteState extends State<QuestRoute>  {
      recorrido = param['recorrido'];
      title = param['title'];
      nameContext = param['nameContext'];
+     
+
      responsiveHeightTitle = 
      MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <500?
      MediaQuery.of(context).size.height * (MediaQuery.of(context).orientation == Orientation.landscape? 0.23 : 0.06)
@@ -78,7 +81,6 @@ class _QuestRouteState extends State<QuestRoute>  {
      MediaQuery.of(context).size.height * (MediaQuery.of(context).orientation == Orientation.landscape? 0.12 : 0.08);
      widthPreguntas = MediaQuery.of(context).size.height * 0.3;
 
-     
      responsiveHeightSub = 
      MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <500?
      MediaQuery.of(context).size.height * (MediaQuery.of(context).orientation == Orientation.landscape? 0.6 : 0.04)
@@ -91,22 +93,38 @@ class _QuestRouteState extends State<QuestRoute>  {
 
 
   Future<QuestData> fetchData() async {
-
     List<Map<String,dynamic>> descriptions = [];
-
     if (soloUnaVez4FutureBuilder) {
     answers = await seht.getAnswer(form, context);
     if (answers.isEmpty) {
-        Navigator.of(context).pop();
-        messageError(context, 'No tiene preguntas registradas', 'Error');
-      } 
+      Navigator.of(context).pop();
+      messageError(context, 'No tiene preguntas registradas', 'Error');
+    } 
     preguntasVerticales = await seht.getQuestion(form, context);
+
     answersRespaldo = (jsonDecode(jsonEncode(answers)) as List)
       .map((dynamic sublist) => (sublist as List).cast<int>())
       .toList();
 
-    if (form==3) {
-      preguntasVerticales2 = preguntasVerticales.sublist(preguntasVerticales.length - 6, preguntasVerticales.length );
+    local = int.parse(await storage.read(key: 'idHotelRegister') as String);
+
+    if (form ==3 && local !=4) {
+      /*
+        En esta variable se se toma por default que las ultimas 6 preguntas del area C,
+        vapor separado en con la ultima area del area C, en cualquier cuestionario  
+      */
+      preguntasVerticales2 = preguntasVerticales.sublist(preguntasVerticales.length - 6, preguntasVerticales.length); 
+      for (var i =  0; i < 6 ; i++) {
+        preguntasVerticales.removeAt(preguntasVerticales.length - 1);
+      }
+    } 
+
+    if (form == 13 && local ==4) {
+      /*
+        En esta variable se se toma por default que las ultimas 6 preguntas del area C,
+        vapor separado en con la ultima area del area C, en cualquier cuestionario  
+      */
+      preguntasVerticales2 = preguntasVerticales.sublist(preguntasVerticales.length - 6, preguntasVerticales.length); 
       for (var i =  0; i < 6 ; i++) {
         preguntasVerticales.removeAt(preguntasVerticales.length - 1);
       }
@@ -116,9 +134,11 @@ class _QuestRouteState extends State<QuestRoute>  {
     titleDescription = await seht.getTitleDescription(form, context);
     comments = await seht.getComments(form, context);
     descriptions = await seht.getDescriptions(form, context);
+
       for (var i = 0; i < comments.length; i++) {
         arrEdConComment.add(TextEditingController());
         arrEdConComment[i].text = comments[i]['comment_text'].toString();
+        
       }
 
       arrEdConDescription[0].text = descriptions[0]['description1'];
@@ -188,7 +208,7 @@ class _QuestRouteState extends State<QuestRoute>  {
     if (!snapshot.hasData && !snapshot.hasError || orientation !=  AuxOrientation) {
       
     AuxOrientation = orientation;
-         soloUnaVez3 = true;
+      soloUnaVez3 = true;
       return CustomBackBvuttonInterceptor(child:Scaffold(
         body: Center(
           child: FractionallySizedBox(
@@ -207,6 +227,17 @@ class _QuestRouteState extends State<QuestRoute>  {
     
      if (soloUnaVez) {
         soloUnaVez = false;
+           
+       /*  print('@array vertical1');
+        for (var i = 0; i < preguntasVerticales.length; i++) {
+          print('@${preguntasVerticales[i]}');
+        }
+        
+        print('@array vertical2');
+        for (var i = 0; i < preguntasVerticales2.length; i++) {
+          print('@${preguntasVerticales2[i]}');
+        }
+ */
         rateRoutes = snapshot.data ==null ? List.generate((preguntasVerticales.length + preguntasVerticales2.length) * preguntasHeaders.length, 
         (index) => rateRoute.none ): transIntegerformToEnumArray(answers) ; 
       }
@@ -219,13 +250,13 @@ class _QuestRouteState extends State<QuestRoute>  {
     
         if (i == 0 ) {
         formValue.add({
-          'comment$i':   arrEdConComment[i].text,
-          'description1':   arrEdConDescription[0].text,
-          'description2':   arrEdConDescription[1].text
+          'comment$i': arrEdConComment[i].text,
+          'description1': arrEdConDescription[0].text,
+          'description2': arrEdConDescription[1].text
         });
         }else{
         formValue.add({
-          'comment$i':   arrEdConComment[i].text ,
+          'comment$i': arrEdConComment[i].text ,
         });
         }
         
@@ -233,7 +264,7 @@ class _QuestRouteState extends State<QuestRoute>  {
       }else{
         formPropertyComment.add("comment$i");
           formValue.add({
-          'comment$i':   arrEdConComment[i].text ,
+          'comment$i': arrEdConComment[i].text ,
         });
       }
     
@@ -289,11 +320,12 @@ class _QuestRouteState extends State<QuestRoute>  {
                           }
                         }
                         
-                        
+
                         for (var i = 0; i < arrEdConComment.length; i++) {
                           if (comments[i]['comment_text'].toString() != arrEdConComment[i].text.toString()) {
                           comments[i]['comment_text'] = arrEdConComment[i].text.toString();
-                          await seht.postComments(comments[i], form, context);
+                          await seht.postComments(comments[i], form, context);   
+                                               
                           }
                         }
 
@@ -370,7 +402,6 @@ class _QuestRouteState extends State<QuestRoute>  {
 
                                     arrEdConDescription[0].text = '';
                                     arrEdConDescription[1].text = '';
-
                                     llenarFormulario(responsiveRow, index, orientation, responsiveComment,);
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(content: Text('Se ha vaciado el formulario', style: getTextStyleText(context, FontWeight.bold, Colors.white),),backgroundColor: Colors.green),
@@ -558,7 +589,7 @@ class _QuestRouteState extends State<QuestRoute>  {
     
   }
   Widget columnOrRow(double responsiveRow, String e, int index, Orientation orientation) {
-  // Ejemplo de uso:
+    //en este codigo, se imprime todas las preguntas con sus respectivas respuestas 
      return Column(
     children: [
       preguntaContainer(e,orientation),
@@ -622,71 +653,91 @@ class _QuestRouteState extends State<QuestRoute>  {
 
 
   llenarFormulario(double responsiveRow,int index,Orientation orientation, double responsiveComment) {
- for (var i = 0; i < preguntasHeaders.length; i++) {
+
+  for (var i = 0; i < preguntasHeaders.length; i++) {
+
       temas.add(
         SizedBox(
           width: MediaQuery.of(context).size.width,
           child: Column(
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width ,
-                  height: MediaQuery.of(context).size.height * 
-                  (MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <900 ?
-                  //cellphones
-                  (orientation == Orientation.landscape? 0.16 :  0.07 )
-                  :
-                  //tablets
-                  (orientation == Orientation.landscape? 0.1 : 0.05 )),
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      color: Color.fromRGBO(156, 39, 50, 1.0)
-                    ),
-                    margin: const EdgeInsets.only(top: 10,bottom: 10),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text(preguntasHeaders[i], style: getTextStyleTitle2(context, Colors.white)),
-                    ),
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width ,
+                height: MediaQuery.of(context).size.height * 
+                (MediaQuery.of(context).size.height < 960 && MediaQuery.of(context).size.width <900 ?
+                //cellphones
+                (orientation == Orientation.landscape? 0.16 :  0.07 )
+                :
+                //tablets
+                (orientation == Orientation.landscape? 0.1 : 0.05 )),
+                child: 
+                //En esta parte se imprime EL AREA
+                Container(
+                  decoration: const BoxDecoration(
+                    color: Color.fromRGBO(156, 39, 50, 1.0)
+                  ),
+                  margin: const EdgeInsets.only(top: 10,bottom: 10),
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text(preguntasHeaders[i], style: getTextStyleTitle2(context, Colors.white)),
                   ),
                 ),
-                Column(
-                  children: [
-                   
-                  //En esta parte se imprime las preguntas verticales (perono se imprimen las preguntas verticales2)
-                    if(i < preguntasHeaders.length - (periodo==3 && recorrido == 3 ? 1 : 0 ))
-                    ...preguntasVerticales.map((e) {
-                      return columnOrRow(responsiveRow, e, ++index,orientation); 
-                    }
-                  ),
-                  //En esta parte se imprime las preguntas verticales, personalizadas
-                    if(i == preguntasHeaders.length - (periodo==3 && recorrido == 3 ? 1 : preguntasHeaders.length -1 ))
-                  ...preguntasVerticales2.map((e) {
-                      return columnOrRow(responsiveRow, e, ++index,orientation);
+              ),
+              Column(
+                children: [
+                
+                  
+                //En esta parte se imprime las preguntas verticales (perono se imprimen las preguntas verticales2)
+                  if(i < preguntasHeaders.length - (periodo==3 && recorrido == 3 ? 1 : 0 ) && local != 4)
+                  ...preguntasVerticales.map((e) {
+                    return columnOrRow(responsiveRow, e, ++index,orientation); 
                   }
-                  ), 
-                  SizedBox(height: responsiveComment,),
-                   Column(
-                    children: [
-                      Text('Comentarios',style: getTextStyleTitle2(context, null),),
-                       Padding(
-                         padding: EdgeInsets.all(responsiveComment),
-                         child: TextFormField(
-                            controller: arrEdConComment[i],
-                           textCapitalization: TextCapitalization.characters,
-                           style: getTextStyleText(context,null,null),
-                           maxLines: 4,
-                           decoration:  InputDecoration(
-                             border: OutlineInputBorder(
-                               borderRadius: BorderRadius.circular(0),
-                             )
-                           )
-                         ),
-                       ),
-                    ],
-                   )
-                  ],
                 ),
-              ],
-            ),
+                //En esta parte se imprime las preguntas verticales, personalizadas
+                  if(i == preguntasHeaders.length - (periodo==3 && recorrido == 3 ? 1 : preguntasHeaders.length -1 ) && local != 4)
+                  ...preguntasVerticales2.map((e) {
+                    return columnOrRow(responsiveRow, e, ++index,orientation);
+                  }
+                ), 
+
+                //ESTA SEGUNDA SECCION SE HIZO ESPECIALMENTE PARA EL AREA D, DEL HOTEL PALMIRA
+
+                //En esta parte se imprime las preguntas verticales (perono se imprimen las preguntas verticales2)
+                  if(i < preguntasHeaders.length - (periodo == 4 && recorrido == 4 ? 1 : 0 ) && local == 4)
+                  ...preguntasVerticales.map((e) {
+                    return columnOrRow(responsiveRow, e, ++index,orientation); 
+                  }
+                ),
+                //En esta parte se imprime las preguntas verticales, personalizadas
+                  if(i == preguntasHeaders.length - (periodo == 4 && recorrido == 4 ? 1 : preguntasHeaders.length -1 ) && local == 4)
+                  ...preguntasVerticales2.map((e) {
+                    return columnOrRow(responsiveRow, e, ++index,orientation);
+                  }
+                ),  
+                SizedBox(height: responsiveComment,),
+                  Column(
+                  children: [
+                    Text('Comentarios',style: getTextStyleTitle2(context, null),),
+                      Padding(
+                        padding: EdgeInsets.all(responsiveComment),
+                        child: TextFormField(
+                          controller: arrEdConComment[i],
+                          textCapitalization: TextCapitalization.characters,
+                          style: getTextStyleText(context,null,null),
+                          maxLines: 4,
+                          decoration:  InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(0),
+                            )
+                          )
+                        ),
+                      ),
+                  ],
+                  )
+                ],
+              ),
+            ],
+          ),
         )
       );
 

@@ -57,7 +57,11 @@ Future<void> requestPermission(Function(bool) onPermissionResult) async {
 }
 
 
-Future<void> jsonToExcelSehExcel(List<String> preguntas,List<String> headers, List<String> preguntas2,List<List<int>> res,String area, List<Map<String,dynamic>> comments,List<String> Titlecomments, DescriptionsSeh descriptionsSeh, String fileName, BuildContext context) async {
+Future<void> jsonToExcelSehExcel(List<String> preguntas,List<String> headers, List<String> preguntas2,List<List<int>> res,
+String area, List<Map<String,dynamic>> comments,List<String> Titlecomments, DescriptionsSeh descriptionsSeh, String fileName, 
+BuildContext context) async {
+  
+  
   bool storagePermissionGranted = false;
   if(!UniversalPlatform.isWeb){
     if (Platform.isAndroid || Platform.isIOS) {
@@ -155,6 +159,7 @@ Future<void> jsonToExcelSehExcel(List<String> preguntas,List<String> headers, Li
 
 
   List<String> brmArr = ['B','R','M'];
+  
   int x =0;
   for (var i = 0; i < (headers.length + espacioColumn) *3 ; i++) {
 
@@ -313,7 +318,7 @@ sheet.autoFitRow(preguntas.length + 6);
   
 //DESCRIPCIONES
 
-if (Titlecomments[0] != "") {
+if (Titlecomments.isNotEmpty ) {
   final Range headerThird = sheet.getRangeByIndex(preguntas.length + 6,5,preguntas.length + 6, 15);
   headerThird.setText("ACTOS INSEGUROS");
   headerThird.cellStyle.bold = true;

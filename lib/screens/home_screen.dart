@@ -1,11 +1,9 @@
 import 'dart:ui';
+import 'package:app_seguimiento_movil/models/models.dart';
 import 'package:app_seguimiento_movil/widgets/widgets.dart';
-import 'package:flutter/animation.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:app_seguimiento_movil/services/services.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import '../models/multi_inputs_model.dart';
@@ -21,7 +19,7 @@ class HomeScreen extends StatefulWidget {
 final storage = FlutterSecureStorage();
 
 class _HomeScreenState extends State<HomeScreen> {
-  String version = '3.3.0';
+  String version = '3.3.2';
   
   final List<Map<String, dynamic>> arrList = [];
 
@@ -113,12 +111,18 @@ class _HomeScreenState extends State<HomeScreen> {
       Map<String, MultiInputsForm> selectHotel) async {
     String? identifier = await storage.read(key: 'idHotelRegister');
     final TextEditingController controller = TextEditingController();
+    bool obscureText = true;
+    String password = '';
+    bool autofucus = true;
+    bool desactivar = false;
+
     if (identifier == null) {
       // print(selectHotel['selectHotel']!.listselect);
       // ignore: use_build_context_synchronously
     showDialog(
       context: context,
       builder: (BuildContext context) {
+      final TextEditingController controller2 = TextEditingController();
         return Stack(children: [
             BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0), // Ajusta el valor de sigmaX y sigmaY para controlar el desenfoque
@@ -130,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
             dismissible: false,
           ),
           StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState) {
+            builder: (BuildContext context, StateSetter setState) {
             return GestureDetector(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -151,15 +155,49 @@ class _HomeScreenState extends State<HomeScreen> {
                           activeListSelect: true,
                           maxLines: 1,
                         ),
+                        const SizedBox(height: 10,),
+                        TextFormField(
+                        controller: controller2,
+                        enabled: true,
+                        textAlign: TextAlign.center,
+                        autofocus: autofucus,
+                        obscureText: obscureText,
+                        decoration: InputDecoration(
+                        suffixIcon:IconButton(
+                        icon: Icon( Icons.visibility ),
+                        onPressed: () {
+                           setState(() {
+                             obscureText = !obscureText;
+                           });
+                        }),
+                      ),
+                      style: getTextStyleButtonField(context),
+                      onChanged: (value) {
+                        setState(() {
+                          password = value;
+                        });
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty || value == '' ) {
+                            return 'Ingrese la contraseña';
+                          } 
+                          return null;
+                        },
+                      ),
                         ElevatedButton(
-                            onPressed: () {
-                              identifier =
-                              generarIdentificadorUnico(selectHotel);
-                              storage.write(
-                                  key: 'idHotelRegister',
-                                  value: identifier);
-                            
-                              Navigator.of(context).pop();
+                            onPressed: () async {
+                              LocalService lc = LocalService();
+                              Access obj = await lc.compararPass(controller2.text, int.parse(selectHotel['selectHotel']!.contenido!), context);
+                              if (obj.container['status']) {
+                                identifier =
+                                generarIdentificadorUnico(selectHotel);
+                                storage.write(
+                                    key: 'idHotelRegister',
+                                    value: identifier);
+                              
+                                Navigator.of(context).pop();
+                              }
+                             
                             },
                             child: Text('Aceptar',
                                 style: getTextStyleButtonField(context))),
@@ -327,7 +365,6 @@ class _ContainerOptionState extends State<ContainerOption> {
                   StatefulBuilder(builder:
                       (BuildContext context, StateSetter setState) {
                     handleButtonPressed() async {
-                      
                       setState(() {
                         desactivar = true;
                       });
@@ -390,7 +427,7 @@ class _ContainerOptionState extends State<ContainerOption> {
                                   padding:
                                       const EdgeInsets.only(bottom: 10),
                                   child: Center(
-                                      child: Text('Ingrese la contraseña ', 
+                                      child: Text('Ingrese la contraseña', 
                                           style: getTextStyleTitle2(
                                               context, null).copyWith(height: 1))),
                                 ),
