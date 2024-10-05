@@ -62,7 +62,7 @@ try {
 
 
  Future<List<Map<String,dynamic>>> getDepartament( BuildContext context ) async {
-  AccessMap result = AccessMap();
+  // AccessMap result = AccessMap();
   var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet

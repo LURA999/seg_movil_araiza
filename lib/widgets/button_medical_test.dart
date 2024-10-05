@@ -11,7 +11,7 @@ import '../theme/app_theme.dart';
 import 'package:collection/collection.dart';
 
 
-final storage = FlutterSecureStorage();
+const  storage =  FlutterSecureStorage();
 class ButtonMedicalTest {
 
  final Function() setStateCallback;
@@ -51,13 +51,13 @@ List<YesNot> yestNotEnumArrFake = [];
 List<ManoDominante> manoArrFake = [];
 List<MetodoAnti> methodArrFake = [];
 List<List<bool>> listChecked_sec7Fake = [[]];
-List<Cause>? causeDiseaseArrFake = [];
+// List<Cause>? causeDiseaseArrFake = [];
 List<Cause> causeEnumFake = [];
 List<List<bool>> checkBoxArrFake = [[],[],[],[],[]];
 int numEmployee = 0;
 //El primero es para controlar los inputs cuando abre y cierra el form
 late bool _inputsAdd = false;
-String firmaAspirante = '';
+// String firmaAspirante = '';
 String firmaDoctor = '';
 List<String> clavesAComparar = [];
 
@@ -1232,8 +1232,8 @@ if (edit && copyBack) {
   yestNotEnumArrFake = List.from(yestNotEnumArr!); 
   manoArrFake = List.from(manoArr!);
   methodArrFake = List.from(methodArr!);
-  firmaAspirante = multiInputArr![47].toString();
-  firmaDoctor = multiInputArr[147].toString();
+  // firmaAspirante = multiInputArr![47].toString();
+  firmaDoctor = multiInputArr![147].toString();
   listChecked_sec7Fake = [List.from(listChecked_sec7[0])];
   causeEnumFake = List.from(causeDiseaseArr!);  
   numEmployee = int.parse(multiInputArr[1]);
@@ -2351,7 +2351,7 @@ StatefulBuilder(
                       
                           
                       // 205 + (10 * 5 = 50) = 255  
-                      bool activarBoxArr = false;
+                      // bool activarBoxArr = false;
                       for (var i = 0; i < 5; i++) {
                         for (var x = 0; x < 10    ; x++) {
                           if(checkBoxArr !=null ? checkBoxArr[i][x] : listChecked_sec4[i][x] == true){

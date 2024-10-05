@@ -21,7 +21,7 @@ class ExamIniPreService extends ChangeNotifier{
 
 
  Future<List<Map<String,dynamic>>> getDepartament( BuildContext context ) async {
-  AccessMap result = AccessMap();
+  // AccessMap result = AccessMap();
   var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
@@ -66,7 +66,7 @@ try {
   } 
 
 Future<List<Map<String,dynamic>>> getOneExamPart1(int idExam, BuildContext context ) async {
-  AccessMap result = AccessMap();
+  // AccessMap result = AccessMap();
   var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
@@ -110,7 +110,7 @@ try {
   } 
 
 Future<List<Map<String,dynamic>>> getExamAcciddentDisease(int idExam, BuildContext context ) async {
-  AccessMap result = AccessMap();
+  // AccessMap result = AccessMap();
   var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
@@ -155,7 +155,7 @@ try {
   } 
 
   Future<List<Map<String,dynamic>>> getExamHeredityFam(int idExam, BuildContext context ) async {
-  AccessMap result = AccessMap();
+  // AccessMap result = AccessMap();
   var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
@@ -200,7 +200,7 @@ try {
   } 
 
   Future<List<Map<String,dynamic>>> getExamHistory(int idExam, BuildContext context ) async {
-  AccessMap result = AccessMap();
+  // AccessMap result = AccessMap();
   var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet

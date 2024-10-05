@@ -104,7 +104,7 @@ class ButtonNavSvg extends StatefulWidget {
 }
 
 class _ButtonNavSvgState extends State<ButtonNavSvg> {
-  bool _isTapped = false;
+  /* bool _isTapped = false;
 
   void _handleTapDown(TapDownDetails details) {
     setState(() {
@@ -116,7 +116,7 @@ class _ButtonNavSvgState extends State<ButtonNavSvg> {
     setState(() {
       _isTapped = false;
     });
-  }
+  } */
 
   @override
   Widget build(BuildContext context) {

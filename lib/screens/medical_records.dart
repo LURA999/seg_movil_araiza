@@ -104,7 +104,6 @@ void initState() {
 Widget build(BuildContext context) {
 ButtonMedicalTest bMedical = ButtonMedicalTest(actualizarWidget); // Pasamos la función actualizarWidget
 
-Size size = MediaQuery.of(context).size ;
 EdgeInsets paddingCell = EdgeInsets.fromLTRB(
 MediaQuery.of(context).size.width * (MediaQuery.of(context).orientation == Orientation.portrait ? .005: .01),
 MediaQuery.of(context).size.height * (MediaQuery.of(context).orientation == Orientation.portrait ? .005: .01),
@@ -184,7 +183,6 @@ return Scaffold(
 
                                   controller.clear();
                                   
-                                  final list = await eips.getAllExamListSearch(context,'');
                                   files.clear();
                                   setState(() { }); 
                                   await searchTable(context);

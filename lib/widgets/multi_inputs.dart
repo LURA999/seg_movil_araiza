@@ -25,6 +25,7 @@ class Guard {
   }
 }
 
+// ignore: must_be_immutable
 class MultiInputs extends StatefulWidget {
 
   final String? hintText;
@@ -223,6 +224,7 @@ final ImagePicker _picker = ImagePicker();
             } catch (e) {
               print(e); 
             }
+            return null;
             
           });
         },

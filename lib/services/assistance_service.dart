@@ -19,7 +19,7 @@ class AssistanceService extends ChangeNotifier{
   bool modoApk = kDebugMode?true:false; 
   bool isSaving = true;
   late String link = modoApk?'https://www.comunicadosaraiza.com/movil_scan_api_prueba2/API':'https://www.comunicadosaraiza.com/movil_scan_api_prueba2/API';
-  final storage = FlutterSecureStorage();
+  final storage =const FlutterSecureStorage();
 
 
  Future<bool> postCloseTurnAssistance(BuildContext context) async {
@@ -467,7 +467,7 @@ try {
   Future<List<Map<String, dynamic>>> showEmployeeAssistance( String palabra,BuildContext context , int local ) async {
     
     List<Map<String, dynamic>> listContainer = [];
-    AccessMap result = AccessMap();
+    // AccessMap result = AccessMap();
     var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet
@@ -513,7 +513,7 @@ try {
 Future<List<Map<String, dynamic>>> showCoursesAssistance( String palabra,BuildContext context ) async {
     
     List<Map<String, dynamic>> listContainer = [];
-    AccessMap result = AccessMap();
+    // AccessMap result = AccessMap();
     var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet

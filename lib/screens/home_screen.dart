@@ -6,7 +6,6 @@ import 'package:app_seguimiento_movil/services/services.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-import '../models/multi_inputs_model.dart';
 import 'package:universal_platform/universal_platform.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,7 +15,7 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-final storage = FlutterSecureStorage();
+const storage = FlutterSecureStorage();
 
 class _HomeScreenState extends State<HomeScreen> {
   String version = '3.3.2';
@@ -112,9 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
     String? identifier = await storage.read(key: 'idHotelRegister');
     final TextEditingController controller = TextEditingController();
     bool obscureText = true;
-    String password = '';
     bool autofucus = true;
-    bool desactivar = false;
 
     if (identifier == null) {
       // print(selectHotel['selectHotel']!.listselect);
@@ -174,7 +171,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       style: getTextStyleButtonField(context),
                       onChanged: (value) {
                         setState(() {
-                          password = value;
                         });
                       },
                       validator: (value) {

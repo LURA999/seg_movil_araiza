@@ -39,9 +39,9 @@ class ChangeLocal {
     final TextEditingController controller = TextEditingController();
     final TextEditingController controller2 = TextEditingController();
     bool obscureText = true;
-    String password = '';
+    // String password = '';
     bool autofucus = true;
-    bool desactivar = false;
+    // bool desactivar = false;
 
     // print(selectHotel['selectHotel']!.listselect);
     // ignore: use_build_context_synchronously
@@ -90,7 +90,7 @@ class ChangeLocal {
                       style: getTextStyleButtonField(context),
                       onChanged: (value) {
                         setState(() {
-                          password = value;
+                          // password = value;
                         });
                       },
                       validator: (value) {

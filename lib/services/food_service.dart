@@ -334,7 +334,7 @@ try {
     return result; 
   }
   Future<bool> postRegisterFood( RegisterFood reg,BuildContext context ) async {
-  Access result = Access();
+  // Access result = Access();
   var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     // No hay conexión a Internet

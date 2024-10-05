@@ -5,6 +5,7 @@ import '../models/models.dart';
 import '../theme/app_theme.dart';
 
 
+// ignore: must_be_immutable
 class RadioInputRateRoute extends StatefulWidget {
   final List<Cause>? causeEnum;
   late  List<rateRoute>? rateRoutes;

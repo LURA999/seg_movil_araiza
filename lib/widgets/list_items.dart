@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:app_seguimiento_movil/models/models.dart';
 
+// ignore: must_be_immutable
 class TableCustom extends StatelessWidget {
   final List<Option> opciones;
 

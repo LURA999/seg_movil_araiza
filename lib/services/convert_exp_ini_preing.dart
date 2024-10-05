@@ -57,14 +57,14 @@ List<MetodoAnti>? methodArr) async {
 final storage = FlutterSecureStorage();
 int local = int.parse(await storage.read(key: 'idHotelRegister') as String);
 int multiInputC = 2; 
-int multiInputCH = 0; 
-int multiInputCAE = 0; 
+// int multiInputCH = 0; 
+// int multiInputCAE = 0; 
 int radioButtonC = 0; 
-int radioButtonCDisease = 0; 
-int radioButtonCDiseaseYN = 0; 
+// int radioButtonCDisease = 0; 
+// int radioButtonCDiseaseYN = 0; 
 
-List months = 
-['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'];
+/* List months = 
+['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE']; */
   final DateTime now = DateTime.now();
   bool storagePermissionGranted = false;
 
@@ -87,8 +87,8 @@ List months =
 
   final pdf = pw.Document();
   // Cargar la fuente personalizada desde un archivo .ttf
-  final fontData = await rootBundle.load('assets/fonts/Gotham-Font/Gotham-Regular.ttf');
-  final customFont = pw.Font.ttf(fontData.buffer.asByteData());
+  // final fontData = await rootBundle.load('assets/fonts/Gotham-Font/Gotham-Regular.ttf');
+  // final customFont = pw.Font.ttf(fontData.buffer.asByteData());
   
   double allFirstWidthTabHead = PdfPageFormat.letter.width * .12;
   double heightTabIlHead = PdfPageFormat.letter.height * 0.095 ;

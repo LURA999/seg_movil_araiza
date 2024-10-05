@@ -1,4 +1,4 @@
-import 'package:app_seguimiento_movil/theme/app_theme.dart';
+// import 'package:app_seguimiento_movil/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class CheckInput extends StatefulWidget {

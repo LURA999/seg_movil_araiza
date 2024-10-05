@@ -4,6 +4,7 @@ import '../models/models.dart';
 import '../services/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+// ignore: must_be_immutable
 class AutocompleteCustom extends StatefulWidget {
   List<String>? goptions;  
   List<int>? goptionsId;

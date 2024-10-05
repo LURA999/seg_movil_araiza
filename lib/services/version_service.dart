@@ -16,7 +16,7 @@ class VersionService extends ChangeNotifier{
 
 
  Future<List<Map<String,dynamic>>> getLastVersion(BuildContext context ) async {
-  Access result = Access();
+  // Access result = Access();
   var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none ) {
     // No hay conexión a Internet
