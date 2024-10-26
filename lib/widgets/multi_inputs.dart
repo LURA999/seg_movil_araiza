@@ -135,9 +135,11 @@ final ImagePicker _picker = ImagePicker();
           } 
         });
       if (widget.activeListSelect == true || ((widget.formValue[widget.formProperty] as MultiInputsForm).activeListSelect ?? false) == true) {
+        print("A");
         //En este puede cambiar el id de cada item de cada opcion, se hace por medio de
         return DropdownButtonWidget(arrSelect: widget.listSelectForm,formValue: widget.formValue,formProperty: widget.formProperty, type: 1,);
       } else {
+        print("B");
         //En este ya viene una lista predefinida desde el mismo sistema, no hay un json predefinido, es solo un array
         return DropdownButtonWidget(list: widget.listSelectButton![indice-1],formValue: widget.formValue,formProperty: widget.formProperty, type: 2);
       }

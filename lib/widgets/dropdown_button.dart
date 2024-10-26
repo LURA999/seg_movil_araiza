@@ -8,6 +8,7 @@ class DropdownButtonWidget extends StatefulWidget {
   final Map<String, dynamic> formValue;
   final List<Map<String,dynamic>>? arrSelect;
   final int type;
+
   DropdownButtonWidget({
   Key? key, 
   this.list, 
@@ -94,14 +95,15 @@ class _DropdownButtonWidgetState extends State<DropdownButtonWidget> {
     if (widget.type == 1) {
       arrSelect = [...widget.arrSelect!];
       final claves = widget.arrSelect![0].keys.toList();
+
       dropdownValue = widget.arrSelect![
       widget.formValue[widget.formProperty]!.contenido.toString() != '' ? 
       arrSelect!.indexWhere((el) => int.parse(el[claves[0]]) == int.parse(widget.formValue[widget.formProperty]!.contenido)) : 0 ][claves[0]];
+      print(dropdownValue) ;
       widget.formValue[widget.formProperty]!.contenido = dropdownValue;
     }else{
       list = [...widget.list!];
       dropdownValue = widget.list!.first;
-
     }
   }
 

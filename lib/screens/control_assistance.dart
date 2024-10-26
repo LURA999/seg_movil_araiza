@@ -63,7 +63,9 @@ class _ControlAssistanceState extends State<ControlAssistance> {
     return FutureBuilder<List<Map<String, dynamic>>>(
       future: recolectandoLocales(),
       builder: (context, snapshot) {
+        
       if (snapshot.hasData) {
+        
         return Scaffold(
           body: Column(
           children: [
@@ -235,7 +237,7 @@ Future<List<Map<String, dynamic>>> recolectandoLocales() async {
           arrList.add(el);
         }
       }
-    formValuesRegistroMan['hotel']!.contenido =  await storage.read(key: 'idHotelRegister');
+    formValuesRegistroMan['hotel']!.contenido =  (await storage.read(key: 'idHotelRegister')).toString();
 
     VarProvider vh = VarProvider();
     await vh.arrSharedPreferences().then((Map<String, dynamic> sharedPrefsData) async { 

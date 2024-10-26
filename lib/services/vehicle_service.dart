@@ -328,7 +328,7 @@ try {
   } else if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
 
 try {
-      notifyListeners();
+      notifyListeners();      
       final url = Uri.parse('$link/qr_vehicle.php?plate=$plate&condition=$condition&local=$local');
       var response = (await http.get(url)).body;
       final result = Access.fromJson(jsonDecode(response));

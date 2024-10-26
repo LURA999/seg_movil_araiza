@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:math';
+
 import 'package:app_seguimiento_movil/models/date_excel_assistance.dart';
 import 'package:app_seguimiento_movil/models/models.dart';
 import 'package:app_seguimiento_movil/models/qr_assistance.dart';
@@ -122,9 +124,9 @@ onFormValueChange(dynamic value,List<String> keyValue) {
   int ivalue = 0;
   //se llena los inputs  y su respectivo formvalue, llenarlo solo en el formvalue no es suficiente
   for (var i = 0; i < inputFields.length; i++) {
-    if (inputFields[i].runtimeType.toString() == 'MultiInputs') {
+    if (inputFields[i] is MultiInputs && value[0][keyValue[ivalue]] != null) {
       (inputFields[i] as MultiInputs).controller!.text = value[0][keyValue[ivalue]] ?? '';
-      formValue[(inputFields[i] as MultiInputs).formProperty]!.contenido = value[0][keyValue[ivalue]];
+      formValue[(inputFields[i] as MultiInputs).formProperty]!.contenido = value[0][keyValue[ivalue]].toString();
       // print('${keyValue[ivalue]} : ${value[0][keyValue[ivalue]]} = ${formValue[(inputFields[i] as MultiInputs).formProperty]!.contenido}');
       ivalue++;
     }
@@ -698,6 +700,7 @@ return showDialog<String>(
                         r.name = '';
                         r.contract = '3';
                         r.local = formValue['hotel']!.contenido;
+                        
                       if(await fService.postRegisterFood(r,context)){
                         Navigator.pop(context);
                         }else{
@@ -916,7 +919,12 @@ return showDialog<String>(
                         });
           
                         if(await aService.postRegisterAssistance(r,context)){
-                        formValue.forEach((key, value) { value.contenido = ''; });
+                        formValue.forEach((key, value) { 
+                          if (key != "hotel") {
+                            value.contenido = '';
+                          } 
+                        });
+
                         setState((){});  
                         Navigator.pop(context);
                          ScaffoldMessenger.of(context).showSnackBar(
@@ -949,7 +957,13 @@ return showDialog<String>(
                             String fileName = ' assistencia_$formattedDate.xlsx';
                               await jsonToExcel(
                               jsonStr,
-                              ["Numero de empleado", "Nombre completo", "Nombre del curso", "Horario", "Hora y Fecha de asistencia"], 
+                              [
+                                "Numero de empleado", 
+                                "Nombre completo", 
+                                "Nombre del curso",
+                                "Horario", 
+                                "Hora y Fecha de asistencia"
+                              ], 
                               jsonStrObs,
                               null,
                               null,
@@ -1057,7 +1071,13 @@ return showDialog<String>(
                                     String fileName = ' assistencia_$formattedDate.xlsx';
                                       await jsonToExcel(
                                       jsonStrAux,
-                                      ["Numero de empleado", "Nombre completo", "Nombre del curso", "Horario", "Hora y Fecha de asistencia"], 
+                                      [
+                                        "Numero de empleado", 
+                                        "Nombre completo", 
+                                        "Nombre del curso", 
+                                        "Horario", 
+                                        "Hora y Fecha de asistencia"
+                                      ], 
                                       null,
                                       null,
                                       null,

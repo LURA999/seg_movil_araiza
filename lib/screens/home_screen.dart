@@ -18,7 +18,7 @@ class HomeScreen extends StatefulWidget {
 const storage = FlutterSecureStorage();
 
 class _HomeScreenState extends State<HomeScreen> {
-  String version = '3.3.2';
+  String version = '3.3.3';
   
   final List<Map<String, dynamic>> arrList = [];
 
@@ -27,7 +27,6 @@ class _HomeScreenState extends State<HomeScreen> {
     if (identifier == null) {
       LocalService lc = LocalService();
       final locals = await lc.getLocal(context);
-      // print('local ${locals.container.toString()}');
       for (var el in locals.container) {
         if (int.parse(el['idLocal']) > 0) {
           arrList.add(el);
